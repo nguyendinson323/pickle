@@ -1,50 +1,50 @@
 import express from 'express';
 import { ReservationController } from '../controllers/reservationController';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { authorizeRoles } from '../middleware/roles';
 
 const router = express.Router();
 
 // Reservation management routes
 router.post('/reservations', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.createReservation
 );
 
 router.get('/reservations/my', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.getUserReservations
 );
 
 router.get('/reservations/:id', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.getReservationById
 );
 
 router.put('/reservations/:id', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.updateReservation
 );
 
 router.delete('/reservations/:id/cancel', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.cancelReservation
 );
 
 // Payment processing
 router.post('/reservations/:id/payment', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.processReservationPayment
 );
 
 // Check-in and check-out
 router.post('/reservations/:id/checkin', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.checkInReservation
 );
 
 router.post('/reservations/:id/checkout', 
-  authenticateToken, 
+  authenticate, 
   ReservationController.checkOutReservation
 );
 
@@ -56,7 +56,7 @@ router.get('/conflicts/detect', ReservationController.detectConflicts);
 
 // Court reservations (for owners/admins)
 router.get('/courts/:courtId/reservations', 
-  authenticateToken, 
+  authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
   ReservationController.getCourtReservations
 );

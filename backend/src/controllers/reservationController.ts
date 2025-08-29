@@ -424,8 +424,8 @@ export class ReservationController {
       }
 
       await reservation.update({
-        checkedInAt: now,
-        status: 'checked_in'
+        checkInTime: now,
+        status: 'confirmed'
       });
 
       res.json({
@@ -460,7 +460,7 @@ export class ReservationController {
       }
 
       await reservation.update({
-        checkedOutAt: new Date(),
+        checkOutTime: new Date(),
         status: 'completed'
       });
 

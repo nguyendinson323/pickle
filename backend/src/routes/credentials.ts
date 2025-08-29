@@ -1,6 +1,6 @@
 import express from 'express';
 import { body, query, param, validationResult } from 'express-validator';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import credentialService from '../services/credentialService';
 import { CredentialType, CredentialStatus } from '../models/Credential';
 
@@ -17,7 +17,7 @@ const validateRequest = (req: express.Request, res: express.Response, next: expr
 
 // Create new credential (admin only)
 router.post('/create',
-  authenticateToken,
+  authenticate,
   [
     body('userId').isInt().withMessage('User ID is required and must be an integer'),
     body('userType').isIn(Object.values(CredentialType)).withMessage('Invalid credential type'),
@@ -96,7 +96,7 @@ router.get('/verify/:credentialId',
 
 // Get user credentials
 router.get('/user/:userId',
-  authenticateToken,
+  authenticate,
   [
     param('userId').isInt().withMessage('User ID must be an integer')
   ],
@@ -132,7 +132,7 @@ router.get('/user/:userId',
 
 // Get credentials by state
 router.get('/state/:stateId',
-  authenticateToken,
+  authenticate,
   [
     param('stateId').isInt().withMessage('State ID must be an integer'),
     query('userType').optional().isIn(Object.values(CredentialType)).withMessage('Invalid credential type'),
@@ -185,7 +185,7 @@ router.get('/state/:stateId',
 
 // Update credential status (admin only)
 router.put('/:credentialId/status',
-  authenticateToken,
+  authenticate,
   [
     param('credentialId').isUUID().withMessage('Invalid credential ID format'),
     body('status').isIn(Object.values(CredentialStatus)).withMessage('Invalid credential status'),
@@ -230,7 +230,7 @@ router.put('/:credentialId/status',
 
 // Renew credential (admin only)
 router.put('/:credentialId/renew',
-  authenticateToken,
+  authenticate,
   [
     param('credentialId').isUUID().withMessage('Invalid credential ID format'),
     body('extensionMonths').optional().isInt({ min: 1, max: 60 }).withMessage('Extension months must be between 1 and 60')
@@ -273,7 +273,7 @@ router.put('/:credentialId/renew',
 
 // Generate PDF credential
 router.get('/:credentialId/pdf',
-  authenticateToken,
+  authenticate,
   [
     param('credentialId').isUUID().withMessage('Invalid credential ID format')
   ],
@@ -302,7 +302,7 @@ router.get('/:credentialId/pdf',
 
 // Generate image credential
 router.get('/:credentialId/image',
-  authenticateToken,
+  authenticate,
   [
     param('credentialId').isUUID().withMessage('Invalid credential ID format')
   ],
@@ -331,7 +331,7 @@ router.get('/:credentialId/image',
 
 // Get expiring credentials (admin only)
 router.get('/expiring',
-  authenticateToken,
+  authenticate,
   [
     query('days').optional().isInt({ min: 1, max: 365 }).withMessage('Days must be between 1 and 365')
   ],
@@ -367,7 +367,7 @@ router.get('/expiring',
 
 // Get credential statistics
 router.get('/stats',
-  authenticateToken,
+  authenticate,
   [
     query('stateId').optional().isInt().withMessage('State ID must be an integer')
   ],

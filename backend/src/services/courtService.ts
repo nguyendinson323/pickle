@@ -39,13 +39,34 @@ interface CourtData {
   minBookingDuration?: number;
   maxBookingDuration?: number;
   cancellationPolicy?: string;
+  isActive?: boolean;
 }
 
 export class CourtService {
   
   static async createCourt(courtData: CourtData): Promise<Court> {
     try {
-      const court = await Court.create(courtData);
+      // Default operating hours (open 8 AM - 8 PM Monday-Sunday)
+      const defaultOperatingHours = {
+        1: { isOpen: true, startTime: '08:00', endTime: '20:00' }, // Monday
+        2: { isOpen: true, startTime: '08:00', endTime: '20:00' }, // Tuesday
+        3: { isOpen: true, startTime: '08:00', endTime: '20:00' }, // Wednesday
+        4: { isOpen: true, startTime: '08:00', endTime: '20:00' }, // Thursday
+        5: { isOpen: true, startTime: '08:00', endTime: '20:00' }, // Friday
+        6: { isOpen: true, startTime: '08:00', endTime: '20:00' }, // Saturday
+        0: { isOpen: true, startTime: '08:00', endTime: '20:00' }  // Sunday
+      };
+
+      const court = await Court.create({
+        ...courtData,
+        isActive: courtData.isActive !== undefined ? courtData.isActive : true,
+        images: courtData.images || [],
+        operatingHours: courtData.operatingHours || defaultOperatingHours,
+        maxAdvanceBookingDays: courtData.maxAdvanceBookingDays || 30,
+        minBookingDuration: courtData.minBookingDuration || 60, // 1 hour
+        maxBookingDuration: courtData.maxBookingDuration || 180, // 3 hours
+        cancellationPolicy: courtData.cancellationPolicy || 'Cancellation allowed up to 24 hours before reservation'
+      });
       return court;
     } catch (error: any) {
       throw new Error(`Error creating court: ${error.message}`);

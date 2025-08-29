@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { validateRequest } from '../middleware/validation';
 import { body, param, query } from 'express-validator';
 import playerFinderService from '../services/playerFinderService';
@@ -12,7 +12,7 @@ const router = Router();
 
 // Create a new finder request
 router.post('/requests',
-  authenticateToken,
+  authenticate,
   [
     body('title').notEmpty().trim().isLength({ min: 5, max: 200 }),
     body('description').notEmpty().trim().isLength({ min: 10, max: 1000 }),
@@ -68,7 +68,7 @@ router.post('/requests',
 
 // Get active finder requests with filters
 router.get('/requests',
-  authenticateToken,
+  authenticate,
   [
     query('skillLevel').optional().isIn(['beginner', 'intermediate', 'advanced', 'pro']),
     query('maxDistance').optional().isInt({ min: 1, max: 200 }),
@@ -120,7 +120,7 @@ router.get('/requests',
 
 // Get user's own finder requests
 router.get('/my-requests',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const player = await Player.findOne({
@@ -158,7 +158,7 @@ router.get('/my-requests',
 
 // Get matches for current user
 router.get('/matches',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const player = await Player.findOne({
@@ -187,7 +187,7 @@ router.get('/matches',
 
 // Get matches for a specific request
 router.get('/requests/:requestId/matches',
-  authenticateToken,
+  authenticate,
   [
     param('requestId').isInt({ min: 1 })
   ],
@@ -232,7 +232,7 @@ router.get('/requests/:requestId/matches',
 
 // Accept or decline a match
 router.patch('/matches/:matchId',
-  authenticateToken,
+  authenticate,
   [
     param('matchId').isInt({ min: 1 }),
     body('status').isIn(['accepted', 'declined']),
@@ -286,7 +286,7 @@ router.patch('/matches/:matchId',
 
 // Cancel a finder request
 router.patch('/requests/:requestId/cancel',
-  authenticateToken,
+  authenticate,
   [
     param('requestId').isInt({ min: 1 })
   ],
@@ -319,7 +319,7 @@ router.patch('/requests/:requestId/cancel',
 
 // Force find new matches for a request
 router.post('/requests/:requestId/find-matches',
-  authenticateToken,
+  authenticate,
   [
     param('requestId').isInt({ min: 1 })
   ],

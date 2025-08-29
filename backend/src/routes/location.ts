@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { validateRequest } from '../middleware/validation';
 import { body, param, query } from 'express-validator';
 import locationService from '../services/locationService';
@@ -10,7 +10,7 @@ const router = Router();
 
 // Geocode an address
 router.post('/geocode',
-  authenticateToken,
+  authenticate,
   [
     body('address').notEmpty().trim().isLength({ min: 5, max: 500 })
   ],
@@ -37,7 +37,7 @@ router.post('/geocode',
 
 // Reverse geocode coordinates
 router.post('/reverse-geocode',
-  authenticateToken,
+  authenticate,
   [
     body('latitude').isFloat({ min: -90, max: 90 }),
     body('longitude').isFloat({ min: -180, max: 180 })
@@ -69,7 +69,7 @@ router.post('/reverse-geocode',
 
 // Create a new location for the user
 router.post('/locations',
-  authenticateToken,
+  authenticate,
   [
     body('latitude').isFloat({ min: -90, max: 90 }),
     body('longitude').isFloat({ min: -180, max: 180 }),
@@ -146,7 +146,7 @@ router.post('/locations',
 
 // Get user's locations
 router.get('/locations',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const player = await Player.findOne({
@@ -178,7 +178,7 @@ router.get('/locations',
 
 // Update a location
 router.put('/locations/:locationId',
-  authenticateToken,
+  authenticate,
   [
     param('locationId').isInt({ min: 1 }),
     body('latitude').optional().isFloat({ min: -90, max: 90 }),
@@ -258,7 +258,7 @@ router.put('/locations/:locationId',
 
 // Delete a location
 router.delete('/locations/:locationId',
-  authenticateToken,
+  authenticate,
   [
     param('locationId').isInt({ min: 1 })
   ],
@@ -300,7 +300,7 @@ router.delete('/locations/:locationId',
 
 // Find nearby locations
 router.get('/nearby',
-  authenticateToken,
+  authenticate,
   [
     query('latitude').isFloat({ min: -90, max: 90 }),
     query('longitude').isFloat({ min: -180, max: 180 }),
@@ -380,7 +380,7 @@ router.get('/nearby',
 
 // Calculate distance between two points
 router.post('/calculate-distance',
-  authenticateToken,
+  authenticate,
   [
     body('lat1').isFloat({ min: -90, max: 90 }),
     body('lon1').isFloat({ min: -180, max: 180 }),

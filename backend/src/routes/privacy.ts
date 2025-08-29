@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { validateRequest } from '../middleware/validation';
 import { body, param } from 'express-validator';
 import privacyService from '../services/privacyService';
@@ -9,7 +9,7 @@ const router = Router();
 
 // Get privacy settings
 router.get('/settings',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const player = await Player.findOne({
@@ -38,7 +38,7 @@ router.get('/settings',
 
 // Update privacy settings
 router.patch('/settings',
-  authenticateToken,
+  authenticate,
   [
     body('showLocation').optional().isBoolean(),
     body('showRealName').optional().isBoolean(),
@@ -88,7 +88,7 @@ router.patch('/settings',
 
 // Block a player
 router.post('/block',
-  authenticateToken,
+  authenticate,
   [
     body('playerId').isInt({ min: 1 })
   ],
@@ -121,7 +121,7 @@ router.post('/block',
 
 // Unblock a player
 router.delete('/block/:playerId',
-  authenticateToken,
+  authenticate,
   [
     param('playerId').isInt({ min: 1 })
   ],
@@ -154,7 +154,7 @@ router.delete('/block/:playerId',
 
 // Get blocked players list
 router.get('/blocked',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const player = await Player.findOne({
@@ -183,7 +183,7 @@ router.get('/blocked',
 
 // Update notification preferences
 router.patch('/notifications',
-  authenticateToken,
+  authenticate,
   [
     body('newFinderRequest').optional().isBoolean(),
     body('finderRequestAccepted').optional().isBoolean(),
@@ -221,7 +221,7 @@ router.patch('/notifications',
 
 // Update online status
 router.patch('/status',
-  authenticateToken,
+  authenticate,
   [
     body('status').isIn(['online', 'away', 'busy', 'offline'])
   ],
@@ -254,7 +254,7 @@ router.patch('/status',
 
 // Get online status
 router.get('/status',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const player = await Player.findOne({
@@ -283,7 +283,7 @@ router.get('/status',
 
 // Get privacy summary
 router.get('/summary',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const player = await Player.findOne({

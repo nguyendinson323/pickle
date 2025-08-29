@@ -1,30 +1,30 @@
 import express from 'express';
 import { CourtReviewController } from '../controllers/courtReviewController';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { authorizeRoles } from '../middleware/roles';
 
 const router = express.Router();
 
 // Review creation and management
 router.post('/reviews', 
-  authenticateToken, 
+  authenticate, 
   CourtReviewController.createReview
 );
 
 router.get('/reviews/my', 
-  authenticateToken, 
+  authenticate, 
   CourtReviewController.getUserReviews
 );
 
 router.get('/reviews/:id', CourtReviewController.getReviewById);
 
 router.put('/reviews/:id', 
-  authenticateToken, 
+  authenticate, 
   CourtReviewController.updateReview
 );
 
 router.delete('/reviews/:id', 
-  authenticateToken, 
+  authenticate, 
   CourtReviewController.deleteReview
 );
 
@@ -34,7 +34,7 @@ router.get('/courts/:courtId/ratings', CourtReviewController.getCourtRatingsSumm
 
 // Owner responses to reviews
 router.post('/reviews/:id/respond', 
-  authenticateToken, 
+  authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
   CourtReviewController.respondToReview
 );

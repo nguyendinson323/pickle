@@ -1,6 +1,6 @@
 import express from 'express';
 import { body, query, param, validationResult } from 'express-validator';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import rankingService from '../services/rankingService';
 import { RankingType, RankingCategory } from '../models/Ranking';
 
@@ -128,7 +128,7 @@ router.get('/history/:playerId',
 
 // Calculate tournament points (admin only)
 router.post('/calculate-points',
-  authenticateToken,
+  authenticate,
   [
     body('playerId').isInt().withMessage('Player ID is required and must be an integer'),
     body('tournamentId').isInt().withMessage('Tournament ID is required and must be an integer'),
@@ -187,7 +187,7 @@ router.post('/calculate-points',
 
 // Update rankings after tournament (admin only)
 router.post('/update-tournament/:tournamentId',
-  authenticateToken,
+  authenticate,
   [
     param('tournamentId').isInt().withMessage('Tournament ID must be an integer')
   ],
@@ -224,7 +224,7 @@ router.post('/update-tournament/:tournamentId',
 
 // Recalculate positions (admin only)
 router.post('/recalculate-positions',
-  authenticateToken,
+  authenticate,
   [
     body('rankingType').isIn(Object.values(RankingType)).withMessage('Invalid ranking type'),
     body('category').isIn(Object.values(RankingCategory)).withMessage('Invalid ranking category'),
@@ -271,7 +271,7 @@ router.post('/recalculate-positions',
 
 // Apply ranking decay (admin only, typically run by cron job)
 router.post('/apply-decay',
-  authenticateToken,
+  authenticate,
   async (req: express.Request, res: express.Response) => {
     try {
       const user = req.user as any;

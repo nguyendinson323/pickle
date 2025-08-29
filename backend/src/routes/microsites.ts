@@ -1,6 +1,6 @@
 import express from 'express';
 import { micrositeController } from '../controllers/micrositeController';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { upload } from '../middleware/fileUpload';
 
 const router = express.Router();
@@ -17,7 +17,7 @@ router.get('/themes/:id', micrositeController.getTheme);
 router.post('/themes/:id/css', micrositeController.generateThemeCSS);
 
 // Protected routes (authentication required)
-router.use(authenticateToken);
+router.use(authenticate);
 
 // Microsite CRUD
 router.post('/', micrositeController.createMicrosite);

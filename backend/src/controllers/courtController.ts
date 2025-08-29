@@ -91,22 +91,22 @@ export class CourtController {
         minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
         maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
         amenities: amenities ? (amenities as string).split(',') : undefined,
-        sortBy: sortBy as string,
-        sortOrder: sortOrder as 'ASC' | 'DESC',
+        sortBy: sortBy as 'distance' | 'price' | 'rating' | 'name' | undefined,
+        sortOrder: ((sortOrder as string)?.toLowerCase() === 'desc' ? 'desc' : 'asc') as 'asc' | 'desc',
         page: parseInt(page as string),
         limit: parseInt(limit as string)
       };
 
-      const result = await CourtService.searchCourts(filters);
+      const courts = await CourtService.searchCourts(filters);
 
       res.json({
         success: true,
-        data: result.courts,
+        data: courts,
         pagination: {
-          current: result.currentPage,
-          pages: result.totalPages,
-          total: result.total,
-          limit: result.limit
+          current: filters.page,
+          pages: Math.ceil(courts.length / filters.limit),
+          total: courts.length,
+          limit: filters.limit
         }
       });
     } catch (error: any) {
@@ -166,11 +166,11 @@ export class CourtController {
       // Calculate average rating
       const reviews = await CourtReview.findAll({
         where: { courtId: id },
-        attributes: ['overallRating']
+        attributes: ['rating']
       });
 
       const averageRating = reviews.length > 0
-        ? reviews.reduce((sum, review) => sum + review.overallRating, 0) / reviews.length
+        ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
         : 0;
 
       const courtData = court.toJSON();
@@ -312,11 +312,11 @@ export class CourtController {
         courts.map(async (court) => {
           const reviews = await CourtReview.findAll({
             where: { courtId: court.id },
-            attributes: ['overallRating']
+            attributes: ['rating']
           });
 
           const averageRating = reviews.length > 0
-            ? reviews.reduce((sum, review) => sum + review.overallRating, 0) / reviews.length
+            ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
             : 0;
 
           const courtData = court.toJSON();
@@ -399,27 +399,27 @@ export class CourtController {
       const stats = {
         totalReviews: reviews.length,
         averageRating: reviews.length > 0
-          ? Math.round((reviews.reduce((sum, review) => sum + review.overallRating, 0) / reviews.length) * 10) / 10
+          ? Math.round((reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length) * 10) / 10
           : 0,
         ratingDistribution: {
-          5: reviews.filter(r => r.overallRating === 5).length,
-          4: reviews.filter(r => r.overallRating === 4).length,
-          3: reviews.filter(r => r.overallRating === 3).length,
-          2: reviews.filter(r => r.overallRating === 2).length,
-          1: reviews.filter(r => r.overallRating === 1).length
+          5: reviews.filter(r => r.rating === 5).length,
+          4: reviews.filter(r => r.rating === 4).length,
+          3: reviews.filter(r => r.rating === 3).length,
+          2: reviews.filter(r => r.rating === 2).length,
+          1: reviews.filter(r => r.rating === 1).length
         },
         amenityRatings: {
-          lighting: reviews.length > 0 
-            ? Math.round((reviews.reduce((sum, review) => sum + (review.lightingRating || 0), 0) / reviews.length) * 10) / 10
+          cleanliness: reviews.length > 0 
+            ? Math.round((reviews.reduce((sum, review) => sum + (review.amenityRatings?.cleanliness || 0), 0) / reviews.length) * 10) / 10
             : 0,
-          surface: reviews.length > 0 
-            ? Math.round((reviews.reduce((sum, review) => sum + (review.surfaceRating || 0), 0) / reviews.length) * 10) / 10
+          equipment: reviews.length > 0 
+            ? Math.round((reviews.reduce((sum, review) => sum + (review.amenityRatings?.equipment || 0), 0) / reviews.length) * 10) / 10
             : 0,
           facilities: reviews.length > 0 
-            ? Math.round((reviews.reduce((sum, review) => sum + (review.facilitiesRating || 0), 0) / reviews.length) * 10) / 10
+            ? Math.round((reviews.reduce((sum, review) => sum + (review.amenityRatings?.facilities || 0), 0) / reviews.length) * 10) / 10
             : 0,
-          accessibility: reviews.length > 0 
-            ? Math.round((reviews.reduce((sum, review) => sum + (review.accessibilityRating || 0), 0) / reviews.length) * 10) / 10
+          location: reviews.length > 0 
+            ? Math.round((reviews.reduce((sum, review) => sum + (review.amenityRatings?.location || 0), 0) / reviews.length) * 10) / 10
             : 0
         }
       };

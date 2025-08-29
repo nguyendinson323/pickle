@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { validateRequest } from '../middleware/validation';
 import { body, param, query } from 'express-validator';
 import conversationService from '../services/conversationService';
@@ -9,7 +9,7 @@ const router = Router();
 
 // Create a new conversation
 router.post('/',
-  authenticateToken,
+  authenticate,
   [
     body('type').isIn(['direct', 'group', 'tournament', 'finder_request']),
     body('participantIds').isArray().notEmpty(),
@@ -43,7 +43,7 @@ router.post('/',
 
 // Get user's conversations
 router.get('/',
-  authenticateToken,
+  authenticate,
   [
     query('type').optional().isArray(),
     query('isArchived').optional().isBoolean(),
@@ -86,7 +86,7 @@ router.get('/',
 
 // Get conversation messages
 router.get('/:conversationId/messages',
-  authenticateToken,
+  authenticate,
   [
     param('conversationId').isInt({ min: 1 }),
     query('limit').optional().isInt({ min: 1, max: 100 }),
@@ -130,7 +130,7 @@ router.get('/:conversationId/messages',
 
 // Send a message
 router.post('/:conversationId/messages',
-  authenticateToken,
+  authenticate,
   [
     param('conversationId').isInt({ min: 1 }),
     body('content').notEmpty().trim().isLength({ max: 5000 }),
@@ -193,7 +193,7 @@ router.post('/:conversationId/messages',
 
 // Edit a message
 router.patch('/messages/:messageId',
-  authenticateToken,
+  authenticate,
   [
     param('messageId').isInt({ min: 1 }),
     body('content').notEmpty().trim().isLength({ max: 5000 })
@@ -223,7 +223,7 @@ router.patch('/messages/:messageId',
 
 // Delete a message
 router.delete('/messages/:messageId',
-  authenticateToken,
+  authenticate,
   [
     param('messageId').isInt({ min: 1 }),
     body('deleteForEveryone').optional().isBoolean()
@@ -252,7 +252,7 @@ router.delete('/messages/:messageId',
 
 // Add reaction to message
 router.post('/messages/:messageId/reactions',
-  authenticateToken,
+  authenticate,
   [
     param('messageId').isInt({ min: 1 }),
     body('reaction').notEmpty().trim().isLength({ min: 1, max: 10 })
@@ -282,7 +282,7 @@ router.post('/messages/:messageId/reactions',
 
 // Remove reaction from message
 router.delete('/messages/:messageId/reactions/:reaction',
-  authenticateToken,
+  authenticate,
   [
     param('messageId').isInt({ min: 1 }),
     param('reaction').notEmpty().trim().isLength({ min: 1, max: 10 })
@@ -312,7 +312,7 @@ router.delete('/messages/:messageId/reactions/:reaction',
 
 // Mark messages as read
 router.post('/:conversationId/read',
-  authenticateToken,
+  authenticate,
   [
     param('conversationId').isInt({ min: 1 })
   ],
@@ -340,7 +340,7 @@ router.post('/:conversationId/read',
 
 // Archive conversation
 router.patch('/:conversationId/archive',
-  authenticateToken,
+  authenticate,
   [
     param('conversationId').isInt({ min: 1 })
   ],
@@ -368,7 +368,7 @@ router.patch('/:conversationId/archive',
 
 // Unarchive conversation
 router.patch('/:conversationId/unarchive',
-  authenticateToken,
+  authenticate,
   [
     param('conversationId').isInt({ min: 1 })
   ],
@@ -396,7 +396,7 @@ router.patch('/:conversationId/unarchive',
 
 // Add participant to conversation
 router.post('/:conversationId/participants',
-  authenticateToken,
+  authenticate,
   [
     param('conversationId').isInt({ min: 1 }),
     body('participantId').isInt({ min: 1 })
@@ -426,7 +426,7 @@ router.post('/:conversationId/participants',
 
 // Remove participant from conversation
 router.delete('/:conversationId/participants/:participantId',
-  authenticateToken,
+  authenticate,
   [
     param('conversationId').isInt({ min: 1 }),
     param('participantId').isInt({ min: 1 })
@@ -456,7 +456,7 @@ router.delete('/:conversationId/participants/:participantId',
 
 // Get unread message count
 router.get('/unread-count',
-  authenticateToken,
+  authenticate,
   async (req: Request, res: Response) => {
     try {
       const count = await conversationService.getUnreadMessageCount(req.user!.id);
@@ -477,7 +477,7 @@ router.get('/unread-count',
 
 // Search messages
 router.get('/search',
-  authenticateToken,
+  authenticate,
   [
     query('q').notEmpty().trim().isLength({ min: 2, max: 100 }),
     query('conversationId').optional().isInt({ min: 1 }),

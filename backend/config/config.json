@@ -1,12 +1,20 @@
 {
   "development": {
-    "storage": "./data/development.sqlite",
-    "dialect": "sqlite",
+    "username": "postgres",
+    "password": "password",
+    "database": "pickleball_federation",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
     "logging": false
   },
   "test": {
-    "storage": "./data/test.sqlite",
-    "dialect": "sqlite",
+    "username": "postgres",
+    "password": "password",
+    "database": "pickleball_federation_test",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
     "logging": false
   },
   "production": {
