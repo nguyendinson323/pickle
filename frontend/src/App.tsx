@@ -16,6 +16,8 @@ import RegistrationPage from '@/pages/RegistrationPage';
 import RegistrationSuccessPage from '@/pages/RegistrationSuccessPage';
 import DashboardPage from '@/pages/DashboardPage';
 import MembershipPage from '@/pages/MembershipPage';
+import MicrositesPage from '@/pages/microsites/MicrositesPage';
+import MicrositeEditorPage from '@/pages/microsites/MicrositeEditorPage';
 
 // Styles
 import '@/styles/globals.css';
@@ -92,6 +94,25 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <MembershipPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Microsite Routes */}
+        <Route
+          path="/dashboard/microsites"
+          element={
+            <ProtectedRoute>
+              <MicrositesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/microsites/:id/editor"
+          element={
+            <ProtectedRoute>
+              <MicrositeEditorPage />
             </ProtectedRoute>
           }
         />

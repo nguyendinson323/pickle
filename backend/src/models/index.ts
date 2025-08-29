@@ -30,6 +30,16 @@ import ConversationMessage from './ConversationMessage';
 import MessageReadStatus from './MessageReadStatus';
 import MessageReaction from './MessageReaction';
 import NotificationQueue from './NotificationQueue';
+import Ranking from './Ranking';
+import RankingHistory from './RankingHistory';
+import Credential from './Credential';
+import PointCalculation from './PointCalculation';
+import Microsite from './Microsite';
+import MicrositePage from './MicrositePage';
+import ContentBlock from './ContentBlock';
+import Theme from './Theme';
+import MediaFile from './MediaFile';
+import ModerationLog from './ModerationLog';
 
 // Initialize models
 const models = {
@@ -63,7 +73,17 @@ const models = {
   ConversationMessage,
   MessageReadStatus,
   MessageReaction,
-  NotificationQueue
+  NotificationQueue,
+  Ranking,
+  RankingHistory,
+  Credential,
+  PointCalculation,
+  Microsite,
+  MicrositePage,
+  ContentBlock,
+  Theme,
+  MediaFile,
+  ModerationLog
 };
 
 // Define associations
@@ -300,6 +320,80 @@ MessageReaction.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 User.hasMany(NotificationQueue, { foreignKey: 'user_id', as: 'notificationQueue' });
 NotificationQueue.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
+// Ranking associations
+Player.hasMany(Ranking, { foreignKey: 'player_id', as: 'rankings' });
+Ranking.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
+
+State.hasMany(Ranking, { foreignKey: 'state_id', as: 'rankings' });
+Ranking.belongsTo(State, { foreignKey: 'state_id', as: 'state' });
+
+// Ranking History associations
+Player.hasMany(RankingHistory, { foreignKey: 'player_id', as: 'rankingHistory' });
+RankingHistory.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
+
+Tournament.hasMany(RankingHistory, { foreignKey: 'tournament_id', as: 'rankingChanges' });
+RankingHistory.belongsTo(Tournament, { foreignKey: 'tournament_id', as: 'tournament' });
+
+State.hasMany(RankingHistory, { foreignKey: 'state_id', as: 'rankingHistory' });
+RankingHistory.belongsTo(State, { foreignKey: 'state_id', as: 'state' });
+
+// Credential associations
+User.hasMany(Credential, { foreignKey: 'user_id', as: 'credentials' });
+Credential.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+State.hasMany(Credential, { foreignKey: 'state_id', as: 'credentials' });
+Credential.belongsTo(State, { foreignKey: 'state_id', as: 'state' });
+
+// Point Calculation associations
+Tournament.hasMany(PointCalculation, { foreignKey: 'tournament_id', as: 'pointCalculations' });
+PointCalculation.belongsTo(Tournament, { foreignKey: 'tournament_id', as: 'tournament' });
+
+Player.hasMany(PointCalculation, { foreignKey: 'player_id', as: 'pointCalculations' });
+PointCalculation.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
+
+TournamentMatch.hasMany(PointCalculation, { foreignKey: 'match_id', as: 'pointCalculations' });
+PointCalculation.belongsTo(TournamentMatch, { foreignKey: 'match_id', as: 'match' });
+
+// Microsite associations
+User.hasMany(Microsite, { foreignKey: 'user_id', as: 'microsites' });
+Microsite.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+Club.hasMany(Microsite, { foreignKey: 'owner_id', as: 'microsites', scope: { owner_type: 'club' } });
+Partner.hasMany(Microsite, { foreignKey: 'owner_id', as: 'microsites', scope: { owner_type: 'partner' } });
+StateCommittee.hasMany(Microsite, { foreignKey: 'owner_id', as: 'microsites', scope: { owner_type: 'state' } });
+
+Microsite.belongsTo(Club, { foreignKey: 'owner_id', as: 'clubOwner', constraints: false });
+Microsite.belongsTo(Partner, { foreignKey: 'owner_id', as: 'partnerOwner', constraints: false });
+Microsite.belongsTo(StateCommittee, { foreignKey: 'owner_id', as: 'stateOwner', constraints: false });
+
+Theme.hasMany(Microsite, { foreignKey: 'theme_id', as: 'microsites' });
+Microsite.belongsTo(Theme, { foreignKey: 'theme_id', as: 'theme' });
+
+// Microsite Page associations
+Microsite.hasMany(MicrositePage, { foreignKey: 'microsite_id', as: 'pages' });
+MicrositePage.belongsTo(Microsite, { foreignKey: 'microsite_id', as: 'microsite' });
+
+MicrositePage.hasMany(MicrositePage, { foreignKey: 'parent_page_id', as: 'childPages' });
+MicrositePage.belongsTo(MicrositePage, { foreignKey: 'parent_page_id', as: 'parentPage' });
+
+// Content Block associations
+MicrositePage.hasMany(ContentBlock, { foreignKey: 'page_id', as: 'contentBlocks' });
+ContentBlock.belongsTo(MicrositePage, { foreignKey: 'page_id', as: 'page' });
+
+// Media File associations
+Microsite.hasMany(MediaFile, { foreignKey: 'microsite_id', as: 'mediaFiles' });
+MediaFile.belongsTo(Microsite, { foreignKey: 'microsite_id', as: 'microsite' });
+
+User.hasMany(MediaFile, { foreignKey: 'user_id', as: 'uploadedFiles' });
+MediaFile.belongsTo(User, { foreignKey: 'user_id', as: 'uploader' });
+
+// Moderation Log associations
+Microsite.hasMany(ModerationLog, { foreignKey: 'microsite_id', as: 'moderationLogs' });
+ModerationLog.belongsTo(Microsite, { foreignKey: 'microsite_id', as: 'microsite' });
+
+User.hasMany(ModerationLog, { foreignKey: 'moderator_id', as: 'moderationActions' });
+ModerationLog.belongsTo(User, { foreignKey: 'moderator_id', as: 'moderator' });
+
 export { sequelize };
 export { 
   User, 
@@ -332,6 +426,16 @@ export {
   ConversationMessage,
   MessageReadStatus,
   MessageReaction,
-  NotificationQueue
+  NotificationQueue,
+  Ranking,
+  RankingHistory,
+  Credential,
+  PointCalculation,
+  Microsite,
+  MicrositePage,
+  ContentBlock,
+  Theme,
+  MediaFile,
+  ModerationLog
 };
 export default models;

@@ -18,6 +18,9 @@ import playerFinderRoutes from './playerFinder';
 import locationRoutes from './location';
 import conversationRoutes from './conversations';
 import privacyRoutes from './privacy';
+import rankingRoutes from './rankings';
+import credentialRoutes from './credentials';
+import micrositeRoutes from './microsites';
 
 const router = Router();
 
@@ -50,5 +53,8 @@ router.use('/api/player-finder', playerFinderRoutes);
 router.use('/api/location', locationRoutes);
 router.use('/api/conversations', conversationRoutes);
 router.use('/api/privacy', privacyRoutes);
+router.use('/api/rankings', rankingRoutes);
+router.use('/api/credentials', credentialRoutes);
+router.use('/api/microsites', micrositeRoutes);
 
 export default router;

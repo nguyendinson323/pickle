@@ -13,6 +13,7 @@ import Court from '../models/Court';
 import Reservation from '../models/Reservation';
 import CourtReview from '../models/CourtReview';
 import CourtSchedule from '../models/CourtSchedule';
+import { seedMicrositeData } from './micrositeSeeder';
 
 export class DatabaseSeeder {
   async run() {
@@ -54,6 +55,9 @@ export class DatabaseSeeder {
       // Seed court schedules and blocks
       const schedules = await this.seedCourtSchedules(courts);
       console.log(`✅ Seeded ${schedules.length} court schedules`);
+
+      // Seed microsite data
+      await seedMicrositeData();
 
       console.log('🎉 Database seeding completed successfully!');
       

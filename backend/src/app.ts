@@ -6,7 +6,9 @@ import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import corsMiddleware from './middleware/cors';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { extractSubdomain, loadMicrosite } from './middleware/subdomain';
 import routes from './routes';
+import publicRoutes from './routes/public';
 import logger from './utils/logger';
 
 const app = express();
@@ -33,6 +35,10 @@ app.use('/api/', limiter);
 // CORS middleware
 app.use(corsMiddleware);
 
+// Subdomain extraction middleware (must be early)
+app.use(extractSubdomain);
+app.use(loadMicrosite);
+
 // Webhook routes (must be before general body parsing)
 app.use('/api/webhooks', express.raw({ type: 'application/json' }), routes);
 
@@ -54,8 +60,16 @@ if (process.env.NODE_ENV === 'development') {
 // API routes
 app.use('/api', routes);
 
-// Root endpoint
-app.get('/', (req, res) => {
+// Public microsite routes (for subdomain requests)
+app.use('/', publicRoutes);
+
+// Root endpoint (for main domain only)
+app.get('/', (req, res, next) => {
+  // If this is a subdomain request, it should have been handled by publicRoutes
+  if ((req as any).subdomain) {
+    return next();
+  }
+  
   res.json({
     success: true,
     message: 'Mexican Pickleball Federation API',

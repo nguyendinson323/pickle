@@ -10,6 +10,9 @@ import paymentSlice from './slices/paymentSlice';
 import courtSlice from './slices/courtSlice';
 import reservationSlice from './slices/reservationSlice';
 import tournamentSlice from './slices/tournamentSlice';
+import rankingSlice from './slices/rankingSlice';
+import credentialSlice from './slices/credentialSlice';
+import micrositeSlice from './slices/micrositeSlice';
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +26,9 @@ export const store = configureStore({
     courts: courtSlice,
     reservations: reservationSlice,
     tournaments: tournamentSlice,
+    rankings: rankingSlice,
+    credentials: credentialSlice,
+    microsites: micrositeSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

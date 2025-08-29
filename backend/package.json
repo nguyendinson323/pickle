@@ -10,6 +10,7 @@
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
     "seed:custom": "ts-node src/scripts/seed.ts",
+    "seed:microsites": "node database/seeders/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src/**/*.ts",
@@ -17,7 +18,11 @@
   },
   "dependencies": {
     "@types/multer": "^2.0.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/pdfkit": "^0.17.2",
+    "@types/qrcode": "^1.5.5",
     "bcryptjs": "^2.4.3",
+    "canvas": "^3.2.0",
     "cloudinary": "^2.7.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -30,10 +35,14 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
+    "pdfkit": "^0.17.1",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
+    "qrcode": "^1.5.4",
     "sequelize": "^6.35.0",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "stripe": "^18.5.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
