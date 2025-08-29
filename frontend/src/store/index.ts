@@ -9,6 +9,7 @@ import messageSlice from './messageSlice';
 import paymentSlice from './slices/paymentSlice';
 import courtSlice from './slices/courtSlice';
 import reservationSlice from './slices/reservationSlice';
+import tournamentSlice from './slices/tournamentSlice';
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     payment: paymentSlice,
     courts: courtSlice,
     reservations: reservationSlice,
+    tournaments: tournamentSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

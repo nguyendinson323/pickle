@@ -21,6 +21,15 @@ import TournamentCategory from './TournamentCategory';
 import TournamentRegistration from './TournamentRegistration';
 import TournamentMatch from './TournamentMatch';
 import TournamentBracket from './TournamentBracket';
+import PlayerLocation from './PlayerLocation';
+import PlayerFinderRequest from './PlayerFinderRequest';
+import PlayerFinderMatch from './PlayerFinderMatch';
+import PlayerPrivacySetting from './PlayerPrivacySetting';
+import Conversation from './Conversation';
+import ConversationMessage from './ConversationMessage';
+import MessageReadStatus from './MessageReadStatus';
+import MessageReaction from './MessageReaction';
+import NotificationQueue from './NotificationQueue';
 
 // Initialize models
 const models = {
@@ -45,7 +54,16 @@ const models = {
   TournamentCategory,
   TournamentRegistration,
   TournamentMatch,
-  TournamentBracket
+  TournamentBracket,
+  PlayerLocation,
+  PlayerFinderRequest,
+  PlayerFinderMatch,
+  PlayerPrivacySetting,
+  Conversation,
+  ConversationMessage,
+  MessageReadStatus,
+  MessageReaction,
+  NotificationQueue
 };
 
 // Define associations
@@ -228,6 +246,60 @@ TournamentBracket.belongsTo(User, { foreignKey: 'winner_player_id', as: 'winner'
 User.hasMany(TournamentBracket, { foreignKey: 'runner_up_player_id', as: 'runnerUpBrackets' });
 TournamentBracket.belongsTo(User, { foreignKey: 'runner_up_player_id', as: 'runnerUp' });
 
+// Player Location associations
+Player.hasMany(PlayerLocation, { foreignKey: 'player_id', as: 'locations' });
+PlayerLocation.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
+
+// Player Privacy Settings associations
+Player.hasOne(PlayerPrivacySetting, { foreignKey: 'player_id', as: 'privacySettings' });
+PlayerPrivacySetting.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
+
+// Player Finder Request associations
+Player.hasMany(PlayerFinderRequest, { foreignKey: 'requester_id', as: 'finderRequests' });
+PlayerFinderRequest.belongsTo(Player, { foreignKey: 'requester_id', as: 'requester' });
+
+PlayerLocation.hasMany(PlayerFinderRequest, { foreignKey: 'location_id', as: 'finderRequests' });
+PlayerFinderRequest.belongsTo(PlayerLocation, { foreignKey: 'location_id', as: 'location' });
+
+// Player Finder Match associations
+PlayerFinderRequest.hasMany(PlayerFinderMatch, { foreignKey: 'request_id', as: 'matches' });
+PlayerFinderMatch.belongsTo(PlayerFinderRequest, { foreignKey: 'request_id', as: 'request' });
+
+Player.hasMany(PlayerFinderMatch, { foreignKey: 'player_id', as: 'finderMatches' });
+PlayerFinderMatch.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
+
+// Conversation associations
+User.hasMany(Conversation, { foreignKey: 'creator_id', as: 'createdConversations' });
+Conversation.belongsTo(User, { foreignKey: 'creator_id', as: 'creator' });
+
+// Conversation Message associations
+Conversation.hasMany(ConversationMessage, { foreignKey: 'conversation_id', as: 'messages' });
+ConversationMessage.belongsTo(Conversation, { foreignKey: 'conversation_id', as: 'conversation' });
+
+User.hasMany(ConversationMessage, { foreignKey: 'sender_id', as: 'conversationMessages' });
+ConversationMessage.belongsTo(User, { foreignKey: 'sender_id', as: 'sender' });
+
+ConversationMessage.hasMany(ConversationMessage, { foreignKey: 'reply_to_id', as: 'replies' });
+ConversationMessage.belongsTo(ConversationMessage, { foreignKey: 'reply_to_id', as: 'replyTo' });
+
+// Message Read Status associations
+ConversationMessage.hasMany(MessageReadStatus, { foreignKey: 'message_id', as: 'readStatus' });
+MessageReadStatus.belongsTo(ConversationMessage, { foreignKey: 'message_id', as: 'message' });
+
+User.hasMany(MessageReadStatus, { foreignKey: 'user_id', as: 'messageReadStatus' });
+MessageReadStatus.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// Message Reaction associations
+ConversationMessage.hasMany(MessageReaction, { foreignKey: 'message_id', as: 'reactions' });
+MessageReaction.belongsTo(ConversationMessage, { foreignKey: 'message_id', as: 'message' });
+
+User.hasMany(MessageReaction, { foreignKey: 'user_id', as: 'messageReactions' });
+MessageReaction.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// Notification Queue associations
+User.hasMany(NotificationQueue, { foreignKey: 'user_id', as: 'notificationQueue' });
+NotificationQueue.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 export { sequelize };
 export { 
   User, 
@@ -251,6 +323,15 @@ export {
   TournamentCategory,
   TournamentRegistration,
   TournamentMatch,
-  TournamentBracket
+  TournamentBracket,
+  PlayerLocation,
+  PlayerFinderRequest,
+  PlayerFinderMatch,
+  PlayerPrivacySetting,
+  Conversation,
+  ConversationMessage,
+  MessageReadStatus,
+  MessageReaction,
+  NotificationQueue
 };
 export default models;

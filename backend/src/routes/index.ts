@@ -13,6 +13,11 @@ import courtRoutes from './courts';
 import reservationRoutes from './reservations';
 import courtReviewRoutes from './courtReviews';
 import analyticsRoutes from './analytics';
+import tournamentRoutes from './tournaments';
+import playerFinderRoutes from './playerFinder';
+import locationRoutes from './location';
+import conversationRoutes from './conversations';
+import privacyRoutes from './privacy';
 
 const router = Router();
 
@@ -40,5 +45,10 @@ router.use('/api', courtRoutes);
 router.use('/api', reservationRoutes);
 router.use('/api', courtReviewRoutes);
 router.use('/api/analytics', analyticsRoutes);
+router.use('/api/tournaments', tournamentRoutes);
+router.use('/api/player-finder', playerFinderRoutes);
+router.use('/api/location', locationRoutes);
+router.use('/api/conversations', conversationRoutes);
+router.use('/api/privacy', privacyRoutes);
 
 export default router;
