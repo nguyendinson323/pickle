@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "postgres",
-    "password": "password",
+    "password": "a",
     "database": "pickleball_federation",
     "host": "localhost",
     "port": 5432,
@@ -10,7 +10,7 @@
   },
   "test": {
     "username": "postgres",
-    "password": "password",
+    "password": "a",
     "database": "pickleball_federation_test",
     "host": "localhost",
     "port": 5432,

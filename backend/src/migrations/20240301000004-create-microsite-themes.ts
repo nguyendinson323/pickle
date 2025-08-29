@@ -278,16 +278,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       defaultValue: false,
       allowNull: false
     },
-    approved_by: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'users',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
-    },
     approved_at: {
       type: DataTypes.DATE,
       allowNull: true
@@ -305,16 +295,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       type: DataTypes.DATE,
       allowNull: true
     },
-    replacement_theme_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'microsite_themes',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
-    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -327,9 +307,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }
   });
 
-  // Add indexes
-  await queryInterface.addIndex('microsite_themes', ['approved_by']);
-  await queryInterface.addIndex('microsite_themes', ['replacement_theme_id']);
+  // Add indexes (removed approved_by and replacement_theme_id indexes)
   await queryInterface.addIndex('microsite_themes', ['slug'], { unique: true });
   await queryInterface.addIndex('microsite_themes', ['category']);
   await queryInterface.addIndex('microsite_themes', ['type']);

@@ -71,8 +71,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.addIndex('users', ['email'], { unique: true });
   await queryInterface.addIndex('users', ['username'], { unique: true });
   await queryInterface.addIndex('users', ['role']);
-  await queryInterface.addIndex('users', ['is_active']);
-  await queryInterface.addIndex('users', ['email_verified']);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {
