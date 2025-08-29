@@ -1,0 +1,333 @@
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { fetchFederationAnalytics } from '../../store/slices/analyticsSlice';
+import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
+import { LoadingSpinner } from '../common/LoadingSpinner';
+
+export const FederationAnalytics: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { federation, loading, error } = useAppSelector(state => state.analytics);
+  
+  const [selectedPeriod, setSelectedPeriod] = useState<'30days' | '3months' | '1year'>('30days');
+
+  useEffect(() => {
+    const endDate = new Date();
+    const startDate = new Date();
+    
+    switch (selectedPeriod) {
+      case '30days':
+        startDate.setDate(endDate.getDate() - 30);
+        break;
+      case '3months':
+        startDate.setMonth(endDate.getMonth() - 3);
+        break;
+      case '1year':
+        startDate.setFullYear(endDate.getFullYear() - 1);
+        break;
+    }
+
+    dispatch(fetchFederationAnalytics({
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0]
+    }));
+  }, [dispatch, selectedPeriod]);
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      notation: price >= 1000000 ? 'compact' : 'standard'
+    }).format(price);
+  };
+
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat('es-MX').format(num);
+  };
+
+  const getPeriodLabel = () => {
+    switch (selectedPeriod) {
+      case '30days': return 'Últimos 30 días';
+      case '3months': return 'Últimos 3 meses';
+      case '1year': return 'Último año';
+      default: return 'Período';
+    }
+  };
+
+  if (loading && !federation) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-600 mb-4">
+          <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Error al cargar analíticas</h3>
+        <p className="text-gray-600 mb-4">{error}</p>
+        <Button onClick={() => window.location.reload()}>
+          Intentar de nuevo
+        </Button>
+      </div>
+    );
+  }
+
+  if (!federation) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-gray-400 mb-4">
+          <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">No hay datos disponibles</h3>
+        <p className="text-gray-600">No se encontraron datos de la federación para mostrar</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Analíticas de la Federación</h1>
+          <p className="text-gray-600 mt-1">Estadísticas generales del ecosistema de pickleball</p>
+        </div>
+
+        <div className="flex gap-1 border border-gray-300 rounded-md overflow-hidden">
+          {[
+            { key: '30days' as const, label: '30D' },
+            { key: '3months' as const, label: '3M' },
+            { key: '1year' as const, label: '1A' }
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setSelectedPeriod(key)}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
+                selectedPeriod === key
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="flex justify-center py-4">
+          <div className="flex items-center gap-2 text-blue-600">
+            <LoadingSpinner size="sm" />
+            <span className="text-sm">Actualizando datos...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Key Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Total Revenue */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
+              <p className="text-2xl font-bold text-green-600">
+                {formatPrice(federation.totalRevenue)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">{getPeriodLabel()}</p>
+            </div>
+            <div className="p-3 bg-green-100 rounded-full">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+            </div>
+          </div>
+        </Card>
+
+        {/* Total Courts */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Canchas Registradas</p>
+              <p className="text-2xl font-bold text-blue-600">
+                {formatNumber(federation.totalCourts)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">En toda la red</p>
+            </div>
+            <div className="p-3 bg-blue-100 rounded-full">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+          </div>
+        </Card>
+
+        {/* Active Users */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Usuarios Activos</p>
+              <p className="text-2xl font-bold text-purple-600">
+                {formatNumber(federation.activeUsers)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">{getPeriodLabel()}</p>
+            </div>
+            <div className="p-3 bg-purple-100 rounded-full">
+              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+              </svg>
+            </div>
+          </div>
+        </Card>
+
+        {/* Total Reservations */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Reservas</p>
+              <p className="text-2xl font-bold text-orange-600">
+                {formatNumber(federation.totalReservations)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">{getPeriodLabel()}</p>
+            </div>
+            <div className="p-3 bg-orange-100 rounded-full">
+              <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h6l2 2h6a2 2 0 012 2v4m-8 16H8a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v1" />
+              </svg>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Detailed Statistics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Top Performing States */}
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Estados con Mejor Rendimiento</h3>
+          <div className="space-y-3">
+            {federation.topStates.map((state, index) => (
+              <div key={state.state} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Badge variant={index === 0 ? 'success' : index === 1 ? 'warning' : 'outline'}>
+                    #{index + 1}
+                  </Badge>
+                  <div>
+                    <p className="font-medium text-gray-900">{state.state}</p>
+                    <p className="text-sm text-gray-500">
+                      {state.courts} canchas • {state.reservations} reservas
+                    </p>
+                  </div>
+                </div>
+                <p className="font-semibold text-green-600">
+                  {formatPrice(state.revenue)}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {federation.topStates.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              <p>No hay datos suficientes para mostrar estados</p>
+            </div>
+          )}
+        </Card>
+
+        {/* Growth Metrics */}
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Métricas de Crecimiento</h3>
+          
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Nuevas canchas registradas</span>
+              <div className="flex items-center gap-2">
+                <Badge variant="success">+{federation.newCourts}</Badge>
+                <span className="text-sm text-gray-500">{getPeriodLabel()}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Nuevos usuarios</span>
+              <div className="flex items-center gap-2">
+                <Badge variant="success">+{formatNumber(federation.newUsers)}</Badge>
+                <span className="text-sm text-gray-500">{getPeriodLabel()}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Tasa de ocupación promedio</span>
+              <Badge variant={
+                federation.averageOccupancy >= 0.8 ? 'success' :
+                federation.averageOccupancy >= 0.6 ? 'warning' : 'danger'
+              }>
+                {(federation.averageOccupancy * 100).toFixed(1)}%
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Calificación promedio</span>
+              <div className="flex items-center gap-1">
+                <span className="font-semibold text-gray-900">
+                  {federation.averageRating.toFixed(1)}
+                </span>
+                <span className="text-yellow-500">⭐</span>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Ingreso promedio por cancha</span>
+                <span className="font-semibold text-green-600">
+                  {federation.totalCourts > 0 
+                    ? formatPrice(federation.totalRevenue / federation.totalCourts)
+                    : formatPrice(0)
+                  }
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Market Distribution */}
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribución del Mercado</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-blue-600 mb-2">
+              {federation.totalCourts}
+            </div>
+            <p className="text-gray-600">Canchas Totales</p>
+            <p className="text-xs text-gray-500 mt-1">En toda la red</p>
+          </div>
+
+          <div className="text-center">
+            <div className="text-3xl font-bold text-purple-600 mb-2">
+              {formatNumber(federation.activeUsers)}
+            </div>
+            <p className="text-gray-600">Usuarios Activos</p>
+            <p className="text-xs text-gray-500 mt-1">Base de jugadores</p>
+          </div>
+
+          <div className="text-center">
+            <div className="text-3xl font-bold text-green-600 mb-2">
+              {formatPrice(federation.totalRevenue / (federation.totalReservations || 1))}
+            </div>
+            <p className="text-gray-600">Ticket Promedio</p>
+            <p className="text-xs text-gray-500 mt-1">Por reserva</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};

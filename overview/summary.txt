@@ -1,0 +1,385 @@
+<>
+Developing the association's website, including registering players, clubs, leagues, tournaments, grouping them by state, player rankings, etc.
+i will like to add ways to monetise
+I’d like to add a functionality that is very important for us.
+This feature allows all athletes who register on the platform to find nearby players to play with—either people in their same area or state, or even when they travel to another state, they can find players in that location.
+The system should send a notification (via text message and email) to the person interested in playing, once the system finds a nearby match, and notify both players.(important)
+It also allows athletes to find coaches near them, for those who want to learn how to play pickleball
+I’ve been researching the development of this functionality, and in some cases it requires API integration with Google, which can generate a cost per use.
+We would like to know if there’s any method to implement it without incurring costs, and if not, then we’ll need to consider that this feature will have a cost—or that it could be included as part of a premium feature package for players.
+When user logged out it should be redirected to the homepage
+Regarding the player search feature, we believe it’s necessary to add a function that allows players to enable or disable the option to be found in the database, for privacy reasons.
+In other words, from their profile they should be able to toggle a button that says “Can Be Found” / “Not Visible”, along with a note or explanation stating that if they activate this button, they will not appear in the player search results.
+This is intended for cases where, for example, some people do not wish to be found by other players and prefer to keep their personal information restricted.For those who do wish to be visible, we could make it so that in the player search results, a simplified list of information is displayed so other players can contact them.
+ADMIN DASHBOARD
+1. In the admin dashboard, the messaging inbox for sending announcements to clubs, players, and state committees is needed. Remember this part is important for any other profiles.
+2. Player affiliations should be fully viewed.
+It’s important to also view separately the affiliations of clubs, state committees, coaches, etc., from which a CSV report can be generated to see how many are active, how many have not renewed, how many haven’t participated in tournaments, and other relevant data.
+3. There should also be a tab for everything related to rankings — player position changes and the ability to control the ranking system in case of any errors.
+4. A tab is needed for managing the microsites of state committees and clubs, where it should be possible at least to supervise and modify the content of each one.
+o Include an option to deactivate microsites or remove inappropriate content.
+5. The court management button is not needed by the admin account since the federation does not own courts. Instead, it is needed a feature to monitor the activity and performance of courts uploaded by clubs or associates.
+6. It’s necessary to add a tab for the management and editing of club microsites. 
+It should be possible to supervise and modify visible content on the microsites of clubs and partners.
+Also, remember to implement the part I already sent you about each player being required to upload a personal ID, along with some other small suggestions regarding users.
+This part: Regarding the login forms: 
+Also, the system must verify that the username is not already in the database to avoid conflicts, or the system could generate a username for them. 
+Alternatively, we could use the CURP as the username, which would save us all the extra steps, since the CURP is a unique, unrepeatable identification key for each person. I’ll leave it to your discretion to choose whichever is easiest for you. 
+2. it is needed to upload a personal photo with the ability to center and crop it (similar to Facebook). 
+3. There must be a mechanism to allow the user to upload a scanned copy of their official ID in PDF, PNG, or JPG format. 
+5. Remember that at the end there should be a checkbox that the user must accept, which displays the privacy notice or allows them to download it.
+
+It is needed to upload the user's photo and credential ID doc during the profile creation process.
+It is needed to upload a document so they can download it so they can view it. Just remember that there must be a checkbox for them to accept it during the profile creation process.
+
+Player
+1. In the player section, remember there should be a tab to display the player’s digital credential, a simplified version of their registration information (the information that should appear there is in the second document I sent you — it must include a QR code and other elements).
+Coach
+2.- Regarding this section, I really liked your proposal for supervision elements, scheduling training sessions, training plans, and other features. I also want to take this opportunity to commend you for making these decisions on your own based on the needs of each profile (we’ve noticed this), and this is very helpful for us because we want to build a complete platform that is useful to all role types involved in practicing this sport.
+For this profile, I would only add the feature to display the match history in which they served as a referee, so it appears in their career or work record.
+The goal is that from within the same platform, when someone organizes a tournament, they can select a referee from a list of referees available in the platform. This would help us track how many events they have participated in and how active they have been. Likewise, in each tournament’s information, players would be able to see who the referee will be.
+Club
+3.-Regarding the court rental section.
+For this section, we would like to see that when selecting a court, it displays a calendar, and when entering a specific day, you can view the time slots during which that court is already reserved. This should be presented in a very visual way so players can easily see which slots are available.
+Naturally, this section should also have its own menu to manage invoices, payments, and generate reports on court usage.
+Also remember that clubs can organize tournaments, so add a tab or button for them to organize their tournaments. This tournament section should also include options to manage their invoices, expenses, and generate a profit report for an organized tournament.
+Likewise, add the section for configuring their club microsite, where they can display their information, logos, courts, banners, tournaments, etc.
+4.-. State or “State Committee”
+As with clubs, it is also needed the part for managing the state committee microsite, where they can display their information, logos, courts, banners, tournaments, etc.
+It is needed to create or manage tournaments. This part is very important because they organize tournaments throughout the entire state or region.
+</>
+
+# Project Overview – Pickleball Sports Federation
+<>
+The project you are collaborating on is the official digital platform for a national sports federation dedicated to the development and regulation of Pickleball. This federation is responsible for organizing and promoting the sport at a national level, establishing official standards, and serving as the central authority for players, clubs, tournaments, and regional associations.
+
+What is a Sports Federation?
+
+A sports federation is a governing body that oversees the promotion, regulation, and development of a specific sport within a country or region. Federations are typically recognized by national or international institutions and act as the primary authority for organizing competitions and setting rules for the sport.
+
+Main Functions of a Sports Federation:
+
+• Regulation and Governance: Establish official rules, standards, and guidelines for fair play and competition.
+• Athlete Registration: Maintain official records of players, rankings, and categories by age or skill level. The platform will also generate digital credentials for each registered athlete, which will serve as their official 
+identification within the federation. These credentials can be used to verify their status during tournaments, training sessions, and other official events.
+• Club and Association Management: Recognize and coordinate regional associations, clubs, and institutions affiliated with the sport.
+• Event Organization: Oversee local, state, and national tournaments and championships.
+• Ranking System: Define a transparent point-based ranking system to evaluate and classify players.
+• Training and Certification: Promote training programs and certify coaches, referees, and officials.
+• Promotion of the Sport: Support outreach campaigns, educational initiatives, and community engagement to grow the sport.
+• Representation: Act as the official representative of the sport before public institutions, sponsors, and the international community.
+• Official Store: Operate an official federation store that offers high-quality, authorized Pickleball gear and accessories in collaboration with top international brands. The store not only promotes the sport, but also helps fund federation activities and national events.
+
+Additional Services – Monetization Layer
+
+Beyond its core regulatory role, the federation will also offer a second layer of paid services through the platform. These services are designed to enhance the experience for clubs and players, and to generate sustainable income for the federation. Key features include:
+• Tournament Management System: Clubs will be able to organize and manage tournaments directly within the platform, with tools for player registration, brackets, results, and rankings.
+• Court Management System: Clubs can define their available courts, schedules, and allow players to reserve courts through a user-friendly interface.
+• Player Finder: A social tool that allows registered players to find other players in their area or in the city/state they are traveling to, based on level, availability, or location—encouraging more active participation and community engagement.
+
+This monetization layer will be optional, offered under a freemium or subscription￾based model, and will be key in supporting the federation's long-term sustainability.
+<>
+
+# Pickleball Platform – Complete Specifications for Profiles and Forms
+
+<>
+The federation is composed of various roles structured in a pyramid-like system, organized as follows:
+The federation is structured in the following way:
+Players represent the base level of the federation. They are individuals who play pickleball and seek to practice the sport, reserve courts, participate in tournaments, and attend events. To be part of the federation, players must pay an annual membership fee.
+There is a feature that allows them to find other players nearby, especially because there are not many players in Mexico, and some come from other countries looking to connect with local players. For them, we offer the ability to find nearby players — this feature comes at an additional cost.
+Players affiliate with clubs (although they can also affiliate directly with the federation).
+Most of their communication is with the State, who is responsible for organizing and overseeing the sport across an entire state.
+Coaches are individuals who train other players. They will be able to pay their membership fee and also access certifications from the platform that help improve their credentials.
+Clubs are groups of players who join together to play as a team or simply to ensure they always have someone to play with. Some clubs have courts and organize tournaments and events on them. Others do not; they are simply organized groups under a shared identity.
+Clubs on a basic plan only receive affiliation status, which requires an annual fee.
+For clubs that have courts, we offer a premium plan that enables them to:
+• Create and manage tournaments directly from the platform.
+• Register their courts in the system so others can view and reserve them.
+• Rent out courts, allowing them to generate revenue.
+Clubs that do not have courts or organize tournaments only participate in events organized by partners or affiliates.
+Partners (such as hotels, resorts, camps, private companies, and court owners) are entities or individuals who own courts or organize events and tournaments, with the sole purpose of generating income. There is no affiliation fee for partners — only a premium plan.
+The premium plan allows partners to:
+• Create and manage tournaments from the platform.
+• Register their courts in the system so others can view and reserve them.
+States are the second most important entity after the federation. They are responsible for organizing, managing, leading, and promoting pickleball within an entire state (a state is equivalent to a “prefecture” in Japan — 都道府県 todōfuken). Mexico has 32 such states.
+States must pay an annual affiliation fee to register (there is no premium plan here due to the higher cost of affiliation).
+They have access to a dashboard that allows them to:
+• View the full list of partners, coaches, and courts.
+• Create tournaments and organize events.
+• Administer all activities within the state.
+• View the list of players registered in their state.
+• Send announcements to partners and players within their jurisdiction.
+The Federation has access to all functionalities. It serves as the top-level administrative entity with full capabilities, including the organization of national tournaments and the management of the entire platform.
+MEXICAN PICKLEBALL FEDERATION
+Organizes:
+• National Tournaments
+• National Tour
+• National League
+• Mexican Open
+• National Championship
+State Committee
+Organizes:
+• State Tournaments
+• Municipal Championship
+• State League
+• State Championship
+CLUBS or PARTNERS
+Organize:
+• Local Tournaments
+1. Account Registration Flow
+When starting the registration process, the user must first select the type of account they wish to create. The available options are:
+• Player
+• Coach
+• Partner
+• Affiliate
+• Club
+After selecting the account type, the system will display the corresponding form with the specific fields required for that account type.
+2. Forms by Account Type
+Player
+Form includes:
+• Full name
+• Date of birth
+• Age (automatically calculated)
+• Gender
+• State
+• CURP (unique population registry code – for Mexico)
+• Upload of INE or passport (file)
+• NRTP level
+• Email
+• Mobile phone number
+• Profile photo (oval crop, like on social networks)
+• Username
+• Password and confirmation
+• Box to read/download privacy policy
+• Checkbox to accept the privacy policy
+• “Register” button
+• Integration with affiliation payment system
+Coach
+Same form as the player.
+Partner (Business, Hotel, Sponsor, Provider)
+Form includes:
+• Business name
+• RFC (optional)
+• Contact person’s full name
+• Contact person’s job title
+• Email
+• Phone / WhatsApp
+• Type of partner (dropdown selector)
+• Website or social media (optional)
+• Logo (optional)
+• Username
+• Password and confirmation
+• Privacy policy box
+• Acceptance checkbox
+• “Register” button
+State (State Committees)
+Form includes:
+• Name of the association or state committee
+• RFC (optional)
+• Full name of the president or representative
+• Role/title
+• Institutional email
+• Phone / WhatsApp
+• State
+• Type of affiliate
+• Website or social media (optional)
+• Logo (optional)
+• Username
+• Password and confirmation
+• Privacy policy (box and checkbox)
+• “Register” button
+Club
+Form includes:
+• Club name
+• RFC (optional)
+• Club manager
+• Role/title
+• Contact email
+• Phone / WhatsApp
+• State
+• Type of club
+• Website or social media (optional)
+• Logo (optional)
+• Username
+• Password and confirmation
+• Privacy policy (box and checkbox)
+• “Register” button
+Once the user account is created, the content and functionality available will depend on the profile type. For example, a player profile will not have the same tabs or features as a club profile.
+3. Profiles and Functionalities by Account Type
+State Profile
+Tab: Account
+Edit contact and organization information.
+Tab: Inbox
+Send announcements to players, partners, and clubs within the state.
+Receive messages from the federation, clubs, and players.
+Tab: Management
+Create/manage tournaments and events.
+Administer clubs.
+View registered courts and their status.
+Tab: Microsite
+Redirects to an interface where the affiliate administrator can configure the microsite content, banners, event calendar, general calendar, etc.
+Public Page: Displays all clubs registered in the state, registered partners, and the number of athletes in that state.
+Tab: Statistics
+View number of courts registered by clubs and partners, active players, events, and 
+tournaments.
+Tab: Documents
+Manage invoices and documents.
+Tab: Affiliation
+View and renew affiliation.
+Tab: Member Management
+Manage clubs, assign roles, and view history.
+Club Profile
+Tab: Account
+Edit contact info, logo, and social media.
+Tab: Inbox
+Send announcements to players, partners, and clubs in the state.
+Receive messages from the federation, clubs, and players.
+Tab: Microsite
+Redirects to an interface where the club administrator can configure the club microsite, banners, event calendar, general calendar, etc.
+On this microsite, athletes can:
+• Reserve and pay for club courts
+• Register for tournaments
+• Pay tournament fees
+(Requires premium plan)
+Public Page: Courts, tournaments, reservations, events.
+Tab: Statistics
+View court usage, active players, and events.
+Tab: Documents
+Manage invoices and documents.
+Tab: Affiliation
+View and renew affiliation.
+Tab: Management
+Create tournaments and events, register courts, manage reservations, maintenance, 
+and incident reports.
+(Requires premium plan)
+Tab: Member Management
+Register players, assign roles, and view history.
+Coach Profile
+Tab: Credential
+(Displays credential image)
+1. Name and federation logos
+2. State of affiliation
+3. Coach's name
+4. NRTP level
+5. Affiliation status (automatically updates when the renewal is paid)
+6. Ranking position (automatically updated by the system)
+7. License type (linked to certifications in the Certifications tab)
+8. QR code (links publicly to this credential tab when scanned)
+9. ID number (automatically assigned by the system)
+10. Nationality (a flag may appear for international coaches)
+Example:
+Tab: Account
+Edit personal and contact information.
+Tab: Inbox
+Receives notifications like a player.
+Tab: Connection
+Search for other users.
+(Requires premium plan)
+Tab: Certifications
+View courses/diplomas.
+Download certificates in PDF format.
+Manage licenses.
+Player Profile
+Tab: Credential
+Displays official ID-style information, including:
+1. Federation name and logos
+2. State of affiliation
+3. Player’s name
+4. NRTP level
+5. Affiliation status (auto-updates upon renewal payment)
+6. Ranking position (auto-updated by system)
+7. Club/Independent (club membership status)
+8. QR code (links to this tab when scanned)
+9. ID number (auto-assigned by the system)
+10. Nationality (flag appears for foreign players)
+Example:
+Tab: Account
+Edit all personal data entered at registration, including profile picture.
+Tab: Inbox
+Notification center: announcements, payments, tournament entries, etc.
+Includes search, filters, read/unread status, etc.
+Tab: Connection
+Search for other players nearby to play with.
+(Requires premium plan)
+Partner Profile
+Tab: Account
+Edit institutional information, contact details, and logo.
+Tab: Inbox
+Receives announcements from the federation, clubs, and other actors.
+Tab: Microsite
+Redirects to an interface where the partner administrator can configure the microsite content, banners, event calendar, general calendar, etc.
+On this microsite, athletes can:
+• Reserve and pay for listed courts
+• Register for tournaments
+• Pay tournament entry fees
+(Requires premium plan)
+Tab: Statistics
+Track interactions, clicks, and views.
+Tab: Documents
+Upload and download invoices, agreements, etc.
+Tab: Affiliation
+View current status, payment history, and renew.
+Tab: Management
+Create/manage tournaments, events, courts, and reservations.
+(Available only with premium plan)
+General Administration Panel (Superadmin)
+This module is an exclusive interface for the central administration team of the Federation, with superuser privileges. It allows full management and oversight of the entire platform from one place.
+Key Functions:
+1. User Management:
+o View, edit, or delete players, coaches, clubs, partners, and affiliates.
+o Activate or deactivate accounts.
+o Search by name, state, or membership status.
+2. Mass Messaging:
+o Compose and send messages to segmented groups (players, clubs, partners, affiliates, coaches).
+o Option to include attachments or links.
+3. Court Registry:
+o View all registered courts.
+o Filter by state, owner, surface type, and availability.
+o View reservation and incident history.
+4. Payments and Membership Control:
+o Check active/inactive memberships of players, clubs, partners, and affiliates.
+o View payment history by user or account type.
+o Export reports in CSV or PDF format.
+5. General Statistics and Reports:
+o Registered users by type.
+o Monthly activity.
+o Tournaments created and court usage.
+o Usage and participation ranking by state.
+6. Microsite and Public Content Management:
+o Supervise and modify public content shown on club and partner microsites.
+o Option to deactivate microsites or remove inappropriate content.
+7. Support and Security Control:
+o Reset passwords.
+o Suspend accounts due to misuse.
+o Create new administrators with limited access.
+8. Manage Tournaments and the Global Ranking System.
+ This module must be fully restricted to users with the "Superadmin" role.
+Profile (Extended)
+Tab: Microsite
+Public page with access to information about registered courts in the state, tournaments organized by clubs or partners, special events, and the reservation payment system.
+Tab: Statistics
+View data on court usage in the state, active registered players, and participation in events and tournaments.
+Tab: Documents
+Manage and download relevant documents such as invoices, agreements, and collaboration certificates.
+Tab: Affiliation
+View current affiliation status of the committee/organization, renew online, and check payment history.
+Tab: Management
+Administrative state functions: create tournaments and events, register courts, schedule maintenance and incidents, and send announcements to clubs, players, and partners in the state. Also includes ranking management.
+Tab: Member Management
+Register players, assign roles within the organization (administrator, coordinator, etc.), and view participation history.
+</>
+
+I'd like to use Docker for running this project.
+
+- Frontend
+tech: React, Vite, TailWindCSS, Typescript, Redux/slice, axios
+I am going to use cloudinary for file upload for all pages.
+I'd like to use raw HTML tags with TailWindCSS instead of imported UI components of node module for SEO optimization.
+Unless absolutely necessary such as icons, I will avoid using node modules for UI whenever possible. I want to prioritize SEO enhancements, performance optimization and extensibility.
+All page should be user friendly with modern design, animation effect and hover effect.
+
+- Backend
+tech: node/express, postgreSQL/sequelize, SendGrid(for Email notification or verification), Stripe(for payment gateway)
+Data validation will also be done sparingly, except in cases where it is absolutely necessary.
+I am going to use cloudinary for file upload for all pages.
+I want to structure the database so that individual tables don't become too large with too many fields.

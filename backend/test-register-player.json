@@ -1,0 +1,14 @@
+{
+  "fullName": "Test Player New",
+  "dateOfBirth": "1995-05-15",
+  "gender": "male",
+  "stateId": 1,
+  "curp": "TEPL950515HDFXXX01",
+  "nrtpLevel": "3.0",
+  "email": "testplayer@example.com",
+  "mobilePhone": "5559998877",
+  "username": "testplayer",
+  "password": "Test123!",
+  "confirmPassword": "Test123!",
+  "privacyPolicyAccepted": true
+}
