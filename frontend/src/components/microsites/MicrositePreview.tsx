@@ -1,10 +1,7 @@
 import React from 'react';
 import { Microsite } from '../../store/micrositeSlice';
 import ContentBlockPreview from './ContentBlockPreview';
-import { 
-  GlobeAltIcon,
-  CalendarIcon
-} from '@heroicons/react/24/outline';
+import { CalendarIcon} from '@heroicons/react/24/outline';
 
 interface MicrositePreviewProps {
   microsite: Microsite;

@@ -33,7 +33,6 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
   
   // Mock payment data since slice doesn't exist
   const [payments, setPayments] = useState<any[]>([]);
-  const loading = false;
   
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [showCancelModal, setShowCancelModal] = useState<number | null>(null);
