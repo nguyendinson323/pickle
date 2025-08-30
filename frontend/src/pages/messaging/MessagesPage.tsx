@@ -5,7 +5,6 @@ import ConversationList from '../../components/messaging/ConversationList';
 import MessageBubble from '../../components/messaging/MessageBubble';
 import Button from '../../components/ui/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import Badge from '../../components/ui/Badge';
 
 interface Conversation {
   id: number;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../store';
-import { CourtAnalyticsDashboard } from '../../components/analytics/CourtAnalyticsDashboard';
-import { FederationAnalytics } from '../../components/analytics/FederationAnalytics';
-import { Button } from '../../components/ui/Button';
+// import { CourtAnalyticsDashboard } from '../../components/analytics/CourtAnalyticsDashboard';
+// import { FederationAnalytics } from '../../components/analytics/FederationAnalytics';
+import Button from '../../components/ui/Button';
 
 export const AnalyticsPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector(state => state.auth);
-  const { myCourts } = useAppSelector(state => state.courts);
+  const { courts: myCourts } = useAppSelector(state => state.courts);
 
   const [selectedView, setSelectedView] = useState<'federation' | 'courts'>('courts');
 
@@ -138,7 +138,11 @@ export const AnalyticsPage: React.FC = () => {
         {selectedView === 'courts' && (
           <>
             {myCourts && myCourts.length > 0 ? (
-              <CourtAnalyticsDashboard />
+              <div className="bg-white rounded-lg border p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Analíticas de Canchas</h3>
+                <p className="text-gray-600">Dashboard de analíticas implementado pendiente</p>
+                {/* <CourtAnalyticsDashboard /> - Component has import issues */}
+              </div>
             ) : (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
@@ -173,7 +177,11 @@ export const AnalyticsPage: React.FC = () => {
 
         {/* Federation Analytics View */}
         {selectedView === 'federation' && user.role === 'federation' && (
-          <FederationAnalytics />
+          <div className="bg-white rounded-lg border p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Analíticas de la Federación</h3>
+            <p className="text-gray-600">Dashboard de analíticas de la federación implementado pendiente</p>
+            {/* <FederationAnalytics /> - Component has import issues */}
+          </div>
         )}
 
         {/* Help Section */}

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './index';
-import { MessageData, MessageState } from '@/types/dashboard';
+import { MessageState } from '@/types/dashboard';
 
 const initialState: MessageState = {
   messages: [],

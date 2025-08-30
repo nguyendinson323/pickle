@@ -7,10 +7,9 @@ import {
   setCurrentMicrosite, 
   fetchMicrositePages,
   togglePreviewMode 
-} from '../../store/slices/micrositeSlice';
+} from '../../store/micrositeSlice';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Button from '../../components/ui/Button';
-import Tabs from '../../components/ui/Tabs';
 import MicrositeBuilderSidebar from '../../components/microsites/MicrositeBuilderSidebar';
 import MicrositePageEditor from '../../components/microsites/MicrositePageEditor';
 import MicrositePreview from '../../components/microsites/MicrositePreview';

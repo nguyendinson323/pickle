@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store';
-import { createMicrosite, fetchThemes } from '../../store/slices/micrositeSlice';
+import { createMicrosite, fetchThemes } from '../../store/micrositeSlice';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import FormField from '../forms/FormField';
+import FormField from '../ui/FormField';
 import SelectField from '../forms/SelectField';
 import { useNavigate } from 'react-router-dom';
 
@@ -233,7 +233,10 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
             />
           </FormField>
 
-          <FormField label="Descripción">
+          <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Descripción
+              </label>
             <textarea
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
@@ -241,9 +244,10 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Describe tu organización y lo que ofreces..."
             />
-          </FormField>
+          </div>
 
           <SelectField
+            name="ownerType"
             label="Tipo de Organización"
             value={formData.ownerType}
             onChange={(value) => handleInputChange('ownerType', value)}
@@ -252,6 +256,7 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
           />
 
           <SelectField
+            name="themeId"
             label="Tema"
             value={formData.themeId}
             onChange={(value) => handleInputChange('themeId', value)}
@@ -276,7 +281,10 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
             />
           </FormField>
 
-          <FormField label="Teléfono de Contacto">
+          <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Teléfono de Contacto
+              </label>
             <input
               type="tel"
               value={formData.contactPhone}
@@ -284,9 +292,12 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Ej: +52 55 1234 5678"
             />
-          </FormField>
+          </div>
 
-          <FormField label="Dirección">
+          <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Dirección
+              </label>
             <textarea
               value={formData.address}
               onChange={(e) => handleInputChange('address', e.target.value)}
@@ -294,7 +305,7 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Dirección física de tu organización"
             />
-          </FormField>
+          </div>
         </div>
 
         {/* Social Media */}
@@ -302,7 +313,10 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
           <h3 className="text-lg font-medium text-gray-900">Redes Sociales</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="Facebook">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Facebook
+              </label>
               <input
                 type="url"
                 value={formData.socialMedia.facebook}
@@ -310,9 +324,12 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="https://facebook.com/tu-pagina"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Instagram">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Instagram
+              </label>
               <input
                 type="url"
                 value={formData.socialMedia.instagram}
@@ -320,9 +337,12 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="https://instagram.com/tu-cuenta"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Twitter">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Twitter
+              </label>
               <input
                 type="url"
                 value={formData.socialMedia.twitter}
@@ -330,9 +350,12 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="https://twitter.com/tu-cuenta"
               />
-            </FormField>
+            </div>
 
-            <FormField label="LinkedIn">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                LinkedIn
+              </label>
               <input
                 type="url"
                 value={formData.socialMedia.linkedin}
@@ -340,7 +363,7 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="https://linkedin.com/company/tu-empresa"
               />
-            </FormField>
+            </div>
           </div>
         </div>
 
@@ -348,7 +371,10 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-gray-900">SEO (Opcional)</h3>
           
-          <FormField label="Título SEO" help="Máximo 60 caracteres">
+          <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Título SEO
+              </label>
             <input
               type="text"
               value={formData.seoTitle}
@@ -356,9 +382,12 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
               maxLength={60}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
-          </FormField>
+          </div>
 
-          <FormField label="Descripción SEO" help="Máximo 160 caracteres">
+          <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Descripción SEO
+              </label>
             <textarea
               value={formData.seoDescription}
               onChange={(e) => handleInputChange('seoDescription', e.target.value)}
@@ -366,7 +395,7 @@ const CreateMicrositeModal: React.FC<CreateMicrositeModalProps> = ({
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
-          </FormField>
+          </div>
         </div>
 
         {/* Actions */}

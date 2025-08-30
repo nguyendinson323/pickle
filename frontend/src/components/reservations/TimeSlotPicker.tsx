@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchAvailableSlots, TimeSlot, setSelectedDate, detectConflicts } from '../../store/slices/reservationSlice';
+import { fetchAvailableSlots, TimeSlot, setSelectedDate, detectConflicts } from '../../store/reservationSlice';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';

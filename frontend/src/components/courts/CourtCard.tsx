@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
-import { Court } from '../../store/slices/courtSlice';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
+import Button from '../ui/Button';
+import { Court } from '../../store/courtSlice';
 
 interface CourtCardProps {
   court: Court;
@@ -76,7 +76,7 @@ export const CourtCard: React.FC<CourtCardProps> = ({
             </Badge>
           )}
           {!court.isActive && (
-            <Badge variant="danger">Inactiva</Badge>
+            <Badge variant="error">Inactiva</Badge>
           )}
         </div>
       </div>
@@ -110,11 +110,11 @@ export const CourtCard: React.FC<CourtCardProps> = ({
         </div>
 
         <div className="flex items-center gap-2 mb-3">
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="info" className="text-xs">
             {getSurfaceTypeLabel(court.surfaceType)}
           </Badge>
           {court.state && (
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="info" className="text-xs">
               {court.state.name}
             </Badge>
           )}
@@ -163,7 +163,7 @@ export const CourtCard: React.FC<CourtCardProps> = ({
               )}
               {onDelete && (
                 <Button 
-                  variant="danger" 
+                  variant="error" 
                   size="sm"
                   onClick={() => onDelete(court.id)}
                 >

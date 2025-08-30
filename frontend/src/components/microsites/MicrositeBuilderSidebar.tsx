@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store';
-import { setCurrentPage, createPage } from '../../store/slices/micrositeSlice';
+import { setCurrentPage, createPage } from '../../store/micrositeSlice';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import { 
@@ -13,7 +13,7 @@ import {
   EyeIcon,
   EyeSlashIcon
 } from '@heroicons/react/24/outline';
-import { Microsite } from '../../store/slices/micrositeSlice';
+import { Microsite } from '../../store/micrositeSlice';
 
 interface Tab {
   key: string;

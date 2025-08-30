@@ -216,7 +216,7 @@ const LoginForm: React.FC = () => {
         </form>
 
         {/* Demo credentials for testing */}
-        {process.env.NODE_ENV === 'development' && (
+        {(import.meta as any).env?.MODE === 'development' && (
           <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
             <h3 className="text-sm font-medium text-yellow-800">
               Credenciales de prueba:

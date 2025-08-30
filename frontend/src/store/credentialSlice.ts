@@ -217,7 +217,7 @@ export const fetchStateCredentials = createAsyncThunk(
 
 export const fetchCredentialStats = createAsyncThunk(
   'credentials/fetchCredentialStats',
-  async (stateId?: number, { rejectWithValue }) => {
+  async ({ stateId }: { stateId?: number } = {}, { rejectWithValue }) => {
     try {
       const params = stateId ? `?stateId=${stateId}` : '';
       const response = await fetch(`/api/credentials/stats${params}`, {

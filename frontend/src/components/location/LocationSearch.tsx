@@ -34,7 +34,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<LocationResult[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -225,7 +225,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
         {allowCurrentLocation && (
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={getCurrentLocation}
             disabled={isGettingLocation || isLoading}

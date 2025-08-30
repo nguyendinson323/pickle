@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
-import { updateMicrosite } from '../../store/slices/micrositeSlice';
-import { Microsite } from '../../store/slices/micrositeSlice';
+import { updateMicrosite } from '../../store/micrositeSlice';
+import { Microsite } from '../../store/micrositeSlice';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Select from '../ui/Select';

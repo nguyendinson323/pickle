@@ -8,7 +8,7 @@ import {
   fetchUserRegistrations,
   clearSelectedTournament,
   clearError
-} from '../../store/slices/tournamentSlice';
+} from '../../store/tournamentSlice';
 import TournamentDetails from '../../components/tournaments/TournamentDetails';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Button from '../../components/ui/Button';
@@ -102,7 +102,7 @@ const TournamentDetailsPage: React.FC = () => {
   const canEditTournament = () => {
     if (!user || !selectedTournament) return false;
     
-    return user.role === 'admin' || 
+    return user.role === 'federation' || 
            (selectedTournament.organizerType === user.role && selectedTournament.organizerId === user.id);
   };
 

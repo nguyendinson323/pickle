@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppDispatch } from '@/store';
-import { markAsRead, deleteMessage } from '@/store/messageSlice';
+import { deleteMessage } from '@/store/messageSlice';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
@@ -8,7 +8,7 @@ import Modal from '@/components/ui/Modal';
 import {
   UserIcon,
   CalendarIcon,
-  ReplyIcon,
+  ArrowUturnLeftIcon,
   TrashIcon,
   PrinterIcon,
   ShareIcon
@@ -59,7 +59,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
 
   const handleDelete = async () => {
     try {
-      await dispatch(deleteMessage(message.id)).unwrap();
+      await dispatch(deleteMessage(parseInt(message.id))).unwrap();
       setShowDeleteModal(false);
       onClose?.();
     } catch (error) {
@@ -211,7 +211,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
                 <Button
                   variant="primary"
                   onClick={() => onReply(message.id)}
-                  leftIcon={<ReplyIcon className="w-4 h-4" />}
+                  leftIcon={<ArrowUturnLeftIcon className="w-4 h-4" />}
                 >
                   Responder
                 </Button>

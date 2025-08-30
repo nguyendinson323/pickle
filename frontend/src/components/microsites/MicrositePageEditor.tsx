@@ -9,8 +9,8 @@ import {
   reorderContentBlocks,
   setDraggedBlock,
   updatePage
-} from '../../store/slices/micrositeSlice';
-import { Microsite, MicrositePage, ContentBlock } from '../../store/slices/micrositeSlice';
+} from '../../store/micrositeSlice';
+import { Microsite, MicrositePage, ContentBlock } from '../../store/micrositeSlice';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 import Modal from '../ui/Modal';

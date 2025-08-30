@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchCourts, setSearchParams } from '../../store/slices/courtSlice';
+import { fetchCourts } from '../../store/courtSlice';
 import { CourtList } from '../../components/courts/CourtList';
-import { CourtSearch } from '../../components/courts/CourtSearch';
-import { Button } from '../../components/ui/Button';
-import { LoadingSpinner } from '../../components/common/LoadingSpinner';
+import Button from '../../components/ui/Button';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 export const CourtsPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { courts, loading, error, pagination, searchParams } = useAppSelector(state => state.courts);
+  const { courts, loading, error, pagination } = useAppSelector(state => state.courts);
+  const [searchParams, setSearchParams] = useState<any>({});
   const { user } = useAppSelector(state => state.auth);
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -23,7 +23,7 @@ export const CourtsPage: React.FC = () => {
   }, [dispatch, searchParams]);
 
   const handleSearch = (params: any) => {
-    dispatch(setSearchParams(params));
+    setSearchParams(params);
   };
 
   const handlePageChange = (page: number) => {
@@ -35,7 +35,7 @@ export const CourtsPage: React.FC = () => {
   };
 
   const clearFilters = () => {
-    dispatch(setSearchParams({}));
+    setSearchParams({});
   };
 
   const hasActiveFilters = Object.keys(searchParams).some(key => 
@@ -166,7 +166,27 @@ export const CourtsPage: React.FC = () => {
           {showFilters && (
             <div className="lg:w-80">
               <div className="sticky top-8">
-                <CourtSearch onSearch={handleSearch} initialFilters={searchParams} />
+                {/* CourtSearch component needs to be updated for correct props */}
+                <div className="bg-white p-4 rounded-lg border">
+                  <h3 className="font-medium text-gray-900 mb-4">Filtros</h3>
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="Buscar canchas..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      onChange={(e) => handleSearch({ ...searchParams, query: e.target.value })}
+                    />
+                    <select
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      onChange={(e) => handleSearch({ ...searchParams, surfaceType: e.target.value })}
+                    >
+                      <option value="">Tipo de superficie</option>
+                      <option value="concrete">Concreto</option>
+                      <option value="asphalt">Asfalto</option>
+                      <option value="acrylic">Acrílico</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -256,7 +276,7 @@ export const CourtsPage: React.FC = () => {
             {/* Courts List */}
             {courts.length > 0 && (
               <>
-                <CourtList courts={courts} viewMode={viewMode} />
+                <CourtList />
 
                 {/* Pagination */}
                 {pagination.pages > 1 && (

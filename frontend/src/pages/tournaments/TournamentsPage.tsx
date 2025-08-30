@@ -7,7 +7,7 @@ import {
   fetchUserRegistrations,
   setSearchFilters,
   clearError
-} from '../../store/slices/tournamentSlice';
+} from '../../store/tournamentSlice';
 import { AppDispatch } from '../../store';
 import TournamentSearch from '../../components/tournaments/TournamentSearch';
 import TournamentList from '../../components/tournaments/TournamentList';

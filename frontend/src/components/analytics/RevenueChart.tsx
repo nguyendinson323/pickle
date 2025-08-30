@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
 
 interface RevenueDataPoint {
   date: string;
@@ -51,7 +51,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
     return maxValue > 0 ? (value / maxValue) * 200 : 0;
   };
 
-  const getBarColor = (index: number, isHovered: boolean = false) => {
+  const getBarColor = (isHovered: boolean = false) => {
     const colors = viewType === 'revenue' 
       ? ['bg-green-500', 'hover:bg-green-600']
       : ['bg-blue-500', 'hover:bg-blue-600'];
@@ -126,7 +126,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
 
             {/* Bars */}
             <div className="absolute inset-0 flex items-end justify-between px-2">
-              {data.map((point, index) => {
+              {data.map((point) => {
                 const value = viewType === 'revenue' ? point.revenue : point.reservations;
                 const height = getBarHeight(value);
                 
@@ -154,7 +154,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
 
                     {/* Bar */}
                     <div
-                      className={`w-full ${getBarColor(index)} group-hover:${getBarColor(index, true)} transition-colors rounded-t cursor-pointer`}
+                      className={`w-full ${getBarColor()} group-hover:${getBarColor(true)} transition-colors rounded-t cursor-pointer`}
                       style={{ height: `${height}px` }}
                     />
                   </div>

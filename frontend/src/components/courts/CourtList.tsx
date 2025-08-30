@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchCourts, updateSearchFilters, setCurrentPage, Court } from '../../store/slices/courtSlice';
+import { fetchCourts, setCurrentPage, Court } from '../../store/courtSlice';
 import { CourtCard } from './CourtCard';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { Button } from '../ui/Button';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Button from '../ui/Button';
 
 interface CourtListProps {
   showActions?: boolean;
@@ -141,7 +141,7 @@ export const CourtList: React.FC<CourtListProps> = ({
       {pagination.pages > 1 && (
         <div className="flex justify-center items-center space-x-4">
           <Button
-            variant="outline"
+            variant="secondary"
             disabled={pagination.current === 1 || loading}
             onClick={() => handlePageChange(pagination.current - 1)}
           >
@@ -164,7 +164,7 @@ export const CourtList: React.FC<CourtListProps> = ({
               return (
                 <Button
                   key={pageNum}
-                  variant={pagination.current === pageNum ? 'primary' : 'outline'}
+                  variant={pagination.current === pageNum ? 'primary' : 'secondary'}
                   size="sm"
                   disabled={loading}
                   onClick={() => handlePageChange(pageNum)}
@@ -176,7 +176,7 @@ export const CourtList: React.FC<CourtListProps> = ({
           </div>
           
           <Button
-            variant="outline"
+            variant="secondary"
             disabled={pagination.current === pagination.pages || loading}
             onClick={() => handlePageChange(pagination.current + 1)}
           >

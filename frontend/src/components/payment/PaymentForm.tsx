@@ -7,7 +7,7 @@ import {
   useElements
 } from '@stripe/react-stripe-js';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { confirmPayment, clearPaymentIntent } from '../../store/slices/paymentSlice';
+import { confirmPayment, clearPaymentIntent } from '../../store/paymentSlice';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { LoadingSpinner } from '../common/LoadingSpinner';

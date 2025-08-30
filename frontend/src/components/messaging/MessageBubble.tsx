@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import Badge from '../ui/Badge';
-import Button from '../ui/Button';
 
 interface MessageReaction {
   id: number;

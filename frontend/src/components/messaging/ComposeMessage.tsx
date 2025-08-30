@@ -7,7 +7,7 @@ import {
   PaperAirplaneIcon,
   XMarkIcon,
   UserIcon,
-  AttachmentIcon
+  PaperClipIcon
 } from '@heroicons/react/24/outline';
 
 interface ComposeMessageProps {
@@ -75,10 +75,14 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
 
     setSending(true);
     try {
-      await dispatch(sendMessage({
-        ...formData,
-        replyToId
-      })).unwrap();
+      const messageData = {
+        receiverId: parseInt(formData.recipientId),
+        subject: formData.subject,
+        content: formData.content,
+        isUrgent: false
+      };
+      
+      await dispatch(sendMessage(messageData)).unwrap();
       
       // Reset form
       setFormData({
@@ -208,7 +212,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
             Archivos adjuntos
           </label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-            <AttachmentIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+            <PaperClipIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
             <p className="text-sm text-gray-600">
               Arrastra archivos aquí o{' '}
               <button

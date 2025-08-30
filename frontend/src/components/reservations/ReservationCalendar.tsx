@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchCourtAvailability, setSelectedDate } from '../../store/slices/reservationSlice';
+import { fetchCourtAvailability, setSelectedDate } from '../../store/reservationSlice';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 

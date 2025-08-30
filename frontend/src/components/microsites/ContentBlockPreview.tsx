@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContentBlock } from '../../store/slices/micrositeSlice';
+import { ContentBlock } from '../../store/micrositeSlice';
 import { 
   MapPinIcon, 
   EnvelopeIcon, 

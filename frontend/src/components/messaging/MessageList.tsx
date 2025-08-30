@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { selectMessages, selectMessagesLoading, markAsRead } from '@/store/messageSlice';
+import { selectMessages, selectMessagesLoading, markAsReadLocally } from '@/store/messageSlice';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
@@ -26,7 +26,7 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
 
   const handleMessageClick = (messageId: string, isRead: boolean) => {
     if (!isRead) {
-      dispatch(markAsRead(messageId));
+      dispatch(markAsReadLocally(parseInt(messageId)));
     }
     onMessageSelect?.(messageId);
   };
@@ -106,13 +106,13 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
             <Card
               key={message.id}
               className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                selectedMessageId === message.id 
+                selectedMessageId === message.id.toString() 
                   ? 'ring-2 ring-primary-500 border-primary-200' 
                   : 'hover:border-gray-300'
               } ${
                 !message.isRead ? 'bg-blue-50 border-blue-200' : ''
               }`}
-              onClick={() => handleMessageClick(message.id, message.isRead)}
+              onClick={() => handleMessageClick(message.id.toString(), message.isRead)}
             >
               <div className="flex items-start space-x-3">
                 {/* Avatar/Icon */}
@@ -129,7 +129,7 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                       <h4 className={`text-sm font-medium truncate ${
                         !message.isRead ? 'text-gray-900' : 'text-gray-700'
                       }`}>
-                        {message.sender?.username || 'Usuario'}
+                        {message.senderName || 'Usuario'}
                       </h4>
                       {!message.isRead && (
                         <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
@@ -138,7 +138,7 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                     <div className="flex items-center space-x-2 flex-shrink-0">
                       <span className="text-xs text-gray-500 flex items-center">
                         <ClockIcon className="w-3 h-3 mr-1" />
-                        {formatDate(message.createdAt)}
+                        {formatDate(message.sentAt)}
                       </span>
                       {!message.isRead ? (
                         <EnvelopeIcon className="w-4 h-4 text-blue-600" />
@@ -159,18 +159,18 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                   </p>
 
                   {/* Message Tags/Category */}
-                  {message.type && (
+                  {message.senderRole && (
                     <div className="mt-2">
                       <Badge 
                         variant={
-                          message.type === 'system' ? 'info' :
-                          message.type === 'notification' ? 'warning' :
+                          message.senderRole === 'system' ? 'info' :
+                          message.senderRole === 'notification' ? 'warning' :
                           'secondary'
                         }
                         className="text-xs"
                       >
-                        {message.type === 'system' ? 'Sistema' :
-                         message.type === 'notification' ? 'Notificación' :
+                        {message.senderRole === 'system' ? 'Sistema' :
+                         message.senderRole === 'notification' ? 'Notificación' :
                          'Mensaje'}
                       </Badge>
                     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Microsite, MicrositePage } from '../../store/slices/micrositeSlice';
+import { Microsite, MicrositePage } from '../../store/micrositeSlice';
 import ContentBlockPreview from './ContentBlockPreview';
 import { 
   PhoneIcon, 

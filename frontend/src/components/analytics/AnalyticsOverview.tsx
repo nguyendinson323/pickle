@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
 
 interface AnalyticsOverviewProps {
   analytics: {
@@ -115,7 +115,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
                 {formatPercentage(analytics.occupancyRate)}
               </p>
               <Badge 
-                variant="outline" 
+                variant="info" 
                 className={`mt-1 ${getOccupancyColor(analytics.occupancyRate)}`}
               >
                 {analytics.occupancyRate >= 0.8 ? 'Excelente' :

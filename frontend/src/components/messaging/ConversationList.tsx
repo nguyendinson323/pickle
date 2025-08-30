@@ -135,11 +135,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
   const getTypeBadge = (type: string) => {
     switch (type) {
       case 'tournament':
-        return <Badge variant="primary" size="xs">Torneo</Badge>;
+        return <Badge variant="primary" size="sm">Torneo</Badge>;
       case 'finder_request':
-        return <Badge variant="secondary" size="xs">Jugador</Badge>;
+        return <Badge variant="secondary" size="sm">Jugador</Badge>;
       case 'group':
-        return <Badge variant="outline" size="xs">Grupo</Badge>;
+        return <Badge variant="info" size="sm">Grupo</Badge>;
       default:
         return null;
     }
@@ -200,7 +200,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
                     </h3>
                     {getTypeBadge(conversation.type)}
                     {conversation.isArchived && (
-                      <Badge variant="outline" size="xs">Archivado</Badge>
+                      <Badge variant="warning" size="sm">Archivado</Badge>
                     )}
                   </div>
                   

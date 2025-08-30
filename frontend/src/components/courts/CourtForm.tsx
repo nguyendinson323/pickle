@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { createCourt, updateCourt, Court } from '../../store/slices/courtSlice';
-import { Button } from '../ui/Button';
-import { FormField } from '../forms/FormField';
-import { SelectField } from '../forms/SelectField';
-import { CheckboxField } from '../forms/CheckboxField';
-import { Modal } from '../ui/Modal';
+import { createCourt, updateCourt, Court } from '../../store/courtSlice';
+import Button from '../ui/Button';
+import Modal from '../ui/Modal';
 
 interface CourtFormProps {
   isOpen: boolean;
@@ -28,7 +25,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    surfaceType: 'concrete' as const,
+    surfaceType: 'concrete' as 'concrete' | 'asphalt' | 'acrylic' | 'composite',
     address: '',
     latitude: 0,
     longitude: 0,
@@ -39,21 +36,19 @@ export const CourtForm: React.FC<CourtFormProps> = ({
     weekendRate: '',
     images: [] as string[],
     operatingHours: {
-      0: { isOpen: true, startTime: '08:00', endTime: '20:00' }, // Sunday
-      1: { isOpen: true, startTime: '06:00', endTime: '22:00' }, // Monday
-      2: { isOpen: true, startTime: '06:00', endTime: '22:00' }, // Tuesday
-      3: { isOpen: true, startTime: '06:00', endTime: '22:00' }, // Wednesday
-      4: { isOpen: true, startTime: '06:00', endTime: '22:00' }, // Thursday
-      5: { isOpen: true, startTime: '06:00', endTime: '22:00' }, // Friday
-      6: { isOpen: true, startTime: '07:00', endTime: '21:00' }  // Saturday
-    },
+      0: { isOpen: true, startTime: '08:00', endTime: '20:00' },
+      1: { isOpen: true, startTime: '06:00', endTime: '22:00' },
+      2: { isOpen: true, startTime: '06:00', endTime: '22:00' },
+      3: { isOpen: true, startTime: '06:00', endTime: '22:00' },
+      4: { isOpen: true, startTime: '06:00', endTime: '22:00' },
+      5: { isOpen: true, startTime: '06:00', endTime: '22:00' },
+      6: { isOpen: true, startTime: '07:00', endTime: '21:00' }
+    } as { [key: number]: { isOpen: boolean; startTime: string; endTime: string } },
     maxAdvanceBookingDays: '30',
     minBookingDuration: '60',
     maxBookingDuration: '180',
     cancellationPolicy: 'Cancelación gratuita hasta 24 horas antes. 50% de reembolso entre 2-24 horas antes.'
   });
-
-  const [imageUrl, setImageUrl] = useState('');
 
   const surfaceOptions = [
     { value: 'concrete', label: 'Concreto' },
@@ -83,10 +78,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
     label: state.name
   }));
 
-  const dayNames = [
-    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
-  ];
-
   useEffect(() => {
     if (court && isOpen) {
       setFormData({
@@ -102,7 +93,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
         peakHourRate: court.peakHourRate?.toString() || '',
         weekendRate: court.weekendRate?.toString() || '',
         images: court.images || [],
-        operatingHours: court.operatingHours,
+        operatingHours: court.operatingHours as { [key: number]: { isOpen: boolean; startTime: string; endTime: string } },
         maxAdvanceBookingDays: court.maxAdvanceBookingDays.toString(),
         minBookingDuration: court.minBookingDuration.toString(),
         maxBookingDuration: court.maxBookingDuration.toString(),
@@ -131,7 +122,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
           4: { isOpen: true, startTime: '06:00', endTime: '22:00' },
           5: { isOpen: true, startTime: '06:00', endTime: '22:00' },
           6: { isOpen: true, startTime: '07:00', endTime: '21:00' }
-        },
+        } as { [key: number]: { isOpen: boolean; startTime: string; endTime: string } },
         maxAdvanceBookingDays: '30',
         minBookingDuration: '60',
         maxBookingDuration: '180',
@@ -150,36 +141,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
       amenities: checked
         ? [...prev.amenities, amenity]
         : prev.amenities.filter(a => a !== amenity)
-    }));
-  };
-
-  const handleOperatingHoursChange = (day: number, field: string, value: string | boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      operatingHours: {
-        ...prev.operatingHours,
-        [day]: {
-          ...prev.operatingHours[day],
-          [field]: value
-        }
-      }
-    }));
-  };
-
-  const handleAddImage = () => {
-    if (imageUrl.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        images: [...prev.images, imageUrl.trim()]
-      }));
-      setImageUrl('');
-    }
-  };
-
-  const handleRemoveImage = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index)
     }));
   };
 
@@ -219,7 +180,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={court ? 'Editar Cancha' : 'Registrar Nueva Cancha'}
-      size="2xl"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
@@ -245,63 +205,108 @@ export const CourtForm: React.FC<CourtFormProps> = ({
           <h3 className="text-lg font-medium text-gray-900">Información Básica</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              label="Nombre de la Cancha *"
-              type="text"
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              required
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nombre de la Cancha *
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             
-            <SelectField
-              label="Estado *"
-              value={formData.stateId}
-              options={stateOptions}
-              onChange={(value) => handleInputChange('stateId', value)}
-              required
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Estado *
+              </label>
+              <select
+                value={formData.stateId}
+                onChange={(e) => handleInputChange('stateId', e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Seleccionar estado</option>
+                {stateOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción
+            </label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          <FormField
-            label="Descripción"
-            type="textarea"
-            value={formData.description}
-            onChange={(e) => handleInputChange('description', e.target.value)}
-            rows={3}
-          />
-
-          <FormField
-            label="Dirección *"
-            type="text"
-            value={formData.address}
-            onChange={(e) => handleInputChange('address', e.target.value)}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Dirección *
+            </label>
+            <input
+              type="text"
+              value={formData.address}
+              onChange={(e) => handleInputChange('address', e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <SelectField
-              label="Tipo de Superficie *"
-              value={formData.surfaceType}
-              options={surfaceOptions}
-              onChange={(value) => handleInputChange('surfaceType', value)}
-              required
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tipo de Superficie *
+              </label>
+              <select
+                value={formData.surfaceType}
+                onChange={(e) => handleInputChange('surfaceType', e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {surfaceOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <FormField
-              label="Latitud"
-              type="number"
-              value={formData.latitude.toString()}
-              onChange={(e) => handleInputChange('latitude', parseFloat(e.target.value) || 0)}
-              step="any"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Latitud
+              </label>
+              <input
+                type="number"
+                step="any"
+                value={formData.latitude.toString()}
+                onChange={(e) => handleInputChange('latitude', parseFloat(e.target.value) || 0)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-            <FormField
-              label="Longitud"
-              type="number"
-              value={formData.longitude.toString()}
-              onChange={(e) => handleInputChange('longitude', parseFloat(e.target.value) || 0)}
-              step="any"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Longitud
+              </label>
+              <input
+                type="number"
+                step="any"
+                value={formData.longitude.toString()}
+                onChange={(e) => handleInputChange('longitude', parseFloat(e.target.value) || 0)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
 
@@ -310,35 +315,50 @@ export const CourtForm: React.FC<CourtFormProps> = ({
           <h3 className="text-lg font-medium text-gray-900">Precios</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <FormField
-              label="Precio por Hora (MXN) *"
-              type="number"
-              value={formData.hourlyRate}
-              onChange={(e) => handleInputChange('hourlyRate', e.target.value)}
-              min="0"
-              step="0.01"
-              required
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Precio por Hora (MXN) *
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.hourlyRate}
+                onChange={(e) => handleInputChange('hourlyRate', e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-            <FormField
-              label="Precio en Hora Pico (MXN)"
-              type="number"
-              value={formData.peakHourRate}
-              onChange={(e) => handleInputChange('peakHourRate', e.target.value)}
-              min="0"
-              step="0.01"
-              placeholder="Opcional"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Precio en Hora Pico (MXN)
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.peakHourRate}
+                onChange={(e) => handleInputChange('peakHourRate', e.target.value)}
+                placeholder="Opcional"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-            <FormField
-              label="Precio Fin de Semana (MXN)"
-              type="number"
-              value={formData.weekendRate}
-              onChange={(e) => handleInputChange('weekendRate', e.target.value)}
-              min="0"
-              step="0.01"
-              placeholder="Opcional"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Precio Fin de Semana (MXN)
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.weekendRate}
+                onChange={(e) => handleInputChange('weekendRate', e.target.value)}
+                placeholder="Opcional"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
 
@@ -348,142 +368,17 @@ export const CourtForm: React.FC<CourtFormProps> = ({
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {amenityOptions.map((amenity) => (
-              <CheckboxField
-                key={amenity.value}
-                label={amenity.label}
-                checked={formData.amenities.includes(amenity.value)}
-                onChange={(checked) => handleAmenityChange(amenity.value, checked)}
-              />
+              <label key={amenity.value} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.amenities.includes(amenity.value)}
+                  onChange={(e) => handleAmenityChange(amenity.value, e.target.checked)}
+                  className="mr-2"
+                />
+                <span className="text-sm">{amenity.label}</span>
+              </label>
             ))}
           </div>
-        </div>
-
-        {/* Images */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Imágenes</h3>
-          
-          <div className="flex gap-2">
-            <FormField
-              label=""
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="URL de la imagen"
-              className="flex-1"
-            />
-            <Button type="button" onClick={handleAddImage} disabled={!imageUrl.trim()}>
-              Agregar
-            </Button>
-          </div>
-
-          {formData.images.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {formData.images.map((image, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={image}
-                    alt={`Imagen ${index + 1}`}
-                    className="w-full h-24 object-cover rounded border"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/placeholder-court.jpg';
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="danger"
-                    size="sm"
-                    className="absolute top-1 right-1"
-                    onClick={() => handleRemoveImage(index)}
-                  >
-                    ×
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Operating Hours */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Horarios de Operación</h3>
-          
-          <div className="space-y-3">
-            {dayNames.map((dayName, dayIndex) => (
-              <div key={dayIndex} className="flex items-center gap-4">
-                <div className="w-20">
-                  <CheckboxField
-                    label={dayName}
-                    checked={formData.operatingHours[dayIndex].isOpen}
-                    onChange={(checked) => handleOperatingHoursChange(dayIndex, 'isOpen', checked)}
-                  />
-                </div>
-                
-                {formData.operatingHours[dayIndex].isOpen && (
-                  <>
-                    <FormField
-                      label=""
-                      type="time"
-                      value={formData.operatingHours[dayIndex].startTime}
-                      onChange={(e) => handleOperatingHoursChange(dayIndex, 'startTime', e.target.value)}
-                      className="w-32"
-                    />
-                    <span className="text-gray-500">a</span>
-                    <FormField
-                      label=""
-                      type="time"
-                      value={formData.operatingHours[dayIndex].endTime}
-                      onChange={(e) => handleOperatingHoursChange(dayIndex, 'endTime', e.target.value)}
-                      className="w-32"
-                    />
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Booking Policies */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Políticas de Reserva</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <FormField
-              label="Días máximos de anticipación"
-              type="number"
-              value={formData.maxAdvanceBookingDays}
-              onChange={(e) => handleInputChange('maxAdvanceBookingDays', e.target.value)}
-              min="1"
-              required
-            />
-
-            <FormField
-              label="Duración mínima (minutos)"
-              type="number"
-              value={formData.minBookingDuration}
-              onChange={(e) => handleInputChange('minBookingDuration', e.target.value)}
-              min="30"
-              step="30"
-              required
-            />
-
-            <FormField
-              label="Duración máxima (minutos)"
-              type="number"
-              value={formData.maxBookingDuration}
-              onChange={(e) => handleInputChange('maxBookingDuration', e.target.value)}
-              min="30"
-              step="30"
-              required
-            />
-          </div>
-
-          <FormField
-            label="Política de Cancelación"
-            type="textarea"
-            value={formData.cancellationPolicy}
-            onChange={(e) => handleInputChange('cancellationPolicy', e.target.value)}
-            rows={3}
-          />
         </div>
 
         {/* Form Actions */}
@@ -499,7 +394,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
           
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             onClick={onClose}
             disabled={loading}
           >

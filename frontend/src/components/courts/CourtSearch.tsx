@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { updateSearchFilters, fetchCourts, resetSearchFilters } from '../../store/slices/courtSlice';
-import { Button } from '../ui/Button';
-import { FormField } from '../forms/FormField';
-import { SelectField } from '../forms/SelectField';
-import { CheckboxField } from '../forms/CheckboxField';
+import { updateSearchFilters, fetchCourts, resetSearchFilters } from '../../store/courtSlice';
+import Button from '../ui/Button';
 
 export const CourtSearch: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -133,7 +130,7 @@ export const CourtSearch: React.FC = () => {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [localFilters.sortBy, localFilters.sortOrder]);
+  }, [localFilters.sortBy, localFilters.sortOrder, searchFilters.sortBy, searchFilters.sortOrder, handleSearch]);
 
   return (
     <div className="bg-white shadow rounded-lg p-6 mb-6">
@@ -142,7 +139,7 @@ export const CourtSearch: React.FC = () => {
           Buscar Canchas
         </h2>
         <Button
-          variant="ghost"
+          variant="secondary"
           size="sm"
           onClick={() => setShowAdvanced(!showAdvanced)}
         >
@@ -152,57 +149,100 @@ export const CourtSearch: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="lg:col-span-2">
-          <FormField
-            label="Buscar por nombre o ubicación"
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Buscar por nombre o ubicación
+          </label>
+          <input
             type="text"
             value={localFilters.search}
             onChange={(e) => handleInputChange('search', e.target.value)}
             placeholder="Nombre de la cancha, dirección..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        <SelectField
-          label="Estado"
-          value={localFilters.stateId}
-          options={stateOptions}
-          onChange={(value) => handleInputChange('stateId', value)}
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Estado
+          </label>
+          <select
+            value={localFilters.stateId}
+            onChange={(e) => handleInputChange('stateId', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {stateOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <SelectField
-          label="Ordenar por"
-          value={`${localFilters.sortBy}:${localFilters.sortOrder}`}
-          options={sortOptions}
-          onChange={handleSortChange}
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Ordenar por
+          </label>
+          <select
+            value={`${localFilters.sortBy}:${localFilters.sortOrder}`}
+            onChange={(e) => handleSortChange(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {showAdvanced && (
         <div className="mt-6 pt-6 border-t border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            <SelectField
-              label="Superficie"
-              value={localFilters.surfaceType}
-              options={surfaceTypeOptions}
-              onChange={(value) => handleInputChange('surfaceType', value)}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Superficie
+              </label>
+              <select
+                value={localFilters.surfaceType}
+                onChange={(e) => handleInputChange('surfaceType', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {surfaceTypeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <FormField
-              label="Precio mínimo (MXN/h)"
-              type="number"
-              value={localFilters.minPrice}
-              onChange={(e) => handleInputChange('minPrice', e.target.value)}
-              placeholder="0"
-              min="0"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Precio mínimo (MXN/h)
+              </label>
+              <input
+                type="number"
+                value={localFilters.minPrice}
+                onChange={(e) => handleInputChange('minPrice', e.target.value)}
+                placeholder="0"
+                min="0"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-            <FormField
-              label="Precio máximo (MXN/h)"
-              type="number"
-              value={localFilters.maxPrice}
-              onChange={(e) => handleInputChange('maxPrice', e.target.value)}
-              placeholder="999999"
-              min="0"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Precio máximo (MXN/h)
+              </label>
+              <input
+                type="number"
+                value={localFilters.maxPrice}
+                onChange={(e) => handleInputChange('maxPrice', e.target.value)}
+                placeholder="999999"
+                min="0"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
 
           <div className="mb-6">
@@ -211,12 +251,15 @@ export const CourtSearch: React.FC = () => {
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {amenityOptions.map((amenity) => (
-                <CheckboxField
-                  key={amenity.value}
-                  label={amenity.label}
-                  checked={localFilters.amenities.includes(amenity.value)}
-                  onChange={(checked) => handleAmenityChange(amenity.value, checked)}
-                />
+                <label key={amenity.value} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={localFilters.amenities.includes(amenity.value)}
+                    onChange={(e) => handleAmenityChange(amenity.value, e.target.checked)}
+                    className="mr-2"
+                  />
+                  <span className="text-sm">{amenity.label}</span>
+                </label>
               ))}
             </div>
           </div>
@@ -236,7 +279,7 @@ export const CourtSearch: React.FC = () => {
         </Button>
         
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={handleReset}
           className="flex-1 sm:flex-none"
         >

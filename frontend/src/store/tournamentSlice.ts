@@ -4,10 +4,9 @@ import {
   TournamentState, 
   TournamentSearchFilters,
   TournamentFormData,
-  TournamentCategory,
   TournamentRegistration
-} from '../../types/tournament';
-import api from '../../services/api';
+} from '../types/tournament';
+import api from '../services/api';
 
 // Initial state
 const initialState: TournamentState = {
@@ -34,7 +33,7 @@ export const fetchTournaments = createAsyncThunk(
     });
     
     const response = await api.get(`/tournaments/search?${params.toString()}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -42,7 +41,7 @@ export const fetchTournament = createAsyncThunk(
   'tournaments/fetchTournament',
   async (tournamentId: number) => {
     const response = await api.get(`/tournaments/${tournamentId}`);
-    return response.data.tournament;
+    return (response as any).data.tournament;
   }
 );
 
@@ -50,7 +49,7 @@ export const createTournament = createAsyncThunk(
   'tournaments/createTournament',
   async (tournamentData: TournamentFormData) => {
     const response = await api.post('/tournaments', tournamentData);
-    return response.data.tournament;
+    return (response as any).data.tournament;
   }
 );
 
@@ -58,7 +57,7 @@ export const updateTournament = createAsyncThunk(
   'tournaments/updateTournament',
   async ({ id, updates }: { id: number; updates: Partial<TournamentFormData> }) => {
     const response = await api.put(`/tournaments/${id}`, updates);
-    return response.data.tournament;
+    return (response as any).data.tournament;
   }
 );
 
@@ -74,7 +73,7 @@ export const updateTournamentStatus = createAsyncThunk(
   'tournaments/updateTournamentStatus',
   async ({ id, status }: { id: number; status: string }) => {
     const response = await api.put(`/tournaments/${id}/status`, { status });
-    return response.data.tournament;
+    return (response as any).data.tournament;
   }
 );
 
@@ -82,7 +81,7 @@ export const fetchUpcomingTournaments = createAsyncThunk(
   'tournaments/fetchUpcomingTournaments',
   async (limit: number = 10) => {
     const response = await api.get(`/tournaments/upcoming?limit=${limit}`);
-    return response.data.tournaments;
+    return (response as any).data.tournaments;
   }
 );
 
@@ -90,7 +89,7 @@ export const fetchActiveTournaments = createAsyncThunk(
   'tournaments/fetchActiveTournaments',
   async () => {
     const response = await api.get('/tournaments/active');
-    return response.data.tournaments;
+    return (response as any).data.tournaments;
   }
 );
 
@@ -106,7 +105,7 @@ export const fetchTournamentsByOrganizer = createAsyncThunk(
     if (level) params.append('level', level);
     
     const response = await api.get(`/tournaments/organizer/${organizerId}?${params.toString()}`);
-    return response.data.tournaments;
+    return (response as any).data.tournaments;
   }
 );
 
@@ -114,7 +113,7 @@ export const fetchUserRegistrations = createAsyncThunk(
   'tournaments/fetchUserRegistrations',
   async () => {
     const response = await api.get('/tournaments/my-registrations');
-    return response.data.registrations;
+    return (response as any).data.registrations;
   }
 );
 
@@ -128,16 +127,14 @@ export const registerForTournament = createAsyncThunk(
     registrationData: any;
   }) => {
     const response = await api.post(`/tournaments/${tournamentId}/register`, registrationData);
-    return response.data;
+    return (response as any).data;
   }
 );
 
 export const cancelRegistration = createAsyncThunk(
   'tournaments/cancelRegistration',
-  async ({ registrationId, reason }: { registrationId: number; reason: string }) => {
-    await api.delete(`/tournaments/registrations/${registrationId}`, { 
-      data: { reason } 
-    });
+  async ({ registrationId }: { registrationId: number; reason: string }) => {
+    await api.delete(`/tournaments/registrations/${registrationId}`);
     return registrationId;
   }
 );
@@ -151,7 +148,7 @@ export const confirmRegistrationPayment = createAsyncThunk(
     const response = await api.post(`/tournaments/registrations/${registrationId}/confirm-payment`, {
       paymentIntentId
     });
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -161,7 +158,7 @@ export const signWaiver = createAsyncThunk(
     const response = await api.post(`/tournaments/registrations/${registrationId}/sign-waiver`, {
       signature
     });
-    return response.data.registration;
+    return (response as any).data.registration;
   }
 );
 
@@ -169,7 +166,7 @@ export const fetchTournamentCategories = createAsyncThunk(
   'tournaments/fetchTournamentCategories',
   async (tournamentId: number) => {
     const response = await api.get(`/tournaments/${tournamentId}/categories`);
-    return response.data.categories;
+    return (response as any).data.categories;
   }
 );
 
@@ -180,7 +177,7 @@ export const createTournamentCategory = createAsyncThunk(
     categoryData: any; 
   }) => {
     const response = await api.post(`/tournaments/${tournamentId}/categories`, categoryData);
-    return response.data.category;
+    return (response as any).data.category;
   }
 );
 
@@ -190,7 +187,7 @@ export const exportTournamentData = createAsyncThunk(
     const response = await api.get(`/tournaments/${tournamentId}/export?format=${format}`, {
       responseType: format === 'csv' ? 'blob' : 'json'
     });
-    return response.data;
+    return (response as any).data;
   }
 );
 

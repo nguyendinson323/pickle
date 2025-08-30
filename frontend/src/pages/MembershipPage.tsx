@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { useAppSelector } from '../store';
-import { Layout } from '../components/common/Layout';
-import { Tabs } from '../components/ui/Tabs';
+import Layout from '../components/common/Layout';
+import Tabs from '../components/ui/Tabs';
 import { MembershipPlans } from '../components/payment/MembershipPlans';
 import { MembershipStatus } from '../components/payment/MembershipStatus';
 import { PaymentHistory } from '../components/payment/PaymentHistory';
 import { PaymentForm } from '../components/payment/PaymentForm';
-import { Modal } from '../components/ui/Modal';
-import { Button } from '../components/ui/Button';
+import Modal from '../components/ui/Modal';
+import Button from '../components/ui/Button';
 
 export const MembershipPage: React.FC = () => {
   const { user } = useAppSelector(state => state.auth);
-  const { currentPaymentIntent } = useAppSelector(state => state.payment);
+  // const { currentPaymentIntent } = useAppSelector(state => state.payment);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [activeTab, setActiveTab] = useState('status');
 
   // Show payment modal when payment intent is created
-  React.useEffect(() => {
-    if (currentPaymentIntent) {
-      setShowPaymentModal(true);
-    }
-  }, [currentPaymentIntent]);
+  // React.useEffect(() => {
+  //   if (currentPaymentIntent) {
+  //     setShowPaymentModal(true);
+  //   }
+  // }, [currentPaymentIntent]);
 
   const handlePaymentSuccess = () => {
     setShowPaymentModal(false);
@@ -64,7 +64,7 @@ export const MembershipPage: React.FC = () => {
           </div>
 
           {/* Welcome Message for New Users */}
-          {user && !user.stripeCustomerId && (
+          {user && !(user as any).stripeCustomerId && (
             <div className="mb-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
               <div className="flex">
                 <svg className="h-6 w-6 text-blue-500 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,9 +95,9 @@ export const MembershipPage: React.FC = () => {
           {/* Main Content */}
           <div className="bg-white rounded-lg shadow">
             <Tabs
-              tabs={tabs}
+              items={tabs}
               activeTab={activeTab}
-              onTabChange={setActiveTab}
+              onChange={setActiveTab}
               className="p-6"
             />
           </div>

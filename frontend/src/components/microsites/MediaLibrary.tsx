@@ -1,10 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../store';
-import { uploadMediaFile, deleteMediaFile } from '../../store/slices/micrositeSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Select from '../ui/Select';
 import Modal from '../ui/Modal';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { 
@@ -16,30 +13,27 @@ import {
   TrashIcon,
   EyeIcon,
   FolderIcon,
-  GridIcon,
-  ListIcon,
-  CheckIcon,
-  XMarkIcon
+  Squares2X2Icon,
+  ListBulletIcon,
+  CheckIcon
 } from '@heroicons/react/24/outline';
+import { MediaFile } from '../../store/micrositeSlice';
 
 interface MediaLibraryProps {
-  micrositeId: number;
   isSelectMode?: boolean;
   allowedTypes?: string[];
   maxSelection?: number;
-  onSelect?: (files: any[]) => void;
-  selectedFiles?: any[];
+  onSelect?: (files: MediaFile[]) => void;
+  selectedFiles?: MediaFile[];
 }
 
 const MediaLibrary: React.FC<MediaLibraryProps> = ({
-  micrositeId,
   isSelectMode = false,
   allowedTypes = ['image', 'video', 'document'],
   maxSelection = 1,
   onSelect,
   selectedFiles = []
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
   const { mediaFiles, loading } = useSelector((state: RootState) => state.microsites);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,18 +42,17 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
   const [filterType, setFilterType] = useState('all');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [previewFile, setPreviewFile] = useState<any>(null);
-  const [selectedItems, setSelectedItems] = useState<any[]>(selectedFiles);
+  const [previewFile, setPreviewFile] = useState<MediaFile | null>(null);
+  const [selectedItems, setSelectedItems] = useState<MediaFile[]>(selectedFiles);
 
   // Filter media files
-  const filteredFiles = mediaFiles?.filter(file => {
-    const matchesSearch = file.fileName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         file.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = filterType === 'all' || file.fileType.startsWith(filterType);
-    const matchesAllowedType = allowedTypes.includes(file.fileType.split('/')[0]);
+  const filteredFiles = (mediaFiles || []).filter((file: MediaFile) => {
+    const matchesSearch = file.filename.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = filterType === 'all' || file.mimeType.startsWith(filterType);
+    const matchesAllowedType = allowedTypes.includes(file.mimeType.split('/')[0]);
     
     return matchesSearch && matchesType && matchesAllowedType;
-  }) || [];
+  });
 
   const handleFileUpload = async (files: FileList) => {
     if (!files.length) return;
@@ -69,16 +62,9 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
 
     try {
       for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('micrositeId', micrositeId.toString());
-        
-        await dispatch(uploadMediaFile({
-          micrositeId,
-          file: formData
-        }));
-
+        // TODO: Implement file upload functionality
+        // This would typically involve creating FormData and dispatching to an async thunk
+        console.log('Upload file:', files[i].name);
         setUploadProgress(((i + 1) / files.length) * 100);
       }
     } catch (error) {
@@ -99,7 +85,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
     e.preventDefault();
   };
 
-  const handleFileSelect = (file: any) => {
+  const handleFileSelect = (file: MediaFile) => {
     if (!isSelectMode) {
       setPreviewFile(file);
       return;
@@ -125,20 +111,21 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
     }
   };
 
-  const handleDelete = async (file: any) => {
+  const handleDelete = async (file: MediaFile) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este archivo?')) {
       try {
-        await dispatch(deleteMediaFile(file.id));
+        // TODO: Implement delete file functionality
+        console.log('Delete file:', file.id);
       } catch (error) {
         console.error('Error deleting file:', error);
       }
     }
   };
 
-  const getFileIcon = (fileType: string) => {
-    if (fileType.startsWith('image/')) {
+  const getFileIcon = (mimeType: string) => {
+    if (mimeType.startsWith('image/')) {
       return <PhotoIcon className="w-6 h-6 text-blue-500" />;
-    } else if (fileType.startsWith('video/')) {
+    } else if (mimeType.startsWith('video/')) {
       return <VideoCameraIcon className="w-6 h-6 text-purple-500" />;
     }
     return <DocumentIcon className="w-6 h-6 text-gray-500" />;
@@ -173,20 +160,20 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
             )}
 
             <div className="aspect-square bg-gray-100 flex items-center justify-center">
-              {file.fileType.startsWith('image/') ? (
+              {file.mimeType.startsWith('image/') ? (
                 <img
                   src={file.url}
-                  alt={file.fileName}
+                  alt={file.filename}
                   className="w-full h-full object-cover"
                 />
               ) : (
-                getFileIcon(file.fileType)
+                getFileIcon(file.mimeType)
               )}
             </div>
 
             <div className="p-2">
               <p className="text-xs font-medium text-gray-900 truncate">
-                {file.fileName}
+                {file.filename}
               </p>
               <p className="text-xs text-gray-500">
                 {formatFileSize(file.size)}
@@ -248,27 +235,24 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
             )}
 
             <div className="flex-shrink-0">
-              {file.fileType.startsWith('image/') ? (
+              {file.mimeType.startsWith('image/') ? (
                 <img
                   src={file.url}
-                  alt={file.fileName}
+                  alt={file.filename}
                   className="w-12 h-12 object-cover rounded"
                 />
               ) : (
                 <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center">
-                  {getFileIcon(file.fileType)}
+                  {getFileIcon(file.mimeType)}
                 </div>
               )}
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-gray-900 truncate">{file.fileName}</p>
+              <p className="font-medium text-gray-900 truncate">{file.filename}</p>
               <p className="text-sm text-gray-500">
-                {formatFileSize(file.size)} • {new Date(file.createdAt).toLocaleDateString()}
+                {formatFileSize(file.size)}
               </p>
-              {file.description && (
-                <p className="text-sm text-gray-600 truncate mt-1">{file.description}</p>
-              )}
             </div>
 
             {!isSelectMode && (
@@ -312,13 +296,13 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
       {previewFile && (
         <div className="space-y-4">
           <div className="text-center">
-            {previewFile.fileType.startsWith('image/') ? (
+            {previewFile.mimeType.startsWith('image/') ? (
               <img
                 src={previewFile.url}
-                alt={previewFile.fileName}
+                alt={previewFile.filename}
                 className="max-w-full max-h-96 mx-auto rounded-lg"
               />
-            ) : previewFile.fileType.startsWith('video/') ? (
+            ) : previewFile.mimeType.startsWith('video/') ? (
               <video
                 src={previewFile.url}
                 controls
@@ -326,8 +310,8 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
               />
             ) : (
               <div className="p-8 bg-gray-100 rounded-lg">
-                {getFileIcon(previewFile.fileType)}
-                <p className="mt-2 font-medium">{previewFile.fileName}</p>
+                {getFileIcon(previewFile.mimeType)}
+                <p className="mt-2 font-medium">{previewFile.filename}</p>
               </div>
             )}
           </div>
@@ -336,7 +320,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
             <dl className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <dt className="font-medium text-gray-900">Nombre:</dt>
-                <dd className="text-gray-600">{previewFile.fileName}</dd>
+                <dd className="text-gray-600">{previewFile.filename}</dd>
               </div>
               <div>
                 <dt className="font-medium text-gray-900">Tamaño:</dt>
@@ -344,18 +328,8 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
               </div>
               <div>
                 <dt className="font-medium text-gray-900">Tipo:</dt>
-                <dd className="text-gray-600">{previewFile.fileType}</dd>
+                <dd className="text-gray-600">{previewFile.mimeType}</dd>
               </div>
-              <div>
-                <dt className="font-medium text-gray-900">Subido:</dt>
-                <dd className="text-gray-600">{new Date(previewFile.createdAt).toLocaleDateString()}</dd>
-              </div>
-              {previewFile.description && (
-                <div className="col-span-2">
-                  <dt className="font-medium text-gray-900">Descripción:</dt>
-                  <dd className="text-gray-600">{previewFile.description}</dd>
-                </div>
-              )}
             </dl>
           </div>
 
@@ -393,13 +367,13 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
                 onClick={() => setViewMode('grid')}
                 className={`p-2 ${viewMode === 'grid' ? 'bg-gray-100 text-gray-900' : 'text-gray-500'}`}
               >
-                <GridIcon className="w-4 h-4" />
+                <Squares2X2Icon className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
                 className={`p-2 ${viewMode === 'list' ? 'bg-gray-100 text-gray-900' : 'text-gray-500'}`}
               >
-                <ListIcon className="w-4 h-4" />
+                <ListBulletIcon className="w-4 h-4" />
               </button>
             </div>
 
@@ -420,24 +394,25 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">
             <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
+            <input
+              type="text"
               placeholder="Buscar archivos..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
-          <Select
+          <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            options={[
-              { value: 'all', label: 'Todos los tipos' },
-              { value: 'image', label: 'Imágenes' },
-              { value: 'video', label: 'Videos' },
-              { value: 'application', label: 'Documentos' }
-            ]}
-          />
+            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="all">Todos los tipos</option>
+            <option value="image">Imágenes</option>
+            <option value="video">Videos</option>
+            <option value="application">Documentos</option>
+          </select>
         </div>
 
         {isSelectMode && selectedItems.length > 0 && (

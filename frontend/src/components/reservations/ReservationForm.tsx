@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { createReservation, detectConflicts, clearConflicts } from '../../store/slices/reservationSlice';
+import { createReservation, detectConflicts, clearConflicts } from '../../store/reservationSlice';
 import { ReservationCalendar } from './ReservationCalendar';
 import { TimeSlotPicker } from './TimeSlotPicker';
 import { Button } from '../ui/Button';

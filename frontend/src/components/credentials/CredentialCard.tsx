@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
-import { Modal } from '../ui/Modal';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
+import Button from '../ui/Button';
+import Modal from '../ui/Modal';
 
 interface CredentialCardProps {
   credential: {
@@ -224,7 +224,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
             {credential.qrCode && (
               <Button
                 onClick={() => setShowQRModal(true)}
-                variant="outline"
+                variant="secondary"
                 size="sm"
               >
                 Ver QR
@@ -234,7 +234,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
             {onDownloadPDF && (
               <Button
                 onClick={onDownloadPDF}
-                variant="outline"
+                variant="secondary"
                 size="sm"
               >
                 PDF
@@ -244,7 +244,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
             {onDownloadImage && (
               <Button
                 onClick={onDownloadImage}
-                variant="outline"
+                variant="secondary"
                 size="sm"
               >
                 Imagen
@@ -315,7 +315,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                     onStatusUpdate('active');
                     setShowActionsModal(false);
                   }}
-                  variant={credential.status === 'active' ? 'primary' : 'outline'}
+                  variant={credential.status === 'active' ? 'primary' : 'secondary'}
                   size="sm"
                 >
                   Activar
@@ -325,7 +325,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                     onStatusUpdate('suspended');
                     setShowActionsModal(false);
                   }}
-                  variant={credential.status === 'suspended' ? 'primary' : 'outline'}
+                  variant={credential.status === 'suspended' ? 'primary' : 'secondary'}
                   size="sm"
                 >
                   Suspender
@@ -335,7 +335,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                     onStatusUpdate('revoked');
                     setShowActionsModal(false);
                   }}
-                  variant={credential.status === 'revoked' ? 'primary' : 'outline'}
+                  variant={credential.status === 'revoked' ? 'primary' : 'secondary'}
                   size="sm"
                 >
                   Revocar
@@ -362,7 +362,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
           <div className="pt-4 border-t">
             <Button
               onClick={() => setShowActionsModal(false)}
-              variant="outline"
+              variant="secondary"
               className="w-full"
             >
               Cancelar

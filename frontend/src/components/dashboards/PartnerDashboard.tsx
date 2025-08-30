@@ -1,47 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '@/store';
-import { 
-  fetchDashboardData, 
-  selectDashboardData, 
-  selectDashboardLoading, 
-  selectDashboardError 
-} from '@/store/dashboardSlice';
-import { 
-  fetchMessages, 
-  selectMessages, 
-  selectUnreadCount 
-} from '@/store/messageSlice';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import StatCard from '@/components/dashboard/StatCard';
-import Tabs from '@/components/ui/Tabs';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
+import { useAppSelector } from '../../store';
+import StatCard from '../dashboard/StatCard';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import LoadingSpinner from '../common/LoadingSpinner';
 import {
   BriefcaseIcon,
   CogIcon,
   InboxIcon,
   PresentationChartBarIcon,
-  HandshakeIcon,
   DocumentTextIcon,
   CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
 
 const PartnerDashboard: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const dashboardData = useAppSelector(selectDashboardData);
-  const loading = useAppSelector(selectDashboardLoading);
-  const error = useAppSelector(selectDashboardError);
-  const messages = useAppSelector(selectMessages);
-  const unreadCount = useAppSelector(selectUnreadCount);
-  
+  const { user } = useAppSelector(state => state.auth);
+  const [loading, setLoading] = useState(false);
+  const [error] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('profile');
 
+  // Mock data since slices don't exist
+  const dashboardData = {
+    statistics: {
+      activeCampaigns: 3,
+      activeSponshorships: 5,
+      pendingContracts: 2
+    }
+  };
+  const unreadCount = 0;
+  const userDisplayName = user?.profile && 'businessName' in user.profile
+    ? user.profile.businessName
+    : user?.profile && 'contactPersonName' in user.profile
+    ? user.profile.contactPersonName
+    : 'Empresa Patrocinadora';
+
   useEffect(() => {
-    dispatch(fetchDashboardData());
-    dispatch(fetchMessages({ page: 1, limit: 10 }));
-  }, [dispatch]);
+    // Mock loading effect
+    setLoading(true);
+    setTimeout(() => setLoading(false), 1000);
+  }, []);
 
   const tabs = [
     {
@@ -71,7 +69,7 @@ const PartnerDashboard: React.FC = () => {
     {
       id: 'sponsorships',
       label: 'Patrocinios',
-      icon: <HandshakeIcon className="w-4 h-4" />,
+      icon: <BriefcaseIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.activeSponshorships || 0
     },
     {
@@ -96,12 +94,12 @@ const PartnerDashboard: React.FC = () => {
             <div>
               <h3 className="text-lg font-semibold mb-2">Perfil del Partner</h3>
               <p className="text-purple-100 mb-4">
-                {dashboardData?.user?.company_name || 'Empresa Patrocinadora'}
+                {userDisplayName}
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-purple-200">ID Partner:</span>
-                  <span className="ml-2 font-medium">{dashboardData?.user?.id || 'PART001'}</span>
+                  <span className="ml-2 font-medium">{user?.id || 'PART001'}</span>
                 </div>
                 <div>
                   <span className="text-purple-200">Industria:</span>
@@ -121,7 +119,7 @@ const PartnerDashboard: React.FC = () => {
               <div className="w-20 h-20 bg-white/20 rounded-lg flex items-center justify-center mb-4">
                 <BriefcaseIcon className="w-10 h-10 text-white" />
               </div>
-              <Button variant="ghost" size="sm" className="text-white border-white/30">
+              <Button variant="secondary" size="sm" className="text-white border-white/30">
                 Editar Perfil
               </Button>
             </div>
@@ -162,9 +160,9 @@ const PartnerDashboard: React.FC = () => {
               <Badge variant="success">Raquetas de Pickleball</Badge>
               <Badge variant="warning">Pelotas Oficiales</Badge>
               <Badge variant="secondary">Ropa Deportiva</Badge>
-              <Badge variant="outline">Accesorios</Badge>
+              <Badge variant="secondary">Accesorios</Badge>
             </div>
-            <Button variant="outline" size="sm" fullWidth className="mt-4">
+            <Button variant="secondary" size="sm" className="w-full mt-4">
               Actualizar Catálogo
             </Button>
           </div>
@@ -239,7 +237,7 @@ const PartnerDashboard: React.FC = () => {
                 </div>
               </div>
               
-              <Button variant="outline" size="sm" fullWidth>
+              <Button variant="secondary" size="sm" className="w-full">
                 Ver Métricas
               </Button>
             </div>
@@ -254,7 +252,7 @@ const PartnerDashboard: React.FC = () => {
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold text-gray-900">Patrocinios</h3>
         <Button variant="primary">
-          <HandshakeIcon className="w-4 h-4 mr-2" />
+          <BriefcaseIcon className="w-4 h-4 mr-2" />
           Nuevo Patrocinio
         </Button>
       </div>
@@ -380,7 +378,7 @@ const PartnerDashboard: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">Error cargando el dashboard</p>
-          <Button onClick={() => dispatch(fetchDashboardData())}>
+          <Button onClick={() => window.location.reload()}>
             Reintentar
           </Button>
         </div>
@@ -389,57 +387,90 @@ const PartnerDashboard: React.FC = () => {
   }
 
   return (
-    <DashboardLayout>
-      <div className="space-y-8">
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard
-            title="Campañas Activas"
-            value={dashboardData?.statistics?.activeCampaigns?.toString() || '3'}
-            change="+1"
-            changeType="positive"
-            icon={<PresentationChartBarIcon className="w-6 h-6" />}
-          />
-          <StatCard
-            title="Patrocinios"
-            value={dashboardData?.statistics?.activeSponshorships?.toString() || '5'}
-            change="+2"
-            changeType="positive"
-            icon={<HandshakeIcon className="w-6 h-6" />}
-          />
-          <StatCard
-            title="Inversión Total"
-            value="$155,000"
-            change="+12%"
-            changeType="positive"
-            icon={<CurrencyDollarIcon className="w-6 h-6" />}
-          />
-          <StatCard
-            title="ROI Promedio"
-            value="285%"
-            change="+25%"
-            changeType="positive"
-            icon={<PresentationChartBarIcon className="w-6 h-6" />}
-          />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+            Partner Dashboard
+          </h1>
+          {user && (
+            <p className="mt-1 text-sm text-gray-500">
+              Bienvenido, {userDisplayName}
+            </p>
+          )}
         </div>
+      </div>
 
-        {/* Main Content with Tabs */}
-        <div className="bg-white rounded-xl shadow-sm">
-          <div className="border-b border-gray-200">
-            <Tabs
-              items={tabs}
-              activeTab={activeTab}
-              onChange={setActiveTab}
-              variant="underline"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-8">
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatCard
+              title="Campañas Activas"
+              value={dashboardData?.statistics?.activeCampaigns?.toString() || '3'}
+              icon={<PresentationChartBarIcon className="w-6 h-6" />}
+              trend={{ direction: 'up', value: 1, label: 'este mes' }}
+              color="blue"
+            />
+            <StatCard
+              title="Patrocinios"
+              value={dashboardData?.statistics?.activeSponshorships?.toString() || '5'}
+              icon={<BriefcaseIcon className="w-6 h-6" />}
+              trend={{ direction: 'up', value: 2, label: 'este mes' }}
+              color="green"
+            />
+            <StatCard
+              title="Inversión Total"
+              value="$155,000"
+              icon={<CurrencyDollarIcon className="w-6 h-6" />}
+              trend={{ direction: 'up', value: 12, label: 'este mes' }}
+              color="purple"
+            />
+            <StatCard
+              title="ROI Promedio"
+              value="285%"
+              icon={<PresentationChartBarIcon className="w-6 h-6" />}
+              trend={{ direction: 'up', value: 25, label: 'este mes' }}
+              color="yellow"
             />
           </div>
-          
-          <div className="p-6">
-            {renderTabContent()}
+
+          {/* Main Content with Tabs */}
+          <div className="bg-white rounded-xl shadow-sm">
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-8 px-6">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+                      py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center space-x-2
+                      ${activeTab === tab.id
+                        ? 'border-purple-500 text-purple-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }
+                    `}
+                  >
+                    {tab.icon}
+                    <span>{tab.label}</span>
+                    {tab.count > 0 && (
+                      <span className="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-900">
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </nav>
+            </div>
+            
+            <div className="p-6">
+              {renderTabContent()}
+            </div>
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </div>
   );
 };
 

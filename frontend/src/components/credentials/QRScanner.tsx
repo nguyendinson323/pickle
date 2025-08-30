@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { LoadingSpinner } from '../common/LoadingSpinner';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 interface QRScannerProps {
   onScanResult?: (result: VerificationResult) => void;
@@ -181,7 +181,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
       case 'active':
         return 'success';
       case 'expired':
-        return 'danger';
+        return 'error';
       case 'suspended':
         return 'warning';
       case 'revoked':
@@ -199,7 +199,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Verificación de Credenciales</h2>
         {onClose && (
-          <Button onClick={onClose} variant="outline">
+          <Button onClick={onClose} variant="secondary">
             Cerrar
           </Button>
         )}
@@ -277,7 +277,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
                 <div>
                   <span className="font-medium text-gray-700">Afiliación:</span>
                   <div>
-                    <Badge variant="outline">
+                    <Badge variant="secondary">
                       {verificationResult.credential.affiliationStatus}
                     </Badge>
                   </div>
@@ -303,7 +303,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
           )}
 
           <div className="mt-6 text-center">
-            <Button onClick={resetScanner} variant="outline">
+            <Button onClick={resetScanner} variant="secondary">
               Verificar Otra Credencial
             </Button>
           </div>
@@ -354,7 +354,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
                       Posicione el código QR dentro del marco de la cámara
                     </p>
                     
-                    <Button onClick={stopCamera} variant="outline">
+                    <Button onClick={stopCamera} variant="secondary">
                       Detener Escáner
                     </Button>
                   </div>

@@ -8,7 +8,7 @@ import {
   checkOutReservation,
   setCurrentPage,
   Reservation 
-} from '../../store/slices/reservationSlice';
+} from '../../store/reservationSlice';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';

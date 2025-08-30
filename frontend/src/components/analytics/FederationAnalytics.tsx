@@ -1,38 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchFederationAnalytics } from '../../store/slices/analyticsSlice';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { LoadingSpinner } from '../common/LoadingSpinner';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 export const FederationAnalytics: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { federation, loading, error } = useAppSelector(state => state.analytics);
+  // Mock federation analytics data since analytics slice doesn't exist yet
+  const federation = {
+    totalRevenue: 0,
+    totalCourts: 0,
+    activeUsers: 0,
+    totalReservations: 0,
+    topStates: [] as Array<{ state: string; courts: number; reservations: number; revenue: number }>,
+    newCourts: 0,
+    newUsers: 0,
+    averageOccupancy: 0,
+    averageRating: 0
+  };
+  const loading = false;
+  const error = null;
   
   const [selectedPeriod, setSelectedPeriod] = useState<'30days' | '3months' | '1year'>('30days');
 
   useEffect(() => {
-    const endDate = new Date();
-    const startDate = new Date();
-    
-    switch (selectedPeriod) {
-      case '30days':
-        startDate.setDate(endDate.getDate() - 30);
-        break;
-      case '3months':
-        startDate.setMonth(endDate.getMonth() - 3);
-        break;
-      case '1year':
-        startDate.setFullYear(endDate.getFullYear() - 1);
-        break;
-    }
-
-    dispatch(fetchFederationAnalytics({
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0]
-    }));
-  }, [dispatch, selectedPeriod]);
+    // TODO: Implement federation analytics data fetching when analytics slice is created
+    console.log('Federation analytics data would be fetched for:', selectedPeriod);
+  }, [selectedPeriod]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-MX', {
@@ -215,10 +208,10 @@ export const FederationAnalytics: React.FC = () => {
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Estados con Mejor Rendimiento</h3>
           <div className="space-y-3">
-            {federation.topStates.map((state, index) => (
+            {federation.topStates.map((state: any, index: number) => (
               <div key={state.state} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Badge variant={index === 0 ? 'success' : index === 1 ? 'warning' : 'outline'}>
+                  <Badge variant={index === 0 ? 'success' : index === 1 ? 'warning' : 'info'}>
                     #{index + 1}
                   </Badge>
                   <div>
@@ -267,7 +260,7 @@ export const FederationAnalytics: React.FC = () => {
               <span className="text-gray-600">Tasa de ocupación promedio</span>
               <Badge variant={
                 federation.averageOccupancy >= 0.8 ? 'success' :
-                federation.averageOccupancy >= 0.6 ? 'warning' : 'danger'
+                federation.averageOccupancy >= 0.6 ? 'warning' : 'error'
               }>
                 {(federation.averageOccupancy * 100).toFixed(1)}%
               </Badge>

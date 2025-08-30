@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Layout } from '../../components/common/Layout';
+import Layout from '../../components/common/Layout';
 import { CredentialList } from '../../components/credentials/CredentialList';
 import { CredentialGenerator } from '../../components/credentials/CredentialGenerator';
 import { CredentialVerifier } from '../../components/credentials/CredentialVerifier';
-import { Card } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
-import { Tabs } from '../../components/ui/Tabs';
-import { Badge } from '../../components/ui/Badge';
-import { Modal } from '../../components/ui/Modal';
-import { RootState } from '../../store/store';
+import Card from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import Tabs from '../../components/ui/Tabs';
+import Badge from '../../components/ui/Badge';
+import Modal from '../../components/ui/Modal';
+import { RootState } from '../../store';
 
 export const CredentialsPage: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -23,7 +23,7 @@ export const CredentialsPage: React.FC = () => {
     expiringSoon: 0
   });
 
-  const isAdmin = user?.role === 'admin' || user?.role === 'state';
+  const isAdmin = user?.role === 'federation' || user?.role === 'state';
 
   useEffect(() => {
     fetchCredentialStats();
@@ -59,7 +59,7 @@ export const CredentialsPage: React.FC = () => {
     }
   };
 
-  const handleCredentialCreated = (credential: any) => {
+  const handleCredentialCreated = (_credential: any) => {
     fetchCredentialStats();
     setShowGenerator(false);
   };
@@ -161,7 +161,7 @@ export const CredentialsPage: React.FC = () => {
                     </Badge>
                   )}
                   {stats.expired > 0 && (
-                    <Badge variant="danger">
+                    <Badge variant="error">
                       {stats.expired} Expiradas
                     </Badge>
                   )}
@@ -190,9 +190,9 @@ export const CredentialsPage: React.FC = () => {
 
         {/* Tabs */}
         <Tabs
-          tabs={tabs}
+          items={tabs.map(tab => ({ ...tab, badge: tab.count > 0 ? tab.count : undefined }))}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onChange={setActiveTab}
         />
 
         {/* Tab Content */}
@@ -238,7 +238,7 @@ export const CredentialsPage: React.FC = () => {
                 </div>
                 
                 <CredentialList
-                  stateId={user?.role === 'state' ? user.stateId : undefined}
+                  stateId={user?.role === 'state' && user.profile ? (user.profile as any).stateId : undefined}
                   showActions={true}
                 />
               </Card>
@@ -261,7 +261,7 @@ export const CredentialsPage: React.FC = () => {
               </p>
               
               <CredentialList
-                stateId={user?.role === 'state' ? user.stateId : undefined}
+                stateId={user?.role === 'state' && user.profile ? (user.profile as any).stateId : undefined}
                 status="active" // We'll need to filter by expiration date in the backend
                 showActions={true}
               />
@@ -311,14 +311,14 @@ export const CredentialsPage: React.FC = () => {
                 <li>• <Badge variant="primary" size="sm">Jugador</Badge> - Para jugadores federados</li>
                 <li>• <Badge variant="secondary" size="sm">Entrenador</Badge> - Para entrenadores certificados</li>
                 <li>• <Badge variant="info" size="sm">Árbitro</Badge> - Para árbitros oficiales</li>
-                <li>• <Badge variant="outline" size="sm">Administrador</Badge> - Para administradores de club</li>
+                <li>• <Badge variant="secondary" size="sm">Administrador</Badge> - Para administradores de club</li>
               </ul>
             </div>
             <div>
               <h4 className="font-medium mb-2">Estados de Credencial</h4>
               <ul className="space-y-1">
                 <li>• <Badge variant="success" size="sm">Activa</Badge> - Válida y verificable</li>
-                <li>• <Badge variant="danger" size="sm">Expirada</Badge> - Requiere renovación</li>
+                <li>• <Badge variant="error" size="sm">Expirada</Badge> - Requiere renovación</li>
                 <li>• <Badge variant="warning" size="sm">Suspendida</Badge> - Temporalmente inválida</li>
                 <li>• <Badge variant="secondary" size="sm">Revocada</Badge> - Permanentemente inválida</li>
               </ul>

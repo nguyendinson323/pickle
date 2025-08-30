@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
-import { updatePage } from '../../store/slices/micrositeSlice';
-import { MicrositePage } from '../../store/slices/micrositeSlice';
+import { updatePage } from '../../store/micrositeSlice';
+import { MicrositePage } from '../../store/micrositeSlice';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import Input from '../ui/Input';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchMembershipPlans, createPaymentIntent } from '../../store/slices/paymentSlice';
+import { fetchMembershipPlans, createPaymentIntent } from '../../store/paymentSlice';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';

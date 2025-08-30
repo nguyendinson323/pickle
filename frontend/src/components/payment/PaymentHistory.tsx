@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchPayments, refundPayment } from '../../store/slices/paymentSlice';
+import { fetchPayments, refundPayment } from '../../store/paymentSlice';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';

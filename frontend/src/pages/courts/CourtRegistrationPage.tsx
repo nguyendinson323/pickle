@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { createCourt, clearCourtError } from '../../store/slices/courtSlice';
-import { CourtForm } from '../../components/courts/CourtForm';
-import { Button } from '../../components/ui/Button';
+import { createCourt, clearError } from '../../store/courtSlice';
+import Button from '../../components/ui/Button';
 
 export const CourtRegistrationPage: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +23,7 @@ export const CourtRegistrationPage: React.FC = () => {
     }
 
     // Clear any existing errors
-    dispatch(clearCourtError());
+    dispatch(clearError());
   }, [user, navigate, dispatch]);
 
   const handleSubmit = async (courtData: any) => {
@@ -135,12 +134,115 @@ export const CourtRegistrationPage: React.FC = () => {
         {/* Registration Form */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6">
-            <CourtForm
-              onSubmit={handleSubmit}
-              onCancel={handleCancel}
-              loading={loading}
-              error={error}
-            />
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const courtData = {
+                name: formData.get('name'),
+                description: formData.get('description'),
+                surfaceType: formData.get('surfaceType'),
+                address: formData.get('address'),
+                hourlyRate: Number(formData.get('hourlyRate')),
+                maxAdvanceBookingDays: 30,
+                minBookingDuration: 60,
+                maxBookingDuration: 180,
+                cancellationPolicy: 'Standard 24-hour cancellation policy',
+                amenities: [],
+                images: []
+              };
+              handleSubmit(courtData);
+            }}>
+              <div className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    Nombre de la Cancha *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    Descripción
+                  </label>
+                  <textarea
+                    name="description"
+                    id="description"
+                    rows={3}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="surfaceType" className="block text-sm font-medium text-gray-700">
+                    Tipo de Superficie *
+                  </label>
+                  <select
+                    name="surfaceType"
+                    id="surfaceType"
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  >
+                    <option value="">Seleccionar...</option>
+                    <option value="concrete">Concreto</option>
+                    <option value="asphalt">Asfalto</option>
+                    <option value="acrylic">Acrílico</option>
+                    <option value="composite">Composite</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                    Dirección *
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="hourlyRate" className="block text-sm font-medium text-gray-700">
+                    Tarifa por Hora (MXN) *
+                  </label>
+                  <input
+                    type="number"
+                    name="hourlyRate"
+                    id="hourlyRate"
+                    min="0"
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+
+                {error && (
+                  <div className="rounded-md bg-red-50 p-4">
+                    <div className="flex">
+                      <div className="ml-3">
+                        <p className="text-sm text-red-800">{error}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-3">
+                  <Button type="button" variant="outline" onClick={handleCancel} disabled={loading}>
+                    Cancelar
+                  </Button>
+                  <Button type="submit" variant="primary" disabled={loading}>
+                    {loading ? 'Registrando...' : 'Registrar Cancha'}
+                  </Button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
 

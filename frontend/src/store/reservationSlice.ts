@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { api } from '../../services/api';
+import api from '../services/api';
 
 // Types
 export interface TimeSlot {
@@ -120,7 +120,7 @@ export const fetchUserReservations = createAsyncThunk(
   'reservations/fetchUserReservations',
   async ({ page = 1, limit = 10 }: { page?: number; limit?: number } = {}) => {
     const response = await api.get(`/api/reservations/my?page=${page}&limit=${limit}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -128,7 +128,7 @@ export const fetchReservationById = createAsyncThunk(
   'reservations/fetchReservationById',
   async (reservationId: number) => {
     const response = await api.get(`/api/reservations/${reservationId}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -136,7 +136,7 @@ export const createReservation = createAsyncThunk(
   'reservations/createReservation',
   async (reservationData: ReservationFormData) => {
     const response = await api.post('/api/reservations', reservationData);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -144,16 +144,14 @@ export const updateReservation = createAsyncThunk(
   'reservations/updateReservation',
   async ({ id, ...updateData }: { id: number } & Partial<ReservationFormData>) => {
     const response = await api.put(`/api/reservations/${id}`, updateData);
-    return response.data;
+    return (response as any).data;
   }
 );
 
 export const cancelReservation = createAsyncThunk(
   'reservations/cancelReservation',
-  async ({ id, reason }: { id: number; reason?: string }) => {
-    const response = await api.delete(`/api/reservations/${id}/cancel`, {
-      data: { reason }
-    });
+  async ({ id }: { id: number; reason?: string }) => {
+    await api.delete(`/api/reservations/${id}/cancel`);
     return id;
   }
 );
@@ -162,7 +160,7 @@ export const checkInReservation = createAsyncThunk(
   'reservations/checkInReservation',
   async (reservationId: number) => {
     const response = await api.post(`/api/reservations/${reservationId}/checkin`);
-    return { reservationId, checkedInAt: response.data.checkedInAt };
+    return { reservationId, checkedInAt: (response as any).data.checkedInAt };
   }
 );
 
@@ -170,7 +168,7 @@ export const checkOutReservation = createAsyncThunk(
   'reservations/checkOutReservation',
   async (reservationId: number) => {
     const response = await api.post(`/api/reservations/${reservationId}/checkout`);
-    return { reservationId, checkedOutAt: response.data.checkedOutAt };
+    return { reservationId, checkedOutAt: (response as any).data.checkedOutAt };
   }
 );
 
@@ -185,7 +183,7 @@ export const checkAvailability = createAsyncThunk(
     const response = await api.get(
       `/api/availability/check?courtId=${courtId}&date=${date}&startTime=${startTime}&endTime=${endTime}`
     );
-    return response.data.available;
+    return (response as any).data.available;
   }
 );
 
@@ -193,7 +191,7 @@ export const fetchAvailableSlots = createAsyncThunk(
   'reservations/fetchAvailableSlots',
   async ({ courtId, date }: { courtId: number; date: string }) => {
     const response = await api.get(`/api/availability/slots?courtId=${courtId}&date=${date}`);
-    return { date, slots: response.data };
+    return { date, slots: (response as any).data };
   }
 );
 
@@ -205,7 +203,7 @@ export const fetchCourtAvailability = createAsyncThunk(
     endDate: string;
   }) => {
     const response = await api.get(`/api/availability/courts/${courtId}?startDate=${startDate}&endDate=${endDate}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -220,7 +218,7 @@ export const detectConflicts = createAsyncThunk(
     const response = await api.get(
       `/api/conflicts/detect?courtId=${courtId}&date=${date}&startTime=${startTime}&endTime=${endTime}`
     );
-    return response.data.conflicts;
+    return (response as any).data.conflicts;
   }
 );
 
@@ -230,7 +228,7 @@ export const processReservationPayment = createAsyncThunk(
     const response = await api.post(`/api/reservations/${reservationId}/payment`, {
       paymentId
     });
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -239,7 +237,7 @@ export const fetchCourtReservations = createAsyncThunk(
   async ({ courtId, date }: { courtId: number; date?: string }) => {
     const params = date ? `?date=${date}` : '';
     const response = await api.get(`/api/courts/${courtId}/reservations${params}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Layout } from '../../components/common/Layout';
-import { RankingFilters } from '../../components/rankings/RankingFilters';
+import Layout from '../../components/common/Layout';
+import { RankingFilters as RankingFiltersComponent } from '../../components/rankings/RankingFilters';
 import { RankingList } from '../../components/rankings/RankingList';
 import { RankingChart } from '../../components/rankings/RankingChart';
 import { PlayerRankingProfile } from '../../components/rankings/PlayerRankingProfile';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Tabs } from '../../components/ui/Tabs';
-import { Button } from '../../components/ui/Button';
-import { Modal } from '../../components/ui/Modal';
+import Card from '../../components/ui/Card';
+import Badge from '../../components/ui/Badge';
+import Tabs from '../../components/ui/Tabs';
+import Modal from '../../components/ui/Modal';
 
-interface RankingFilters {
+interface RankingFiltersType {
   category: string;
   rankingType: string;
   stateId?: number;
@@ -19,7 +18,7 @@ interface RankingFilters {
 }
 
 export const RankingsPage: React.FC = () => {
-  const [filters, setFilters] = useState<RankingFilters>({
+  const [filters, setFilters] = useState<RankingFiltersType>({
     category: 'national',
     rankingType: 'overall'
   });
@@ -52,7 +51,7 @@ export const RankingsPage: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        await response.json();
         // This would need to be implemented in the backend
         // For now, we'll use placeholder stats
         setStats({
@@ -66,7 +65,7 @@ export const RankingsPage: React.FC = () => {
     }
   };
 
-  const handleFiltersChange = (newFilters: RankingFilters) => {
+  const handleFiltersChange = (newFilters: RankingFiltersType) => {
     setFilters(newFilters);
   };
 
@@ -148,13 +147,13 @@ export const RankingsPage: React.FC = () => {
                   {formatRankingType(filters.rankingType)}
                 </Badge>
                 {filters.stateId && (
-                  <Badge variant="outline">Estado</Badge>
+                  <Badge variant="info">Estado</Badge>
                 )}
                 {filters.ageGroup && (
-                  <Badge variant="outline">{filters.ageGroup}</Badge>
+                  <Badge variant="info">{filters.ageGroup}</Badge>
                 )}
                 {filters.gender && (
-                  <Badge variant="outline">
+                  <Badge variant="info">
                     {filters.gender === 'male' ? 'Masculino' : 'Femenino'}
                   </Badge>
                 )}
@@ -168,16 +167,16 @@ export const RankingsPage: React.FC = () => {
         </Card>
 
         {/* Filters */}
-        <RankingFilters
+        <RankingFiltersComponent
           onFiltersChange={handleFiltersChange}
           initialFilters={filters}
         />
 
         {/* Tabs */}
         <Tabs
-          tabs={tabs}
+          items={tabs.map(tab => ({ ...tab, badge: tab.count > 0 ? tab.count : undefined }))}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onChange={setActiveTab}
         />
 
         {/* Tab Content */}

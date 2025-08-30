@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchCourtById, clearCurrentCourt } from '../../store/slices/courtSlice';
+import { fetchCourtById, clearCurrentCourt } from '../../store/courtSlice';
 import { CourtDetail } from '../../components/courts/CourtDetail';
 import { ReservationForm } from '../../components/reservations/ReservationForm';
 import { CourtAnalyticsDashboard } from '../../components/analytics/CourtAnalyticsDashboard';
-import { Button } from '../../components/ui/Button';
-import { LoadingSpinner } from '../../components/common/LoadingSpinner';
-import { Badge } from '../../components/ui/Badge';
+import Button from '../../components/ui/Button';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import Badge from '../../components/ui/Badge';
 
 export const CourtDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -156,12 +156,10 @@ export const CourtDetailPage: React.FC = () => {
                 {currentCourt.isActive ? (
                   <Badge variant="success">Activa</Badge>
                 ) : (
-                  <Badge variant="danger">Inactiva</Badge>
+                  <Badge variant="error">Inactiva</Badge>
                 )}
 
-                {currentCourt.isFeatured && (
-                  <Badge variant="warning">Destacada</Badge>
-                )}
+                {/* Featured badge removed - isFeatured property not available */}
               </div>
               
               <p className="text-gray-600 flex items-center">
@@ -169,7 +167,7 @@ export const CourtDetailPage: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                {currentCourt.address}, {currentCourt.city}, {currentCourt.state}
+                {currentCourt.address}{currentCourt.state && `, ${currentCourt.state.name}`}
               </p>
             </div>
 
@@ -259,7 +257,7 @@ export const CourtDetailPage: React.FC = () => {
         )}
 
         {activeTab === 'details' && (
-          <CourtDetail court={currentCourt} />
+          <CourtDetail />
         )}
 
         {activeTab === 'reserve' && user && (

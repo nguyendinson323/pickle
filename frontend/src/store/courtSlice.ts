@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { api } from '../../services/api';
+import api from '../services/api';
 
 // Types
 export interface Court {
@@ -141,7 +141,7 @@ export const fetchCourts = createAsyncThunk(
     });
 
     const response = await api.get(`/api/courts?${params.toString()}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -149,7 +149,7 @@ export const fetchCourtById = createAsyncThunk(
   'courts/fetchCourtById',
   async (courtId: number) => {
     const response = await api.get(`/api/courts/${courtId}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -157,7 +157,7 @@ export const fetchNearbyCourtss = createAsyncThunk(
   'courts/fetchNearbyCourts',
   async ({ latitude, longitude, radius = 25 }: { latitude: number; longitude: number; radius?: number }) => {
     const response = await api.get(`/api/courts/near/location?latitude=${latitude}&longitude=${longitude}&radius=${radius}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -165,7 +165,7 @@ export const fetchCourtsByOwner = createAsyncThunk(
   'courts/fetchCourtsByOwner',
   async ({ ownerType, ownerId }: { ownerType: 'club' | 'partner'; ownerId: number }) => {
     const response = await api.get(`/api/courts/owner/${ownerType}/${ownerId}`);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -173,7 +173,7 @@ export const createCourt = createAsyncThunk(
   'courts/createCourt',
   async (courtData: Partial<Court>) => {
     const response = await api.post('/api/courts', courtData);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -181,7 +181,7 @@ export const updateCourt = createAsyncThunk(
   'courts/updateCourt',
   async ({ id, ...courtData }: Partial<Court> & { id: number }) => {
     const response = await api.put(`/api/courts/${id}`, courtData);
-    return response.data;
+    return (response as any).data;
   }
 );
 
@@ -197,7 +197,7 @@ export const updateCourtImages = createAsyncThunk(
   'courts/updateCourtImages',
   async ({ courtId, images }: { courtId: number; images: string[] }) => {
     const response = await api.put(`/api/courts/${courtId}/images`, { images });
-    return { courtId, images: response.data.images };
+    return { courtId, images: (response as any).data.images };
   }
 );
 
@@ -205,7 +205,7 @@ export const fetchCourtStats = createAsyncThunk(
   'courts/fetchCourtStats',
   async (courtId: number) => {
     const response = await api.get(`/api/courts/${courtId}/stats`);
-    return response.data;
+    return (response as any).data;
   }
 );
 

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api';
 
 export interface MembershipPlan {
   id: number;
@@ -74,7 +74,7 @@ const initialState: PaymentState = {
 // Async thunks
 export const fetchMembershipPlans = createAsyncThunk(
   'payment/fetchMembershipPlans',
-  async (role?: string, { rejectWithValue }) => {
+  async ({ role }: { role?: string } = {}, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
       const params = role ? `?role=${role}` : '';

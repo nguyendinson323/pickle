@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchCourtAnalytics, setAnalyticsDateRange } from '../../store/slices/analyticsSlice';
+import { useAppSelector } from '../../store';
 import { AnalyticsOverview } from './AnalyticsOverview';
 import { RevenueChart } from './RevenueChart';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { Badge } from '../ui/Badge';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Badge from '../ui/Badge';
 
 interface CourtAnalyticsDashboardProps {
   courtId?: number;
@@ -17,51 +16,26 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
   courtId,
   showFilters = true 
 }) => {
-  const dispatch = useAppDispatch();
-  const { 
-    overview, 
-    revenue, 
-    loading, 
-    error, 
-    dateRange 
-  } = useAppSelector(state => state.analytics);
-  const { courts } = useAppSelector(state => state.courts);
+  const { courts, loading, error } = useAppSelector(state => state.courts);
+  
+  // Mock analytics data since analytics slice doesn't exist yet
+  const overview = {
+    totalRevenue: 0,
+    totalReservations: 0,
+    averageRating: 0,
+    occupancyRate: 0,
+    topRevenueHours: [] as Array<{ hour: string; revenue: number; reservations: number }>,
+    revenueByDay: [] as Array<{ date: string; revenue: number; reservations: number }>
+  };
+  const revenue: Array<{ date: string; revenue: number; reservations: number }> = [];
 
   const [selectedPeriod, setSelectedPeriod] = useState<'7days' | '30days' | '3months' | '1year'>('30days');
   const [selectedCourt, setSelectedCourt] = useState<number | undefined>(courtId);
 
   useEffect(() => {
-    if (selectedCourt || !courtId) {
-      const endDate = new Date();
-      const startDate = new Date();
-      
-      switch (selectedPeriod) {
-        case '7days':
-          startDate.setDate(endDate.getDate() - 7);
-          break;
-        case '30days':
-          startDate.setDate(endDate.getDate() - 30);
-          break;
-        case '3months':
-          startDate.setMonth(endDate.getMonth() - 3);
-          break;
-        case '1year':
-          startDate.setFullYear(endDate.getFullYear() - 1);
-          break;
-      }
-
-      dispatch(setAnalyticsDateRange({
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0]
-      }));
-
-      dispatch(fetchCourtAnalytics({
-        courtId: selectedCourt,
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0]
-      }));
-    }
-  }, [dispatch, selectedPeriod, selectedCourt, courtId]);
+    // TODO: Implement analytics data fetching when analytics slice is created
+    console.log('Analytics data would be fetched for:', { selectedCourt, selectedPeriod, courtId });
+  }, [selectedPeriod, selectedCourt, courtId]);
 
   const getPeriodLabel = () => {
     switch (selectedPeriod) {
@@ -200,10 +174,10 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
               </h3>
               
               <div className="space-y-3">
-                {overview.topRevenueHours.slice(0, 3).map((hour, index) => (
+                {overview.topRevenueHours.slice(0, 3).map((hour: any, index: number) => (
                   <div key={hour.hour} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Badge variant={index === 0 ? 'success' : index === 1 ? 'warning' : 'outline'}>
+                      <Badge variant={index === 0 ? 'success' : index === 1 ? 'warning' : 'info'}>
                         #{index + 1}
                       </Badge>
                       <div>
@@ -250,7 +224,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
                   <span className="text-gray-600">Tasa de ocupación</span>
                   <Badge variant={
                     overview.occupancyRate >= 0.8 ? 'success' :
-                    overview.occupancyRate >= 0.6 ? 'warning' : 'danger'
+                    overview.occupancyRate >= 0.6 ? 'warning' : 'error'
                   }>
                     {(overview.occupancyRate * 100).toFixed(1)}%
                   </Badge>

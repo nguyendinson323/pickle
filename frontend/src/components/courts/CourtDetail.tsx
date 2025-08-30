@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchCourtById, fetchCourtStats, clearCurrentCourt } from '../../store/slices/courtSlice';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { Card } from '../ui/Card';
+import { fetchCourtById, fetchCourtStats, clearCurrentCourt } from '../../store/courtSlice';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import Card from '../ui/Card';
 
 export const CourtDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -140,11 +140,11 @@ export const CourtDetail: React.FC = () => {
                 </span>
               )}
             </div>
-            <Badge variant="outline">
+            <Badge variant="info">
               {getSurfaceTypeLabel(currentCourt.surfaceType)}
             </Badge>
             {!currentCourt.isActive && (
-              <Badge variant="danger">Inactiva</Badge>
+              <Badge variant="error">Inactiva</Badge>
             )}
           </div>
         </div>

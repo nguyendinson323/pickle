@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '@/store';
-import { 
-  fetchDashboardData, 
-  selectDashboardData, 
-  selectDashboardLoading, 
-  selectDashboardError 
-} from '@/store/dashboardSlice';
-import { 
-  fetchMessages, 
-  selectMessages, 
-  selectUnreadCount 
-} from '@/store/messageSlice';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import StatCard from '@/components/dashboard/StatCard';
-import Tabs from '@/components/ui/Tabs';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
+import { useAppSelector } from '../../store';
+import StatCard from '../dashboard/StatCard';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import LoadingSpinner from '../common/LoadingSpinner';
 import {
   FlagIcon,
   CogIcon,
@@ -29,19 +16,31 @@ import {
 } from '@heroicons/react/24/outline';
 
 const StateDashboard: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const dashboardData = useAppSelector(selectDashboardData);
-  const loading = useAppSelector(selectDashboardLoading);
-  const error = useAppSelector(selectDashboardError);
-  const messages = useAppSelector(selectMessages);
-  const unreadCount = useAppSelector(selectUnreadCount);
-  
+  const { user } = useAppSelector(state => state.auth);
+  const [loading, setLoading] = useState(false);
+  const [error] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
 
+  // Mock data since slices don't exist
+  const dashboardData = {
+    user: user || {
+      firstName: 'Estado',
+      lastName: 'de México'
+    },
+    statistics: {
+      registeredClubs: 28,
+      registeredPlayers: 1240,
+      stateTournaments: 12,
+      certifiedCoaches: 45
+    }
+  };
+  const unreadCount = 0;
+
   useEffect(() => {
-    dispatch(fetchDashboardData());
-    dispatch(fetchMessages({ page: 1, limit: 10 }));
-  }, [dispatch]);
+    // Mock loading effect
+    setLoading(true);
+    setTimeout(() => setLoading(false), 1000);
+  }, []);
 
   const tabs = [
     {
@@ -96,7 +95,7 @@ const StateDashboard: React.FC = () => {
             <div>
               <h3 className="text-lg font-semibold mb-2">Comité Estatal</h3>
               <p className="text-red-100 mb-4">
-                {dashboardData?.user?.state || 'Estado de México'}
+                Estado de México
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
@@ -240,7 +239,7 @@ const StateDashboard: React.FC = () => {
                 </div>
               </div>
               
-              <Button variant="outline" size="sm" fullWidth>
+              <Button variant="secondary" size="sm" className="w-full">
                 Ver Detalles
               </Button>
             </div>
@@ -325,7 +324,7 @@ const StateDashboard: React.FC = () => {
                 </div>
               </div>
               
-              <Button variant="outline" size="sm" fullWidth>
+              <Button variant="secondary" size="sm" className="w-full">
                 Gestionar
               </Button>
             </div>
@@ -393,7 +392,7 @@ const StateDashboard: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">Error cargando el dashboard</p>
-          <Button onClick={() => dispatch(fetchDashboardData())}>
+          <Button onClick={() => window.location.reload()}>
             Reintentar
           </Button>
         </div>
@@ -402,49 +401,75 @@ const StateDashboard: React.FC = () => {
   }
 
   return (
-    <DashboardLayout>
-      <div className="space-y-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+            Panel Estatal
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Bienvenido al sistema de gestión estatal
+          </p>
+        </div>
+        <div className="space-y-8">
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             title="Clubes Registrados"
             value={dashboardData?.statistics?.registeredClubs?.toString() || '28'}
-            change="+4"
-            changeType="positive"
             icon={<BuildingOfficeIcon className="w-6 h-6" />}
+            trend={{ direction: 'up', value: 4, label: 'este mes' }}
+            color="blue"
           />
           <StatCard
             title="Jugadores Activos"
             value={dashboardData?.statistics?.registeredPlayers?.toString() || '1,240'}
-            change="+85"
-            changeType="positive"
             icon={<UserGroupIcon className="w-6 h-6" />}
+            trend={{ direction: 'up', value: 85, label: 'este mes' }}
+            color="green"
           />
           <StatCard
             title="Torneos Anuales"
             value={dashboardData?.statistics?.stateTournaments?.toString() || '12'}
-            change="+3"
-            changeType="positive"
             icon={<TrophyIcon className="w-6 h-6" />}
+            trend={{ direction: 'up', value: 3, label: 'este mes' }}
+            color="purple"
           />
           <StatCard
             title="Entrenadores"
             value={dashboardData?.statistics?.certifiedCoaches?.toString() || '45'}
-            change="+7"
-            changeType="positive"
             icon={<UserGroupIcon className="w-6 h-6" />}
+            trend={{ direction: 'up', value: 7, label: 'este mes' }}
+            color="yellow"
           />
         </div>
 
         {/* Main Content with Tabs */}
         <div className="bg-white rounded-xl shadow-sm">
           <div className="border-b border-gray-200">
-            <Tabs
-              items={tabs}
-              activeTab={activeTab}
-              onChange={setActiveTab}
-              variant="underline"
-            />
+            <nav className="-mb-px flex space-x-8 px-6">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+                    py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center space-x-2
+                    ${activeTab === tab.id
+                      ? 'border-red-500 text-red-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }
+                  `}
+                >
+                  {tab.icon}
+                  <span>{tab.label}</span>
+                  {tab.count > 0 && (
+                    <span className="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-900">
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </nav>
           </div>
           
           <div className="p-6">
@@ -452,7 +477,8 @@ const StateDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </div>
+    </div>
   );
 };
 

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { FormField } from '../forms/FormField';
-import { SelectField } from '../forms/SelectField';
-import { FileField } from '../forms/FileField';
-import { LoadingSpinner } from '../common/LoadingSpinner';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 interface CredentialGeneratorProps {
   onCredentialCreated?: (credential: any) => void;
@@ -171,7 +168,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
     if (formData.userType && formData.stateId && !formData.federationIdNumber) {
       generateFederationId();
     }
-  }, [formData.userType, formData.stateId]);
+  }, [formData.userType, formData.stateId, formData.federationIdNumber]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,7 +247,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold">Generar Nueva Credencial</h2>
         {onClose && (
-          <Button onClick={onClose} variant="outline">
+          <Button onClick={onClose} variant="secondary">
             Cerrar
           </Button>
         )}
@@ -298,51 +295,77 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* User Type */}
-          <SelectField
-            label="Tipo de Usuario *"
-            value={formData.userType}
-            onChange={(value) => setFormData(prev => ({ ...prev, userType: value }))}
-            options={userTypeOptions}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Tipo de Usuario *
+            </label>
+            <select
+              value={formData.userType}
+              onChange={(e) => setFormData(prev => ({ ...prev, userType: e.target.value }))}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {userTypeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Full Name */}
-          <FormField
-            label="Nombre Completo *"
-            value={formData.fullName}
-            onChange={(value) => setFormData(prev => ({ ...prev, fullName: value }))}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre Completo *
+            </label>
+            <input
+              type="text"
+              value={formData.fullName}
+              onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
           {/* State */}
-          <SelectField
-            label="Estado *"
-            value={formData.stateId}
-            onChange={handleStateChange}
-            options={[
-              { value: '', label: 'Seleccionar estado' },
-              ...states.map(state => ({
-                value: state.id.toString(),
-                label: state.name
-              }))
-            ]}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Estado *
+            </label>
+            <select
+              value={formData.stateId}
+              onChange={(e) => handleStateChange(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Seleccionar estado</option>
+              {states.map(state => (
+                <option key={state.id} value={state.id.toString()}>
+                  {state.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Federation ID */}
           <div className="flex space-x-2">
-            <FormField
-              label="ID de Federación *"
-              value={formData.federationIdNumber}
-              onChange={(value) => setFormData(prev => ({ ...prev, federationIdNumber: value }))}
-              required
-              className="flex-1"
-            />
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                ID de Federación *
+              </label>
+              <input
+                type="text"
+                value={formData.federationIdNumber}
+                onChange={(e) => setFormData(prev => ({ ...prev, federationIdNumber: e.target.value }))}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             <div className="self-end">
               <Button 
                 type="button"
                 onClick={generateFederationId}
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 disabled={!formData.userType || !formData.stateId}
               >
@@ -353,70 +376,114 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
 
           {/* NRTP Level */}
           {formData.userType === 'player' && (
-            <SelectField
-              label="Nivel NRTP"
-              value={formData.nrtpLevel}
-              onChange={(value) => setFormData(prev => ({ ...prev, nrtpLevel: value }))}
-              options={nrtpLevelOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nivel NRTP
+              </label>
+              <select
+                value={formData.nrtpLevel}
+                onChange={(e) => setFormData(prev => ({ ...prev, nrtpLevel: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {nrtpLevelOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
 
           {/* Ranking Position */}
           {formData.userType === 'player' && (
-            <FormField
-              label="Posición en Ranking"
-              type="number"
-              value={formData.rankingPosition}
-              onChange={(value) => setFormData(prev => ({ ...prev, rankingPosition: value }))}
-              min="1"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Posición en Ranking
+              </label>
+              <input
+                type="number"
+                value={formData.rankingPosition}
+                onChange={(e) => setFormData(prev => ({ ...prev, rankingPosition: e.target.value }))}
+                min="1"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           )}
 
           {/* Club Name */}
-          <FormField
-            label="Club"
-            value={formData.clubName}
-            onChange={(value) => setFormData(prev => ({ ...prev, clubName: value }))}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Club
+            </label>
+            <input
+              type="text"
+              value={formData.clubName}
+              onChange={(e) => setFormData(prev => ({ ...prev, clubName: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
           {/* License Type */}
           {['coach', 'referee'].includes(formData.userType) && (
-            <FormField
-              label="Tipo de Licencia"
-              value={formData.licenseType}
-              onChange={(value) => setFormData(prev => ({ ...prev, licenseType: value }))}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tipo de Licencia
+              </label>
+              <input
+                type="text"
+                value={formData.licenseType}
+                onChange={(e) => setFormData(prev => ({ ...prev, licenseType: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           )}
 
           {/* Nationality */}
-          <FormField
-            label="Nacionalidad"
-            value={formData.nationality}
-            onChange={(value) => setFormData(prev => ({ ...prev, nationality: value }))}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nacionalidad
+            </label>
+            <input
+              type="text"
+              value={formData.nationality}
+              onChange={(e) => setFormData(prev => ({ ...prev, nationality: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
           {/* Photo URL */}
-          <FormField
-            label="URL de Foto"
-            value={formData.photo}
-            onChange={(value) => setFormData(prev => ({ ...prev, photo: value }))}
-            placeholder="https://..."
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              URL de Foto
+            </label>
+            <input
+              type="text"
+              value={formData.photo}
+              onChange={(e) => setFormData(prev => ({ ...prev, photo: e.target.value }))}
+              placeholder="https://..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
           {/* Expiration Date */}
-          <FormField
-            label="Fecha de Vencimiento *"
-            type="date"
-            value={formData.expirationDate}
-            onChange={(value) => setFormData(prev => ({ ...prev, expirationDate: value }))}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Fecha de Vencimiento *
+            </label>
+            <input
+              type="date"
+              value={formData.expirationDate}
+              onChange={(e) => setFormData(prev => ({ ...prev, expirationDate: e.target.value }))}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         </div>
 
         {/* Submit Button */}
         <div className="flex justify-end space-x-3 pt-6">
           {onClose && (
-            <Button type="button" onClick={onClose} variant="outline">
+            <Button type="button" onClick={onClose} variant="secondary">
               Cancelar
             </Button>
           )}

@@ -6,13 +6,13 @@ import registrationSlice from './registrationSlice';
 import dataSlice from './dataSlice';
 import dashboardSlice from './dashboardSlice';
 import messageSlice from './messageSlice';
-import paymentSlice from './slices/paymentSlice';
-import courtSlice from './slices/courtSlice';
-import reservationSlice from './slices/reservationSlice';
-import tournamentSlice from './slices/tournamentSlice';
-import rankingSlice from './slices/rankingSlice';
-import credentialSlice from './slices/credentialSlice';
-import micrositeSlice from './slices/micrositeSlice';
+import paymentSlice from './paymentSlice';
+import courtSlice from './courtSlice';
+import reservationSlice from './reservationSlice';
+import tournamentSlice from './tournamentSlice';
+import rankingSlice from './rankingSlice';
+import credentialSlice from './credentialSlice';
+import micrositeSlice from './micrositeSlice';
 
 export const store = configureStore({
   reducer: {
@@ -36,7 +36,7 @@ export const store = configureStore({
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
     }),
-  devTools: process.env.NODE_ENV !== 'production',
+  devTools: true,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

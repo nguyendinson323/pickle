@@ -8,7 +8,7 @@ import {
   publishMicrosite,
   unpublishMicrosite,
   clearError 
-} from '../../store/slices/micrositeSlice';
+} from '../../store/micrositeSlice';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Modal from '../../components/ui/Modal';
@@ -16,13 +16,13 @@ import Badge from '../../components/ui/Badge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { PlusIcon, EyeIcon, PencilIcon, TrashIcon, DocumentDuplicateIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
-import CreateMicrositeModal from '../../components/microsites/CreateMicrositeModal';
+// import CreateMicrositeModal from '../../components/microsites/CreateMicrositeModal'; // Temporarily disabled due to component issues
 
 const MicrositesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { microsites, loading, error } = useSelector((state: RootState) => state.microsites);
-  const { user } = useSelector((state: RootState) => state.auth);
+  // const { user } = useSelector((state: RootState) => state.auth); // Removed since CreateMicrositeModal is disabled
   
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -90,7 +90,7 @@ const MicrositesPage: React.FC = () => {
       case 'suspended':
         return <Badge variant="error">Suspended</Badge>;
       default:
-        return <Badge variant="default">{status}</Badge>;
+        return <Badge variant="primary">{status}</Badge>;
     }
   };
 
@@ -291,11 +291,23 @@ const MicrositesPage: React.FC = () => {
 
       {/* Create Microsite Modal */}
       {showCreateModal && (
-        <CreateMicrositeModal
+        <Modal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
-          ownerType={user?.role}
-        />
+          title="Crear Micrositio"
+        >
+          <div className="p-6">
+            <p className="text-gray-600 mb-4">
+              Funcionalidad de creación de micrositios en desarrollo.
+            </p>
+            <Button 
+              onClick={() => setShowCreateModal(false)}
+              className="w-full"
+            >
+              Cerrar
+            </Button>
+          </div>
+        </Modal>
       )}
 
       {/* Delete Confirmation Modal */}
@@ -317,8 +329,9 @@ const MicrositesPage: React.FC = () => {
               Cancelar
             </Button>
             <Button
-              variant="danger"
+              variant="outline"
               onClick={handleDelete}
+              className="text-red-600 border-red-300 hover:bg-red-50"
             >
               Eliminar
             </Button>

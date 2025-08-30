@@ -15,7 +15,7 @@ import LoginPage from '@/pages/LoginPage';
 import RegistrationPage from '@/pages/RegistrationPage';
 import RegistrationSuccessPage from '@/pages/RegistrationSuccessPage';
 import DashboardPage from '@/pages/DashboardPage';
-import MembershipPage from '@/pages/MembershipPage';
+import { MembershipPage } from '@/pages/MembershipPage';
 import MicrositesPage from '@/pages/microsites/MicrositesPage';
 import MicrositeEditorPage from '@/pages/microsites/MicrositeEditorPage';
 

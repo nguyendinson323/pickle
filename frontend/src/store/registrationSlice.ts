@@ -42,13 +42,9 @@ export const registerPlayer = createAsyncThunk(
         formData.append('idDocument', data.idDocument);
       }
 
-      const response = await api.post('/registration/player', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/registration/player', formData);
       
-      return response.data as RegistrationResponse;
+      return (response as any).data as RegistrationResponse;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Registration failed');
     }
@@ -74,13 +70,9 @@ export const registerCoach = createAsyncThunk(
         formData.append('idDocument', data.idDocument);
       }
 
-      const response = await api.post('/registration/coach', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/registration/coach', formData);
       
-      return response.data as RegistrationResponse;
+      return (response as any).data as RegistrationResponse;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Registration failed');
     }
@@ -106,13 +98,9 @@ export const registerClub = createAsyncThunk(
         formData.append('logo', data.logo);
       }
 
-      const response = await api.post('/registration/club', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/registration/club', formData);
       
-      return response.data as RegistrationResponse;
+      return (response as any).data as RegistrationResponse;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Registration failed');
     }
@@ -138,13 +126,9 @@ export const registerPartner = createAsyncThunk(
         formData.append('logo', data.logo);
       }
 
-      const response = await api.post('/registration/partner', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/registration/partner', formData);
       
-      return response.data as RegistrationResponse;
+      return (response as any).data as RegistrationResponse;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Registration failed');
     }
@@ -170,13 +154,9 @@ export const registerStateCommittee = createAsyncThunk(
         formData.append('logo', data.logo);
       }
 
-      const response = await api.post('/registration/state-committee', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/registration/state-committee', formData);
       
-      return response.data as RegistrationResponse;
+      return (response as any).data as RegistrationResponse;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Registration failed');
     }

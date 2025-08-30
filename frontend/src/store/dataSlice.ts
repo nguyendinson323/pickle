@@ -47,7 +47,7 @@ export const fetchStates = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/data/states');
-      return response.data.data as State[];
+      return (response as any).data?.data as State[];
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch states');
     }
@@ -56,11 +56,11 @@ export const fetchStates = createAsyncThunk(
 
 export const fetchMembershipPlans = createAsyncThunk(
   'data/fetchMembershipPlans',
-  async (role?: string, { rejectWithValue }) => {
+  async ({ role }: { role?: string } = {}, { rejectWithValue }) => {
     try {
       const url = role ? `/data/membership-plans?role=${role}` : '/data/membership-plans';
       const response = await api.get(url);
-      return { role, data: response.data.data };
+      return { role, data: (response as any).data?.data };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch membership plans');
     }
@@ -72,7 +72,7 @@ export const fetchPrivacyPolicy = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/data/privacy-policy');
-      return response.data.data;
+      return (response as any).data?.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch privacy policy');
     }
@@ -84,7 +84,7 @@ export const fetchNrtpLevels = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/data/nrtp-levels');
-      return response.data.data;
+      return (response as any).data?.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch NRTP levels');
     }
@@ -96,7 +96,7 @@ export const fetchGenderOptions = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/data/gender-options');
-      return response.data.data;
+      return (response as any).data?.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch gender options');
     }

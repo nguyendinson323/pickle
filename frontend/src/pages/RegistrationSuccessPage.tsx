@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '@/store';
 import { selectUser } from '@/store/authSlice';
-import { UserRole } from '@/types/registration';
+import { UserRole } from '@/types/auth';
 
 const RegistrationSuccessPage: React.FC = () => {
   const user = useAppSelector(selectUser);
@@ -14,6 +14,7 @@ const RegistrationSuccessPage: React.FC = () => {
       case 'club': return 'Club';
       case 'partner': return 'Socio Comercial';
       case 'state': return 'Comité Estatal';
+      case 'federation': return 'Federación';
       default: return 'Usuario';
     }
   };
@@ -54,6 +55,13 @@ const RegistrationSuccessPage: React.FC = () => {
           'Registra clubes en tu estado',
           'Planifica eventos estatales',
           'Establece contacto con otros comités'
+        ];
+      case 'federation':
+        return [
+          'Gestiona la plataforma nacional',
+          'Supervisa comités estatales',
+          'Administra torneos nacionales',
+          'Coordina con organizaciones internacionales'
         ];
       default:
         return ['Completa tu perfil', 'Explora las funcionalidades'];

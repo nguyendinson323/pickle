@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CredentialCard } from './CredentialCard';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { Button } from '../ui/Button';
-import { SelectField } from '../forms/SelectField';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Button from '../ui/Button';
 
 interface CredentialListProps {
   userId?: number;
@@ -264,7 +263,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
     return (
       <div className="text-center py-8">
         <div className="text-red-600 mb-4">{error}</div>
-        <Button onClick={handleRefresh} variant="outline">
+        <Button onClick={handleRefresh} variant="secondary">
           Reintentar
         </Button>
       </div>
@@ -280,7 +279,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
             <h3 className="text-lg font-medium">Filtros</h3>
             <Button
               onClick={() => setFilters({ userType: '', status: '' })}
-              variant="outline"
+              variant="secondary"
               size="sm"
             >
               Resetear
@@ -288,19 +287,39 @@ export const CredentialList: React.FC<CredentialListProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <SelectField
-              label="Tipo de Usuario"
-              value={filters.userType}
-              onChange={(value) => setFilters(prev => ({ ...prev, userType: value }))}
-              options={userTypeOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tipo de Usuario
+              </label>
+              <select
+                value={filters.userType}
+                onChange={(e) => setFilters(prev => ({ ...prev, userType: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {userTypeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <SelectField
-              label="Estado"
-              value={filters.status}
-              onChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
-              options={statusOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Estado
+              </label>
+              <select
+                value={filters.status}
+                onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {statusOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       )}
@@ -312,7 +331,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
         </div>
         <Button 
           onClick={handleRefresh}
-          variant="outline"
+          variant="secondary"
           size="sm"
           disabled={loading}
         >
@@ -350,7 +369,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
           <Button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             Anterior
@@ -373,7 +392,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
                 <Button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  variant={currentPage === pageNum ? 'primary' : 'outline'}
+                  variant={currentPage === pageNum ? 'primary' : 'secondary'}
                   size="sm"
                   className="w-10"
                 >
@@ -386,7 +405,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
           <Button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === pagination.totalPages - 1}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             Siguiente

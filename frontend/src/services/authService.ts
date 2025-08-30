@@ -7,12 +7,13 @@ class AuthService {
   async login(credentials: LoginCredentials): Promise<{ user: UserProfile; token: string }> {
     const response = await apiService.post<ApiResponse<{ user: UserProfile; token: string }>>('/auth/login', credentials);
     
-    if (response.success && response.user && response.token) {
+    if (response.success && response.data) {
+      const { user, token } = response.data;
       // Store token and user data
-      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.token);
-      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(response.user));
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(user));
       
-      return { user: response.user, token: response.token };
+      return { user, token };
     }
     
     throw new Error(response.error || 'Login failed');
@@ -34,10 +35,10 @@ class AuthService {
   async getCurrentUser(): Promise<UserProfile> {
     const response = await apiService.get<ApiResponse<UserProfile>>('/auth/me');
     
-    if (response.success && response.user) {
+    if (response.success && response.data) {
       // Update stored user data
-      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(response.user));
-      return response.user;
+      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(response.data));
+      return response.data;
     }
     
     throw new Error(response.error || 'Failed to get current user');
@@ -48,7 +49,7 @@ class AuthService {
       const response = await apiService.get<ApiResponse>('/auth/verify');
       return {
         valid: response.success,
-        user: response.user,
+        user: response.data,
       };
     } catch (error) {
       return { valid: false };
@@ -58,9 +59,9 @@ class AuthService {
   async refreshToken(): Promise<string> {
     const response = await apiService.post<ApiResponse<{ token: string }>>('/auth/refresh');
     
-    if (response.success && response.token) {
-      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.token);
-      return response.token;
+    if (response.success && response.data) {
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.token);
+      return response.data.token;
     }
     
     throw new Error(response.error || 'Token refresh failed');

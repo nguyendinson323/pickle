@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ContentBlock } from '../../store/slices/micrositeSlice';
+import { ContentBlock } from '../../store/micrositeSlice';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import FormField from '../forms/FormField';
+// FormField removed - using direct label/div structure instead
 import SelectField from '../forms/SelectField';
 import Tabs from '../ui/Tabs';
 import MediaSelector from './MediaSelector';
@@ -24,13 +24,13 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
   micrositeId,
 }) => {
   const [content, setContent] = useState(block.content);
-  const [settings, setSettings] = useState(block.settings);
+  const [settings, setSettings] = useState(block.settings || {});
   const [activeTab, setActiveTab] = useState('content');
   const [showMediaSelector, setShowMediaSelector] = useState(false);
 
   useEffect(() => {
     setContent(block.content);
-    setSettings(block.settings);
+    setSettings(block.settings || {});
   }, [block]);
 
   const handleSave = () => {
@@ -39,11 +39,11 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
   };
 
   const handleContentChange = (field: string, value: any) => {
-    setContent(prev => ({ ...prev, [field]: value }));
+    setContent((prev: any) => ({ ...prev, [field]: value }));
   };
 
   const handleSettingsChange = (field: string, value: any) => {
-    setSettings(prev => ({ ...prev, [field]: value }));
+    setSettings((prev: any) => ({ ...prev, [field]: value }));
   };
 
   const renderContentEditor = () => {
@@ -51,7 +51,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
       case 'text':
         return (
           <div className="space-y-4">
-            <FormField label="Contenido de Texto" required>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Contenido de Texto <span className="text-red-500">*</span>
+              </label>
               <textarea
                 value={content.text || ''}
                 onChange={(e) => handleContentChange('text', e.target.value)}
@@ -59,9 +62,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 rows={8}
                 placeholder="Escribe tu contenido aquí... (HTML permitido)"
               />
-            </FormField>
+            </div>
 
             <SelectField
+              name="textAlign"
               label="Alineación del Texto"
               value={content.textAlign || 'left'}
               onChange={(value) => handleContentChange('textAlign', value)}
@@ -74,6 +78,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
             />
 
             <SelectField
+              name="fontSize"
               label="Tamaño de Fuente"
               value={content.fontSize || 'medium'}
               onChange={(value) => handleContentChange('fontSize', value)}
@@ -85,21 +90,27 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
               ]}
             />
 
-            <FormField label="Color del Texto">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Color del Texto
+              </label>
               <input
                 type="color"
                 value={content.color || '#000000'}
                 onChange={(e) => handleContentChange('color', e.target.value)}
                 className="h-10 w-20 border border-gray-300 rounded cursor-pointer"
               />
-            </FormField>
+            </div>
           </div>
         );
 
       case 'image':
         return (
           <div className="space-y-4">
-            <FormField label="Imagen" required>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Imagen <span className="text-red-500">*</span>
+              </label>
               <div className="space-y-3">
                 {content.imageUrl && (
                   <div className="relative">
@@ -132,9 +143,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                   </div>
                 </div>
               </div>
-            </FormField>
+            </div>
 
-            <FormField label="Texto Alternativo">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Texto Alternativo
+              </label>
               <input
                 type="text"
                 value={content.alt || ''}
@@ -142,9 +156,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Descripción de la imagen"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Pie de Imagen">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Pie de Imagen
+              </label>
               <input
                 type="text"
                 value={content.caption || ''}
@@ -152,9 +169,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Texto que aparece debajo de la imagen"
               />
-            </FormField>
+            </div>
 
             <SelectField
+              name="alignment"
               label="Alineación"
               value={content.alignment || 'center'}
               onChange={(value) => handleContentChange('alignment', value)}
@@ -166,6 +184,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
             />
 
             <SelectField
+              name="size"
               label="Tamaño"
               value={content.size || 'medium'}
               onChange={(value) => handleContentChange('size', value)}
@@ -183,6 +202,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
         return (
           <div className="space-y-4">
             <SelectField
+              name="videoType"
               label="Tipo de Video"
               value={content.videoType || 'youtube'}
               onChange={(value) => handleContentChange('videoType', value)}
@@ -193,7 +213,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
               ]}
             />
 
-            <FormField label="URL del Video" required>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                URL del Video <span className="text-red-500">*</span>
+              </label>
               <input
                 type="url"
                 value={content.videoUrl || ''}
@@ -205,9 +228,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                     : 'URL del video'
                 }
               />
-            </FormField>
+            </div>
 
-            <FormField label="Imagen de Vista Previa">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Imagen de Vista Previa
+              </label>
               <input
                 type="url"
                 value={content.thumbnail || ''}
@@ -215,7 +241,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="URL de la imagen de vista previa"
               />
-            </FormField>
+            </div>
 
             <div className="flex items-center gap-6">
               <label className="flex items-center">
@@ -244,7 +270,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
       case 'contact':
         return (
           <div className="space-y-4">
-            <FormField label="Título" required>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Título <span className="text-red-500">*</span>
+              </label>
               <input
                 type="text"
                 value={content.title || ''}
@@ -252,9 +281,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Contáctanos"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Email de Contacto">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email de Contacto
+              </label>
               <input
                 type="email"
                 value={content.email || ''}
@@ -262,9 +294,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="contacto@ejemplo.com"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Teléfono de Contacto">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Teléfono de Contacto
+              </label>
               <input
                 type="tel"
                 value={content.phone || ''}
@@ -272,9 +307,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="+52 55 1234 5678"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Dirección">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Dirección
+              </label>
               <textarea
                 value={content.address || ''}
                 onChange={(e) => handleContentChange('address', e.target.value)}
@@ -282,7 +320,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 rows={3}
                 placeholder="Dirección completa"
               />
-            </FormField>
+            </div>
 
             <div className="flex items-center">
               <input
@@ -298,7 +336,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
             </div>
 
             {content.showForm && (
-              <FormField label="Campos del Formulario">
+              <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Campos del Formulario
+              </label>
                 <div className="space-y-2">
                   {['name', 'email', 'phone', 'message'].map((field) => (
                     <label key={field} className="flex items-center">
@@ -310,7 +351,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                           if (e.target.checked) {
                             handleContentChange('formFields', [...fields, field]);
                           } else {
-                            handleContentChange('formFields', fields.filter(f => f !== field));
+                            handleContentChange('formFields', fields.filter((f: string) => f !== field));
                           }
                         }}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -324,7 +365,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                     </label>
                   ))}
                 </div>
-              </FormField>
+              </div>
             )}
           </div>
         );
@@ -332,7 +373,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
       case 'map':
         return (
           <div className="space-y-4">
-            <FormField label="Latitud" required>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Latitud <span className="text-red-500">*</span>
+              </label>
               <input
                 type="number"
                 step="any"
@@ -341,9 +385,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="19.4326"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Longitud" required>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Longitud <span className="text-red-500">*</span>
+              </label>
               <input
                 type="number"
                 step="any"
@@ -352,9 +399,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="-99.1332"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Nivel de Zoom">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nivel de Zoom
+              </label>
               <input
                 type="number"
                 min="1"
@@ -363,9 +413,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 onChange={(e) => handleContentChange('zoom', parseInt(e.target.value))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Título del Marcador">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Título del Marcador
+              </label>
               <input
                 type="text"
                 value={content.markerTitle || ''}
@@ -373,9 +426,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Título que aparece en el marcador"
               />
-            </FormField>
+            </div>
 
-            <FormField label="Dirección">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Dirección
+              </label>
               <input
                 type="text"
                 value={content.address || ''}
@@ -383,7 +439,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Dirección visible"
               />
-            </FormField>
+            </div>
 
             <div className="flex items-center">
               <input
@@ -403,7 +459,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
       case 'custom_html':
         return (
           <div className="space-y-4">
-            <FormField label="Código HTML" required>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Código HTML <span className="text-red-500">*</span>
+              </label>
               <textarea
                 value={content.html || ''}
                 onChange={(e) => handleContentChange('html', e.target.value)}
@@ -411,9 +470,12 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 rows={8}
                 placeholder="<div>Tu código HTML aquí...</div>"
               />
-            </FormField>
+            </div>
 
-            <FormField label="CSS Personalizado">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                CSS Personalizado
+              </label>
               <textarea
                 value={content.css || ''}
                 onChange={(e) => handleContentChange('css', e.target.value)}
@@ -421,7 +483,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
                 rows={6}
                 placeholder=".mi-clase { color: blue; }"
               />
-            </FormField>
+            </div>
 
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
               <p className="text-yellow-800 text-sm">
@@ -444,8 +506,13 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
   const renderSettingsEditor = () => {
     return (
       <div className="space-y-4">
-        <FormField label="Margen Superior">
+        <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Margen Superior
+              </label>
           <SelectField
+            name="marginTop"
+            label="Margen Superior"
             value={settings.marginTop || 'medium'}
             onChange={(value) => handleSettingsChange('marginTop', value)}
             options={[
@@ -455,10 +522,15 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
               { value: 'large', label: 'Grande' },
             ]}
           />
-        </FormField>
+        </div>
 
-        <FormField label="Margen Inferior">
+        <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Margen Inferior
+              </label>
           <SelectField
+            name="marginBottom"
+            label="Margen Inferior"
             value={settings.marginBottom || 'medium'}
             onChange={(value) => handleSettingsChange('marginBottom', value)}
             options={[
@@ -468,16 +540,19 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
               { value: 'large', label: 'Grande' },
             ]}
           />
-        </FormField>
+        </div>
 
-        <FormField label="Color de Fondo">
+        <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Color de Fondo
+              </label>
           <input
             type="color"
             value={settings.backgroundColor || '#ffffff'}
             onChange={(e) => handleSettingsChange('backgroundColor', e.target.value)}
             className="h-10 w-20 border border-gray-300 rounded cursor-pointer"
           />
-        </FormField>
+        </div>
 
         <div className="flex items-center">
           <input
@@ -492,7 +567,10 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
           </label>
         </div>
 
-        <FormField label="Clase CSS Personalizada">
+        <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Clase CSS Personalizada
+              </label>
           <input
             type="text"
             value={settings.customClass || ''}
@@ -500,7 +578,7 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             placeholder="mi-clase-personalizada"
           />
-        </FormField>
+        </div>
       </div>
     );
   };
@@ -525,8 +603,8 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
   };
 
   const tabs = [
-    { key: 'content', label: 'Contenido' },
-    { key: 'settings', label: 'Configuración' },
+    { id: 'content', label: 'Contenido' },
+    { id: 'settings', label: 'Configuración' },
   ];
 
   return (
@@ -538,9 +616,9 @@ const ContentBlockEditor: React.FC<ContentBlockEditorProps> = ({
     >
       <div className="space-y-6">
         <Tabs
-          tabs={tabs}
+          items={tabs}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onChange={setActiveTab}
         />
 
         <div className="min-h-[400px]">
