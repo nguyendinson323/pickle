@@ -4,7 +4,11 @@
 This step implements a comprehensive ranking system for players and coaches, automatic digital credential generation with QR codes, ranking history tracking, and point-based tournament ranking calculations. The system generates official federation ID cards that can be scanned for verification during tournaments and events.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
-You can write seeder files for this step at backend and seed into database.
+Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
+For each page, you must accurately determine whether the functionalities of all dynamic elements, including buttons, are correctly integrated with the backend and accurately reflected in Redux to ensure real-time updates.
+There are already data seeded to test in database .
+You need to test with only this database seeded data from backend.
+Don't use any mockup, simulation or random data for frontend.
 
 ## Objectives
 - Build multi-category ranking system (National, State, Age Groups, Gender)

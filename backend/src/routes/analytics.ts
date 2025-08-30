@@ -1,7 +1,8 @@
 import express from 'express';
-import { AnalyticsController } from '../controllers/analyticsController';
+import analyticsController from '../controllers/analyticsController';
 import { authenticate } from '../middleware/auth';
 import { authorizeRoles } from '../middleware/roles';
+import { asyncHandler } from '../middleware/errorHandler';
 
 const router = express.Router();
 
@@ -9,55 +10,55 @@ const router = express.Router();
 router.get('/courts/:courtId/dashboard', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  AnalyticsController.getCourtDashboard
+  asyncHandler(analyticsController.getCourtDashboard)
 );
 
 router.get('/courts/:courtId/revenue', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  AnalyticsController.getCourtRevenue
+  asyncHandler(analyticsController.getCourtRevenue)
 );
 
 router.get('/courts/:courtId/usage', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  AnalyticsController.getCourtUsage
+  asyncHandler(analyticsController.getCourtUsage)
 );
 
 router.get('/courts/:courtId/customers', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  AnalyticsController.getCustomerMetrics
+  asyncHandler(analyticsController.getCustomerMetrics)
 );
 
 router.get('/courts/:courtId/revenue-breakdown', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  AnalyticsController.getRevenueBreakdown
+  asyncHandler(analyticsController.getRevenueBreakdown)
 );
 
 // Owner analytics (multiple courts)
 router.get('/owners/:ownerType/:ownerId/analytics', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  AnalyticsController.getOwnerAnalytics
+  asyncHandler(analyticsController.getOwnerAnalytics)
 );
 
 // Court comparison
 router.get('/courts/comparison', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  AnalyticsController.getCourtComparison
+  asyncHandler(analyticsController.getCourtComparison)
 );
 
 // Public analytics
-router.get('/popularity/ranking', AnalyticsController.getPopularityRanking);
+router.get('/popularity/ranking', asyncHandler(analyticsController.getPopularityRanking));
 
 // Federation-wide analytics
 router.get('/federation/analytics', 
   authenticate, 
   authorizeRoles(['federation']), 
-  AnalyticsController.getFederationAnalytics
+  asyncHandler(analyticsController.getFederationAnalytics)
 );
 
 export default router;

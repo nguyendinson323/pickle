@@ -16,7 +16,7 @@ export class TournamentController {
   // Create tournament
   async createTournament(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const userRole = req.user?.role;
       const tournamentData = req.body;
 
@@ -42,7 +42,7 @@ export class TournamentController {
   async updateTournament(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const updates = req.body;
 
       const tournament = await Tournament.findByPk(id);
@@ -51,7 +51,7 @@ export class TournamentController {
       }
 
       // Check ownership
-      if (tournament.organizerId !== userId && req.user?.role !== 'admin') {
+      if (tournament.organizerId !== userId && req.user?.role !== 'federation') {
         return res.status(403).json({ error: 'Not authorized to update this tournament' });
       }
 
@@ -68,7 +68,7 @@ export class TournamentController {
   async deleteTournament(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
 
       const tournament = await Tournament.findByPk(id, {
         include: [{ model: TournamentRegistration, as: 'registrations' }]
@@ -79,12 +79,13 @@ export class TournamentController {
       }
 
       // Check ownership
-      if (tournament.organizerId !== userId && req.user?.role !== 'admin') {
+      if (tournament.organizerId !== userId && req.user?.role !== 'federation') {
         return res.status(403).json({ error: 'Not authorized to delete this tournament' });
       }
 
       // Check if tournament has registrations
-      if (tournament.registrations && tournament.registrations.length > 0) {
+      const registrations = (tournament as any).registrations;
+      if (registrations && registrations.length > 0) {
         return res.status(400).json({ error: 'Cannot delete tournament with active registrations' });
       }
 
@@ -262,7 +263,7 @@ export class TournamentController {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
 
       const tournament = await Tournament.findByPk(id);
       if (!tournament) {
@@ -270,7 +271,7 @@ export class TournamentController {
       }
 
       // Check ownership
-      if (tournament.organizerId !== userId && req.user?.role !== 'admin') {
+      if (tournament.organizerId !== userId && req.user?.role !== 'federation') {
         return res.status(403).json({ error: 'Not authorized to update this tournament' });
       }
 

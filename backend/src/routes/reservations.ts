@@ -2,63 +2,64 @@ import express from 'express';
 import { ReservationController } from '../controllers/reservationController';
 import { authenticate } from '../middleware/auth';
 import { authorizeRoles } from '../middleware/roles';
+import { asyncHandler } from '../middleware/errorHandler';
 
 const router = express.Router();
 
 // Reservation management routes
 router.post('/reservations', 
   authenticate, 
-  ReservationController.createReservation
+  asyncHandler(ReservationController.createReservation)
 );
 
 router.get('/reservations/my', 
   authenticate, 
-  ReservationController.getUserReservations
+  asyncHandler(ReservationController.getUserReservations)
 );
 
 router.get('/reservations/:id', 
   authenticate, 
-  ReservationController.getReservationById
+  asyncHandler(ReservationController.getReservationById)
 );
 
 router.put('/reservations/:id', 
   authenticate, 
-  ReservationController.updateReservation
+  asyncHandler(ReservationController.updateReservation)
 );
 
 router.delete('/reservations/:id/cancel', 
   authenticate, 
-  ReservationController.cancelReservation
+  asyncHandler(ReservationController.cancelReservation)
 );
 
 // Payment processing
 router.post('/reservations/:id/payment', 
   authenticate, 
-  ReservationController.processReservationPayment
+  asyncHandler(ReservationController.processReservationPayment)
 );
 
 // Check-in and check-out
 router.post('/reservations/:id/checkin', 
   authenticate, 
-  ReservationController.checkInReservation
+  asyncHandler(ReservationController.checkInReservation)
 );
 
 router.post('/reservations/:id/checkout', 
   authenticate, 
-  ReservationController.checkOutReservation
+  asyncHandler(ReservationController.checkOutReservation)
 );
 
 // Availability and conflict detection
-router.get('/availability/check', ReservationController.checkAvailability);
-router.get('/availability/slots', ReservationController.getAvailableSlots);
-router.get('/availability/courts/:courtId', ReservationController.getCourtAvailability);
-router.get('/conflicts/detect', ReservationController.detectConflicts);
+router.get('/availability/check', asyncHandler(ReservationController.checkAvailability));
+router.get('/availability/slots', asyncHandler(ReservationController.getAvailableSlots));
+router.get('/availability/courts/:courtId', asyncHandler(ReservationController.getCourtAvailability));
+router.get('/conflicts/detect', asyncHandler(ReservationController.detectConflicts));
 
 // Court reservations (for owners/admins)
 router.get('/courts/:courtId/reservations', 
   authenticate, 
   authorizeRoles(['club', 'partner', 'federation']), 
-  ReservationController.getCourtReservations
+  asyncHandler(ReservationController.getCourtReservations)
 );
 
 export default router;

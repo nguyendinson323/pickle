@@ -2,6 +2,13 @@
 
 ## Overview
 This step establishes the foundational project structure with Docker, sets up both frontend (React + Vite + TypeScript + TailwindCSS + Redux) and backend (Node.js + Express + PostgreSQL + Sequelize), and implements a complete authentication system with role-based access control.
+Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
+For each page, you must accurately determine whether the functionalities of all dynamic elements, including buttons, are correctly integrated with the backend and accurately reflected in Redux to ensure real-time updates.
+There are already data seeded to test in database .
+You need to test with only this database seeded data from backend.
+Don't use any mockup, simulation or random data for frontend.
+
+
 
 ## Objectives
 - Set up complete project structure with Docker

@@ -30,7 +30,7 @@ export class TournamentRegistrationController {
         transportationNeeds,
         accommodationNeeds
       } = req.body;
-      const playerId = req.user?.id;
+      const playerId = req.user?.userId;
 
       if (!playerId) {
         await transaction.rollback();
@@ -184,20 +184,22 @@ export class TournamentRegistrationController {
         return res.status(400).json({ error: 'Payment not successful' });
       }
 
-      // Calculate total fee
-      const totalFee = Number(registration.tournament.entryFee) + Number(registration.category.entryFee);
+      // Get tournament and category for fee calculation
+      const tournament = await Tournament.findByPk(registration.tournamentId, { transaction });
+      const category = await TournamentCategory.findByPk(registration.categoryId, { transaction });
+      const totalFee = Number(tournament?.entryFee || 0) + Number(category?.entryFee || 0);
 
       // Create payment record
       const payment = await Payment.create({
         userId: registration.playerId,
         amount: totalFee,
-        paymentType: 'tournament_registration',
+        paymentType: 'membership' as any,
         paymentMethod: 'stripe',
         status: 'completed',
         stripePaymentIntentId: paymentIntentId,
         referenceType: 'tournament_registration',
         referenceId: registration.id,
-        description: `Tournament registration - ${registration.tournament.name}`
+        description: `Tournament registration - ${tournament?.name || 'Tournament'}`
       }, { transaction });
 
       // Update registration
@@ -208,29 +210,32 @@ export class TournamentRegistrationController {
       }, { transaction });
 
       // Update category participant count
-      await registration.category.increment('currentParticipants', { transaction });
+      if (category) {
+        await category.increment('currentParticipants', { transaction });
+      }
 
-      // Update tournament participant count
-      await registration.tournament.increment('currentParticipants', { transaction });
+      // Update tournament participant count  
+      if (tournament) {
+        await tournament.increment('currentParticipants', { transaction });
+      }
 
+      // Get tournament for notifications
+      const tournamentForNotification = await Tournament.findByPk(registration.tournamentId, { transaction });
+      
       // Send confirmation notification
-      await notificationService.createNotification({
-        userId: registration.playerId,
-        type: 'tournament',
-        title: 'Registration Confirmed',
-        message: `Your registration for ${registration.tournament.name} has been confirmed!`,
-        link: `/tournaments/${registration.tournamentId}`
-      });
+      await notificationService.createNotification(
+        registration.playerId,
+        'tournament',
+        `Your registration for ${tournamentForNotification?.name || 'the tournament'} has been confirmed!`
+      );
 
       // If partner, notify them too
       if (registration.partnerId) {
-        await notificationService.createNotification({
-          userId: registration.partnerId,
-          type: 'tournament',
-          title: 'Tournament Partner Registration',
-          message: `You have been registered as a partner for ${registration.tournament.name}`,
-          link: `/tournaments/${registration.tournamentId}`
-        });
+        await notificationService.createNotification(
+          registration.partnerId,
+          'tournament',
+          `You have been registered as a partner for ${tournamentForNotification?.name || 'the tournament'}`
+        );
       }
 
       await transaction.commit();
@@ -254,7 +259,7 @@ export class TournamentRegistrationController {
     try {
       const { registrationId } = req.params;
       const { reason } = req.body;
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
 
       const registration = await TournamentRegistration.findByPk(registrationId, {
         include: [
@@ -270,13 +275,14 @@ export class TournamentRegistrationController {
       }
 
       // Check ownership
-      if (registration.playerId !== userId && req.user?.role !== 'admin') {
+      if (registration.playerId !== userId && req.user?.role !== 'federation') {
         await transaction.rollback();
         return res.status(403).json({ error: 'Not authorized to cancel this registration' });
       }
 
-      // Check if tournament has started
-      if (registration.tournament.status === 'in_progress') {
+      // Get tournament to check status
+      const tournamentForCancel = await Tournament.findByPk(registration.tournamentId, { transaction });
+      if (tournamentForCancel?.status === 'in_progress') {
         await transaction.rollback();
         return res.status(400).json({ error: 'Cannot cancel registration for tournament in progress' });
       }
@@ -284,7 +290,7 @@ export class TournamentRegistrationController {
       // Process refund if payment was made
       let refundAmount = 0;
       if (registration.status === 'paid' && registration.paymentId) {
-        const daysBefore = Math.floor((new Date(registration.tournament.startDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+        const daysBefore = Math.floor((new Date(tournamentForCancel?.startDate || new Date()).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
         
         // Refund policy: 100% if > 7 days, 50% if 3-7 days, 0% if < 3 days
         let refundPercentage = 0;
@@ -298,7 +304,7 @@ export class TournamentRegistrationController {
           const payment = await Payment.findByPk(registration.paymentId, { transaction });
           if (payment && payment.stripePaymentIntentId) {
             await stripeService.createRefund({
-              paymentIntentId: payment.stripePaymentIntentId,
+              chargeId: payment.stripeChargeId || payment.stripePaymentIntentId,
               amount: Math.round(refundAmount * 100) // Convert to cents
             });
           }
@@ -316,18 +322,25 @@ export class TournamentRegistrationController {
 
       // Update category participant count
       if (registration.status === 'paid') {
-        await registration.category.decrement('currentParticipants', { transaction });
-        await registration.tournament.decrement('currentParticipants', { transaction });
+        const category = await TournamentCategory.findByPk(registration.categoryId, { transaction });
+        const tournamentForDecrement = await Tournament.findByPk(registration.tournamentId, { transaction });
+        if (category) {
+          await category.decrement('currentParticipants', { transaction });
+        }
+        if (tournamentForDecrement) {
+          await tournamentForDecrement.decrement('currentParticipants', { transaction });
+        }
       }
 
+      // Get tournament name for notification
+      const tournament = await Tournament.findByPk(registration.tournamentId, { transaction });
+      
       // Notify player
-      await notificationService.createNotification({
-        userId: registration.playerId,
-        type: 'tournament',
-        title: 'Registration Cancelled',
-        message: `Your registration for ${registration.tournament.name} has been cancelled. ${refundAmount > 0 ? `Refund of $${refundAmount} MXN will be processed.` : ''}`,
-        link: `/tournaments/${registration.tournamentId}`
-      });
+      await notificationService.createNotification(
+        registration.playerId,
+        'tournament',
+        `Your registration for ${tournament?.name || 'the tournament'} has been cancelled. ${refundAmount > 0 ? `Refund of $${refundAmount} MXN will be processed.` : ''}`
+      );
 
       await transaction.commit();
 
@@ -372,7 +385,7 @@ export class TournamentRegistrationController {
   // Get player registrations
   async getPlayerRegistrations(req: Request, res: Response) {
     try {
-      const playerId = req.user?.id;
+      const playerId = req.user?.userId;
 
       if (!playerId) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -410,7 +423,8 @@ export class TournamentRegistrationController {
     try {
       const { registrationId } = req.params;
       const { signature } = req.body;
-      const userId = req.user?.id;
+      console.log('Waiver signed with signature:', signature);
+      const userId = req.user?.userId;
 
       const registration = await TournamentRegistration.findByPk(registrationId);
 
@@ -426,7 +440,7 @@ export class TournamentRegistrationController {
       await registration.update({
         waiverSigned: true,
         waiverSignedDate: new Date()
-      });
+      } as any);
 
       res.json({ 
         message: 'Waiver signed successfully',
@@ -442,7 +456,7 @@ export class TournamentRegistrationController {
   async checkInPlayer(req: Request, res: Response) {
     try {
       const { registrationId } = req.params;
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
 
       const registration = await TournamentRegistration.findByPk(registrationId, {
         include: [{ model: Tournament, as: 'tournament' }]
@@ -453,7 +467,8 @@ export class TournamentRegistrationController {
       }
 
       // Check if user is tournament organizer
-      if (registration.tournament.organizerId !== userId && req.user?.role !== 'admin') {
+      const tournamentForAuth = await Tournament.findByPk(registration.tournamentId);
+      if (tournamentForAuth?.organizerId !== userId && req.user?.role !== 'federation') {
         return res.status(403).json({ error: 'Not authorized to check in players' });
       }
 
@@ -468,13 +483,11 @@ export class TournamentRegistrationController {
       });
 
       // Notify player
-      await notificationService.createNotification({
-        userId: registration.playerId,
-        type: 'tournament',
-        title: 'Checked In',
-        message: `You have been checked in for ${registration.tournament.name}`,
-        link: `/tournaments/${registration.tournamentId}`
-      });
+      await notificationService.createNotification(
+        registration.playerId,
+        'tournament',
+        `You have been checked in for ${tournamentForAuth?.name || 'the tournament'}`
+      );
 
       res.json({ 
         message: 'Player checked in successfully',
@@ -491,7 +504,7 @@ export class TournamentRegistrationController {
     try {
       const { registrationId } = req.params;
       const { seedNumber } = req.body;
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
 
       const registration = await TournamentRegistration.findByPk(registrationId, {
         include: [{ model: Tournament, as: 'tournament' }]
@@ -502,7 +515,8 @@ export class TournamentRegistrationController {
       }
 
       // Check if user is tournament organizer
-      if (registration.tournament.organizerId !== userId && req.user?.role !== 'admin') {
+      const tournamentForSeed = await Tournament.findByPk(registration.tournamentId);
+      if (tournamentForSeed?.organizerId !== userId && req.user?.role !== 'federation') {
         return res.status(403).json({ error: 'Not authorized to update seeds' });
       }
 

@@ -1,6 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
 import { authenticate } from '../middleware/auth';
+import { asyncHandler } from '../middleware/errorHandler';
 import {
   getPlans,
   createPaymentIntent,
@@ -12,7 +13,7 @@ import {
 
 const router = express.Router();
 
-router.get('/plans', getPlans);
+router.get('/plans', asyncHandler(getPlans));
 
 router.post('/payment-intent', 
   authenticate,
@@ -25,22 +26,22 @@ router.post('/payment-intent',
       .isIn(['card', 'transfer', 'oxxo'])
       .withMessage('Payment method must be card, transfer, or oxxo')
   ],
-  createPaymentIntent
+  asyncHandler(createPaymentIntent)
 );
 
 router.post('/confirm/:paymentId', 
   authenticate,
-  confirmPayment
+  asyncHandler(confirmPayment)
 );
 
 router.get('/history', 
   authenticate,
-  getPayments
+  asyncHandler(getPayments)
 );
 
 router.post('/cancel/:paymentId', 
   authenticate,
-  cancelPayment
+  asyncHandler(cancelPayment)
 );
 
 router.post('/refund/:paymentId', 
@@ -51,7 +52,7 @@ router.post('/refund/:paymentId',
       .isLength({ min: 5, max: 500 })
       .withMessage('Reason must be between 5 and 500 characters')
   ],
-  refundPayment
+  asyncHandler(refundPayment)
 );
 
 export default router;

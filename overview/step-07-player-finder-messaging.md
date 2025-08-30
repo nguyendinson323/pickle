@@ -4,7 +4,11 @@
 This step implements the premium player finder feature with location-based matching, real-time notifications via SMS and email, privacy controls, and an enhanced messaging system. The player finder helps connect players in the same area or when traveling, addressing the need for more players in Mexico. It includes Google Maps integration, distance calculations, and sophisticated matching algorithms.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
-You can write seeder files for this step at backend and seed into database.
+Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
+For each page, you must accurately determine whether the functionalities of all dynamic elements, including buttons, are correctly integrated with the backend and accurately reflected in Redux to ensure real-time updates.
+There are already data seeded to test in database .
+You need to test with only this database seeded data from backend.
+Don't use any mockup, simulation or random data for frontend.
 
 ## Objectives
 - Build location-based player finder with GPS/address search

@@ -4,7 +4,11 @@
 This step implements the complete membership management system with Stripe payment integration, handles annual membership fees, premium plan upgrades, automatic renewals, and invoice generation. It includes membership status tracking, payment history, and renewal notifications for all user types.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
-Write seeder files for this step at backend and seed into database.
+Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
+For each page, you must accurately determine whether the functionalities of all dynamic elements, including buttons, are correctly integrated with the backend and accurately reflected in Redux to ensure real-time updates.
+There are already data seeded to test in database .
+You need to test with only this database seeded data from backend.
+Don't use any mockup, simulation or random data for frontend.
 
 ## Objectives
 - Integrate Stripe payment gateway for all transactions

@@ -237,7 +237,7 @@ const checkCurp = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-module.exports = {
+export default {
   registerPlayer,
   registerCoach,
   registerClub,

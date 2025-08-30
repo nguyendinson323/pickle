@@ -1,13 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
-import { asyncHandler } from '../middleware/errorHandler';
-import {
-  getNotifications,
-  markNotificationAsRead,
-  markAllNotificationsAsRead,
-  deleteNotification,
-  getUnreadCount
-} from '../controllers/notificationController';
+import notificationController from '../controllers/notificationController';
 
 const router = Router();
 
@@ -15,10 +8,10 @@ const router = Router();
 router.use(authenticate);
 
 // Notification endpoints
-router.get('/', asyncHandler(getNotifications));
-router.put('/:id/read', asyncHandler(markNotificationAsRead));
-router.put('/mark-all-read', asyncHandler(markAllNotificationsAsRead));
-router.delete('/:id', asyncHandler(deleteNotification));
-router.get('/unread-count', asyncHandler(getUnreadCount));
+router.get('/', notificationController.getNotifications);
+router.put('/:id/read', notificationController.markNotificationAsRead);
+router.put('/mark-all-read', notificationController.markAllNotificationsAsRead);
+router.delete('/:id', notificationController.deleteNotification);
+router.get('/unread-count', notificationController.getUnreadCount);
 
 export default router;

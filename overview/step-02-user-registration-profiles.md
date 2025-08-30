@@ -2,6 +2,11 @@
 
 ## Overview
 This step builds the complete user registration system for all user roles (Player, Coach, Club, Partner, State Committee) with role-specific forms, file upload capabilities via Cloudinary, and comprehensive profile management. Each registration form includes Mexican-specific fields (CURP, RFC, INE) and privacy policy acceptance.
+Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
+For each page, you must accurately determine whether the functionalities of all dynamic elements, including buttons, are correctly integrated with the backend and accurately reflected in Redux to ensure real-time updates.
+There are already data seeded to test in database .
+You need to test with only this database seeded data from backend.
+Don't use any mockup, simulation or random data for frontend.
 
 ## Objectives
 - Create role-specific registration forms

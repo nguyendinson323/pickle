@@ -2,6 +2,11 @@
 
 ## Overview
 This step creates comprehensive role-based dashboard systems for all user types (Player, Coach, Club, Partner, State Committee, Federation Admin), implements core UI components with modern design and animations, and builds the messaging/notification system. Each dashboard provides role-specific functionality and navigation.
+Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
+For each page, you must accurately determine whether the functionalities of all dynamic elements, including buttons, are correctly integrated with the backend and accurately reflected in Redux to ensure real-time updates.
+There are already data seeded to test in database .
+You need to test with only this database seeded data from backend.
+Don't use any mockup, simulation or random data for frontend.
 
 ## Objectives
 - Create role-specific dashboard layouts with proper navigation

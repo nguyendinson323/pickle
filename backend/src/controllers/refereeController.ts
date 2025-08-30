@@ -2,11 +2,13 @@ import { Request, Response } from 'express';
 import refereeService from '../services/refereeService';
 import { TournamentMatch, Tournament, Coach } from '../models';
 import notificationService from '../services/notificationService';
+import { UserRole } from '../types/auth';
 
 interface AuthRequest extends Request {
   user?: {
     userId: number;
-    role: string;
+    email: string;
+    role: UserRole;
   };
 }
 
@@ -58,13 +60,11 @@ const assignReferee = async (req: AuthRequest, res: Response): Promise<void> => 
     // Notify referee
     const referee = await Coach.findByPk(refereeId);
     if (referee) {
-      await notificationService.createNotification({
-        userId: referee.userId,
-        type: 'referee_assignment',
-        title: 'New Match Assignment',
-        message: `You have been assigned as referee for a match`,
-        metadata: { matchId, tournamentId: tournament.id }
-      });
+      await notificationService.createNotification(
+        referee.userId,
+        'referee_assignment',
+        `You have been assigned as referee for a match`
+      );
     }
 
     res.json({ message: 'Referee assigned successfully', assignment });
@@ -123,11 +123,12 @@ const updateRefereeStatus = async (req: AuthRequest, res: Response): Promise<voi
       return;
     }
 
-    const updated = await refereeService.updateRefereeStatus(
-      Number(matchId),
-      status,
-      notes
-    );
+    // Update match with referee feedback
+    const matchToUpdate = await TournamentMatch.findByPk(matchId);
+    if (matchToUpdate) {
+      await matchToUpdate.update({ status, notes } as any);
+    }
+    const updated = matchToUpdate;
 
     res.json({ message: 'Referee status updated', data: updated });
   } catch (error: any) {
@@ -158,7 +159,7 @@ const getRefereeStatistics = async (req: AuthRequest, res: Response): Promise<vo
   try {
     const { refereeId } = req.params;
 
-    const stats = await refereeService.getRefereeStatistics(Number(refereeId));
+    const stats = await refereeService.getRefereeStats(Number(refereeId));
     res.json({ statistics: stats });
   } catch (error) {
     console.error('Error fetching referee statistics:', error);

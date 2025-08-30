@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
-import CourtReview from '../models/CourtReview';
-import Reservation from '../models/Reservation';
-import Court from '../models/Court';
-import User from '../models/User';
+import { CourtReview, Reservation, Court, User } from '../models';
 
 const createReview = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -241,7 +238,8 @@ const flagReview = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Here you would typically create a report record in a separate table
-    // For now, we'll just hide the review
+    // For now, we'll just hide the review and log the reason
+    console.log(`Review flagged with reason: ${reason}`);
     await review.update({ isHidden: true });
 
     res.json({ success: true, message: 'Reseña reportada exitosamente' });

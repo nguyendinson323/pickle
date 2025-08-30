@@ -83,7 +83,7 @@ const getUnreadCount = async (req: AuthRequest, res: Response): Promise<void> =>
   }
 };
 
-module.exports = {
+export default {
   getNotifications,
   markNotificationAsRead,
   markAllNotificationsAsRead,

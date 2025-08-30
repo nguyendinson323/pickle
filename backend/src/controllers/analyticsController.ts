@@ -299,7 +299,7 @@ const getFederationAnalytics = async (req: Request, res: Response): Promise<void
   }
 };
 
-module.exports = {
+export default {
   getCourtDashboard,
   getCourtRevenue,
   getCourtUsage,

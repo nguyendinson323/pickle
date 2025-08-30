@@ -4,7 +4,11 @@
 This step implements a comprehensive microsite management system that allows clubs, partners, and state committees to create and manage their own public websites within the federation platform. Each organization gets a customizable microsite with their own subdomain, content management capabilities, and integration with booking/tournament systems.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
-You can write seeder files for this step at backend and seed into database.
+Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
+For each page, you must accurately determine whether the functionalities of all dynamic elements, including buttons, are correctly integrated with the backend and accurately reflected in Redux to ensure real-time updates.
+There are already data seeded to test in database .
+You need to test with only this database seeded data from backend.
+Don't use any mockup, simulation or random data for frontend.
 
 ## Objectives
 - Create customizable microsites for clubs, partners, and state committees

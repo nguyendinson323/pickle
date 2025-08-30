@@ -1,6 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
 import { authenticate } from '../middleware/auth';
+import { asyncHandler } from '../middleware/errorHandler';
 import {
   getMembership,
   getMembershipHistory,
@@ -15,17 +16,17 @@ const router = express.Router();
 
 router.get('/current', 
   authenticate,
-  getMembership
+  asyncHandler(getMembership)
 );
 
 router.get('/history', 
   authenticate,
-  getMembershipHistory
+  asyncHandler(getMembershipHistory)
 );
 
 router.get('/status', 
   authenticate,
-  checkMembershipStatus
+  asyncHandler(checkMembershipStatus)
 );
 
 router.post('/upgrade', 
@@ -35,7 +36,7 @@ router.post('/upgrade',
       .isInt({ min: 1 })
       .withMessage('Valid membership plan ID is required')
   ],
-  upgradeMembership
+  asyncHandler(upgradeMembership)
 );
 
 router.post('/cancel', 
@@ -46,17 +47,17 @@ router.post('/cancel',
       .isLength({ min: 5, max: 500 })
       .withMessage('Reason must be between 5 and 500 characters')
   ],
-  cancelMembership
+  asyncHandler(cancelMembership)
 );
 
 router.post('/renew', 
   authenticate,
-  renewMembership
+  asyncHandler(renewMembership)
 );
 
 router.get('/stats', 
   authenticate,
-  getMembershipStats
+  asyncHandler(getMembershipStats)
 );
 
 export default router;
