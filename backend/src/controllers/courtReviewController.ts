@@ -4,463 +4,259 @@ import Reservation from '../models/Reservation';
 import Court from '../models/Court';
 import User from '../models/User';
 
-export class CourtReviewController {
+const createReview = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { courtId, reservationId, rating, title, comment, isRecommended, amenityRatings } = req.body;
+    const userId = (req as any).user.userId;
 
-  static async createReview(req: Request, res: Response): Promise<void> {
-    try {
-      const {
-        courtId,
-        reservationId,
-        overallRating,
-        lightingRating,
-        surfaceRating,
-        facilitiesRating,
-        accessibilityRating,
-        comment,
-        wouldRecommend
-      } = req.body;
-
-      const userId = (req as any).user.id;
-
-      // Verify the reservation exists and belongs to the user
-      const reservation = await Reservation.findOne({
-        where: { 
-          id: reservationId,
-          userId,
-          courtId,
-          status: 'completed'
-        }
-      });
-
-      if (!reservation) {
-        res.status(400).json({
-          success: false,
-          message: 'Reserva no encontrada o no completada'
-        });
-        return;
-      }
-
-      // Check if review already exists for this reservation
-      const existingReview = await CourtReview.findOne({
-        where: { reservationId }
-      });
-
-      if (existingReview) {
-        res.status(400).json({
-          success: false,
-          message: 'Ya existe una reseña para esta reserva'
-        });
-        return;
-      }
-
-      const review = await CourtReview.create({
-        userId,
-        courtId: parseInt(courtId),
-        reservationId: parseInt(reservationId),
-        overallRating,
-        lightingRating,
-        surfaceRating,
-        facilitiesRating,
-        accessibilityRating,
-        comment,
-        wouldRecommend: wouldRecommend || false,
-        isVerified: true
-      });
-
-      res.status(201).json({
-        success: true,
-        message: 'Reseña creada exitosamente',
-        data: review
-      });
-    } catch (error: any) {
-      console.error('Error creating review:', error);
-      res.status(400).json({
-        success: false,
-        message: error.message || 'Error al crear la reseña'
-      });
+    const reservation = await Reservation.findOne({ where: { id: reservationId, userId, courtId, status: 'completed' } });
+    if (!reservation) {
+      res.status(400).json({ success: false, message: 'Reserva no encontrada o no completada' });
+      return;
     }
+
+    const existingReview = await CourtReview.findOne({ where: { reservationId } });
+    if (existingReview) {
+      res.status(400).json({ success: false, message: 'Ya existe una reseña para esta reserva' });
+      return;
+    }
+
+    const review = await CourtReview.create({
+      userId,
+      courtId: parseInt(courtId),
+      reservationId: parseInt(reservationId),
+      rating,
+      title,
+      comment,
+      amenityRatings,
+      isRecommended: isRecommended || false,
+      isVerifiedBooking: true,
+      isHidden: false
+    });
+
+    res.status(201).json({ success: true, message: 'Reseña creada exitosamente', data: review });
+  } catch (error: any) {
+    console.error('Error creating review:', error);
+    res.status(400).json({ success: false, message: error.message || 'Error al crear la reseña' });
   }
+};
 
-  static async getCourtReviews(req: Request, res: Response): Promise<void> {
-    try {
-      const { courtId } = req.params;
-      const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = req.query;
+const getCourtReviews = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { courtId } = req.params;
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = req.query;
+    const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
 
-      const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
+    const { rows: reviews, count: total } = await CourtReview.findAndCountAll({
+      where: { courtId, isHidden: false },
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'username'] },
+        { model: Reservation, as: 'reservation', attributes: ['id', 'reservationDate'] }
+      ],
+      order: [[sortBy as string, sortOrder as string]],
+      limit: parseInt(limit as string),
+      offset
+    });
 
-      const { rows: reviews, count: total } = await CourtReview.findAndCountAll({
-        where: { courtId },
-        include: [
-          {
-            model: User,
-            as: 'user',
-            attributes: ['id', 'username']
-          },
-          {
-            model: Reservation,
-            as: 'reservation',
-            attributes: ['id', 'reservationDate']
-          }
-        ],
-        order: [[sortBy as string, sortOrder as string]],
-        limit: parseInt(limit as string),
-        offset
-      });
+    const avgRatings = await calculateAverageRatings(parseInt(courtId));
 
-      const pages = Math.ceil(total / parseInt(limit as string));
-
-      res.json({
-        success: true,
-        data: reviews,
+    res.json({
+      success: true,
+      data: {
+        reviews,
+        averageRatings: avgRatings,
         pagination: {
-          current: parseInt(page as string),
-          pages,
           total,
-          limit: parseInt(limit as string)
+          page: parseInt(page as string),
+          limit: parseInt(limit as string),
+          totalPages: Math.ceil(total / parseInt(limit as string))
         }
-      });
-    } catch (error: any) {
-      console.error('Error fetching court reviews:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Error interno del servidor'
-      });
-    }
+      }
+    });
+  } catch (error: any) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener las reseñas' });
   }
+};
 
-  static async getUserReviews(req: Request, res: Response): Promise<void> {
-    try {
-      const userId = (req as any).user.id;
-      const { page = 1, limit = 10 } = req.query;
+const getUserReviews = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user.userId;
+    const { page = 1, limit = 10 } = req.query;
+    const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
 
-      const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
+    const { rows: reviews, count: total } = await CourtReview.findAndCountAll({
+      where: { userId },
+      include: [
+        { model: Court, as: 'court', attributes: ['id', 'name'] },
+        { model: Reservation, as: 'reservation', attributes: ['id', 'reservationDate'] }
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: parseInt(limit as string),
+      offset
+    });
 
-      const { rows: reviews, count: total } = await CourtReview.findAndCountAll({
-        where: { userId },
-        include: [
-          {
-            model: Court,
-            as: 'court',
-            attributes: ['id', 'name', 'address']
-          },
-          {
-            model: Reservation,
-            as: 'reservation',
-            attributes: ['id', 'reservationDate']
-          }
-        ],
-        order: [['createdAt', 'DESC']],
-        limit: parseInt(limit as string),
-        offset
-      });
-
-      const pages = Math.ceil(total / parseInt(limit as string));
-
-      res.json({
-        success: true,
-        data: reviews,
+    res.json({
+      success: true,
+      data: {
+        reviews,
         pagination: {
-          current: parseInt(page as string),
-          pages,
           total,
-          limit: parseInt(limit as string)
+          page: parseInt(page as string),
+          limit: parseInt(limit as string),
+          totalPages: Math.ceil(total / parseInt(limit as string))
         }
-      });
-    } catch (error: any) {
-      console.error('Error fetching user reviews:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Error interno del servidor'
-      });
+      }
+    });
+  } catch (error: any) {
+    console.error('Error fetching user reviews:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener las reseñas del usuario' });
+  }
+};
+
+const updateReview = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user.userId;
+    const updates = req.body;
+
+    const review = await CourtReview.findOne({ where: { id, userId } });
+    if (!review) {
+      res.status(404).json({ success: false, message: 'Reseña no encontrada' });
+      return;
     }
+
+    const daysSinceCreation = (Date.now() - review.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceCreation > 30) {
+      res.status(400).json({ success: false, message: 'No se pueden editar reseñas después de 30 días' });
+      return;
+    }
+
+    await review.update(updates);
+    res.json({ success: true, message: 'Reseña actualizada exitosamente', data: review });
+  } catch (error: any) {
+    console.error('Error updating review:', error);
+    res.status(400).json({ success: false, message: error.message || 'Error al actualizar la reseña' });
+  }
+};
+
+const deleteReview = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user.userId;
+
+    const review = await CourtReview.findOne({ where: { id, userId } });
+    if (!review) {
+      res.status(404).json({ success: false, message: 'Reseña no encontrada' });
+      return;
+    }
+
+    const daysSinceCreation = (Date.now() - review.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceCreation > 7) {
+      res.status(400).json({ success: false, message: 'No se pueden eliminar reseñas después de 7 días' });
+      return;
+    }
+
+    await review.destroy();
+    res.json({ success: true, message: 'Reseña eliminada exitosamente' });
+  } catch (error: any) {
+    console.error('Error deleting review:', error);
+    res.status(500).json({ success: false, message: 'Error al eliminar la reseña' });
+  }
+};
+
+const respondToReview = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { response } = req.body;
+    const userId = (req as any).user.userId;
+
+    const review = await CourtReview.findByPk(id, {
+      include: [{ model: Court, as: 'court' }]
+    });
+
+    if (!review) {
+      res.status(404).json({ success: false, message: 'Reseña no encontrada' });
+      return;
+    }
+
+    const court = (review as any).court;
+    if (court.ownerId !== userId) {
+      res.status(403).json({ success: false, message: 'No autorizado para responder a esta reseña' });
+      return;
+    }
+
+    await review.update({
+      ownerResponse: response,
+      ownerResponseAt: new Date()
+    });
+
+    res.json({ success: true, message: 'Respuesta agregada exitosamente', data: review });
+  } catch (error: any) {
+    console.error('Error responding to review:', error);
+    res.status(500).json({ success: false, message: 'Error al responder a la reseña' });
+  }
+};
+
+const calculateAverageRatings = async (courtId: number) => {
+  const reviews = await CourtReview.findAll({ 
+    where: { courtId, isHidden: false } 
+  });
+
+  if (reviews.length === 0) {
+    return {
+      overall: 0,
+      totalReviews: 0,
+      distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+      recommendationRate: 0
+    };
   }
 
-  static async updateReview(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      const userId = (req as any).user.id;
-      const updateData = req.body;
+  const ratingSum = reviews.reduce((sum, review) => sum + review.rating, 0);
+  const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  
+  reviews.forEach(review => {
+    distribution[review.rating as keyof typeof distribution]++;
+  });
 
-      // Remove fields that shouldn't be updated
-      delete updateData.userId;
-      delete updateData.courtId;
-      delete updateData.reservationId;
-      delete updateData.isVerified;
+  const recommendCount = reviews.filter(review => review.isRecommended).length;
 
-      const review = await CourtReview.findOne({
-        where: { id, userId }
-      });
+  return {
+    overall: parseFloat((ratingSum / reviews.length).toFixed(1)),
+    totalReviews: reviews.length,
+    distribution,
+    recommendationRate: parseFloat(((recommendCount / reviews.length) * 100).toFixed(1))
+  };
+};
 
-      if (!review) {
-        res.status(404).json({
-          success: false,
-          message: 'Reseña no encontrada'
-        });
-        return;
-      }
+const flagReview = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
 
-      // Check if review is within edit time limit (24 hours)
-      const now = new Date();
-      const reviewDate = new Date(review.createdAt);
-      const hoursDifference = (now.getTime() - reviewDate.getTime()) / (1000 * 60 * 60);
-
-      if (hoursDifference > 24) {
-        res.status(400).json({
-          success: false,
-          message: 'Las reseñas solo pueden editarse dentro de las primeras 24 horas'
-        });
-        return;
-      }
-
-      await review.update(updateData);
-
-      res.json({
-        success: true,
-        message: 'Reseña actualizada exitosamente',
-        data: review
-      });
-    } catch (error: any) {
-      console.error('Error updating review:', error);
-      res.status(400).json({
-        success: false,
-        message: error.message || 'Error al actualizar la reseña'
-      });
+    const review = await CourtReview.findByPk(id);
+    if (!review) {
+      res.status(404).json({ success: false, message: 'Reseña no encontrada' });
+      return;
     }
+
+    // Here you would typically create a report record in a separate table
+    // For now, we'll just hide the review
+    await review.update({ isHidden: true });
+
+    res.json({ success: true, message: 'Reseña reportada exitosamente' });
+  } catch (error: any) {
+    console.error('Error flagging review:', error);
+    res.status(500).json({ success: false, message: 'Error al reportar la reseña' });
   }
+};
 
-  static async deleteReview(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      const userId = (req as any).user.id;
-
-      const review = await CourtReview.findOne({
-        where: { id, userId }
-      });
-
-      if (!review) {
-        res.status(404).json({
-          success: false,
-          message: 'Reseña no encontrada'
-        });
-        return;
-      }
-
-      // Check if review is within delete time limit (48 hours)
-      const now = new Date();
-      const reviewDate = new Date(review.createdAt);
-      const hoursDifference = (now.getTime() - reviewDate.getTime()) / (1000 * 60 * 60);
-
-      if (hoursDifference > 48) {
-        res.status(400).json({
-          success: false,
-          message: 'Las reseñas solo pueden eliminarse dentro de las primeras 48 horas'
-        });
-        return;
-      }
-
-      await review.destroy();
-
-      res.json({
-        success: true,
-        message: 'Reseña eliminada exitosamente'
-      });
-    } catch (error: any) {
-      console.error('Error deleting review:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Error interno del servidor'
-      });
-    }
-  }
-
-  static async getReviewById(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-
-      const review = await CourtReview.findByPk(id, {
-        include: [
-          {
-            model: User,
-            as: 'user',
-            attributes: ['id', 'username']
-          },
-          {
-            model: Court,
-            as: 'court',
-            attributes: ['id', 'name', 'address']
-          },
-          {
-            model: Reservation,
-            as: 'reservation',
-            attributes: ['id', 'reservationDate']
-          }
-        ]
-      });
-
-      if (!review) {
-        res.status(404).json({
-          success: false,
-          message: 'Reseña no encontrada'
-        });
-        return;
-      }
-
-      res.json({
-        success: true,
-        data: review
-      });
-    } catch (error: any) {
-      console.error('Error fetching review:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Error interno del servidor'
-      });
-    }
-  }
-
-  static async getCourtRatingsSummary(req: Request, res: Response): Promise<void> {
-    try {
-      const { courtId } = req.params;
-
-      const reviews = await CourtReview.findAll({
-        where: { courtId },
-        attributes: [
-          'overallRating',
-          'lightingRating',
-          'surfaceRating',
-          'facilitiesRating',
-          'accessibilityRating',
-          'wouldRecommend'
-        ]
-      });
-
-      if (reviews.length === 0) {
-        res.json({
-          success: true,
-          data: {
-            totalReviews: 0,
-            averageRating: 0,
-            ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-            aspectRatings: {
-              lighting: 0,
-              surface: 0,
-              facilities: 0,
-              accessibility: 0
-            },
-            recommendationRate: 0
-          }
-        });
-        return;
-      }
-
-      const totalReviews = reviews.length;
-      const averageRating = reviews.reduce((sum, review) => sum + review.overallRating, 0) / totalReviews;
-
-      // Calculate rating distribution
-      const ratingDistribution = reviews.reduce((acc, review) => {
-        acc[review.overallRating] = (acc[review.overallRating] || 0) + 1;
-        return acc;
-      }, {} as { [key: number]: number });
-
-      // Fill missing ratings with 0
-      for (let i = 1; i <= 5; i++) {
-        if (!ratingDistribution[i]) ratingDistribution[i] = 0;
-      }
-
-      // Calculate aspect ratings averages
-      const aspectRatings = {
-        lighting: reviews
-          .filter(r => r.lightingRating !== null)
-          .reduce((sum, review) => sum + (review.lightingRating || 0), 0) / 
-          reviews.filter(r => r.lightingRating !== null).length || 0,
-        
-        surface: reviews
-          .filter(r => r.surfaceRating !== null)
-          .reduce((sum, review) => sum + (review.surfaceRating || 0), 0) / 
-          reviews.filter(r => r.surfaceRating !== null).length || 0,
-        
-        facilities: reviews
-          .filter(r => r.facilitiesRating !== null)
-          .reduce((sum, review) => sum + (review.facilitiesRating || 0), 0) / 
-          reviews.filter(r => r.facilitiesRating !== null).length || 0,
-        
-        accessibility: reviews
-          .filter(r => r.accessibilityRating !== null)
-          .reduce((sum, review) => sum + (review.accessibilityRating || 0), 0) / 
-          reviews.filter(r => r.accessibilityRating !== null).length || 0
-      };
-
-      // Round aspect ratings to 1 decimal place
-      Object.keys(aspectRatings).forEach(key => {
-        aspectRatings[key as keyof typeof aspectRatings] = 
-          Math.round(aspectRatings[key as keyof typeof aspectRatings] * 10) / 10;
-      });
-
-      // Calculate recommendation rate
-      const recommendationCount = reviews.filter(review => review.wouldRecommend).length;
-      const recommendationRate = Math.round((recommendationCount / totalReviews) * 100);
-
-      const summary = {
-        totalReviews,
-        averageRating: Math.round(averageRating * 10) / 10,
-        ratingDistribution,
-        aspectRatings,
-        recommendationRate
-      };
-
-      res.json({
-        success: true,
-        data: summary
-      });
-    } catch (error: any) {
-      console.error('Error fetching court ratings summary:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Error interno del servidor'
-      });
-    }
-  }
-
-  static async respondToReview(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      const { ownerResponse } = req.body;
-      const userRole = (req as any).user.role;
-
-      // Only allow club owners, partners, or federation to respond
-      if (!['club', 'partner', 'federation'].includes(userRole)) {
-        res.status(403).json({
-          success: false,
-          message: 'No tienes permisos para responder reseñas'
-        });
-        return;
-      }
-
-      const review = await CourtReview.findByPk(id);
-      if (!review) {
-        res.status(404).json({
-          success: false,
-          message: 'Reseña no encontrada'
-        });
-        return;
-      }
-
-      await review.update({
-        ownerResponse,
-        ownerResponseAt: new Date()
-      });
-
-      res.json({
-        success: true,
-        message: 'Respuesta agregada exitosamente',
-        data: { ownerResponse, ownerResponseAt: new Date() }
-      });
-    } catch (error: any) {
-      console.error('Error responding to review:', error);
-      res.status(400).json({
-        success: false,
-        message: error.message || 'Error al responder la reseña'
-      });
-    }
-  }
-}
+export default {
+  createReview,
+  getCourtReviews,
+  getUserReviews,
+  updateReview,
+  deleteReview,
+  respondToReview,
+  flagReview
+};

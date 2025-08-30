@@ -11,229 +11,239 @@ interface MulterRequest extends Request {
   file?: Express.Multer.File;
 }
 
-class RegistrationController {
-  async registerPlayer(req: MulterRequest, res: Response) {
-    try {
-      // Check validation errors
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          error: 'Validation failed',
-          details: errors.array()
-        });
-      }
-
-      const data = {
-        ...req.body,
-        profilePhoto: req.files?.profilePhoto?.[0],
-        idDocument: req.files?.idDocument?.[0]
-      };
-
-      const result = await registrationService.registerPlayer(data);
-      
-      res.status(201).json(result);
-    } catch (error: any) {
+const registerPlayer = async (req: MulterRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       res.status(400).json({
         success: false,
-        error: error.message || 'Player registration failed'
+        error: 'Validation failed',
+        details: errors.array()
       });
+      return;
     }
+
+    const data = {
+      ...req.body,
+      profilePhoto: req.files?.profilePhoto?.[0],
+      idDocument: req.files?.idDocument?.[0]
+    };
+
+    const result = await registrationService.registerPlayer(data);
+    
+    res.status(201).json(result);
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      error: error.message || 'Player registration failed'
+    });
   }
+};
 
-  async registerCoach(req: MulterRequest, res: Response) {
-    try {
-      // Check validation errors
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          error: 'Validation failed',
-          details: errors.array()
-        });
-      }
-
-      const data = {
-        ...req.body,
-        profilePhoto: req.files?.profilePhoto?.[0],
-        idDocument: req.files?.idDocument?.[0]
-      };
-
-      const result = await registrationService.registerCoach(data);
-      
-      res.status(201).json(result);
-    } catch (error: any) {
+const registerCoach = async (req: MulterRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       res.status(400).json({
         success: false,
-        error: error.message || 'Coach registration failed'
+        error: 'Validation failed',
+        details: errors.array()
       });
+      return;
     }
+
+    const data = {
+      ...req.body,
+      profilePhoto: req.files?.profilePhoto?.[0],
+      idDocument: req.files?.idDocument?.[0]
+    };
+
+    const result = await registrationService.registerCoach(data);
+    
+    res.status(201).json(result);
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      error: error.message || 'Coach registration failed'
+    });
   }
+};
 
-  async registerClub(req: MulterRequest, res: Response) {
-    try {
-      // Check validation errors
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          error: 'Validation failed',
-          details: errors.array()
-        });
-      }
-
-      const data = {
-        ...req.body,
-        logo: req.file,
-        socialMedia: req.body.socialMedia ? JSON.parse(req.body.socialMedia) : undefined
-      };
-
-      const result = await registrationService.registerClub(data);
-      
-      res.status(201).json(result);
-    } catch (error: any) {
+const registerClub = async (req: MulterRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       res.status(400).json({
         success: false,
-        error: error.message || 'Club registration failed'
+        error: 'Validation failed',
+        details: errors.array()
       });
+      return;
     }
+
+    const data = {
+      ...req.body,
+      logo: req.file,
+      socialMedia: req.body.socialMedia ? JSON.parse(req.body.socialMedia) : undefined
+    };
+
+    const result = await registrationService.registerClub(data);
+    
+    res.status(201).json(result);
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      error: error.message || 'Club registration failed'
+    });
   }
+};
 
-  async registerPartner(req: MulterRequest, res: Response) {
-    try {
-      // Check validation errors
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          error: 'Validation failed',
-          details: errors.array()
-        });
-      }
-
-      const data = {
-        ...req.body,
-        logo: req.file,
-        socialMedia: req.body.socialMedia ? JSON.parse(req.body.socialMedia) : undefined
-      };
-
-      const result = await registrationService.registerPartner(data);
-      
-      res.status(201).json(result);
-    } catch (error: any) {
+const registerPartner = async (req: MulterRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       res.status(400).json({
         success: false,
-        error: error.message || 'Partner registration failed'
+        error: 'Validation failed',
+        details: errors.array()
       });
+      return;
     }
+
+    const data = {
+      ...req.body,
+      logo: req.file,
+      socialMedia: req.body.socialMedia ? JSON.parse(req.body.socialMedia) : undefined
+    };
+
+    const result = await registrationService.registerPartner(data);
+    
+    res.status(201).json(result);
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      error: error.message || 'Partner registration failed'
+    });
   }
+};
 
-  async registerStateCommittee(req: MulterRequest, res: Response) {
-    try {
-      // Check validation errors
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          error: 'Validation failed',
-          details: errors.array()
-        });
-      }
-
-      const data = {
-        ...req.body,
-        logo: req.file,
-        socialMedia: req.body.socialMedia ? JSON.parse(req.body.socialMedia) : undefined
-      };
-
-      const result = await registrationService.registerStateCommittee(data);
-      
-      res.status(201).json(result);
-    } catch (error: any) {
+const registerStateCommittee = async (req: MulterRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       res.status(400).json({
         success: false,
-        error: error.message || 'State committee registration failed'
+        error: 'Validation failed',
+        details: errors.array()
       });
+      return;
     }
+
+    const data = {
+      ...req.body,
+      logo: req.file,
+      socialMedia: req.body.socialMedia ? JSON.parse(req.body.socialMedia) : undefined
+    };
+
+    const result = await registrationService.registerStateCommittee(data);
+    
+    res.status(201).json(result);
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      error: error.message || 'State committee registration failed'
+    });
   }
+};
 
-  async checkUsername(req: Request, res: Response) {
-    try {
-      const { username } = req.params;
-      
-      if (!username || username.length < 3) {
-        return res.status(400).json({
-          success: false,
-          error: 'Username must be at least 3 characters'
-        });
-      }
-
-      const available = await registrationService.checkUsernameAvailability(username);
-      
-      res.json({
-        success: true,
-        available,
-        message: available ? 'Username is available' : 'Username is already taken'
-      });
-    } catch (error: any) {
-      res.status(500).json({
+const checkUsername = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username } = req.params;
+    
+    if (!username || username.length < 3) {
+      res.status(400).json({
         success: false,
-        error: 'Error checking username availability'
+        error: 'Username must be at least 3 characters'
       });
+      return;
     }
+
+    const available = await registrationService.checkUsernameAvailability(username);
+    
+    res.json({
+      success: true,
+      available,
+      message: available ? 'Username is available' : 'Username is already taken'
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: 'Error checking username availability'
+    });
   }
+};
 
-  async checkEmail(req: Request, res: Response) {
-    try {
-      const { email } = req.params;
-      
-      if (!email || !email.includes('@')) {
-        return res.status(400).json({
-          success: false,
-          error: 'Invalid email format'
-        });
-      }
-
-      const available = await registrationService.checkEmailAvailability(email);
-      
-      res.json({
-        success: true,
-        available,
-        message: available ? 'Email is available' : 'Email is already registered'
-      });
-    } catch (error: any) {
-      res.status(500).json({
+const checkEmail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email } = req.params;
+    
+    if (!email || !email.includes('@')) {
+      res.status(400).json({
         success: false,
-        error: 'Error checking email availability'
+        error: 'Invalid email format'
       });
+      return;
     }
+
+    const available = await registrationService.checkEmailAvailability(email);
+    
+    res.json({
+      success: true,
+      available,
+      message: available ? 'Email is available' : 'Email is already registered'
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: 'Error checking email availability'
+    });
   }
+};
 
-  async checkCurp(req: Request, res: Response) {
-    try {
-      const { curp } = req.params;
-      
-      if (!curp || curp.length !== 18) {
-        return res.status(400).json({
-          success: false,
-          error: 'CURP must be exactly 18 characters'
-        });
-      }
-
-      const available = await registrationService.checkCurpAvailability(curp);
-      
-      res.json({
-        success: true,
-        available,
-        message: available ? 'CURP is available' : 'CURP is already registered'
-      });
-    } catch (error: any) {
-      res.status(500).json({
+const checkCurp = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { curp } = req.params;
+    
+    if (!curp || curp.length !== 18) {
+      res.status(400).json({
         success: false,
-        error: 'Error checking CURP availability'
+        error: 'CURP must be exactly 18 characters'
       });
+      return;
     }
-  }
-}
 
-export default new RegistrationController();
+    const available = await registrationService.checkCurpAvailability(curp);
+    
+    res.json({
+      success: true,
+      available,
+      message: available ? 'CURP is available' : 'CURP is already registered'
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: 'Error checking CURP availability'
+    });
+  }
+};
+
+module.exports = {
+  registerPlayer,
+  registerCoach,
+  registerClub,
+  registerPartner,
+  registerStateCommittee,
+  checkUsername,
+  checkEmail,
+  checkCurp
+};
