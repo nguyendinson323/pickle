@@ -67,7 +67,7 @@ export function validateMexicanPhone(phone: string): boolean {
   
   if (cleanPhone.length === 10) {
     return /^[1-9]\d{9}$/.test(cleanPhone);
-  } else if (cleanPhone.length === 12 && cleanPhone.startsWith('52')) {
+  } else if (cleanPhone.length === 12 && cleanPhone.indexOf('52') === 0) {
     return /^52[1-9]\d{9}$/.test(cleanPhone);
   }
   
@@ -79,7 +79,7 @@ export function formatPhoneNumber(phone: string): string {
   
   if (cleanPhone.length === 10) {
     return cleanPhone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-  } else if (cleanPhone.length === 12 && cleanPhone.startsWith('52')) {
+  } else if (cleanPhone.length === 12 && cleanPhone.indexOf('52') === 0) {
     const localNumber = cleanPhone.substring(2);
     return `+52 ${localNumber.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}`;
   }
@@ -91,7 +91,7 @@ export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
+  let timeout: any;
   
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
@@ -150,10 +150,10 @@ export function getFileSize(bytes: number): string {
 
 export function isValidImageFile(file: File): boolean {
   const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  return validTypes.includes(file.type);
+  return validTypes.indexOf(file.type) !== -1;
 }
 
 export function isValidDocumentFile(file: File): boolean {
   const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-  return validTypes.includes(file.type);
+  return validTypes.indexOf(file.type) !== -1;
 }

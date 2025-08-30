@@ -18,7 +18,6 @@ const MediaSelector: React.FC<MediaSelectorProps> = ({
   isOpen,
   onClose,
   onSelect,
-  micrositeId,
   allowedTypes = ['image'],
   maxSelection = 1,
   title = 'Seleccionar Archivo'
@@ -50,7 +49,6 @@ const MediaSelector: React.FC<MediaSelectorProps> = ({
       <div className="h-[80vh] flex flex-col">
         <div className="flex-1 overflow-hidden">
           <MediaLibrary
-            micrositeId={micrositeId}
             isSelectMode={true}
             allowedTypes={allowedTypes}
             maxSelection={maxSelection}

@@ -4,8 +4,6 @@ import { AppDispatch } from '../../store';
 import { updateMicrosite } from '../../store/micrositeSlice';
 import { Microsite } from '../../store/micrositeSlice';
 import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Select from '../ui/Select';
 import { 
   PaintBrushIcon,
   SwatchIcon,
@@ -25,19 +23,19 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
   const [activeSection, setActiveSection] = useState('templates');
 
   const [themeSettings, setThemeSettings] = useState({
-    template: microsite.theme?.template || 'modern',
-    primaryColor: microsite.theme?.primaryColor || '#3B82F6',
-    secondaryColor: microsite.theme?.secondaryColor || '#10B981',
-    accentColor: microsite.theme?.accentColor || '#F59E0B',
-    backgroundColor: microsite.theme?.backgroundColor || '#FFFFFF',
-    textColor: microsite.theme?.textColor || '#1F2937',
-    headingFont: microsite.theme?.headingFont || 'Inter',
-    bodyFont: microsite.theme?.bodyFont || 'Inter',
-    borderRadius: microsite.theme?.borderRadius || 'medium',
-    spacing: microsite.theme?.spacing || 'medium',
-    headerStyle: microsite.theme?.headerStyle || 'default',
-    navigationStyle: microsite.theme?.navigationStyle || 'horizontal',
-    footerStyle: microsite.theme?.footerStyle || 'simple',
+    template: microsite.settings?.theme?.template || 'modern',
+    primaryColor: microsite.settings?.theme?.primaryColor || '#3B82F6',
+    secondaryColor: microsite.settings?.theme?.secondaryColor || '#10B981',
+    accentColor: microsite.settings?.theme?.accentColor || '#F59E0B',
+    backgroundColor: microsite.settings?.theme?.backgroundColor || '#FFFFFF',
+    textColor: microsite.settings?.theme?.textColor || '#1F2937',
+    headingFont: microsite.settings?.theme?.headingFont || 'Inter',
+    bodyFont: microsite.settings?.theme?.bodyFont || 'Inter',
+    borderRadius: microsite.settings?.theme?.borderRadius || 'medium',
+    spacing: microsite.settings?.theme?.spacing || 'medium',
+    headerStyle: microsite.settings?.theme?.headerStyle || 'default',
+    navigationStyle: microsite.settings?.theme?.navigationStyle || 'horizontal',
+    footerStyle: microsite.settings?.theme?.footerStyle || 'simple',
   });
 
   const templates = [
@@ -177,10 +175,13 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
     try {
       await dispatch(updateMicrosite({
         id: microsite.id,
-        updates: {
-          theme: themeSettings
+        data: {
+          settings: {
+            ...microsite.settings,
+            theme: themeSettings
+          }
         }
-      }));
+      })).unwrap();
     } catch (error) {
       console.error('Error updating theme:', error);
     } finally {
@@ -275,11 +276,12 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
                 onChange={(e) => handleThemeChange('primaryColor', e.target.value)}
                 className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
               />
-              <Input
+              <input
+                type="text"
                 value={themeSettings.primaryColor}
-                onChange={(e) => handleThemeChange('primaryColor', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleThemeChange('primaryColor', e.target.value)}
                 placeholder="#3B82F6"
-                className="flex-1"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -295,11 +297,12 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
                 onChange={(e) => handleThemeChange('secondaryColor', e.target.value)}
                 className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
               />
-              <Input
+              <input
+                type="text"
                 value={themeSettings.secondaryColor}
-                onChange={(e) => handleThemeChange('secondaryColor', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleThemeChange('secondaryColor', e.target.value)}
                 placeholder="#10B981"
-                className="flex-1"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -315,11 +318,12 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
                 onChange={(e) => handleThemeChange('accentColor', e.target.value)}
                 className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
               />
-              <Input
+              <input
+                type="text"
                 value={themeSettings.accentColor}
-                onChange={(e) => handleThemeChange('accentColor', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleThemeChange('accentColor', e.target.value)}
                 placeholder="#F59E0B"
-                className="flex-1"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -335,11 +339,12 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
                 onChange={(e) => handleThemeChange('backgroundColor', e.target.value)}
                 className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
               />
-              <Input
+              <input
+                type="text"
                 value={themeSettings.backgroundColor}
-                onChange={(e) => handleThemeChange('backgroundColor', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleThemeChange('backgroundColor', e.target.value)}
                 placeholder="#FFFFFF"
-                className="flex-1"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -355,11 +360,12 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
                 onChange={(e) => handleThemeChange('textColor', e.target.value)}
                 className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
               />
-              <Input
+              <input
+                type="text"
                 value={themeSettings.textColor}
-                onChange={(e) => handleThemeChange('textColor', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleThemeChange('textColor', e.target.value)}
                 placeholder="#1F2937"
-                className="flex-1"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -376,19 +382,35 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Select
-            label="Fuente para Títulos"
-            value={themeSettings.headingFont}
-            onChange={(e) => handleThemeChange('headingFont', e.target.value)}
-            options={fontOptions}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Fuente para Títulos
+            </label>
+            <select
+              value={themeSettings.headingFont}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleThemeChange('headingFont', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            >
+              {fontOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
 
-          <Select
-            label="Fuente para Texto"
-            value={themeSettings.bodyFont}
-            onChange={(e) => handleThemeChange('bodyFont', e.target.value)}
-            options={fontOptions}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Fuente para Texto
+            </label>
+            <select
+              value={themeSettings.bodyFont}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleThemeChange('bodyFont', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            >
+              {fontOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Typography Preview */}
@@ -429,40 +451,80 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
         
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Select
-              label="Bordes Redondeados"
-              value={themeSettings.borderRadius}
-              onChange={(e) => handleThemeChange('borderRadius', e.target.value)}
-              options={borderRadiusOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Bordes Redondeados
+              </label>
+              <select
+                value={themeSettings.borderRadius}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleThemeChange('borderRadius', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                {borderRadiusOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
 
-            <Select
-              label="Espaciado"
-              value={themeSettings.spacing}
-              onChange={(e) => handleThemeChange('spacing', e.target.value)}
-              options={spacingOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Espaciado
+              </label>
+              <select
+                value={themeSettings.spacing}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleThemeChange('spacing', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                {spacingOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
 
-            <Select
-              label="Estilo de Encabezado"
-              value={themeSettings.headerStyle}
-              onChange={(e) => handleThemeChange('headerStyle', e.target.value)}
-              options={headerStyleOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Estilo de Encabezado
+              </label>
+              <select
+                value={themeSettings.headerStyle}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleThemeChange('headerStyle', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                {headerStyleOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
 
-            <Select
-              label="Estilo de Navegación"
-              value={themeSettings.navigationStyle}
-              onChange={(e) => handleThemeChange('navigationStyle', e.target.value)}
-              options={navigationStyleOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Estilo de Navegación
+              </label>
+              <select
+                value={themeSettings.navigationStyle}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleThemeChange('navigationStyle', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                {navigationStyleOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
 
-            <Select
-              label="Estilo de Pie de Página"
-              value={themeSettings.footerStyle}
-              onChange={(e) => handleThemeChange('footerStyle', e.target.value)}
-              options={footerStyleOptions}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Estilo de Pie de Página
+              </label>
+              <select
+                value={themeSettings.footerStyle}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleThemeChange('footerStyle', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                {footerStyleOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -527,19 +589,19 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
               onClick={() => {
                 // Reset to original theme
                 setThemeSettings({
-                  template: microsite.theme?.template || 'modern',
-                  primaryColor: microsite.theme?.primaryColor || '#3B82F6',
-                  secondaryColor: microsite.theme?.secondaryColor || '#10B981',
-                  accentColor: microsite.theme?.accentColor || '#F59E0B',
-                  backgroundColor: microsite.theme?.backgroundColor || '#FFFFFF',
-                  textColor: microsite.theme?.textColor || '#1F2937',
-                  headingFont: microsite.theme?.headingFont || 'Inter',
-                  bodyFont: microsite.theme?.bodyFont || 'Inter',
-                  borderRadius: microsite.theme?.borderRadius || 'medium',
-                  spacing: microsite.theme?.spacing || 'medium',
-                  headerStyle: microsite.theme?.headerStyle || 'default',
-                  navigationStyle: microsite.theme?.navigationStyle || 'horizontal',
-                  footerStyle: microsite.theme?.footerStyle || 'simple',
+                  template: microsite.settings?.theme?.template || 'modern',
+                  primaryColor: microsite.settings?.theme?.primaryColor || '#3B82F6',
+                  secondaryColor: microsite.settings?.theme?.secondaryColor || '#10B981',
+                  accentColor: microsite.settings?.theme?.accentColor || '#F59E0B',
+                  backgroundColor: microsite.settings?.theme?.backgroundColor || '#FFFFFF',
+                  textColor: microsite.settings?.theme?.textColor || '#1F2937',
+                  headingFont: microsite.settings?.theme?.headingFont || 'Inter',
+                  bodyFont: microsite.settings?.theme?.bodyFont || 'Inter',
+                  borderRadius: microsite.settings?.theme?.borderRadius || 'medium',
+                  spacing: microsite.settings?.theme?.spacing || 'medium',
+                  headerStyle: microsite.settings?.theme?.headerStyle || 'default',
+                  navigationStyle: microsite.settings?.theme?.navigationStyle || 'horizontal',
+                  footerStyle: microsite.settings?.theme?.footerStyle || 'simple',
                 });
               }}
               disabled={isLoading}

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchMembershipPlans, createPaymentIntent } from '../../store/paymentSlice';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { LoadingSpinner } from '../common/LoadingSpinner';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 interface MembershipPlansProps {
   userRole?: string;
@@ -12,7 +12,7 @@ interface MembershipPlansProps {
 
 export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) => {
   const dispatch = useAppDispatch();
-  const { membershipPlans, loading, error } = useAppSelector(state => state.payment);
+  const { plans: membershipPlans, loading, error } = useAppSelector(state => state.payment);
   const { user } = useAppSelector(state => state.auth);
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [billingType, setBillingType] = useState<'monthly' | 'annual'>('annual');
@@ -27,9 +27,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
     setSelectedPlan(planId);
     try {
       await dispatch(createPaymentIntent({
-        membershipPlanId: planId,
-        billingType,
-        currency: 'mxn'
+        membershipPlanId: planId
       })).unwrap();
     } catch (error) {
       console.error('Error creating payment intent:', error);
@@ -65,7 +63,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
         <h3 className="text-red-800 font-medium">Error al cargar los planes</h3>
         <p className="text-red-600 text-sm mt-1">{error}</p>
         <Button 
-          variant="outline" 
+          variant="secondary" 
           size="sm" 
           className="mt-3"
           onClick={() => dispatch(fetchMembershipPlans({ role: userRole || user?.role }))}
@@ -76,7 +74,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
     );
   }
 
-  const filteredPlans = membershipPlans.filter(plan => 
+  const filteredPlans = membershipPlans.filter((plan: any) => 
     plan.isActive && (!userRole || plan.role === userRole || plan.role === user?.role)
   );
 
@@ -112,20 +110,22 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
             }`}
           >
             Anual
-            <Badge variant="success" className="ml-2">
-              Ahorra hasta 20%
-            </Badge>
+            {filteredPlans.some((plan: any) => calculateDiscount(plan.annualFee, plan.monthlyFee) > 0) && (
+              <Badge variant="success" className="ml-2">
+                Ahorra hasta {Math.max(...filteredPlans.map((plan: any) => calculateDiscount(plan.annualFee, plan.monthlyFee)))}%
+              </Badge>
+            )}
           </button>
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredPlans.map((plan) => {
+        {filteredPlans.map((plan: any) => {
           const price = billingType === 'annual' ? plan.annualFee : plan.monthlyFee;
           const discount = billingType === 'annual' 
             ? calculateDiscount(plan.annualFee, plan.monthlyFee)
             : 0;
-          const isPremium = plan.planType === 'premium';
+          const isPremium = (plan as any).planType === 'premium';
           
           return (
             <Card 
@@ -165,7 +165,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
                 </div>
 
                 <div className="space-y-3 mb-8">
-                  {plan.features.map((feature, index) => (
+                  {((plan as any).features || []).map((feature: any, index: any) => (
                     <div key={index} className="flex items-start">
                       <svg
                         className="h-5 w-5 text-green-500 mt-0.5 mr-3 flex-shrink-0"
@@ -194,7 +194,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
                 <Button
                   onClick={() => handleSelectPlan(plan.id)}
                   disabled={selectedPlan === plan.id || loading}
-                  variant={isPremium ? 'primary' : 'outline'}
+                  variant={isPremium ? 'primary' : 'secondary'}
                   className="w-full"
                 >
                   {selectedPlan === plan.id ? (

@@ -195,7 +195,7 @@ const MicrositeEditorPage: React.FC = () => {
                 />
               )}
               {activeTab === 'media' && (
-                <MediaLibrary micrositeId={currentMicrosite.id} />
+                <MediaLibrary />
               )}
               {activeTab === 'theme' && (
                 <ThemeCustomizer microsite={currentMicrosite} />

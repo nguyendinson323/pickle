@@ -34,23 +34,23 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
     }).format(amount);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string) => {
     switch (status) {
       case 'draft':
-        return 'gray';
+        return 'secondary';
       case 'published':
       case 'registration_open':
-        return 'green';
+        return 'success';
       case 'registration_closed':
-        return 'yellow';
+        return 'warning';
       case 'in_progress':
-        return 'blue';
+        return 'info';
       case 'completed':
-        return 'purple';
+        return 'primary';
       case 'cancelled':
-        return 'red';
+        return 'error';
       default:
-        return 'gray';
+        return 'secondary';
     }
   };
 
@@ -100,7 +100,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
         
         {/* Status and Level Badges */}
         <div className="absolute top-4 right-4 flex flex-col gap-2">
-          <Badge color={getStatusColor(tournament.status)} className="text-xs">
+          <Badge variant={getStatusVariant(tournament.status)} size="sm" className="text-xs">
             {tournament.status.replace('_', ' ').toUpperCase()}
           </Badge>
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLevelColor(tournament.level)}`}>

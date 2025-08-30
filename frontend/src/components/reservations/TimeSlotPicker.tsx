@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchAvailableSlots, TimeSlot, setSelectedDate, detectConflicts } from '../../store/reservationSlice';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
+import { fetchAvailableSlots, TimeSlot } from '../../store/reservationSlice';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
 
 interface TimeSlotPickerProps {
   courtId: number;
@@ -17,8 +17,8 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
   courtId,
   selectedDate,
   onSlotSelect,
-  selectedStartTime,
-  selectedEndTime
+  selectedStartTime: _selectedStartTime,
+  selectedEndTime: _selectedEndTime
 }) => {
   const dispatch = useAppDispatch();
   const { availableSlots, availabilityLoading, availabilityError, conflicts } = useAppSelector(state => state.reservations);
@@ -178,7 +178,7 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
                   Confirmar
                 </Button>
               )}
-              <Button size="sm" variant="outline" onClick={handleClearSelection}>
+              <Button size="sm" variant="secondary" onClick={handleClearSelection}>
                 Limpiar
               </Button>
             </div>
@@ -231,7 +231,7 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
               </h3>
               
               <div className="space-y-1">
-                {slots.map((slot, index) => {
+                {slots.map((slot) => {
                   const isSelected = isSlotSelected(slot);
                   const canExtend = canExtendSelection(slot);
                   const isDisabled = !slot.isAvailable || slot.isBlocked;
@@ -272,13 +272,13 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
                         </span>
                         
                         {slot.isBlocked && slot.blockReason && (
-                          <Badge variant="danger" className="text-xs">
+                          <Badge variant="error" className="text-xs">
                             {slot.blockReason}
                           </Badge>
                         )}
                         
                         {slot.reservationId && (
-                          <Badge variant="danger" className="text-xs">
+                          <Badge variant="error" className="text-xs">
                             Reservado
                           </Badge>
                         )}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { LoadingSpinner } from '../common/LoadingSpinner';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 interface RankingChartProps {
   playerId?: number;

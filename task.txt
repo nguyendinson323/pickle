@@ -1,15 +1,4 @@
 
-
-frontend/src/components/messaging/ComposeMessage.tsx
-frontend/src/components/messaging/ConversationList.tsx
-frontend/src/components/messaging/MessageList.tsx
-frontend/src/components/messaging/MessageViewer.tsx
-
-
-frontend/src/components/microsites/ContentBlockEditor.tsx
-frontend/src/components/microsites/ContentBlockPreview.tsx
-frontend/src/components/microsites/CreateMicrositeModal.tsx
-frontend/src/components/microsites/MediaLibrary.tsx
 frontend/src/components/microsites/MicrositeBuilderSidebar.tsx
 frontend/src/components/microsites/MicrositePageEditor.tsx
 frontend/src/components/microsites/MicrositePreview.tsx
@@ -18,6 +7,8 @@ frontend/src/components/microsites/ThemeCustomizer.tsx
 
 frontend/src/components/notifications/NotificationCenter.tsx
 frontend/src/components/notifications/NotificationToast.tsx
+
+
 
 frontend/src/components/payment/MembershipPlans.tsx
 frontend/src/components/payment/MembershipStatus.tsx

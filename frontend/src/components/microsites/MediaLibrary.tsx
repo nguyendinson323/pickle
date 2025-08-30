@@ -23,6 +23,7 @@ interface MediaLibraryProps {
   isSelectMode?: boolean;
   allowedTypes?: string[];
   maxSelection?: number;
+  micrositeId?: number,
   onSelect?: (files: MediaFile[]) => void;
   selectedFiles?: MediaFile[];
 }

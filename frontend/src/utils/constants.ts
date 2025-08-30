@@ -1,5 +1,5 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-export const APP_NAME = import.meta.env.VITE_APP_NAME || 'Federación Mexicana de Pickleball';
+export const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api';
+export const APP_NAME = (import.meta as any).env?.VITE_APP_NAME || 'Federación Mexicana de Pickleball';
 
 export const ROUTES = {
   HOME: '/',

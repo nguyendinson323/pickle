@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tournament, TournamentCategory } from '../../types/tournament';
+import { Tournament } from '../../types/tournament';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -33,12 +33,6 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
     });
   };
 
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('es-MX', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('es-MX', {
@@ -47,23 +41,23 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
     }).format(amount);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string) => {
     switch (status) {
       case 'draft':
-        return 'gray';
+        return 'secondary';
       case 'published':
       case 'registration_open':
-        return 'green';
+        return 'success';
       case 'registration_closed':
-        return 'yellow';
+        return 'warning';
       case 'in_progress':
-        return 'blue';
+        return 'info';
       case 'completed':
-        return 'purple';
+        return 'primary';
       case 'cancelled':
-        return 'red';
+        return 'error';
       default:
-        return 'gray';
+        return 'secondary';
     }
   };
 
@@ -97,7 +91,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
       <div className="flex justify-between items-start">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Badge color={getStatusColor(tournament.status)}>
+            <Badge variant={getStatusVariant(tournament.status)}>
               {tournament.status.replace('_', ' ').toUpperCase()}
             </Badge>
             <span className="text-sm text-gray-600 capitalize">
@@ -318,7 +312,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
               )}
               
               {isUserRegistered(category.id) && (
-                <Badge color="green" className="text-xs">
+                <Badge variant="success" className="text-xs">
                   Registrado
                 </Badge>
               )}
@@ -355,18 +349,18 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
         </div>
 
         {/* Transportation and Accommodation */}
-        {(tournament.transportationInfo || tournament.accommodationInfo) && (
+        {((tournament as any).transportationInfo || (tournament as any).accommodationInfo) && (
           <div className="border-t pt-4 space-y-3">
-            {tournament.transportationInfo && (
+            {(tournament as any).transportationInfo && (
               <div>
                 <h5 className="font-medium text-gray-900 mb-1">🚗 Transporte</h5>
-                <p className="text-sm text-gray-600">{tournament.transportationInfo}</p>
+                <p className="text-sm text-gray-600">{(tournament as any).transportationInfo}</p>
               </div>
             )}
-            {tournament.accommodationInfo && (
+            {(tournament as any).accommodationInfo && (
               <div>
                 <h5 className="font-medium text-gray-900 mb-1">🏨 Alojamiento</h5>
-                <p className="text-sm text-gray-600">{tournament.accommodationInfo}</p>
+                <p className="text-sm text-gray-600">{(tournament as any).accommodationInfo}</p>
               </div>
             )}
           </div>
@@ -483,7 +477,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
           {tournament.name}
         </h1>
         <div className="flex justify-center items-center gap-4 flex-wrap">
-          <Badge color={getStatusColor(tournament.status)} className="text-sm">
+          <Badge variant={getStatusVariant(tournament.status)} className="text-sm">
             {tournament.status.replace('_', ' ').toUpperCase()}
           </Badge>
           <span className="text-gray-600 capitalize">
@@ -497,9 +491,9 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
 
       {/* Tabs */}
       <Tabs
-        tabs={tabs}
+        items={tabs}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onChange={setActiveTab}
       />
 
       {/* Tab Content */}

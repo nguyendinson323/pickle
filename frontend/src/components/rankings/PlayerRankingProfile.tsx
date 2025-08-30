@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Tabs } from '../ui/Tabs';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { Button } from '../ui/Button';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
+import Tabs from '../ui/Tabs';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Button from '../ui/Button';
 
 interface PlayerRankingProfileProps {
   playerId: number;
@@ -148,7 +148,7 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
       <Card className="p-6">
         <div className="text-center">
           <div className="text-red-600 mb-4">{error}</div>
-          <Button onClick={fetchPlayerData} variant="outline">
+          <Button onClick={fetchPlayerData} variant="secondary">
             Try Again
           </Button>
         </div>
@@ -168,7 +168,7 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Perfil de Rankings</h2>
         {onClose && (
-          <Button onClick={onClose} variant="outline">
+          <Button onClick={onClose} variant="secondary">
             Cerrar
           </Button>
         )}
@@ -176,9 +176,9 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
 
       {/* Tabs */}
       <Tabs
-        tabs={tabs}
+        items={tabs.map(tab => ({ ...tab, badge: tab.count }))}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onChange={setActiveTab}
       />
 
       {/* Tab Content */}
@@ -209,17 +209,17 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
                           </h3>
                           <div className="flex items-center space-x-2 text-sm text-gray-600">
                             {ranking.State && (
-                              <Badge variant="outline" size="sm">
+                              <Badge variant="secondary" size="sm">
                                 {ranking.State.name}
                               </Badge>
                             )}
                             {ranking.ageGroup && (
-                              <Badge variant="outline" size="sm">
+                              <Badge variant="secondary" size="sm">
                                 {ranking.ageGroup}
                               </Badge>
                             )}
                             {ranking.gender && (
-                              <Badge variant="outline" size="sm">
+                              <Badge variant="secondary" size="sm">
                                 {ranking.gender === 'male' ? 'M' : 'F'}
                               </Badge>
                             )}
@@ -320,7 +320,7 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
                         {tournament.Tournament.name}
                       </h3>
                       <div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
-                        <Badge variant="outline" size="sm">
+                        <Badge variant="secondary" size="sm">
                           {tournament.Tournament.level}
                         </Badge>
                         <span>

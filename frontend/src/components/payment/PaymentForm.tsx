@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   Elements,
@@ -8,12 +8,12 @@ import {
 } from '@stripe/react-stripe-js';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { confirmPayment, clearPaymentIntent } from '../../store/paymentSlice';
-import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
-import { LoadingSpinner } from '../common/LoadingSpinner';
+import Button from '../ui/Button';
+import Card from '../ui/Card';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 // Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+const stripePromise = loadStripe((import.meta as any).env?.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -41,7 +41,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
   const stripe = useStripe();
   const elements = useElements();
   const dispatch = useAppDispatch();
-  const { currentPaymentIntent, loading, error } = useAppSelector(state => state.payment);
+  const { paymentIntent: currentPaymentIntent, loading: _loading, error } = useAppSelector(state => state.payment);
   const { user } = useAppSelector(state => state.auth);
 
   const [processing, setProcessing] = useState(false);
@@ -90,10 +90,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
       }
 
       if (paymentIntent.status === 'succeeded') {
-        await dispatch(confirmPayment({
-          paymentIntentId: currentPaymentIntent.id,
-          stripePaymentIntentId: paymentIntent.id
-        })).unwrap();
+        await dispatch(confirmPayment(currentPaymentIntent.paymentId)).unwrap();
 
         if (onSuccess) onSuccess();
       }
@@ -254,7 +251,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               onClick={handleCancel}
               className="flex-1"
               disabled={processing}

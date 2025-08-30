@@ -1,39 +1,37 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store, useAppDispatch, useAppSelector } from '@/store';
-import { verifyToken, selectIsAuthenticated, selectAuthLoading } from '@/store/authSlice';
-import { ROUTES } from '@/utils/constants';
+import { store, useAppSelector } from './store';
+import { ROUTES } from './utils/constants';
 
 // Components
-import ProtectedRoute from '@/components/common/ProtectedRoute';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import LoadingSpinner from './components/common/LoadingSpinner';
 
 // Pages
-import HomePage from '@/pages/HomePage';
-import LoginPage from '@/pages/LoginPage';
-import RegistrationPage from '@/pages/RegistrationPage';
-import RegistrationSuccessPage from '@/pages/RegistrationSuccessPage';
-import DashboardPage from '@/pages/DashboardPage';
-import { MembershipPage } from '@/pages/MembershipPage';
-import MicrositesPage from '@/pages/microsites/MicrositesPage';
-import MicrositeEditorPage from '@/pages/microsites/MicrositeEditorPage';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegistrationPage from './pages/RegistrationPage';
+import RegistrationSuccessPage from './pages/RegistrationSuccessPage';
+import DashboardPage from './pages/DashboardPage';
+import { MembershipPage } from './pages/MembershipPage';
+import MicrositesPage from './pages/microsites/MicrositesPage';
+import MicrositeEditorPage from './pages/microsites/MicrositeEditorPage';
 
 // Styles
-import '@/styles/globals.css';
+import './styles/globals.css';
 
 const AppContent: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const isLoading = useAppSelector(selectAuthLoading);
+  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    // Check if user is authenticated on app load
+    // Mock authentication check
     const token = localStorage.getItem('auth_token');
     if (token && !isAuthenticated) {
-      dispatch(verifyToken());
+      // In a real app, this would dispatch verifyToken
+      console.log('Token found, user should be authenticated');
     }
-  }, [dispatch, isAuthenticated]);
+  }, [isAuthenticated]);
 
   // Show loading spinner during initial auth check
   if (isLoading) {

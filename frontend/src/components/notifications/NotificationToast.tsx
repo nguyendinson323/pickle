@@ -105,7 +105,7 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
 
   const toast = (
     <div
-      className={`fixed z-50 max-w-md w-full transition-all duration-300 ease-in-out ${getPositionClasses()} ${getAnimationClasses()}`}
+      className={`w-full transition-all duration-300 ease-in-out ${getAnimationClasses()}`}
     >
       <div className={`rounded-lg border shadow-lg p-4 ${getColorClasses()}`}>
         <div className="flex items-start">
@@ -157,7 +157,7 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
     </div>
   );
 
-  return createPortal(toast, document.body);
+  return toast;
 };
 
 // Toast Container Component
@@ -178,9 +178,23 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   onRemoveToast,
   position = 'top-right'
 }) => {
-  return (
+  const getContainerPositionClasses = () => {
+    switch (position) {
+      case 'top-left':
+        return 'top-4 left-4';
+      case 'bottom-right':
+        return 'bottom-4 right-4';
+      case 'bottom-left':
+        return 'bottom-4 left-4';
+      case 'top-right':
+      default:
+        return 'top-4 right-4';
+    }
+  };
+
+  const container = (
     <>
-      <style jsx global>{`
+      <style>{`
         @keyframes shrink {
           from {
             width: 100%;
@@ -190,20 +204,27 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
           }
         }
       `}</style>
-      {toasts.map((toast, index) => (
-        <NotificationToast
-          key={toast.id}
-          id={toast.id}
-          type={toast.type}
-          title={toast.title}
-          message={toast.message}
-          duration={toast.duration}
-          onClose={onRemoveToast}
-          position={position}
-        />
-      ))}
+      <div className={`fixed z-50 ${getContainerPositionClasses()}`}>
+        <div className="flex flex-col space-y-3">
+          {toasts.map((toast) => (
+            <div key={toast.id} className="max-w-md w-full">
+              <NotificationToast
+                id={toast.id}
+                type={toast.type}
+                title={toast.title}
+                message={toast.message}
+                duration={toast.duration}
+                onClose={onRemoveToast}
+                position={position}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   );
+
+  return createPortal(container, document.body);
 };
 
 export default NotificationToast;

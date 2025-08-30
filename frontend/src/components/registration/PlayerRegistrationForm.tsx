@@ -48,7 +48,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
 
   // Form validation
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [_showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   // Load data on component mount
   useEffect(() => {
@@ -231,7 +231,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             <SelectField
               name="nrtpLevel"
               label="Nivel NRTP (Opcional)"
-              value={formData.nrtpLevel}
+              value={formData.nrtpLevel || ''}
               onChange={(value) => updateField('nrtpLevel', value)}
               options={nrtpLevels}
               error={errors.nrtpLevel}

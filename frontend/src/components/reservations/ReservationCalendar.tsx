@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchCourtAvailability, setSelectedDate } from '../../store/reservationSlice';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
 
 interface ReservationCalendarProps {
   courtId: number;
@@ -190,11 +190,11 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
                 {availability && isSelectable && (
                   <div className="flex-1 flex flex-col justify-end">
                     {availability.hasAvailability ? (
-                      <Badge variant="success" className="text-xs">
+                      <Badge variant="primary" className="text-xs">
                         {availability.available} disponibles
                       </Badge>
                     ) : (
-                      <Badge variant="danger" className="text-xs">
+                      <Badge variant="error" className="text-xs">
                         Sin disponibilidad
                       </Badge>
                     )}
@@ -253,11 +253,11 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
                   {availability && isSelectable && (
                     <div>
                       {availability.hasAvailability ? (
-                        <Badge variant="success" className="text-xs">
+                        <Badge variant="primary" className="text-xs">
                           {availability.available} slots
                         </Badge>
                       ) : (
-                        <Badge variant="danger" className="text-xs">
+                        <Badge variant="error" className="text-xs">
                           Lleno
                         </Badge>
                       )}
@@ -307,7 +307,7 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
 
         <div className="flex items-center gap-2">
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={goToToday}
           >
@@ -315,7 +315,7 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
           </Button>
           
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={viewType === 'month' ? goToPreviousMonth : goToPreviousWeek}
           >
@@ -323,7 +323,7 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
           </Button>
           
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={viewType === 'month' ? goToNextMonth : goToNextWeek}
           >

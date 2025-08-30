@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SelectField } from '../forms/SelectField';
-import { Button } from '../ui/Button';
+import Button from '../ui/Button';
 
 interface RankingFiltersProps {
   onFiltersChange: (filters: {
@@ -117,7 +116,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
         <h3 className="text-lg font-medium">Filtros de Ranking</h3>
         <Button
           onClick={handleReset}
-          variant="outline"
+          variant="secondary"
           size="sm"
         >
           Resetear
@@ -126,66 +125,112 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {/* Category */}
-        <SelectField
-          label="Categoría"
-          value={category}
-          onChange={(value) => {
-            setCategory(value);
-            // Reset dependent filters when category changes
-            if (value !== 'state') setStateId(undefined);
-            if (value !== 'age_group') setAgeGroup(undefined);
-            if (value !== 'gender') setGender(undefined);
-          }}
-          options={categoryOptions}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Categoría
+          </label>
+          <select
+            value={category}
+            onChange={(e) => {
+              const value = e.target.value;
+              setCategory(value);
+              // Reset dependent filters when category changes
+              if (value !== 'state') setStateId(undefined);
+              if (value !== 'age_group') setAgeGroup(undefined);
+              if (value !== 'gender') setGender(undefined);
+            }}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            {categoryOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Ranking Type */}
-        <SelectField
-          label="Tipo de Ranking"
-          value={rankingType}
-          onChange={setRankingType}
-          options={rankingTypeOptions}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Tipo de Ranking
+          </label>
+          <select
+            value={rankingType}
+            onChange={(e) => setRankingType(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            {rankingTypeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* State (only show when category is 'state') */}
         {category === 'state' && (
-          <SelectField
-            label="Estado"
-            value={stateId?.toString() || ''}
-            onChange={(value) => setStateId(value ? parseInt(value) : undefined)}
-            options={[
-              { value: '', label: 'Seleccionar estado' },
-              ...states.map(state => ({
-                value: state.id.toString(),
-                label: state.name
-              }))
-            ]}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Estado
+            </label>
+            <select
+              value={stateId?.toString() || ''}
+              onChange={(e) => setStateId(e.target.value ? parseInt(e.target.value) : undefined)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Seleccionar estado</option>
+              {states.map(state => (
+                <option key={state.id} value={state.id.toString()}>
+                  {state.name}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
 
         {/* Age Group (only show when category is 'age_group' or when filtering) */}
         {(category === 'age_group' || category === 'national' || category === 'state') && (
-          <SelectField
-            label="Grupo de Edad"
-            value={ageGroup || ''}
-            onChange={(value) => setAgeGroup(value || undefined)}
-            options={ageGroupOptions}
-            required={category === 'age_group'}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Grupo de Edad
+            </label>
+            <select
+              value={ageGroup || ''}
+              onChange={(e) => setAgeGroup(e.target.value || undefined)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required={category === 'age_group'}
+            >
+              {ageGroupOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
 
         {/* Gender (only show when category is 'gender' or when filtering) */}
         {(category === 'gender' || category === 'national' || category === 'state' || category === 'age_group') && (
-          <SelectField
-            label="Género"
-            value={gender || ''}
-            onChange={(value) => setGender(value || undefined)}
-            options={genderOptions}
-            required={category === 'gender'}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Género
+            </label>
+            <select
+              value={gender || ''}
+              onChange={(e) => setGender(e.target.value || undefined)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required={category === 'gender'}
+            >
+              {genderOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
       </div>
 

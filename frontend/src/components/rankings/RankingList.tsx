@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RankingCard } from './RankingCard';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { Button } from '../ui/Button';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Button from '../ui/Button';
 
 interface RankingListProps {
   category: string;
@@ -71,7 +71,7 @@ export const RankingList: React.FC<RankingListProps> = ({
   });
   const [currentPage, setCurrentPage] = useState(0);
 
-  const fetchRankings = async (offset: number = 0) => {
+  const fetchRankings = useCallback(async (offset: number = 0) => {
     try {
       setLoading(true);
       setError(null);
@@ -111,12 +111,12 @@ export const RankingList: React.FC<RankingListProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, rankingType, stateId, ageGroup, gender, limit]);
 
   useEffect(() => {
     fetchRankings(0);
     setCurrentPage(0);
-  }, [category, rankingType, stateId, ageGroup, gender, limit]);
+  }, [fetchRankings]);
 
   const handlePageChange = (newPage: number) => {
     const offset = newPage * pagination.limit;
@@ -140,7 +140,7 @@ export const RankingList: React.FC<RankingListProps> = ({
     return (
       <div className="text-center py-8">
         <div className="text-red-600 mb-4">{error}</div>
-        <Button onClick={handleRefresh} variant="outline">
+        <Button onClick={handleRefresh} variant="secondary">
           Try Again
         </Button>
       </div>
@@ -167,7 +167,7 @@ export const RankingList: React.FC<RankingListProps> = ({
         </div>
         <Button 
           onClick={handleRefresh}
-          variant="outline"
+          variant="secondary"
           size="sm"
           disabled={loading}
         >
@@ -177,7 +177,7 @@ export const RankingList: React.FC<RankingListProps> = ({
 
       {/* Rankings List */}
       <div className="space-y-3">
-        {rankings.map((ranking, index) => (
+        {rankings.map((ranking) => (
           <RankingCard
             key={ranking.id}
             ranking={ranking}
@@ -193,7 +193,7 @@ export const RankingList: React.FC<RankingListProps> = ({
           <Button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             Previous
@@ -216,7 +216,7 @@ export const RankingList: React.FC<RankingListProps> = ({
                 <Button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  variant={currentPage === pageNum ? 'primary' : 'outline'}
+                  variant={currentPage === pageNum ? 'primary' : 'secondary'}
                   size="sm"
                   className="w-10"
                 >
@@ -229,7 +229,7 @@ export const RankingList: React.FC<RankingListProps> = ({
           <Button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === pagination.totalPages - 1}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             Next

@@ -13,6 +13,7 @@ import tournamentSlice from './tournamentSlice';
 import rankingSlice from './rankingSlice';
 import credentialSlice from './credentialSlice';
 import micrositeSlice from './micrositeSlice';
+import notificationSlice from './notificationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -29,6 +30,7 @@ export const store = configureStore({
     rankings: rankingSlice,
     credentials: credentialSlice,
     microsites: micrositeSlice,
+    notifications: notificationSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

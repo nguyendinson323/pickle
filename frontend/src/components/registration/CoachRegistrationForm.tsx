@@ -48,7 +48,7 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
 
   // Form validation
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [_showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   // Load data on component mount
   useEffect(() => {
@@ -166,9 +166,9 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Personal Information */}
-        <div className="bg-white p-6 rounded-lg shadow-card">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-            <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
             Información Personal
@@ -231,7 +231,7 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
             <SelectField
               name="nrtpLevel"
               label="Nivel NRTP (Opcional)"
-              value={formData.nrtpLevel}
+              value={formData.nrtpLevel || ''}
               onChange={(value) => updateField('nrtpLevel', value)}
               options={nrtpLevels}
               error={errors.nrtpLevel}
@@ -251,9 +251,9 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
         </div>
 
         {/* Account Information */}
-        <div className="bg-white p-6 rounded-lg shadow-card">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-            <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
             </svg>
             Información de Cuenta
@@ -307,9 +307,9 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
         </div>
 
         {/* File Uploads */}
-        <div className="bg-white p-6 rounded-lg shadow-card">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-            <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             Documentos (Opcional)
@@ -337,7 +337,7 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
         </div>
 
         {/* Privacy Policy */}
-        <div className="bg-white p-6 rounded-lg shadow-card">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <CheckboxField
             name="privacyPolicyAccepted"
             label={
@@ -346,7 +346,7 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowPrivacyModal(true)}
-                  className="text-primary-600 hover:text-primary-700 underline"
+                  className="text-blue-600 hover:text-blue-700 underline"
                 >
                   Política de Privacidad
                 </button>
@@ -376,7 +376,7 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
           <button
             type="button"
             onClick={onBack}
-            className="btn-secondary px-6 py-2"
+            className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Volver
           </button>
@@ -384,7 +384,7 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="btn-primary px-8 py-2 flex items-center"
+            className="px-8 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
           >
             {isSubmitting ? (
               <>

@@ -17,16 +17,22 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
   const renderContent = () => {
     switch (block.type) {
       case 'text':
+        const textAlignClass = block.content.textAlign === 'center' ? 'text-center' : 
+                               block.content.textAlign === 'right' ? 'text-right' : 
+                               'text-left';
         return (
           <div 
-            className={`prose max-w-none text-${block.content.textAlign || 'left'}`}
+            className={`prose max-w-none ${textAlignClass}`}
             dangerouslySetInnerHTML={{ __html: block.content.text || '<p>Texto vacío</p>' }}
           />
         );
 
       case 'image':
+        const alignmentClass = block.content.alignment === 'left' ? 'text-left' : 
+                               block.content.alignment === 'right' ? 'text-right' : 
+                               'text-center';
         return (
-          <div className={`text-${block.content.alignment || 'center'}`}>
+          <div className={alignmentClass}>
             {block.content.imageUrl ? (
               <div>
                 <img
@@ -54,7 +60,14 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
           <div>
             <h3 className="text-lg font-medium mb-4">Galería de Imágenes</h3>
             {block.content.images && block.content.images.length > 0 ? (
-              <div className={`grid gap-4 grid-cols-${block.content.columns || 3}`}>
+              <div className={`grid gap-4 ${
+                block.content.columns === 1 ? 'grid-cols-1' :
+                block.content.columns === 2 ? 'grid-cols-2' :
+                block.content.columns === 4 ? 'grid-cols-4' :
+                block.content.columns === 5 ? 'grid-cols-5' :
+                block.content.columns === 6 ? 'grid-cols-6' :
+                'grid-cols-3'
+              }`}>
                 {block.content.images.map((image: any, index: number) => (
                   <div key={index} className="aspect-square">
                     <img

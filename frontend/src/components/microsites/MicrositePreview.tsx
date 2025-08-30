@@ -1,10 +1,7 @@
 import React from 'react';
-import { Microsite, MicrositePage } from '../../store/micrositeSlice';
+import { Microsite } from '../../store/micrositeSlice';
 import ContentBlockPreview from './ContentBlockPreview';
 import { 
-  PhoneIcon, 
-  EnvelopeIcon, 
-  MapPinIcon,
   GlobeAltIcon,
   CalendarIcon
 } from '@heroicons/react/24/outline';
@@ -32,15 +29,11 @@ const MicrositePreview: React.FC<MicrositePreviewProps> = ({ microsite }) => {
             )}
           </div>
           
-          {microsite.logo && (
-            <div className="flex-shrink-0">
-              <img 
-                src={microsite.logo} 
-                alt={microsite.title}
-                className="h-12 w-auto"
-              />
+          <div className="flex-shrink-0">
+            <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
+              <span className="text-gray-500 text-xs">Logo</span>
             </div>
-          )}
+          </div>
         </div>
         
         <nav className="mt-6">
@@ -50,7 +43,7 @@ const MicrositePreview: React.FC<MicrositePreviewProps> = ({ microsite }) => {
               .sort((a, b) => {
                 if (a.isHomePage) return -1;
                 if (b.isHomePage) return 1;
-                return a.sortOrder - b.sortOrder;
+                return (a.sortOrder || 0) - (b.sortOrder || 0);
               })
               .map((page) => (
                 <button
@@ -72,113 +65,14 @@ const MicrositePreview: React.FC<MicrositePreviewProps> = ({ microsite }) => {
   );
 
   const renderContactInfo = () => {
-    const hasContact = microsite.phone || microsite.email || microsite.address;
-    
-    if (!hasContact) return null;
-
-    return (
-      <div className="bg-gray-50 border-t border-gray-200 py-8">
-        <div className="container mx-auto px-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center">
-            Información de Contacto
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {microsite.phone && (
-              <div className="flex items-center justify-center gap-3">
-                <PhoneIcon className="w-5 h-5 text-blue-600" />
-                <span className="text-gray-700">{microsite.phone}</span>
-              </div>
-            )}
-            
-            {microsite.email && (
-              <div className="flex items-center justify-center gap-3">
-                <EnvelopeIcon className="w-5 h-5 text-blue-600" />
-                <span className="text-gray-700">{microsite.email}</span>
-              </div>
-            )}
-            
-            {microsite.address && (
-              <div className="flex items-center justify-center gap-3">
-                <MapPinIcon className="w-5 h-5 text-blue-600" />
-                <span className="text-gray-700">{microsite.address}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
+    // Contact info not available in current Microsite interface
+    return null;
   };
 
   const renderSocialMedia = () => {
-    const socialLinks = microsite.socialMedia;
-    if (!socialLinks || Object.keys(socialLinks).length === 0) return null;
+    // Social media not available in current Microsite interface
+    return null;
 
-    return (
-      <div className="bg-white border-t border-gray-200 py-6">
-        <div className="container mx-auto px-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-            Síguenos
-          </h3>
-          <div className="flex justify-center gap-6">
-            {socialLinks.facebook && (
-              <a 
-                href={socialLinks.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                Facebook
-              </a>
-            )}
-            
-            {socialLinks.instagram && (
-              <a 
-                href={socialLinks.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-pink-600 hover:text-pink-700 transition-colors"
-              >
-                Instagram
-              </a>
-            )}
-            
-            {socialLinks.twitter && (
-              <a 
-                href={socialLinks.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-500 transition-colors"
-              >
-                Twitter
-              </a>
-            )}
-            
-            {socialLinks.youtube && (
-              <a 
-                href={socialLinks.youtube}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-red-600 hover:text-red-700 transition-colors"
-              >
-                YouTube
-              </a>
-            )}
-            
-            {socialLinks.website && (
-              <a 
-                href={socialLinks.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-700 transition-colors flex items-center gap-1"
-              >
-                <GlobeAltIcon className="w-4 h-4" />
-                Sitio Web
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-    );
   };
 
   const renderFooter = () => (
@@ -193,7 +87,7 @@ const MicrositePreview: React.FC<MicrositePreviewProps> = ({ microsite }) => {
         
         <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
           <CalendarIcon className="w-4 h-4" />
-          <span>Última actualización: {new Date(microsite.updatedAt).toLocaleDateString('es-MX')}</span>
+          <span>Estado: Activo</span>
         </div>
         
         <div className="mt-4 pt-4 border-t border-gray-700 text-xs text-gray-500">
@@ -255,7 +149,7 @@ const MicrositePreview: React.FC<MicrositePreviewProps> = ({ microsite }) => {
                 {currentPage.contentBlocks
                   .filter(block => block.isVisible)
                   .sort((a, b) => a.sortOrder - b.sortOrder)
-                  .map((block, index) => (
+                  .map((block) => (
                     <div key={block.id} className="content-block">
                       <ContentBlockPreview block={block} />
                     </div>

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from './index';
 
 export interface NotificationData {
   id: string;
@@ -231,9 +232,9 @@ const notificationSlice = createSlice({
 export const { clearError, updateUnreadCount, addNotification } = notificationSlice.actions;
 
 // Selectors
-export const selectNotifications = (state: { notifications: NotificationState }) => state.notifications.notifications;
-export const selectNotificationsLoading = (state: { notifications: NotificationState }) => state.notifications.loading;
-export const selectNotificationsError = (state: { notifications: NotificationState }) => state.notifications.error;
-export const selectNotificationUnreadCount = (state: { notifications: NotificationState }) => state.notifications.unreadCount;
+export const selectNotifications = (state: RootState) => state.notifications.notifications;
+export const selectNotificationsLoading = (state: RootState) => state.notifications.loading;
+export const selectNotificationsError = (state: RootState) => state.notifications.error;
+export const selectNotificationUnreadCount = (state: RootState) => state.notifications.unreadCount;
 
 export default notificationSlice.reducer;

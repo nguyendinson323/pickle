@@ -46,19 +46,36 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
   };
 
   const handleCreatePage = async () => {
+    const existingSlugs = microsite.pages?.map(p => p.slug) || [];
+    let slug = 'nueva-pagina';
+    let counter = 1;
+    
+    while (existingSlugs.includes(slug)) {
+      slug = `nueva-pagina-${counter}`;
+      counter++;
+    }
+
     const pageData = {
       title: 'Nueva Página',
-      slug: `nueva-pagina-${Date.now()}`,
+      slug,
       isHomePage: false,
       isPublished: false,
       template: 'default',
+      sortOrder: (microsite.pages?.length || 0) + 1,
       settings: {},
     };
 
-    await dispatch(createPage({ 
-      micrositeId: microsite.id, 
-      pageData 
-    }));
+    try {
+      const newPage = await dispatch(createPage({ 
+        micrositeId: microsite.id, 
+        pageData 
+      })).unwrap();
+      
+      // Auto-select the newly created page
+      dispatch(setCurrentPage(newPage));
+    } catch (error) {
+      console.error('Error creating page:', error);
+    }
   };
 
   const getPageIcon = (page: any) => {
@@ -177,7 +194,7 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
                       // Home page first, then by sort order
                       if (a.isHomePage) return -1;
                       if (b.isHomePage) return 1;
-                      return a.sortOrder - b.sortOrder;
+                      return (a.sortOrder || 0) - (b.sortOrder || 0);
                     })
                     .map((page) => (
                       <div
@@ -207,12 +224,12 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
                         
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-gray-500 font-mono">
-                            /{page.slug}
+                            /{page.slug || ''}
                           </span>
                           {getPageStatus(page)}
                         </div>
 
-                        {page.contentBlocks && (
+                        {page.contentBlocks && page.contentBlocks.length > 0 && (
                           <div className="text-xs text-gray-500 mt-1">
                             {page.contentBlocks.length} bloques de contenido
                           </div>
@@ -286,7 +303,7 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
                 <div className="flex justify-between items-center">
                   <span>Tema:</span>
                   <span className="text-gray-600">
-                    {microsite.theme?.name || 'Por defecto'}
+                    {microsite.themeId || 'Por defecto'}
                   </span>
                 </div>
 
@@ -298,9 +315,9 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span>Última actualización:</span>
+                  <span>Estado:</span>
                   <span className="text-gray-600 text-xs">
-                    {new Date(microsite.updatedAt).toLocaleDateString('es-MX')}
+                    Activo
                   </span>
                 </div>
               </div>

@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchPayments, refundPayment } from '../../store/paymentSlice';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { Modal } from '../ui/Modal';
-import { LoadingSpinner } from '../common/LoadingSpinner';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import Modal from '../ui/Modal';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 interface PaymentHistoryProps {
   userId?: number;
 }
 
-export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
+export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
   const dispatch = useAppDispatch();
   const { payments, loading, error } = useAppSelector(state => state.payment);
-  const { user } = useAppSelector(state => state.auth);
   
   const [showRefundModal, setShowRefundModal] = useState<number | null>(null);
   const [refundReason, setRefundReason] = useState('');
@@ -24,10 +23,9 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
   useEffect(() => {
     dispatch(fetchPayments({ 
       page, 
-      limit,
-      userId: userId || user?.id 
+      limit
     }));
-  }, [dispatch, page, userId, user?.id]);
+  }, [dispatch, page]);
 
   const handleRefund = async () => {
     if (!showRefundModal) return;
@@ -44,22 +42,21 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
       // Refresh payments
       dispatch(fetchPayments({ 
         page, 
-        limit,
-        userId: userId || user?.id 
+        limit
       }));
     } catch (error) {
       console.error('Error processing refund:', error);
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string) => {
     switch (status) {
       case 'completed':
         return 'success';
       case 'pending':
         return 'warning';
       case 'failed':
-        return 'danger';
+        return 'error';
       case 'refunded':
         return 'secondary';
       default:
@@ -82,11 +79,13 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
     }
   };
 
-  const formatAmount = (amount: number) => {
+  const formatAmount = (amount: number, currency = 'MXN') => {
+    // Check if amount is already in the correct format (has decimals) or in cents
+    const finalAmount = amount > 1000 && amount % 1 === 0 ? amount / 100 : amount;
     return new Intl.NumberFormat('es-MX', {
       style: 'currency',
-      currency: 'MXN'
-    }).format(amount / 100);
+      currency: currency
+    }).format(finalAmount);
   };
 
   const formatDate = (date: string) => {
@@ -100,9 +99,13 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
   };
 
   const canRefund = (payment: any) => {
+    if (payment.status !== 'completed') return false;
+    
     const paymentDate = new Date(payment.createdAt);
-    const daysSincePayment = (Date.now() - paymentDate.getTime()) / (1000 * 60 * 60 * 24);
-    return payment.status === 'completed' && daysSincePayment <= 30;
+    const now = new Date();
+    const daysSincePayment = Math.floor((now.getTime() - paymentDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    return daysSincePayment <= 30;
   };
 
   if (loading && payments.length === 0) {
@@ -122,7 +125,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
           variant="outline" 
           size="sm" 
           className="mt-3"
-          onClick={() => dispatch(fetchPayments({ page, limit, userId: userId || user?.id }))}
+          onClick={() => dispatch(fetchPayments({ page, limit }))}
         >
           Reintentar
         </Button>
@@ -173,7 +176,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
                     <h3 className="text-lg font-semibold text-gray-900">
                       {payment.description || 'Pago de Membresía'}
                     </h3>
-                    <Badge variant={getStatusColor(payment.status)}>
+                    <Badge variant={getStatusVariant(payment.status)}>
                       {getStatusText(payment.status)}
                     </Badge>
                   </div>
@@ -182,7 +185,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
                     <div>
                       <span className="text-gray-500">Monto:</span>
                       <div className="font-semibold text-gray-900">
-                        {formatAmount(payment.amount)}
+                        {formatAmount(payment.amount, payment.currency)}
                       </div>
                     </div>
                     
@@ -208,18 +211,13 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ userId }) => {
                     </div>
                   </div>
 
-                  {payment.metadata && Object.keys(payment.metadata).length > 0 && (
+                  {payment.description && (
                     <div className="mt-4 p-3 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-medium text-gray-700 mb-2">
-                        Información adicional:
+                        Descripción:
                       </h4>
                       <div className="text-sm text-gray-600">
-                        {Object.entries(payment.metadata).map(([key, value]) => (
-                          <div key={key} className="flex justify-between">
-                            <span className="capitalize">{key.replace('_', ' ')}:</span>
-                            <span>{String(value)}</span>
-                          </div>
-                        ))}
+                        {payment.description}
                       </div>
                     </div>
                   )}

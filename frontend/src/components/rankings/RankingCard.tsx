@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
 
 interface RankingCardProps {
   ranking: {
@@ -111,12 +111,12 @@ export const RankingCard: React.FC<RankingCardProps> = ({
                 <span>{ranking.State.name}</span>
               )}
               {ranking.ageGroup && (
-                <Badge variant="outline" size="sm">
+                <Badge variant="secondary" size="sm">
                   {ranking.ageGroup}
                 </Badge>
               )}
               {ranking.gender && (
-                <Badge variant="outline" size="sm">
+                <Badge variant="secondary" size="sm">
                   {ranking.gender === 'male' ? 'M' : 'F'}
                 </Badge>
               )}

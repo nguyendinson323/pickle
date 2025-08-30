@@ -5,11 +5,8 @@ import { updatePage } from '../../store/micrositeSlice';
 import { MicrositePage } from '../../store/micrositeSlice';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Textarea from '../ui/Textarea';
-import Select from '../ui/Select';
 import Switch from '../ui/Switch';
-import Tabs from '../ui/Tabs';
+import FormField from '../ui/FormField';
 import {
   DocumentTextIcon,
   GlobeAltIcon,
@@ -92,7 +89,7 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
       setFormData(prev => ({
         ...prev,
         [section]: {
-          ...prev[section as keyof typeof prev],
+          ...(prev[section as keyof typeof prev] as any),
           [subField]: value
         }
       }));
@@ -130,7 +127,7 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
     try {
       await dispatch(updatePage({
         id: page.id,
-        updates: formData
+        data: formData
       }));
       onClose();
     } catch (error) {
@@ -174,49 +171,60 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
 
   const renderGeneralTab = () => (
     <div className="space-y-4">
-      <Input
-        label="Título de la Página"
-        value={formData.title}
-        onChange={(e) => handleTitleChange(e.target.value)}
-        placeholder="Ej: Acerca de Nosotros"
-        required
-      />
+      <FormField label="Título de la Página" required>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e.target.value)}
+          placeholder="Ej: Acerca de Nosotros"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </FormField>
 
       {!page?.isHomePage && (
-        <Input
-          label="URL (Slug)"
-          value={formData.slug}
-          onChange={(e) => handleInputChange('slug', generateSlug(e.target.value))}
-          placeholder="acerca-de-nosotros"
-          required
-          helperText="La URL será: /tu-slug"
-        />
+        <FormField label="URL (Slug)" required help="La URL será: /tu-slug">
+          <input
+            type="text"
+            value={formData.slug}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('slug', generateSlug(e.target.value))}
+            placeholder="acerca-de-nosotros"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </FormField>
       )}
 
-      <Textarea
-        label="Descripción"
-        value={formData.description}
-        onChange={(e) => handleInputChange('description', e.target.value)}
-        placeholder="Describe el contenido de esta página..."
-        rows={3}
-      />
+      <FormField label="Descripción">
+        <textarea
+          value={formData.description}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('description', e.target.value)}
+          placeholder="Describe el contenido de esta página..."
+          rows={3}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </FormField>
 
-      <Select
-        label="Plantilla"
-        value={formData.template}
-        onChange={(e) => handleInputChange('template', e.target.value)}
-        options={templates}
-      />
+      <FormField label="Plantilla">
+        <select
+          value={formData.template}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('template', e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {templates.map(template => (
+            <option key={template.value} value={template.value}>{template.label}</option>
+          ))}
+        </select>
+      </FormField>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Orden en Navegación
         </label>
-        <Input
+        <input
           type="number"
           value={formData.sortOrder.toString()}
-          onChange={(e) => handleInputChange('sortOrder', parseInt(e.target.value) || 1)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('sortOrder', parseInt(e.target.value) || 1)}
           min="1"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>
@@ -227,56 +235,72 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
       <div>
         <h3 className="text-sm font-medium text-gray-900 mb-3">Meta Tags</h3>
         <div className="space-y-4">
-          <Input
-            label="Meta Título"
-            value={formData.seoSettings.metaTitle}
-            onChange={(e) => handleInputChange('seoSettings.metaTitle', e.target.value)}
-            placeholder="Título que aparece en Google (50-60 caracteres)"
-            maxLength={60}
-          />
+          <FormField label="Meta Título">
+            <input
+              type="text"
+              value={formData.seoSettings.metaTitle}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.metaTitle', e.target.value)}
+              placeholder="Título que aparece en Google (50-60 caracteres)"
+              maxLength={60}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </FormField>
 
-          <Textarea
-            label="Meta Descripción"
-            value={formData.seoSettings.metaDescription}
-            onChange={(e) => handleInputChange('seoSettings.metaDescription', e.target.value)}
-            placeholder="Descripción que aparece en Google (150-160 caracteres)"
-            maxLength={160}
-            rows={3}
-          />
+          <FormField label="Meta Descripción">
+            <textarea
+              value={formData.seoSettings.metaDescription}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('seoSettings.metaDescription', e.target.value)}
+              placeholder="Descripción que aparece en Google (150-160 caracteres)"
+              maxLength={160}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </FormField>
 
-          <Input
-            label="Palabras Clave"
-            value={formData.seoSettings.metaKeywords}
-            onChange={(e) => handleInputChange('seoSettings.metaKeywords', e.target.value)}
-            placeholder="palabra1, palabra2, palabra3"
-          />
+          <FormField label="Palabras Clave">
+            <input
+              type="text"
+              value={formData.seoSettings.metaKeywords}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.metaKeywords', e.target.value)}
+              placeholder="palabra1, palabra2, palabra3"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </FormField>
         </div>
       </div>
 
       <div className="border-t pt-4">
         <h3 className="text-sm font-medium text-gray-900 mb-3">Open Graph (Redes Sociales)</h3>
         <div className="space-y-4">
-          <Input
-            label="Título OG"
-            value={formData.seoSettings.ogTitle}
-            onChange={(e) => handleInputChange('seoSettings.ogTitle', e.target.value)}
-            placeholder="Título al compartir en redes sociales"
-          />
+          <FormField label="Título OG">
+            <input
+              type="text"
+              value={formData.seoSettings.ogTitle}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.ogTitle', e.target.value)}
+              placeholder="Título al compartir en redes sociales"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </FormField>
 
-          <Textarea
-            label="Descripción OG"
-            value={formData.seoSettings.ogDescription}
-            onChange={(e) => handleInputChange('seoSettings.ogDescription', e.target.value)}
-            placeholder="Descripción al compartir en redes sociales"
-            rows={2}
-          />
+          <FormField label="Descripción OG">
+            <textarea
+              value={formData.seoSettings.ogDescription}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('seoSettings.ogDescription', e.target.value)}
+              placeholder="Descripción al compartir en redes sociales"
+              rows={2}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </FormField>
 
-          <Input
-            label="Imagen OG (URL)"
-            value={formData.seoSettings.ogImage}
-            onChange={(e) => handleInputChange('seoSettings.ogImage', e.target.value)}
-            placeholder="https://ejemplo.com/imagen-compartir.jpg"
-          />
+          <FormField label="Imagen OG (URL)">
+            <input
+              type="text"
+              value={formData.seoSettings.ogImage}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.ogImage', e.target.value)}
+              placeholder="https://ejemplo.com/imagen-compartir.jpg"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </FormField>
         </div>
       </div>
 
@@ -339,26 +363,28 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
     <div className="space-y-4">
       <div>
         <h3 className="text-sm font-medium text-gray-900 mb-3">CSS Personalizado</h3>
-        <Textarea
-          label="CSS Personalizado para esta Página"
-          value={formData.settings.customCSS}
-          onChange={(e) => handleInputChange('settings.customCSS', e.target.value)}
-          placeholder="/* Agrega tu CSS personalizado aquí */"
-          rows={6}
-          className="font-mono text-sm"
-        />
+        <FormField label="CSS Personalizado para esta Página">
+          <textarea
+            value={formData.settings.customCSS}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('settings.customCSS', e.target.value)}
+            placeholder="/* Agrega tu CSS personalizado aquí */"
+            rows={6}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+          />
+        </FormField>
       </div>
 
       <div>
         <h3 className="text-sm font-medium text-gray-900 mb-3">JavaScript Personalizado</h3>
-        <Textarea
-          label="JavaScript Personalizado para esta Página"
-          value={formData.settings.customJS}
-          onChange={(e) => handleInputChange('settings.customJS', e.target.value)}
-          placeholder="// Agrega tu JavaScript personalizado aquí"
-          rows={6}
-          className="font-mono text-sm"
-        />
+        <FormField label="JavaScript Personalizado para esta Página">
+          <textarea
+            value={formData.settings.customJS}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('settings.customJS', e.target.value)}
+            placeholder="// Agrega tu JavaScript personalizado aquí"
+            rows={6}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+          />
+        </FormField>
       </div>
     </div>
   );
@@ -408,7 +434,7 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
       {/* Footer */}
       <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={onClose}
           disabled={isLoading}
         >
