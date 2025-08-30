@@ -89,7 +89,7 @@ class RankingAnalyticsService {
 
       const totalPlayers = totalPlayersResult;
       const activeRankings = activeRankingsResult;
-      const averagePoints = parseFloat(averagePointsResult?.avgPoints || '0');
+      const averagePoints = parseFloat((averagePointsResult as any)?.avgPoints || '0');
 
       // Get top players
       const topPlayers = await Ranking.findAll({
@@ -212,16 +212,7 @@ class RankingAnalyticsService {
           `), 'pointRange'],
           [sequelize.fn('COUNT', sequelize.col('id')), 'playerCount']
         ],
-        group: [sequelize.literal(`
-          CASE 
-            WHEN points = 0 THEN '0'
-            WHEN points <= 100 THEN '1-100'
-            WHEN points <= 500 THEN '101-500'
-            WHEN points <= 1000 THEN '501-1000'
-            WHEN points <= 2000 THEN '1001-2000'
-            ELSE '2000+'
-          END
-        `)],
+        group: ['pointRange'],
         order: [['pointRange', 'ASC']]
       });
 
@@ -345,7 +336,7 @@ class RankingAnalyticsService {
         attributes: [[sequelize.fn('AVG', sequelize.col('points')), 'avgPoints']],
         raw: true
       });
-      const averagePoints = parseFloat(averagePointsResult?.avgPoints || '0');
+      const averagePoints = parseFloat((averagePointsResult as any)?.avgPoints || '0');
 
       // Get top players
       const topPlayers = await Ranking.findAll({

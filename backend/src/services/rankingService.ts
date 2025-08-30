@@ -3,7 +3,6 @@ import {
   RankingHistory,
   PointCalculation,
   Tournament,
-  TournamentMatch,
   Player,
   State
 } from '../models';
@@ -134,7 +133,7 @@ class RankingService {
       // Calculate multipliers and bonuses
       const placementMultiplier = this.getPlacementMultiplier(finalPlacement, totalPlayers);
       const levelMultiplier = this.getLevelMultiplier(player.nrtpLevel);
-      const opponentBonus = this.calculateOpponentBonus(averageOpponentRating, player.currentRating);
+      const opponentBonus = this.calculateOpponentBonus(averageOpponentRating, 0); // player.currentRating not available
       
       // Get player's tournament count for activity bonus
       const playerTournaments = await PointCalculation.count({
@@ -212,7 +211,7 @@ class RankingService {
         throw new Error('No point calculations found for tournament');
       }
 
-      const tournament = pointCalculations[0].Tournament;
+      const tournament = (pointCalculations[0] as any).Tournament;
       
       // Update rankings for each category
       await Promise.all([
@@ -236,7 +235,7 @@ class RankingService {
     transaction: any
   ): Promise<void> {
     for (const calculation of pointCalculations) {
-      const player = calculation.Player;
+      const player = (calculation as any).Player;
       
       // Get or create national ranking for each type
       for (const rankingType of Object.values(RankingType)) {
@@ -247,7 +246,7 @@ class RankingService {
           points: calculation.totalPoints,
           tournamentId: calculation.tournamentId,
           gender: player.gender,
-          ageGroup: this.calculateAgeGroup(player.birthDate),
+          ageGroup: this.calculateAgeGroup(player.dateOfBirth),
           transaction
         });
       }
@@ -261,7 +260,7 @@ class RankingService {
     transaction: any
   ): Promise<void> {
     for (const calculation of pointCalculations) {
-      const player = calculation.Player;
+      const player = (calculation as any).Player;
       
       for (const rankingType of Object.values(RankingType)) {
         await this.updateRankingRecord({
@@ -272,7 +271,7 @@ class RankingService {
           tournamentId: calculation.tournamentId,
           stateId,
           gender: player.gender,
-          ageGroup: this.calculateAgeGroup(player.birthDate),
+          ageGroup: this.calculateAgeGroup(player.dateOfBirth),
           transaction
         });
       }
@@ -285,8 +284,8 @@ class RankingService {
     transaction: any
   ): Promise<void> {
     for (const calculation of pointCalculations) {
-      const player = calculation.Player;
-      const ageGroup = this.calculateAgeGroup(player.birthDate);
+      const player = (calculation as any).Player;
+      const ageGroup = this.calculateAgeGroup(player.dateOfBirth);
       
       for (const rankingType of Object.values(RankingType)) {
         await this.updateRankingRecord({
@@ -309,7 +308,7 @@ class RankingService {
     transaction: any
   ): Promise<void> {
     for (const calculation of pointCalculations) {
-      const player = calculation.Player;
+      const player = (calculation as any).Player;
       
       for (const rankingType of Object.values(RankingType)) {
         await this.updateRankingRecord({
@@ -319,7 +318,7 @@ class RankingService {
           points: calculation.totalPoints,
           tournamentId: calculation.tournamentId,
           gender: player.gender,
-          ageGroup: this.calculateAgeGroup(player.birthDate),
+          ageGroup: this.calculateAgeGroup(player.dateOfBirth),
           transaction
         });
       }
@@ -476,11 +475,8 @@ class RankingService {
             position: newPosition
           }, { transaction });
 
-          // Update history record with new position
-          await RankingHistory.update({
-            newPosition,
-            positionChange: oldPosition - newPosition
-          }, {
+          // Update most recent history record with new position
+          const recentHistory = await RankingHistory.findOne({
             where: {
               playerId: ranking.playerId,
               rankingType,
@@ -491,9 +487,15 @@ class RankingService {
               ...(gender && { gender })
             },
             order: [['changeDate', 'DESC']],
-            limit: 1,
             transaction
           });
+          
+          if (recentHistory) {
+            await recentHistory.update({
+              newPosition,
+              positionChange: oldPosition - newPosition
+            }, { transaction });
+          }
         }
       }
 

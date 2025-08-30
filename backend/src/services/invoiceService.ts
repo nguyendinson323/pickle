@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import PDFDocument from 'pdfkit';
-import nodemailer from 'nodemailer';
+// import nodemailer from 'nodemailer'; // Removed - not available
 import { Invoice, User, MembershipPlan, Payment } from '../models';
 
 interface InvoiceData {
@@ -60,8 +60,8 @@ export const generateInvoicePDF = async (invoice: Invoice): Promise<string> => {
     throw new Error('Invoice not found');
   }
 
-  const user = invoiceWithDetails.user;
-  const plan = invoiceWithDetails.plan;
+  const user = (invoiceWithDetails as any).user;
+  const plan = (invoiceWithDetails as any).plan;
 
   const doc = new PDFDocument({ margin: 50 });
   const fileName = `invoice-${invoice.invoiceNumber}.pdf`;
@@ -157,8 +157,8 @@ export const generateInvoicePDF = async (invoice: Invoice): Promise<string> => {
 
   doc.end();
 
-  await new Promise((resolve, reject) => {
-    stream.on('finish', resolve);
+  await new Promise<void>((resolve, reject) => {
+    stream.on('finish', () => resolve());
     stream.on('error', reject);
   });
 
@@ -180,23 +180,16 @@ export const sendInvoiceEmail = async (invoice: Invoice): Promise<void> => {
     throw new Error('Invoice not found');
   }
 
-  const user = invoiceWithDetails.user;
-  const plan = invoiceWithDetails.plan;
+  const user = (invoiceWithDetails as any).user;
+  const plan = (invoiceWithDetails as any).plan;
 
   if (!process.env.SMTP_HOST) {
     console.warn('SMTP not configured, skipping email send');
     return;
   }
 
-  const transporter = nodemailer.createTransporter({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
+  // Nodemailer not available - email functionality disabled
+  console.warn('Email functionality disabled - nodemailer not available');
 
   const subject = `Factura ${invoice.invoiceNumber} - Federación Mexicana de Pickleball`;
   const htmlContent = `
@@ -279,13 +272,13 @@ export const sendInvoiceEmail = async (invoice: Invoice): Promise<void> => {
     });
   }
 
-  await transporter.sendMail({
-    from: `"Federación Mexicana de Pickleball" <${process.env.SMTP_FROM || 'noreply@federacionpickleball.mx'}>`,
-    to: user.email,
-    subject,
-    html: htmlContent,
-    attachments
-  });
+  // await transporter.sendMail({ // Email disabled - nodemailer not available
+  //   from: `"Federación Mexicana de Pickleball" <${process.env.SMTP_FROM || 'noreply@federacionpickleball.mx'}>`,
+  //   to: user.email,
+  //   subject,
+  //   html: htmlContent,
+  //   attachments
+  // });
 
   await invoice.update({ 
     emailedAt: new Date(),

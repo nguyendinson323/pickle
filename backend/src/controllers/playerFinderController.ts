@@ -1,10 +1,8 @@
 import { Response } from 'express';
 import { AuthRequest } from '../types/auth';
 import playerFinderService from '../services/playerFinderService';
-import locationService from '../services/locationService';
-import privacyService from '../services/privacyService';
 import enhancedNotificationService from '../services/enhancedNotificationService';
-import { PlayerLocation, PlayerFinderRequest, Player, User } from '../models';
+import { PlayerLocation, PlayerFinderRequest, Player } from '../models';
 
 // Create a new finder request
 const createFinderRequest = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -206,15 +204,20 @@ const updateMatchStatus = async (req: AuthRequest, res: Response): Promise<void>
     );
 
     // Send notification if accepted
-    if (req.body.status === 'accepted') {
+    if (req.body.status === 'accepted' && updatedMatch && 'requestId' in updatedMatch) {
+      // Get player name from profile
+      const playerName = req.user.profile && 'fullName' in req.user.profile 
+        ? req.user.profile.fullName 
+        : req.user.username;
+
       await enhancedNotificationService.notifyFinderRequestAccepted(
-        updatedMatch.request!.requesterId,
+        updatedMatch.requestId,
         {
-          accepterName: `${req.user.firstName} ${req.user.lastName}`,
+          accepterName: playerName,
           accepterContact: req.user.email,
-          requestTitle: updatedMatch.request!.title,
+          requestTitle: 'Player Finder Request',
           message: req.body.message || 'Sin mensaje',
-          playerName: `${req.user.firstName}`
+          playerName: playerName
         }
       );
     }

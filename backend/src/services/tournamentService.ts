@@ -7,7 +7,6 @@ import {
   User,
   Payment
 } from '../models';
-import { Op } from 'sequelize';
 import sequelize from '../config/database';
 import notificationService from './notificationService';
 
@@ -58,8 +57,8 @@ class TournamentService {
       // Update tournament status
       await tournament.update({ status: 'in_progress' }, { transaction });
 
-      // Generate brackets for each category if not already generated
-      for (const category of tournament.categories || []) {
+      // Generate brackets for each category if not already generated  
+      for (const category of (tournament as any).categories || []) {
         const existingBracket = await TournamentBracket.findOne({
           where: { tournamentId, categoryId: category.id },
           transaction
@@ -71,15 +70,14 @@ class TournamentService {
       }
 
       // Notify all registered players
-      const registrations = tournament.registrations || [];
+      const registrations = (tournament as any).registrations || [];
       for (const registration of registrations) {
-        await notificationService.createNotification({
-          userId: registration.playerId,
-          type: 'tournament',
-          title: 'Tournament Started',
-          message: `The tournament "${tournament.name}" has started. Check your matches!`,
-          link: `/tournaments/${tournamentId}`
-        });
+        await notificationService.createNotification(
+          registration.playerId,
+          'Tournament Started',
+          `The tournament "${tournament.name}" has started. Check your matches!`,
+          { type: 'info', actionUrl: `/tournaments/${tournamentId}` }
+        );
       }
 
       await transaction.commit();
@@ -107,7 +105,7 @@ class TournamentService {
       }
 
       // Check if all matches are completed
-      const incompleteMatches = tournament.matches?.filter(m => 
+      const incompleteMatches = (tournament as any).matches?.filter((m: any) => 
         m.status !== 'completed' && m.status !== 'cancelled'
       );
 
@@ -125,15 +123,14 @@ class TournamentService {
       await this.updatePlayerRankings(tournamentId, transaction);
 
       // Notify winners
-      for (const bracket of tournament.brackets || []) {
+      for (const bracket of (tournament as any).brackets || []) {
         if (bracket.winnerPlayerId) {
-          await notificationService.createNotification({
-            userId: bracket.winnerPlayerId,
-            type: 'tournament',
-            title: 'Congratulations!',
-            message: `You won the ${bracket.name} category in ${tournament.name}!`,
-            link: `/tournaments/${tournamentId}/results`
-          });
+          await notificationService.createNotification(
+            bracket.winnerPlayerId,
+            'Congratulations!',
+            `You won the ${bracket.name} category in ${tournament.name}!`,
+            { type: 'success', actionUrl: `/tournaments/${tournamentId}/results` }
+          );
         }
       }
 
@@ -162,7 +159,7 @@ class TournamentService {
       throw new Error('Category not found');
     }
 
-    const players = category.registrations?.map(r => ({
+    const players = (category as any).registrations?.map((r: any) => ({
       id: r.playerId,
       name: r.player?.username,
       seed: r.seedNumber
@@ -273,18 +270,18 @@ class TournamentService {
     }
 
     const stats = {
-      totalCategories: tournament.categories?.length || 0,
-      totalRegistrations: tournament.registrations?.length || 0,
-      totalMatches: tournament.matches?.length || 0,
-      completedMatches: tournament.matches?.filter(m => m.status === 'completed').length || 0,
-      revenue: tournament.registrations?.reduce((sum, r) => sum + Number(r.amountPaid), 0) || 0,
+      totalCategories: (tournament as any).categories?.length || 0,
+      totalRegistrations: (tournament as any).registrations?.length || 0,
+      totalMatches: (tournament as any).matches?.length || 0,
+      completedMatches: (tournament as any).matches?.filter((m: any) => m.status === 'completed').length || 0,
+      revenue: (tournament as any).registrations?.reduce((sum: any, r: any) => sum + Number(r.amountPaid), 0) || 0,
       registrationsByCategory: {},
       matchesByStatus: {},
       playersByState: {}
     };
 
     // Group registrations by category
-    for (const registration of tournament.registrations || []) {
+    for (const registration of (tournament as any).registrations || []) {
       const categoryId = registration.categoryId;
       if (!stats.registrationsByCategory[categoryId]) {
         stats.registrationsByCategory[categoryId] = 0;
@@ -293,7 +290,7 @@ class TournamentService {
     }
 
     // Group matches by status
-    for (const match of tournament.matches || []) {
+    for (const match of (tournament as any).matches || []) {
       if (!stats.matchesByStatus[match.status]) {
         stats.matchesByStatus[match.status] = 0;
       }
@@ -314,21 +311,21 @@ class TournamentService {
       return;
     }
 
-    const prizeDistribution = tournament.prizeDistribution || {
+    const prizeDistribution = (tournament as any).prizeDistribution || {
       first: 0.5,
       second: 0.3,
       third: 0.15,
       fourth: 0.05
     };
 
-    for (const bracket of tournament.brackets || []) {
+    for (const bracket of (tournament as any).brackets || []) {
       if (bracket.winnerPlayerId) {
-        const firstPrize = Number(tournament.prizePool) * prizeDistribution.first;
+        const firstPrize = Number((tournament as any).prizePool) * prizeDistribution.first;
         // Create payment record for prize
         await Payment.create({
           userId: bracket.winnerPlayerId,
           amount: firstPrize,
-          paymentType: 'prize',
+          paymentType: 'tournament',
           paymentMethod: 'transfer',
           status: 'pending',
           referenceType: 'tournament',
@@ -338,11 +335,11 @@ class TournamentService {
       }
 
       if (bracket.runnerUpPlayerId) {
-        const secondPrize = Number(tournament.prizePool) * prizeDistribution.second;
+        const secondPrize = Number((tournament as any).prizePool) * prizeDistribution.second;
         await Payment.create({
           userId: bracket.runnerUpPlayerId,
           amount: secondPrize,
-          paymentType: 'prize',
+          paymentType: 'tournament',
           paymentMethod: 'transfer',
           status: 'pending',
           referenceType: 'tournament',
@@ -376,13 +373,13 @@ class TournamentService {
 
     const points = pointsMap[tournament.level] || { win: 5, loss: 2 };
 
-    for (const match of tournament.matches || []) {
+    for (const match of (tournament as any).matches || []) {
       if (match.status === 'completed' && match.winnerId) {
         // Update winner's ranking points
         const winner = await User.findByPk(match.winnerId, { transaction });
         if (winner) {
-          const currentPoints = winner.rankingPoints || 0;
-          await winner.update({ 
+          const currentPoints = (winner as any).rankingPoints || 0;
+          await (winner as any).update({ 
             rankingPoints: currentPoints + points.win 
           }, { transaction });
         }
@@ -391,8 +388,8 @@ class TournamentService {
         if (match.loserId) {
           const loser = await User.findByPk(match.loserId, { transaction });
           if (loser) {
-            const currentPoints = loser.rankingPoints || 0;
-            await loser.update({ 
+            const currentPoints = (loser as any).rankingPoints || 0;
+            await (loser as any).update({ 
               rankingPoints: currentPoints + points.loss 
             }, { transaction });
           }
@@ -442,7 +439,7 @@ class TournamentService {
 
     // Check age requirements
     if (category.minAge || category.maxAge) {
-      const playerAge = this.calculateAge(player.dateOfBirth);
+      const playerAge = this.calculateAge((player as any).dateOfBirth);
       if (category.minAge && playerAge < category.minAge) {
         eligible = false;
         reasons.push(`Must be at least ${category.minAge} years old`);
@@ -454,23 +451,23 @@ class TournamentService {
     }
 
     // Check gender requirements
-    if (category.genderRequirement !== 'open' && player.gender !== category.genderRequirement) {
+    if (category.genderRequirement !== 'open' && (player as any).gender !== category.genderRequirement) {
       eligible = false;
       reasons.push(`Category is for ${category.genderRequirement} only`);
     }
 
     // Check ranking requirements
-    if (category.minRankingPoints && player.rankingPoints < category.minRankingPoints) {
+    if (category.minRankingPoints && (player as any).rankingPoints < category.minRankingPoints) {
       eligible = false;
       reasons.push(`Requires at least ${category.minRankingPoints} ranking points`);
     }
-    if (category.maxRankingPoints && player.rankingPoints > category.maxRankingPoints) {
+    if (category.maxRankingPoints && (player as any).rankingPoints > category.maxRankingPoints) {
       eligible = false;
       reasons.push(`Maximum ${category.maxRankingPoints} ranking points allowed`);
     }
 
     // Check if already registered
-    const existingRegistration = player.tournamentRegistrations?.find(r => 
+    const existingRegistration = (player as any).tournamentRegistrations?.find((r: any) => 
       r.categoryId === categoryId && r.status !== 'cancelled'
     );
     if (existingRegistration) {

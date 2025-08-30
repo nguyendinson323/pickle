@@ -3,9 +3,9 @@ import {
   Tournament,
   TournamentMatch,
   Ranking,
-  PointCalculation
+  PointCalculation,
+  Player
 } from '../models';
-import { TournamentStatus } from '../models/Tournament';
 import rankingService from './rankingService';
 import notificationService from './notificationService';
 import sequelize from '../config/database';
@@ -102,7 +102,7 @@ class AutomatedRankingService {
       // Find completed tournaments that haven't been processed for rankings
       const completedTournaments = await Tournament.findAll({
         where: {
-          status: TournamentStatus.COMPLETED,
+          status: 'completed',
           endDate: {
             [Op.gte]: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // Last 7 days
           }
@@ -110,6 +110,7 @@ class AutomatedRankingService {
         include: [
           {
             model: PointCalculation,
+            as: 'pointCalculations',
             required: false
           }
         ]
@@ -117,7 +118,7 @@ class AutomatedRankingService {
 
       // Filter tournaments that don't have point calculations yet
       const unprocessedTournaments = completedTournaments.filter(
-        tournament => tournament.PointCalculations?.length === 0
+        tournament => !(tournament as any).pointCalculations || (tournament as any).pointCalculations.length === 0
       );
 
       if (unprocessedTournaments.length === 0) {
@@ -352,7 +353,7 @@ class AutomatedRankingService {
             [Op.gt]: 0 // Only notify players who have some points
           }
         },
-        include: [{ model: Player }],
+        include: [{ model: Player, as: 'player' }],
         limit: 50 // Limit to avoid spam
       });
 
@@ -365,11 +366,11 @@ class AutomatedRankingService {
 
       for (const ranking of inactivePlayers) {
         try {
-          await notificationService.sendNotification(
-            ranking.Player.userId,
+          await notificationService.createNotification(
+            (ranking as any).player.userId,
             'Ranking Activity Reminder',
             `Your ranking position may decline due to inactivity. Participate in tournaments to maintain your ranking!`,
-            'ranking_reminder'
+            { type: 'warning' }
           );
         } catch (error) {
           console.error(`Error sending reminder to player ${ranking.playerId}:`, error);
@@ -393,12 +394,11 @@ class AutomatedRankingService {
         try {
           const message = `Your rankings have been updated after ${tournament.name}. Check your new position!`;
           
-          await notificationService.sendNotification(
+          await notificationService.createNotification(
             result.playerId,
             'Rankings Updated',
             message,
-            'ranking_update',
-            { tournamentId, finalPlacement: result.finalPlacement }
+            { type: 'success' }
           );
         } catch (error) {
           console.error(`Error sending notification to player ${result.playerId}:`, error);

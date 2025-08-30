@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { 
   Credential,
   User,
@@ -70,8 +71,6 @@ class CredentialService {
     
     return await QRCode.toDataURL(JSON.stringify(qrData), {
       errorCorrectionLevel: 'M',
-      type: 'image/png',
-      quality: 0.92,
       margin: 1,
       color: {
         dark: '#000000',
@@ -521,7 +520,7 @@ class CredentialService {
     return await Credential.findAll({
       where: {
         expirationDate: {
-          $lte: futureDate
+          [Op.lte]: futureDate
         },
         status: CredentialStatus.ACTIVE
       },

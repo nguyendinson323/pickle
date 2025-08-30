@@ -77,7 +77,7 @@ export class ReservationService {
       // Send notification
       await createNotification({
         userId: reservationData.userId,
-        type: 'reservation_created',
+        type: 'success',
         title: 'Reserva Creada',
         message: `Tu reserva para ${court.name} ha sido creada exitosamente.`,
         metadata: {
@@ -257,7 +257,7 @@ export class ReservationService {
       // Send notification
       await createNotification({
         userId: reservation.userId,
-        type: 'reservation_cancelled',
+        type: 'info',
         title: 'Reserva Cancelada',
         message: `Tu reserva para ${(reservation as any).court.name} ha sido cancelada.`,
         metadata: {
@@ -286,7 +286,7 @@ export class ReservationService {
       // Send confirmation notification
       await createNotification({
         userId: reservation.userId,
-        type: 'reservation_confirmed',
+        type: 'success',
         title: 'Reserva Confirmada',
         message: 'Tu pago ha sido procesado y tu reserva está confirmada.',
         metadata: {

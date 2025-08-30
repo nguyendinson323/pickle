@@ -364,7 +364,8 @@ export class PageService {
       const newPage = await MicrositePage.create(duplicateData);
 
       // Duplicate content blocks
-      for (const block of originalPage.contentBlocks || []) {
+      const contentBlocks = (originalPage as any).contentBlocks || [];
+      for (const block of contentBlocks) {
         const blockData = {
           ...block.toJSON(),
           id: undefined,

@@ -149,11 +149,14 @@ class PrivacyService {
       ]
     });
 
-    return players.map(player => ({
-      id: player.id,
-      name: `${player.user.firstName} ${player.user.lastName}`,
-      blockedAt: new Date() // You might want to track this separately
-    }));
+    return players.map(player => {
+      const user = (player as any).user;
+      return {
+        id: player.id,
+        name: `${user?.firstName || 'Unknown'} ${user?.lastName || 'User'}`,
+        blockedAt: new Date() // You might want to track this separately
+      };
+    });
   }
 
   async isPlayerBlocked(playerId: number, targetPlayerId: number): Promise<boolean> {

@@ -45,7 +45,7 @@ class BracketService {
         throw new Error('Category not found');
       }
 
-      const registrations = category.registrations || [];
+      const registrations = (category as any).registrations || [];
       
       if (registrations.length < 2) {
         throw new Error('Not enough players to generate bracket');
@@ -58,7 +58,7 @@ class BracketService {
       const seededPlayers = this.seedPlayers(players, seedingMethod);
 
       // Generate bracket structure based on type
-      let bracketData;
+      let bracketData: any;
       switch (bracketType) {
         case 'single_elimination':
           bracketData = this.generateSingleElimination(seededPlayers);
@@ -357,8 +357,8 @@ class BracketService {
         transaction
       });
 
-      if (!match || !match.bracket) {
-        throw new Error('Match or bracket not found');
+      if (!match) {
+        throw new Error('Match not found');
       }
 
       // Update match with winner
@@ -369,8 +369,14 @@ class BracketService {
         actualEndTime: new Date()
       }, { transaction });
 
+      // Get the bracket
+      const bracket = await TournamentBracket.findByPk(match.bracketId, { transaction });
+      if (!bracket) {
+        throw new Error('Bracket not found');
+      }
+
       // Find the corresponding bracket node
-      const bracketData = match.bracket.bracketData;
+      const bracketData = bracket.bracketData;
       const node = bracketData.brackets.find((b: BracketNode) => 
         b.round === this.getRoundNumber(match.round) && 
         b.position === match.matchNumber - 1
@@ -420,7 +426,7 @@ class BracketService {
 
       // Check if tournament is complete
       if (match.round === 'final') {
-        await match.bracket.update({
+        await bracket.update({
           winnerPlayerId: winnerId,
           runnerUpPlayerId: match.loserId,
           isComplete: true,
@@ -583,10 +589,15 @@ class BracketService {
       throw new Error('Bracket not found');
     }
 
-    const totalMatches = bracket.matches?.length || 0;
-    const completedMatches = bracket.matches?.filter(m => m.status === 'completed').length || 0;
-    const inProgressMatches = bracket.matches?.filter(m => m.status === 'in_progress').length || 0;
-    const upcomingMatches = bracket.matches?.filter(m => m.status === 'scheduled').length || 0;
+    // Get matches for this bracket
+    const matches = await TournamentMatch.findAll({
+      where: { bracketId }
+    });
+
+    const totalMatches = matches.length;
+    const completedMatches = matches.filter((m: any) => m.status === 'completed').length;
+    const inProgressMatches = matches.filter((m: any) => m.status === 'in_progress').length;
+    const upcomingMatches = matches.filter((m: any) => m.status === 'scheduled').length;
 
     return {
       bracketId,

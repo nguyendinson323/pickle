@@ -2,7 +2,6 @@ import { Op, QueryTypes } from 'sequelize';
 import sequelize from '../config/database';
 import Reservation from '../models/Reservation';
 import Court from '../models/Court';
-import Payment from '../models/Payment';
 import CourtReview from '../models/CourtReview';
 import User from '../models/User';
 
@@ -304,7 +303,7 @@ export class AnalyticsService {
           });
 
           const averageRating = reviews.length > 0
-            ? reviews.reduce((sum, review) => sum + review.overallRating, 0) / reviews.length
+            ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
             : 0;
 
           // Calculate utilization rate
@@ -498,7 +497,7 @@ export class AnalyticsService {
           });
 
           const courtRating = reviews.length > 0
-            ? reviews.reduce((sum, r) => sum + r.overallRating, 0) / reviews.length
+            ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
             : 0;
 
           totalRevenue += courtRevenue;

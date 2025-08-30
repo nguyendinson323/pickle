@@ -1,10 +1,10 @@
-import { MicrositeService } from './micrositeService';
+// import { MicrositeService } from './micrositeService'; // Currently unused
 import { PageService } from './pageService';
 import { ThemeService } from './themeService';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { SubdomainRequest } from '../middleware/subdomain';
 
-const micrositeService = new MicrositeService();
+// const micrositeService = new MicrositeService(); // Currently unused
 const pageService = new PageService();
 const themeService = new ThemeService();
 
@@ -56,7 +56,7 @@ export class MicrositeRenderer {
           content: homePage.content,
           metaTitle: homePage.metaTitle || microsite.seoTitle || microsite.title,
           metaDescription: homePage.metaDescription || microsite.seoDescription || microsite.description,
-          contentBlocks: homePage.contentBlocks || []
+          contentBlocks: (homePage as any).contentBlocks || []
         },
         theme: microsite.theme,
         themeCSS,
@@ -67,7 +67,7 @@ export class MicrositeRenderer {
       if (req.headers.accept?.includes('application/json')) {
         res.json({ success: true, data: pageData });
       } else {
-        res.send(this.generateHTML(pageData));
+        res.send(this.generateHTML(pageData, req));
       }
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -123,7 +123,7 @@ export class MicrositeRenderer {
           content: page.content,
           metaTitle: page.metaTitle || microsite.seoTitle || microsite.title,
           metaDescription: page.metaDescription || microsite.seoDescription || microsite.description,
-          contentBlocks: page.contentBlocks || []
+          contentBlocks: (page as any).contentBlocks || []
         },
         theme: microsite.theme,
         themeCSS,
@@ -134,7 +134,7 @@ export class MicrositeRenderer {
       if (req.headers.accept?.includes('application/json')) {
         res.json({ success: true, data: pageData });
       } else {
-        res.send(this.generateHTML(pageData));
+        res.send(this.generateHTML(pageData, req));
       }
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -191,7 +191,7 @@ export class MicrositeRenderer {
     }
   }
 
-  private generateHTML(data: any): string {
+  private generateHTML(data: any, req?: SubdomainRequest): string {
     const { microsite, page, themeCSS, customJS } = data;
 
     // Generate content blocks HTML
@@ -210,7 +210,7 @@ export class MicrositeRenderer {
     <meta property="og:title" content="${page.metaTitle}">
     <meta property="og:description" content="${page.metaDescription || ''}">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="${req.protocol}://${req.get('host')}${req.originalUrl}">
+    <meta property="og:url" content="${req ? `${req.protocol}://${req.get('host')}${req.originalUrl}` : ''}">
     ${microsite.ogImage ? `<meta property="og:image" content="${microsite.ogImage}">` : ''}
     
     <!-- Twitter Card -->

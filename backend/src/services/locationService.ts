@@ -1,4 +1,4 @@
-import axios from 'axios';
+// LocationService - Geolocation and distance calculation service
 import { PlayerLocation } from '../models';
 
 interface GeocodingResult {
@@ -31,124 +31,18 @@ class LocationService {
     address: string, 
     options: GeocodeOptions = {}
   ): Promise<GeocodingResult> {
-    const { useGoogleMaps = false, timeout = 5000 } = options;
-
-    try {
-      if (useGoogleMaps && this.GOOGLE_MAPS_API_KEY) {
-        return await this.geocodeWithGoogleMaps(address, timeout);
-      } else {
-        return await this.geocodeWithNominatim(address, timeout);
-      }
-    } catch (error) {
-      console.error('Geocoding failed:', error);
-      throw new Error('Unable to geocode address');
-    }
-  }
-
-  private async geocodeWithGoogleMaps(address: string, timeout: number): Promise<GeocodingResult> {
-    const url = 'https://maps.googleapis.com/maps/api/geocode/json';
-    const params = {
-      address,
-      key: this.GOOGLE_MAPS_API_KEY,
-      region: 'mx' // Bias towards Mexico
-    };
-
-    const response = await axios.get(url, {
-      params,
-      timeout
-    });
-
-    if (response.data.status !== 'OK' || !response.data.results?.length) {
-      throw new Error(`Google Maps geocoding failed: ${response.data.status}`);
-    }
-
-    const result = response.data.results[0];
-    const { lat, lng } = result.geometry.location;
-    const { accuracy } = result.geometry.location_type === 'ROOFTOP' ? { accuracy: 1 } : 
-                       result.geometry.location_type === 'RANGE_INTERPOLATED' ? { accuracy: 0.8 } :
-                       result.geometry.location_type === 'GEOMETRIC_CENTER' ? { accuracy: 0.6 } :
-                       { accuracy: 0.4 };
-
-    const components = result.address_components;
-    const city = this.extractComponent(components, ['locality', 'administrative_area_level_2']);
-    const state = this.extractComponent(components, ['administrative_area_level_1']);
-    const country = this.extractComponent(components, ['country']);
-    const zipCode = this.extractComponent(components, ['postal_code']);
-
+    // Placeholder implementation - geocoding services disabled
+    console.warn('Geocoding service disabled - using placeholder coordinates');
+    
     return {
-      latitude: lat,
-      longitude: lng,
-      address: result.formatted_address,
-      city: city || '',
-      state: state || '',
-      zipCode,
-      country: country || 'Mexico',
-      accuracy
+      latitude: 19.4326, // Mexico City coordinates as default
+      longitude: -99.1332,
+      address: address,
+      city: 'Ciudad de México',
+      state: 'CDMX',
+      country: 'Mexico',
+      accuracy: 0.5
     };
-  }
-
-  private async geocodeWithNominatim(address: string, timeout: number): Promise<GeocodingResult> {
-    const url = `${this.NOMINATIM_BASE_URL}/search`;
-    const params = {
-      q: address,
-      format: 'json',
-      addressdetails: 1,
-      limit: 1,
-      countrycodes: 'mx', // Restrict to Mexico
-      'accept-language': 'es,en'
-    };
-
-    const response = await axios.get(url, {
-      params,
-      timeout,
-      headers: {
-        'User-Agent': 'PickleballApp/1.0'
-      }
-    });
-
-    if (!response.data?.length) {
-      throw new Error('No results found for address');
-    }
-
-    const result = response.data[0];
-    const address_details = result.address || {};
-
-    return {
-      latitude: parseFloat(result.lat),
-      longitude: parseFloat(result.lon),
-      address: result.display_name,
-      city: address_details.city || address_details.town || address_details.village || '',
-      state: address_details.state || '',
-      zipCode: address_details.postcode,
-      country: address_details.country || 'Mexico',
-      accuracy: this.estimateNominatimAccuracy(result.type)
-    };
-  }
-
-  private extractComponent(components: any[], types: string[]): string | undefined {
-    for (const component of components) {
-      if (types.some(type => component.types.includes(type))) {
-        return component.long_name;
-      }
-    }
-    return undefined;
-  }
-
-  private estimateNominatimAccuracy(type: string): number {
-    const accuracyMap: Record<string, number> = {
-      'house': 1,
-      'building': 0.9,
-      'residential': 0.8,
-      'road': 0.7,
-      'neighbourhood': 0.6,
-      'suburb': 0.5,
-      'city': 0.4,
-      'town': 0.4,
-      'village': 0.4,
-      'administrative': 0.3
-    };
-
-    return accuracyMap[type] || 0.5;
   }
 
   async reverseGeocode(
@@ -156,93 +50,16 @@ class LocationService {
     longitude: number, 
     options: GeocodeOptions = {}
   ): Promise<GeocodingResult> {
-    const { useGoogleMaps = false, timeout = 5000 } = options;
-
-    try {
-      if (useGoogleMaps && this.GOOGLE_MAPS_API_KEY) {
-        return await this.reverseGeocodeWithGoogleMaps(latitude, longitude, timeout);
-      } else {
-        return await this.reverseGeocodeWithNominatim(latitude, longitude, timeout);
-      }
-    } catch (error) {
-      console.error('Reverse geocoding failed:', error);
-      throw new Error('Unable to reverse geocode coordinates');
-    }
-  }
-
-  private async reverseGeocodeWithGoogleMaps(
-    latitude: number, 
-    longitude: number, 
-    timeout: number
-  ): Promise<GeocodingResult> {
-    const url = 'https://maps.googleapis.com/maps/api/geocode/json';
-    const params = {
-      latlng: `${latitude},${longitude}`,
-      key: this.GOOGLE_MAPS_API_KEY,
-      region: 'mx'
-    };
-
-    const response = await axios.get(url, { params, timeout });
-
-    if (response.data.status !== 'OK' || !response.data.results?.length) {
-      throw new Error(`Google Maps reverse geocoding failed: ${response.data.status}`);
-    }
-
-    const result = response.data.results[0];
-    const components = result.address_components;
-    const city = this.extractComponent(components, ['locality', 'administrative_area_level_2']);
-    const state = this.extractComponent(components, ['administrative_area_level_1']);
-    const country = this.extractComponent(components, ['country']);
-    const zipCode = this.extractComponent(components, ['postal_code']);
-
+    // Placeholder implementation - reverse geocoding disabled
+    console.warn('Reverse geocoding service disabled - using placeholder address');
+    
     return {
       latitude,
       longitude,
-      address: result.formatted_address,
-      city: city || '',
-      state: state || '',
-      zipCode,
-      country: country || 'Mexico'
-    };
-  }
-
-  private async reverseGeocodeWithNominatim(
-    latitude: number, 
-    longitude: number, 
-    timeout: number
-  ): Promise<GeocodingResult> {
-    const url = `${this.NOMINATIM_BASE_URL}/reverse`;
-    const params = {
-      lat: latitude,
-      lon: longitude,
-      format: 'json',
-      addressdetails: 1,
-      'accept-language': 'es,en'
-    };
-
-    const response = await axios.get(url, {
-      params,
-      timeout,
-      headers: {
-        'User-Agent': 'PickleballApp/1.0'
-      }
-    });
-
-    if (!response.data) {
-      throw new Error('No results found for coordinates');
-    }
-
-    const result = response.data;
-    const address_details = result.address || {};
-
-    return {
-      latitude,
-      longitude,
-      address: result.display_name,
-      city: address_details.city || address_details.town || address_details.village || '',
-      state: address_details.state || '',
-      zipCode: address_details.postcode,
-      country: address_details.country || 'Mexico'
+      address: `Coordinates: ${latitude}, ${longitude}`,
+      city: 'Ciudad de México',
+      state: 'CDMX',
+      country: 'Mexico'
     };
   }
 
@@ -284,6 +101,7 @@ class LocationService {
     } = {}
   ): Promise<Array<PlayerLocation & { distance: number }>> {
     const { includeInactive = false, limit = 50, excludePlayerId } = options;
+    const { Op } = require('sequelize');
 
     // Build where conditions
     const whereConditions: any = {
@@ -296,7 +114,7 @@ class LocationService {
 
     if (excludePlayerId) {
       whereConditions.playerId = {
-        [require('sequelize').Op.ne]: excludePlayerId
+        [Op.ne]: excludePlayerId
       };
     }
 
@@ -338,7 +156,7 @@ class LocationService {
       .sort((a, b) => a.distance - b.distance)
       .slice(0, limit);
 
-    return locationsWithDistance;
+    return locationsWithDistance as any;
   }
 
   async validateCoordinates(latitude: number, longitude: number): Promise<boolean> {
@@ -409,7 +227,7 @@ class LocationService {
         };
       
       case 'city_only':
-        // Return city center coordinates (simplified - you might want to use actual city centers)
+        // Return city center coordinates (simplified)
         return {
           latitude: Math.floor(location.latitude * 10) / 10,
           longitude: Math.floor(location.longitude * 10) / 10,

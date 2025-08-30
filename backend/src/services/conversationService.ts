@@ -4,8 +4,7 @@ import {
   ConversationMessage, 
   MessageReadStatus, 
   MessageReaction,
-  User,
-  Player
+  User
 } from '../models';
 import privacyService from './privacyService';
 
@@ -201,7 +200,7 @@ class ConversationService {
             {
               model: User,
               as: 'sender',
-              attributes: ['id', 'firstName', 'lastName', 'profileImageUrl']
+              attributes: ['id', 'username', 'email']
             }
           ]
         }
@@ -254,7 +253,7 @@ class ConversationService {
         {
           model: User,
           as: 'sender',
-          attributes: ['id', 'firstName', 'lastName', 'profileImageUrl']
+          attributes: ['id', 'username', 'email']
         },
         {
           model: ConversationMessage,
@@ -263,7 +262,7 @@ class ConversationService {
             {
               model: User,
               as: 'sender',
-              attributes: ['firstName', 'lastName']
+              attributes: ['username']
             }
           ]
         },
@@ -274,7 +273,7 @@ class ConversationService {
             {
               model: User,
               as: 'user',
-              attributes: ['id', 'firstName', 'lastName']
+              attributes: ['id', 'username']
             }
           ]
         },
@@ -317,7 +316,7 @@ class ConversationService {
 
     // Filter messages that haven't been read yet
     const messagesToMarkRead = unreadMessages.filter(
-      message => !message.readStatus || message.readStatus.length === 0
+      message => !(message as any).readStatus || (message as any).readStatus.length === 0
     );
 
     // Create read status records
@@ -353,7 +352,7 @@ class ConversationService {
     }
 
     // Check if user is participant in the conversation
-    if (!message.conversation!.participantIds.includes(userId)) {
+    if (!(message as any).conversation || !(message as any).conversation.participantIds.includes(userId)) {
       throw new Error('Access denied');
     }
 
@@ -534,7 +533,7 @@ class ConversationService {
         {
           model: User,
           as: 'sender',
-          attributes: ['id', 'firstName', 'lastName', 'profileImageUrl']
+          attributes: ['id', 'username', 'email']
         }
       ],
       limit,
