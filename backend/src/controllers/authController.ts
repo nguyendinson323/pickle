@@ -1,30 +1,9 @@
 import { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
 import authService from '../services/authService';
 import { LoginRequest } from '../types/auth';
 
-// Validation rules
-const loginValidation = [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Valid email is required'),
-  body('password')
-    .isLength({ min: 1 })
-    .withMessage('Password is required')
-];
-
 const login = async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-    }
-
     const loginData: LoginRequest = req.body;
     const result = await authService.login(loginData);
 
@@ -159,7 +138,6 @@ const verifyToken = async (req: Request, res: Response) => {
 };
 
 export default {
-  loginValidation,
   login,
   logout,
   getCurrentUser,

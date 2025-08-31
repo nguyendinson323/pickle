@@ -6,7 +6,7 @@ import { asyncHandler } from '../middleware/errorHandler';
 const router = Router();
 
 // Public routes
-router.post('/login', authController.loginValidation, asyncHandler(authController.login));
+router.post('/login', asyncHandler(authController.login));
 router.post('/refresh', asyncHandler(authController.refreshToken));
 
 // Protected routes

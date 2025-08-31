@@ -42,37 +42,6 @@ export function capitalizeFirst(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export function validateEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-export function validateCURP(curp: string): boolean {
-  const curpRegex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9]{2}$/;
-  return curpRegex.test(curp.toUpperCase());
-}
-
-export function validateRFC(rfc: string): boolean {
-  const rfcRegex = /^[A-Z&Ñ]{3,4}[0-9]{6}[A-V1-9][A-Z1-9][0-9A]$/;
-  return rfcRegex.test(rfc.toUpperCase());
-}
-
-export function validateMexicanPhone(phone: string): boolean {
-  // Remove all non-digit characters
-  const cleanPhone = phone.replace(/\D/g, '');
-  
-  // Mexican mobile numbers: 10 digits starting with specific patterns
-  // Landline: 10 digits
-  // With country code: 12 digits starting with 52
-  
-  if (cleanPhone.length === 10) {
-    return /^[1-9]\d{9}$/.test(cleanPhone);
-  } else if (cleanPhone.length === 12 && cleanPhone.indexOf('52') === 0) {
-    return /^52[1-9]\d{9}$/.test(cleanPhone);
-  }
-  
-  return false;
-}
 
 export function formatPhoneNumber(phone: string): string {
   const cleanPhone = phone.replace(/\D/g, '');
@@ -148,12 +117,3 @@ export function getFileSize(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-export function isValidImageFile(file: File): boolean {
-  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  return validTypes.indexOf(file.type) !== -1;
-}
-
-export function isValidDocumentFile(file: File): boolean {
-  const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-  return validTypes.indexOf(file.type) !== -1;
-}

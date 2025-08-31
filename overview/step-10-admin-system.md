@@ -54,7 +54,6 @@ Don't use any mockup, simulation or random data for frontend.
 - **Tournament Oversight**: Monitor all tournaments across levels
 - **Court Registry**: View and verify all registered courts
 - **Event Calendar**: System-wide event and tournament calendar
-- **Results Validation**: Verify tournament results and rankings
 - **Dispute Resolution**: Handle tournament and booking disputes
 
 ### 6. Communication Center

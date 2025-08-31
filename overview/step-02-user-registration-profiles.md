@@ -14,7 +14,6 @@ Don't use any mockup, simulation or random data for frontend.
 - Build profile management systems for all user types
 - Add Mexican states integration
 - Create privacy policy system
-- Implement form validation and error handling
 - Build profile editing functionality
 
 ## Database Extensions
@@ -56,7 +55,6 @@ export const deleteFromCloudinary = async (publicId: string): Promise<void>
 **Files to Create:**
 - `src/controllers/registrationController.ts` - Handle all registration types
 - `src/services/registrationService.ts` - Business logic for registration
-- `src/validators/registrationValidators.ts` - Input validation
 
 **Registration Methods:**
 - `registerPlayer()` - Player registration with CURP, photo, ID document
@@ -131,7 +129,6 @@ GET /api/data/privacy-policy
 - `src/components/forms/SelectField.tsx` - Dropdown select
 - `src/components/forms/FileField.tsx` - File upload field
 - `src/components/forms/CheckboxField.tsx` - Checkbox with label
-- `src/components/forms/FormValidation.tsx` - Validation helpers
 
 ### 3. Profile Management
 **Files to Create:**
@@ -237,7 +234,7 @@ export interface FormFieldProps {
 - ID Document (file upload, INE or Passport)
 - Username (text, required, unique check)
 - Password (password, required, min 8 chars)
-- Confirm Password (password, required, match validation)
+- Confirm Password (password, required)
 - Privacy Policy (checkbox, required, modal view)
 
 ### Club Registration Form
@@ -328,38 +325,6 @@ export interface FormFieldProps {
 - Track user acceptance with timestamps
 - Generate PDF for download
 
-## Validation Rules
-
-### CURP Validation (Mexican ID)
-- Length: exactly 18 characters
-- Format: AAAA######AAAAAA##
-- Pattern matching for valid CURP structure
-
-### RFC Validation (Mexican Tax ID)
-- Length: 12-13 characters
-- Format validation for business RFC
-
-### Email Validation
-- Standard email format
-- Domain validation
-- Uniqueness check across system
-
-### Phone Validation
-- Mexican phone format (+52)
-- Mobile number validation
-
-### Username Validation
-- 3-50 characters
-- Alphanumeric and underscore only
-- Uniqueness check across all users
-
-### Password Validation
-- Minimum 8 characters
-- At least one uppercase letter
-- At least one lowercase letter
-- At least one number
-- At least one special character
-
 ## Error Handling
 
 ### Backend Error Response Format
@@ -376,7 +341,6 @@ interface ErrorResponse {
 ```
 
 ### Frontend Error Handling
-- Field-level validation errors
 - Form-level submission errors
 - File upload error handling
 - Network error recovery
@@ -402,7 +366,6 @@ PUT /api/profile/me
 ### Frontend Testing
 - Test all registration forms
 - Verify file upload functionality
-- Test form validation
 - Verify image cropping
 - Test privacy policy modal
 - Test profile editing
@@ -438,11 +401,9 @@ VITE_MAX_FILE_SIZE=10485760
 ✅ File uploads to Cloudinary function properly
 ✅ Profile photo cropping works (Facebook-style)
 ✅ ID document upload is secure
-✅ Form validation prevents invalid submissions
 ✅ Privacy policy modal displays and tracks acceptance
 ✅ Profile editing works for all user types
 ✅ Mexican states populate correctly in dropdowns
-✅ CURP and RFC validation works
 ✅ Username uniqueness is enforced
 ✅ All user roles can register successfully
 ✅ Profile completion status is tracked
@@ -471,7 +432,6 @@ After completing this step, you should have:
 - Complete user registration system for all roles
 - File upload functionality with Cloudinary
 - Profile management system
-- Form validation and error handling
 - Privacy policy compliance
 - Ready foundation for membership and payment integration
 

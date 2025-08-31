@@ -55,62 +55,62 @@ const StateCommitteeRegistrationForm: React.FC<StateCommitteeRegistrationFormPro
     dispatch(fetchStates());
   }, [dispatch]);
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
+  // const validateForm = (): boolean => {
+  //   const newErrors: Record<string, string> = {};
 
-    // Required fields validation
-    if (!formData.name.trim()) newErrors.name = 'The association/committee name is required';
-    if (!formData.presidentName.trim()) newErrors.presidentName = 'The president name is required';
-    if (!formData.presidentTitle.trim()) newErrors.presidentTitle = 'The president title is required';
-    if (!formData.institutionalEmail.trim()) newErrors.institutionalEmail = 'The institutional email is required';
-    if (!formData.phone.trim()) newErrors.phone = 'The phone number is required';
-    if (!formData.stateId) newErrors.stateId = 'The state is required';
-    if (!formData.affiliateType.trim()) newErrors.affiliateType = 'The affiliation type is required';
-    if (!formData.username.trim()) newErrors.username = 'The username is required';
-    if (!formData.email.trim()) newErrors.email = 'The email is required';
-    if (!formData.password) newErrors.password = 'The password is required';
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'The password confirmation is required';
-    if (!formData.privacyPolicyAccepted) newErrors.privacyPolicyAccepted = 'You must accept the privacy policy';
+  //   // Required fields validation
+  //   if (!formData.name.trim()) newErrors.name = 'The association/committee name is required';
+  //   if (!formData.presidentName.trim()) newErrors.presidentName = 'The president name is required';
+  //   if (!formData.presidentTitle.trim()) newErrors.presidentTitle = 'The president title is required';
+  //   if (!formData.institutionalEmail.trim()) newErrors.institutionalEmail = 'The institutional email is required';
+  //   if (!formData.phone.trim()) newErrors.phone = 'The phone number is required';
+  //   if (!formData.stateId) newErrors.stateId = 'The state is required';
+  //   if (!formData.affiliateType.trim()) newErrors.affiliateType = 'The affiliation type is required';
+  //   if (!formData.username.trim()) newErrors.username = 'The username is required';
+  //   if (!formData.email.trim()) newErrors.email = 'The email is required';
+  //   if (!formData.password) newErrors.password = 'The password is required';
+  //   if (!formData.confirmPassword) newErrors.confirmPassword = 'The password confirmation is required';
+  //   if (!formData.privacyPolicyAccepted) newErrors.privacyPolicyAccepted = 'You must accept the privacy policy';
 
-    // Format validations
-    if (formData.rfc && formData.rfc.length !== 12) {
-      newErrors.rfc = 'The organization RFC must have 12 characters';
-    }
+  //   // Format validations
+  //   if (formData.rfc && formData.rfc.length !== 12) {
+  //     newErrors.rfc = 'The organization RFC must have 12 characters';
+  //   }
     
-    if (formData.institutionalEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.institutionalEmail)) {
-      newErrors.institutionalEmail = 'The institutional email format is invalid';
-    }
+  //   if (formData.institutionalEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.institutionalEmail)) {
+  //     newErrors.institutionalEmail = 'The institutional email format is invalid';
+  //   }
     
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'The email format is invalid';
-    }
+  //   if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+  //     newErrors.email = 'The email format is invalid';
+  //   }
     
-    if (formData.phone && !/^(\+52)?[1-9]\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'The phone format is invalid (10 digits)';
-    }
+  //   if (formData.phone && !/^(\+52)?[1-9]\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
+  //     newErrors.phone = 'The phone format is invalid (10 digits)';
+  //   }
     
-    if (formData.website && formData.website.trim() && !/^https?:\/\/.+\..+/.test(formData.website)) {
-      newErrors.website = 'The website format is invalid';
-    }
+  //   if (formData.website && formData.website.trim() && !/^https?:\/\/.+\..+/.test(formData.website)) {
+  //     newErrors.website = 'The website format is invalid';
+  //   }
     
-    if (formData.password && formData.password.length < 8) {
-      newErrors.password = 'The password must have at least 8 characters';
-    }
+  //   if (formData.password && formData.password.length < 8) {
+  //     newErrors.password = 'The password must have at least 8 characters';
+  //   }
     
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'The passwords do not match';
-    }
+  //   if (formData.password !== formData.confirmPassword) {
+  //     newErrors.confirmPassword = 'The passwords do not match';
+  //   }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      return;
-    }
+    // if (!validateForm()) {
+    //   return;
+    // }
 
     try {
       const result = await dispatch(registerStateCommittee(formData)).unwrap();

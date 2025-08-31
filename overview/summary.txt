@@ -380,6 +380,6 @@ All page should be user friendly with modern design, animation effect and hover 
 
 - Backend
 tech: node/express, postgreSQL/sequelize, SendGrid(for Email notification or verification), Stripe(for payment gateway)
-Data validation will also be done sparingly, except in cases where it is absolutely necessary.
+Data validation won't also be done any where.
 I am going to use cloudinary for file upload for all pages.
 I want to structure the database so that individual tables don't become too large with too many fields.

@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { loginUser, clearError, selectAuthLoading, selectAuthError, selectIsAuthenticated } from '@/store/authSlice';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { ROUTES } from '@/utils/constants';
-import { validateEmail } from '@/utils/helpers';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 const LoginForm: React.FC = () => {
@@ -38,32 +37,12 @@ const LoginForm: React.FC = () => {
   }, [isAuthenticated, navigate, from]);
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear field error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
     
     // Clear global error
     if (error) {
@@ -127,18 +106,12 @@ const LoginForm: React.FC = () => {
                 name="email"
                 type="email"
                 autoComplete="email"
-                required
-                className={`form-input ${
-                  errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
-                }`}
+                className="form-input"
                 placeholder="your@email.com"
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={isLoading}
               />
-              {errors.email && (
-                <p className="form-error">{errors.email}</p>
-              )}
             </div>
 
             {/* Password field */}
@@ -152,10 +125,7 @@ const LoginForm: React.FC = () => {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
-                  required
-                  className={`form-input pr-10 ${
-                    errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
-                  }`}
+                  className="form-input pr-10"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -174,9 +144,6 @@ const LoginForm: React.FC = () => {
                   )}
                 </button>
               </div>
-              {errors.password && (
-                <p className="form-error">{errors.password}</p>
-              )}
             </div>
           </div>
 
@@ -222,8 +189,8 @@ const LoginForm: React.FC = () => {
               Test credentials:
             </h3>
             <p className="text-xs text-yellow-600 mt-1">
-              Email: admin@pickleballfed.mx<br />
-              Password: admin123
+              Email: admin@federacionpickleball.mx<br />
+              Password: a
             </p>
           </div>
         )}

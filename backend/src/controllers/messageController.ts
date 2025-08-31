@@ -1,20 +1,10 @@
 import { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
 import { AuthRequest } from '../types/auth';
 import messageService from '../services/messageService';
 import { asyncHandler } from '../middleware/errorHandler';
 
-const sendMessageValidators = [
-  body('receiverId').isInt({ min: 1 }).withMessage('Valid receiver ID is required'),
-  body('subject').trim().isLength({ min: 1, max: 255 }).withMessage('Subject must be between 1 and 255 characters'),
-  body('content').trim().isLength({ min: 1, max: 10000 }).withMessage('Content must be between 1 and 10000 characters'),
-  body('isUrgent').optional().isBoolean().withMessage('isUrgent must be a boolean'),
-];
 
 const sendMessage = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ success: false, error: 'Validation failed', details: errors.array() });
-
   const { receiverId, subject, content, isUrgent, attachments } = req.body;
   const senderId = req.user.userId;
 
@@ -83,7 +73,6 @@ const getConversation = asyncHandler(async (req: AuthRequest, res: Response) => 
 });
 
 export {
-  sendMessageValidators,
   sendMessage,
   getInbox,
   markMessageAsRead,

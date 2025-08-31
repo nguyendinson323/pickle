@@ -3,7 +3,6 @@ import { authenticate } from '../middleware/auth';
 import { asyncHandler } from '../middleware/errorHandler';
 import {
   sendMessage,
-  sendMessageValidators,
   getInbox,
   markMessageAsRead,
   deleteMessage,
@@ -19,7 +18,7 @@ router.use(authenticate);
 
 // Message endpoints
 router.get('/inbox', asyncHandler(getInbox));
-router.post('/send', sendMessageValidators, asyncHandler(sendMessage));
+router.post('/send', asyncHandler(sendMessage));
 router.put('/:id/read', asyncHandler(markMessageAsRead));
 router.delete('/:id', asyncHandler(deleteMessage));
 router.get('/unread-count', asyncHandler(getUnreadCount));

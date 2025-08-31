@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import { MembershipPlan, Payment, User, Membership } from '../models';
 import stripeService from '../services/stripeService';
 import { UserRole } from '../types/auth';
@@ -27,12 +26,6 @@ const getPlans = async (req: AuthRequest, res: Response): Promise<void> => {
 
 const createPaymentIntent = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
-      return;
-    }
-
     const { planId, amount, type, metadata } = req.body;
     const userId = req.user?.userId;
 

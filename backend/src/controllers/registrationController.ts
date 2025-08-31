@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import registrationService from '../services/registrationService';
 
 interface MulterRequest extends Request {
@@ -13,16 +12,6 @@ interface MulterRequest extends Request {
 
 const registerPlayer = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-      return;
-    }
-
     const data = {
       ...req.body,
       profilePhoto: req.files?.profilePhoto?.[0],
@@ -42,16 +31,6 @@ const registerPlayer = async (req: MulterRequest, res: Response): Promise<void> 
 
 const registerCoach = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-      return;
-    }
-
     const data = {
       ...req.body,
       profilePhoto: req.files?.profilePhoto?.[0],
@@ -71,16 +50,6 @@ const registerCoach = async (req: MulterRequest, res: Response): Promise<void> =
 
 const registerClub = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-      return;
-    }
-
     const data = {
       ...req.body,
       logo: req.file,
@@ -100,16 +69,6 @@ const registerClub = async (req: MulterRequest, res: Response): Promise<void> =>
 
 const registerPartner = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-      return;
-    }
-
     const data = {
       ...req.body,
       logo: req.file,
@@ -129,16 +88,6 @@ const registerPartner = async (req: MulterRequest, res: Response): Promise<void>
 
 const registerStateCommittee = async (req: MulterRequest, res: Response): Promise<void> => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-      return;
-    }
-
     const data = {
       ...req.body,
       logo: req.file,

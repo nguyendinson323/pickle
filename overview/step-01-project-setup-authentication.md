@@ -132,7 +132,6 @@ pick-new/
   - State (Mexican states)
   - Player, Coach, Club, Partner, StateCommittee profiles
 - Define model relationships and associations
-- Set up model validations
 
 ### 3. Authentication System
 - Implement JWT token generation and validation
@@ -177,7 +176,6 @@ pick-new/
 - Type-safe API methods
 
 ### 4. Authentication Components
-- LoginForm component with form validation
 - LogoutButton component
 - ProtectedRoute wrapper component
 - Loading states and error handling

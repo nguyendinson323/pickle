@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import { Op, fn, col } from 'sequelize';
 import { Membership, MembershipPlan, User, Payment } from '../models';
 import { createNotification } from '../services/notificationService';
@@ -61,9 +60,6 @@ const getMembershipHistory = async (req: Request, res: Response) => {
 
 const upgradeMembership = async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
     const { membershipPlanId } = req.body;
     const userId = (req as any).user.userId;
     const user = await User.findByPk(userId);

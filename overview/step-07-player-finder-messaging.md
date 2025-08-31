@@ -667,7 +667,6 @@ curl -X POST http://localhost:5000/api/conversations \
 ### Alternative Solutions
 1. **OpenStreetMap**: Free geocoding and mapping
 2. **Browser Geolocation**: Free current location detection
-3. **Manual Entry**: Address input with validation
 4. **Cached Mexican Locations**: Pre-cache common Mexican addresses
 
 ## Success Criteria

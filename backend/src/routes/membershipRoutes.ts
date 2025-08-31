@@ -1,5 +1,4 @@
 import express from 'express';
-import { body } from 'express-validator';
 import { authenticate } from '../middleware/auth';
 import { asyncHandler } from '../middleware/errorHandler';
 import {
@@ -31,22 +30,11 @@ router.get('/status',
 
 router.post('/upgrade', 
   authenticate,
-  [
-    body('membershipPlanId')
-      .isInt({ min: 1 })
-      .withMessage('Valid membership plan ID is required')
-  ],
   asyncHandler(upgradeMembership)
 );
 
 router.post('/cancel', 
   authenticate,
-  [
-    body('reason')
-      .optional()
-      .isLength({ min: 5, max: 500 })
-      .withMessage('Reason must be between 5 and 500 characters')
-  ],
   asyncHandler(cancelMembership)
 );
 

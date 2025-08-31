@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import profileService from '../services/profileService';
 import { AuthenticatedRequest } from '../types/auth';
 
@@ -48,18 +47,6 @@ export class ProfileController {
   // Update user profile
   async updateProfile(req: AuthenticatedRequest, res: Response) {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            message: 'Validation failed',
-            code: 'VALIDATION_ERROR',
-            details: errors.array()
-          }
-        });
-      }
-
       if (!req.user) {
         return res.status(401).json({
           success: false,
@@ -330,18 +317,6 @@ export class ProfileController {
   // Change password
   async changePassword(req: AuthenticatedRequest, res: Response) {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            message: 'Validation failed',
-            code: 'VALIDATION_ERROR',
-            details: errors.array()
-          }
-        });
-      }
-
       if (!req.user) {
         return res.status(401).json({
           success: false,

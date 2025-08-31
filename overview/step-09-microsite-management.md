@@ -78,7 +78,6 @@ unpublishPage(pageId: number): Promise<void>
 ### 2. Content Management System
 **Files to Create:**
 - `src/services/cmsService.ts` - Content management system
-- `src/utils/contentValidator.ts` - Content validation and moderation
 - `src/services/mediaService.ts` - Media file management
 
 **CMS Methods:**
