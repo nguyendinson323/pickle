@@ -41,10 +41,10 @@ export const FederationAnalytics: React.FC = () => {
 
   const getPeriodLabel = () => {
     switch (selectedPeriod) {
-      case '30days': return 'Últimos 30 días';
-      case '3months': return 'Últimos 3 meses';
-      case '1year': return 'Último año';
-      default: return 'Período';
+      case '30days': return 'Last 30 days';
+      case '3months': return 'Last 3 months';
+      case '1year': return 'Last year';
+      default: return 'Period';
     }
   };
 
@@ -64,10 +64,10 @@ export const FederationAnalytics: React.FC = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Error al cargar analíticas</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Error loading analytics</h3>
         <p className="text-gray-600 mb-4">{error}</p>
         <Button onClick={() => window.location.reload()}>
-          Intentar de nuevo
+          Try again
         </Button>
       </div>
     );
@@ -81,8 +81,8 @@ export const FederationAnalytics: React.FC = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No hay datos disponibles</h3>
-        <p className="text-gray-600">No se encontraron datos de la federación para mostrar</p>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">No data available</h3>
+        <p className="text-gray-600">No federation data found to display</p>
       </div>
     );
   }
@@ -92,8 +92,8 @@ export const FederationAnalytics: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Analíticas de la Federación</h1>
-          <p className="text-gray-600 mt-1">Estadísticas generales del ecosistema de pickleball</p>
+          <h1 className="text-2xl font-bold text-gray-900">Federation Analytics</h1>
+          <p className="text-gray-600 mt-1">General statistics of the pickleball ecosystem</p>
         </div>
 
         <div className="flex gap-1 border border-gray-300 rounded-md overflow-hidden">
@@ -122,7 +122,7 @@ export const FederationAnalytics: React.FC = () => {
         <div className="flex justify-center py-4">
           <div className="flex items-center gap-2 text-blue-600">
             <LoadingSpinner size="sm" />
-            <span className="text-sm">Actualizando datos...</span>
+            <span className="text-sm">Updating data...</span>
           </div>
         </div>
       )}
@@ -133,7 +133,7 @@ export const FederationAnalytics: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
+              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
               <p className="text-2xl font-bold text-green-600">
                 {formatPrice(federation.totalRevenue)}
               </p>
@@ -151,11 +151,11 @@ export const FederationAnalytics: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Canchas Registradas</p>
+              <p className="text-sm font-medium text-gray-600">Registered Courts</p>
               <p className="text-2xl font-bold text-blue-600">
                 {formatNumber(federation.totalCourts)}
               </p>
-              <p className="text-xs text-gray-500 mt-1">En toda la red</p>
+              <p className="text-xs text-gray-500 mt-1">Across the network</p>
             </div>
             <div className="p-3 bg-blue-100 rounded-full">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,7 +169,7 @@ export const FederationAnalytics: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Usuarios Activos</p>
+              <p className="text-sm font-medium text-gray-600">Active Users</p>
               <p className="text-2xl font-bold text-purple-600">
                 {formatNumber(federation.activeUsers)}
               </p>
@@ -187,7 +187,7 @@ export const FederationAnalytics: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Reservas</p>
+              <p className="text-sm font-medium text-gray-600">Total Reservations</p>
               <p className="text-2xl font-bold text-orange-600">
                 {formatNumber(federation.totalReservations)}
               </p>
@@ -206,7 +206,7 @@ export const FederationAnalytics: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Performing States */}
         <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Estados con Mejor Rendimiento</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing States</h3>
           <div className="space-y-3">
             {federation.topStates.map((state: any, index: number) => (
               <div key={state.state} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -217,7 +217,7 @@ export const FederationAnalytics: React.FC = () => {
                   <div>
                     <p className="font-medium text-gray-900">{state.state}</p>
                     <p className="text-sm text-gray-500">
-                      {state.courts} canchas • {state.reservations} reservas
+                      {state.courts} courts • {state.reservations} reservations
                     </p>
                   </div>
                 </div>
@@ -230,18 +230,18 @@ export const FederationAnalytics: React.FC = () => {
 
           {federation.topStates.length === 0 && (
             <div className="text-center py-8 text-gray-500">
-              <p>No hay datos suficientes para mostrar estados</p>
+              <p>Not enough data to show states</p>
             </div>
           )}
         </Card>
 
         {/* Growth Metrics */}
         <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Métricas de Crecimiento</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Growth Metrics</h3>
           
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Nuevas canchas registradas</span>
+              <span className="text-gray-600">New registered courts</span>
               <div className="flex items-center gap-2">
                 <Badge variant="success">+{federation.newCourts}</Badge>
                 <span className="text-sm text-gray-500">{getPeriodLabel()}</span>
@@ -249,7 +249,7 @@ export const FederationAnalytics: React.FC = () => {
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Nuevos usuarios</span>
+              <span className="text-gray-600">New users</span>
               <div className="flex items-center gap-2">
                 <Badge variant="success">+{formatNumber(federation.newUsers)}</Badge>
                 <span className="text-sm text-gray-500">{getPeriodLabel()}</span>
@@ -257,7 +257,7 @@ export const FederationAnalytics: React.FC = () => {
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Tasa de ocupación promedio</span>
+              <span className="text-gray-600">Average occupancy rate</span>
               <Badge variant={
                 federation.averageOccupancy >= 0.8 ? 'success' :
                 federation.averageOccupancy >= 0.6 ? 'warning' : 'error'
@@ -267,7 +267,7 @@ export const FederationAnalytics: React.FC = () => {
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Calificación promedio</span>
+              <span className="text-gray-600">Average rating</span>
               <div className="flex items-center gap-1">
                 <span className="font-semibold text-gray-900">
                   {federation.averageRating.toFixed(1)}
@@ -278,7 +278,7 @@ export const FederationAnalytics: React.FC = () => {
 
             <div className="pt-4 border-t">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Ingreso promedio por cancha</span>
+                <span className="text-gray-600">Average revenue per court</span>
                 <span className="font-semibold text-green-600">
                   {federation.totalCourts > 0 
                     ? formatPrice(federation.totalRevenue / federation.totalCourts)
@@ -293,31 +293,31 @@ export const FederationAnalytics: React.FC = () => {
 
       {/* Market Distribution */}
       <Card className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribución del Mercado</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Market Distribution</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">
               {federation.totalCourts}
             </div>
-            <p className="text-gray-600">Canchas Totales</p>
-            <p className="text-xs text-gray-500 mt-1">En toda la red</p>
+            <p className="text-gray-600">Total Courts</p>
+            <p className="text-xs text-gray-500 mt-1">Across the network</p>
           </div>
 
           <div className="text-center">
             <div className="text-3xl font-bold text-purple-600 mb-2">
               {formatNumber(federation.activeUsers)}
             </div>
-            <p className="text-gray-600">Usuarios Activos</p>
-            <p className="text-xs text-gray-500 mt-1">Base de jugadores</p>
+            <p className="text-gray-600">Active Users</p>
+            <p className="text-xs text-gray-500 mt-1">Player base</p>
           </div>
 
           <div className="text-center">
             <div className="text-3xl font-bold text-green-600 mb-2">
               {formatPrice(federation.totalRevenue / (federation.totalReservations || 1))}
             </div>
-            <p className="text-gray-600">Ticket Promedio</p>
-            <p className="text-xs text-gray-500 mt-1">Por reserva</p>
+            <p className="text-gray-600">Average Ticket</p>
+            <p className="text-xs text-gray-500 mt-1">Per reservation</p>
           </div>
         </div>
       </Card>

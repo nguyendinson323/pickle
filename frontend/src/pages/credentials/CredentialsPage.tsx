@@ -67,19 +67,19 @@ export const CredentialsPage: React.FC = () => {
   // Define tabs based on user role
   const getTabs = () => {
     const baseTabs = [
-      { id: 'my-credentials', label: 'Mis Credenciales', count: 0 }
+      { id: 'my-credentials', label: 'My Credentials', count: 0 }
     ];
 
     if (isAdmin) {
       baseTabs.push(
-        { id: 'manage', label: 'Gestionar', count: stats.total },
-        { id: 'generate', label: 'Generar', count: 0 },
-        { id: 'verify', label: 'Verificar', count: 0 },
-        { id: 'expiring', label: 'Por Vencer', count: stats.expiringSoon }
+        { id: 'manage', label: 'Manage', count: stats.total },
+        { id: 'generate', label: 'Generate', count: 0 },
+        { id: 'verify', label: 'Verify', count: 0 },
+        { id: 'expiring', label: 'Expiring', count: stats.expiringSoon }
       );
     } else {
       baseTabs.push(
-        { id: 'verify', label: 'Verificar', count: 0 }
+        { id: 'verify', label: 'Verify', count: 0 }
       );
     }
 
@@ -95,9 +95,9 @@ export const CredentialsPage: React.FC = () => {
         <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white p-6 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Credenciales Digitales</h1>
+              <h1 className="text-3xl font-bold mb-2">Digital Credentials</h1>
               <p className="text-green-100">
-                Sistema oficial de credenciales de la Federación Mexicana de Pickleball
+                Official credential system of the Mexican Pickleball Federation
               </p>
             </div>
             
@@ -124,21 +124,21 @@ export const CredentialsPage: React.FC = () => {
               <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
                 <div className="p-4 text-center">
                   <div className="text-2xl font-bold text-green-200">{stats.active.toLocaleString()}</div>
-                  <div className="text-sm text-green-100">Activas</div>
+                  <div className="text-sm text-green-100">Active</div>
                 </div>
               </Card>
               
               <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
                 <div className="p-4 text-center">
                   <div className="text-2xl font-bold text-red-200">{stats.expired.toLocaleString()}</div>
-                  <div className="text-sm text-green-100">Expiradas</div>
+                  <div className="text-sm text-green-100">Expired</div>
                 </div>
               </Card>
               
               <Card className="bg-white/10 backdrop-blur border-white/20 text-white">
                 <div className="p-4 text-center">
                   <div className="text-2xl font-bold text-yellow-200">{stats.expiringSoon.toLocaleString()}</div>
-                  <div className="text-sm text-green-100">Por Vencer</div>
+                  <div className="text-sm text-green-100">Expiring</div>
                 </div>
               </Card>
             </div>
@@ -150,19 +150,19 @@ export const CredentialsPage: React.FC = () => {
           <Card className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <h3 className="font-semibold">Acciones Rápidas</h3>
+                <h3 className="font-semibold">Quick Actions</h3>
                 <div className="flex items-center space-x-2">
                   <Badge variant="success">
-                    {stats.active} Activas
+                    {stats.active} Active
                   </Badge>
                   {stats.expiringSoon > 0 && (
                     <Badge variant="warning">
-                      {stats.expiringSoon} Por Vencer
+                      {stats.expiringSoon} Expiring
                     </Badge>
                   )}
                   {stats.expired > 0 && (
                     <Badge variant="error">
-                      {stats.expired} Expiradas
+                      {stats.expired} Expired
                     </Badge>
                   )}
                 </div>
@@ -174,14 +174,14 @@ export const CredentialsPage: React.FC = () => {
                   variant="primary"
                   size="sm"
                 >
-                  + Nueva Credencial
+                  + New Credential
                 </Button>
                 <Button
                   onClick={() => setShowVerifier(true)}
                   variant="outline"
                   size="sm"
                 >
-                  Verificar
+                  Verify
                 </Button>
               </div>
             </div>
@@ -201,13 +201,13 @@ export const CredentialsPage: React.FC = () => {
             <div className="space-y-6">
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">Mis Credenciales</h3>
+                  <h3 className="text-lg font-semibold">My Credentials</h3>
                   <Button
                     onClick={() => setShowVerifier(true)}
                     variant="outline"
                     size="sm"
                   >
-                    Verificar Credencial
+                    Verify Credential
                   </Button>
                 </div>
                 
@@ -225,14 +225,14 @@ export const CredentialsPage: React.FC = () => {
             <div className="space-y-6">
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">Gestión de Credenciales</h3>
+                  <h3 className="text-lg font-semibold">Credential Management</h3>
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => setShowGenerator(true)}
                       variant="primary"
                       size="sm"
                     >
-                      + Nueva Credencial
+                      + New Credential
                     </Button>
                   </div>
                 </div>
@@ -255,9 +255,9 @@ export const CredentialsPage: React.FC = () => {
 
           {activeTab === 'expiring' && isAdmin && (
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Credenciales por Vencer</h3>
+              <h3 className="text-lg font-semibold mb-4">Expiring Credentials</h3>
               <p className="text-gray-600 mb-6">
-                Credenciales que expiran en los próximos 30 días
+                Credentials expiring in the next 30 days
               </p>
               
               <CredentialList
@@ -294,42 +294,42 @@ export const CredentialsPage: React.FC = () => {
 
         {/* Help Section */}
         <Card className="p-6 bg-gray-50">
-          <h3 className="text-lg font-semibold mb-4">Acerca de las Credenciales Digitales</h3>
+          <h3 className="text-lg font-semibold mb-4">About Digital Credentials</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
             <div>
-              <h4 className="font-medium mb-2">Características</h4>
+              <h4 className="font-medium mb-2">Features</h4>
               <ul className="space-y-1">
-                <li>• Verificación mediante código QR</li>
-                <li>• Descarga en formato PDF e imagen</li>
-                <li>• Verificación de integridad con checksum</li>
-                <li>• Renovación automática disponible</li>
+                <li>• QR code verification</li>
+                <li>• Download in PDF and image format</li>
+                <li>• Integrity verification with checksum</li>
+                <li>• Automatic renewal available</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-medium mb-2">Tipos de Credencial</h4>
+              <h4 className="font-medium mb-2">Credential Types</h4>
               <ul className="space-y-1">
-                <li>• <Badge variant="primary" size="sm">Jugador</Badge> - Para jugadores federados</li>
-                <li>• <Badge variant="secondary" size="sm">Entrenador</Badge> - Para entrenadores certificados</li>
-                <li>• <Badge variant="info" size="sm">Árbitro</Badge> - Para árbitros oficiales</li>
-                <li>• <Badge variant="secondary" size="sm">Administrador</Badge> - Para administradores de club</li>
+                <li>• <Badge variant="primary" size="sm">Player</Badge> - For federated players</li>
+                <li>• <Badge variant="secondary" size="sm">Coach</Badge> - For certified coaches</li>
+                <li>• <Badge variant="info" size="sm">Referee</Badge> - For official referees</li>
+                <li>• <Badge variant="secondary" size="sm">Administrator</Badge> - For club administrators</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-medium mb-2">Estados de Credencial</h4>
+              <h4 className="font-medium mb-2">Credential Status</h4>
               <ul className="space-y-1">
-                <li>• <Badge variant="success" size="sm">Activa</Badge> - Válida y verificable</li>
-                <li>• <Badge variant="error" size="sm">Expirada</Badge> - Requiere renovación</li>
-                <li>• <Badge variant="warning" size="sm">Suspendida</Badge> - Temporalmente inválida</li>
-                <li>• <Badge variant="secondary" size="sm">Revocada</Badge> - Permanentemente inválida</li>
+                <li>• <Badge variant="success" size="sm">Active</Badge> - Valid and verifiable</li>
+                <li>• <Badge variant="error" size="sm">Expired</Badge> - Requires renewal</li>
+                <li>• <Badge variant="warning" size="sm">Suspended</Badge> - Temporarily invalid</li>
+                <li>• <Badge variant="secondary" size="sm">Revoked</Badge> - Permanently invalid</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-medium mb-2">Verificación</h4>
+              <h4 className="font-medium mb-2">Verification</h4>
               <ul className="space-y-1">
-                <li>• Escaneo de código QR con cualquier dispositivo</li>
-                <li>• Verificación manual por ID</li>
-                <li>• Verificación masiva para eventos</li>
-                <li>• Historial de verificaciones</li>
+                <li>• QR code scanning with any device</li>
+                <li>• Manual verification by ID</li>
+                <li>• Bulk verification for events</li>
+                <li>• Verification history</li>
               </ul>
             </div>
           </div>
@@ -342,12 +342,12 @@ export const CredentialsPage: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <h4 className="font-medium text-blue-900 mb-1">¿Necesitas ayuda?</h4>
+              <h4 className="font-medium text-blue-900 mb-1">Need help?</h4>
               <p className="text-blue-800 text-sm mb-3">
-                Si tienes problemas con tu credencial o necesitas asistencia, contacta al soporte técnico.
+                If you have problems with your credential or need assistance, contact technical support.
               </p>
               <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100">
-                Contactar Soporte
+                Contact Support
               </Button>
             </div>
           </div>

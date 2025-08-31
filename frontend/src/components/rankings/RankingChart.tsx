@@ -75,7 +75,7 @@ export const RankingChart: React.FC<RankingChartProps> = ({
 
   const formatPeriod = (period: string) => {
     const date = new Date(period);
-    return date.toLocaleDateString('es-ES', { 
+    return date.toLocaleDateString('en-US', { 
       month: 'short', 
       year: '2-digit' 
     });
@@ -211,7 +211,7 @@ export const RankingChart: React.FC<RankingChartProps> = ({
         <div className="text-center">
           <div className="text-red-600 mb-4">{error}</div>
           <Button onClick={fetchTrendData} variant="outline" size="sm">
-            Reintentar
+            Retry
           </Button>
         </div>
       </Card>
@@ -222,16 +222,16 @@ export const RankingChart: React.FC<RankingChartProps> = ({
     return (
       <Card className="p-6">
         <div className="text-center text-gray-500" style={{ height: height }}>
-          No hay datos suficientes para mostrar el gráfico
+          Not enough data to show chart
         </div>
       </Card>
     );
   }
 
   const viewOptions = [
-    { value: 'changes', label: 'Total de Cambios' },
-    { value: 'points', label: 'Promedio de Puntos' },
-    { value: 'players', label: 'Jugadores Activos' }
+    { value: 'changes', label: 'Total Changes' },
+    { value: 'points', label: 'Average Points' },
+    { value: 'players', label: 'Active Players' }
   ];
 
   return (
@@ -239,7 +239,7 @@ export const RankingChart: React.FC<RankingChartProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold">
-          Tendencias de Ranking {playerId ? '- Jugador' : '- General'}
+          Ranking Trends {playerId ? '- Player' : '- General'}
         </h3>
         <div className="flex space-x-2">
           {viewOptions.map((option) => (
@@ -267,9 +267,9 @@ export const RankingChart: React.FC<RankingChartProps> = ({
             'bg-purple-500'
           }`}></div>
           <span>
-            {viewType === 'changes' && 'Cambios de ranking'}
-            {viewType === 'points' && 'Cambio promedio de puntos'}
-            {viewType === 'players' && 'Jugadores con actividad'}
+            {viewType === 'changes' && 'Ranking changes'}
+            {viewType === 'points' && 'Average points change'}
+            {viewType === 'players' && 'Players with activity'}
           </span>
         </div>
       </div>
@@ -281,19 +281,19 @@ export const RankingChart: React.FC<RankingChartProps> = ({
             <div className="text-2xl font-bold text-blue-600">
               {data.reduce((sum, d) => sum + d.totalChanges, 0)}
             </div>
-            <div className="text-sm text-gray-600">Total de cambios</div>
+            <div className="text-sm text-gray-600">Total changes</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">
               +{data.reduce((sum, d) => sum + d.positiveChanges, 0)}
             </div>
-            <div className="text-sm text-gray-600">Cambios positivos</div>
+            <div className="text-sm text-gray-600">Positive changes</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">
               {Math.round(data.reduce((sum, d) => sum + d.activePlayers, 0) / data.length)}
             </div>
-            <div className="text-sm text-gray-600">Promedio jugadores activos</div>
+            <div className="text-sm text-gray-600">Average active players</div>
           </div>
         </div>
       )}

@@ -53,9 +53,9 @@ export const MyCourtsPage: React.FC = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'active': return 'Activa';
-      case 'inactive': return 'Inactiva';
-      case 'pending': return 'Pendiente';
+      case 'active': return 'Active';
+      case 'inactive': return 'Inactive';
+      case 'pending': return 'Pending';
       default: return status;
     }
   };
@@ -114,12 +114,12 @@ export const MyCourtsPage: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Acceso Restringido</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Restricted Access</h3>
           <p className="text-gray-600 mb-4">
-            Esta página es solo para propietarios de canchas registradas.
+            This page is only for registered court owners.
           </p>
           <Button onClick={() => navigate('/courts')}>
-            Volver a Canchas
+            Back to Courts
           </Button>
         </div>
       </div>
@@ -133,9 +133,9 @@ export const MyCourtsPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Mis Canchas</h1>
+              <h1 className="text-2xl font-bold text-gray-900">My Courts</h1>
               <p className="text-gray-600 mt-1">
-                Administra y monitorea el rendimiento de tus canchas
+                Manage and monitor the performance of your courts
               </p>
             </div>
 
@@ -147,7 +147,7 @@ export const MyCourtsPage: React.FC = () => {
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                Ver Analíticas
+                View Analytics
               </Button>
               
               <Button
@@ -157,7 +157,7 @@ export const MyCourtsPage: React.FC = () => {
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                Nueva Cancha
+                New Court
               </Button>
             </div>
           </div>
@@ -181,10 +181,10 @@ export const MyCourtsPage: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Error al cargar las canchas</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Error loading courts</h3>
             <p className="text-gray-600 mb-4">{error}</p>
             <Button onClick={() => dispatch(fetchCourtsByOwner({ ownerType: user.role as any, ownerId: user.id }))}>
-              Intentar de nuevo
+              Try again
             </Button>
           </div>
         )}
@@ -198,13 +198,13 @@ export const MyCourtsPage: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No tienes canchas registradas
+              You have no registered courts
             </h3>
             <p className="text-gray-600 mb-4">
-              Registra tu primera cancha para comenzar a recibir reservas.
+              Register your first court to start receiving reservations.
             </p>
             <Button onClick={() => navigate('/courts/register')}>
-              Registrar Mi Primera Cancha
+              Register My First Court
             </Button>
           </div>
         )}
@@ -215,22 +215,22 @@ export const MyCourtsPage: React.FC = () => {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               {getStatsCard(
-                'Total Canchas', 
+                'Total Courts', 
                 myCourts.length, 
                 'blue'
               )}
               {getStatsCard(
-                'Activas', 
+                'Active', 
                 myCourts.filter((c: any) => c.isActive).length, 
                 'green'
               )}
               {getStatsCard(
-                'Inactivas', 
+                'Inactive', 
                 myCourts.filter((c: any) => !c.isActive).length, 
                 'red'
               )}
               {getStatsCard(
-                'Pendientes', 
+                'Pending', 
                 0, // No pending status available 
                 'yellow'
               )}
@@ -244,41 +244,41 @@ export const MyCourtsPage: React.FC = () => {
                   variant={filterStatus === 'all' ? 'primary' : 'outline'}
                   onClick={() => setFilterStatus('all')}
                 >
-                  Todas ({myCourts.length})
+                  All ({myCourts.length})
                 </Button>
                 <Button
                   size="sm"
                   variant={filterStatus === 'active' ? 'primary' : 'outline'}
                   onClick={() => setFilterStatus('active')}
                 >
-                  Activas ({myCourts.filter((c: any) => c.isActive).length})
+                  Active ({myCourts.filter((c: any) => c.isActive).length})
                 </Button>
                 <Button
                   size="sm"
                   variant={filterStatus === 'inactive' ? 'primary' : 'outline'}
                   onClick={() => setFilterStatus('inactive')}
                 >
-                  Inactivas ({myCourts.filter((c: any) => !c.isActive).length})
+                  Inactive ({myCourts.filter((c: any) => !c.isActive).length})
                 </Button>
                 <Button
                   size="sm"
                   variant={filterStatus === 'pending' ? 'primary' : 'outline'}
                   onClick={() => setFilterStatus('pending')}
                 >
-                  Pendientes (0)
+                  Pending (0)
                 </Button>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Ordenar por:</span>
+                <span className="text-sm text-gray-600">Sort by:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
                   className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="createdAt">Más recientes</option>
-                  <option value="name">Nombre</option>
-                  <option value="status">Estado</option>
+                  <option value="createdAt">Most recent</option>
+                  <option value="name">Name</option>
+                  <option value="status">Status</option>
                 </select>
               </div>
             </div>
@@ -288,7 +288,7 @@ export const MyCourtsPage: React.FC = () => {
               <div className="flex justify-center mb-4">
                 <div className="flex items-center gap-2 text-blue-600">
                   <LoadingSpinner size="sm" />
-                  <span className="text-sm">Procesando...</span>
+                  <span className="text-sm">Processing...</span>
                 </div>
               </div>
             )}
@@ -327,7 +327,7 @@ export const MyCourtsPage: React.FC = () => {
                         variant={court.isActive ? 'outline' : 'primary'}
                         onClick={() => handleToggleStatus(court.id)}
                         className="bg-white shadow-lg"
-                        title={court.isActive ? 'Desactivar cancha' : 'Activar cancha'}
+                        title={court.isActive ? 'Deactivate court' : 'Activate court'}
                       >
                         {court.isActive ? (
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -345,7 +345,7 @@ export const MyCourtsPage: React.FC = () => {
                         variant="outline"
                         onClick={() => navigate(`/courts/${court.id}/analytics`)}
                         className="bg-white shadow-lg"
-                        title="Ver analíticas"
+                        title="View analytics"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -363,7 +363,7 @@ export const MyCourtsPage: React.FC = () => {
                   </svg>
                 </div>
                 <p className="text-gray-600">
-                  No hay canchas que coincidan con los filtros seleccionados.
+                  No courts match the selected filters.
                 </p>
               </div>
             )}

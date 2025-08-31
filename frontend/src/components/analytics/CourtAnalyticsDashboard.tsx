@@ -39,11 +39,11 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
 
   const getPeriodLabel = () => {
     switch (selectedPeriod) {
-      case '7days': return 'Últimos 7 días';
-      case '30days': return 'Últimos 30 días';
-      case '3months': return 'Últimos 3 meses';
-      case '1year': return 'Último año';
-      default: return 'Período';
+      case '7days': return 'Last 7 days';
+      case '30days': return 'Last 30 days';
+      case '3months': return 'Last 3 months';
+      case '1year': return 'Last year';
+      default: return 'Period';
     }
   };
 
@@ -72,10 +72,10 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Error al cargar analíticas</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Error loading analytics</h3>
         <p className="text-gray-600 mb-4">{error}</p>
         <Button onClick={() => window.location.reload()}>
-          Intentar de nuevo
+          Try again
         </Button>
       </div>
     );
@@ -87,10 +87,10 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {currentCourt ? `Analíticas - ${currentCourt.name}` : 'Analíticas Generales'}
+            {currentCourt ? `Analytics - ${currentCourt.name}` : 'General Analytics'}
           </h1>
           <p className="text-gray-600 mt-1">
-            Análisis de rendimiento y estadísticas de uso
+            Performance analysis and usage statistics
           </p>
         </div>
 
@@ -103,7 +103,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
                 onChange={(e) => setSelectedCourt(e.target.value ? Number(e.target.value) : undefined)}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Todas las canchas</option>
+                <option value="">All courts</option>
                 {courts.map((court) => (
                   <option key={court.id} value={court.id}>
                     {court.name}
@@ -142,7 +142,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
         <div className="flex justify-center py-4">
           <div className="flex items-center gap-2 text-blue-600">
             <LoadingSpinner size="sm" />
-            <span className="text-sm">Actualizando datos...</span>
+            <span className="text-sm">Updating data...</span>
           </div>
         </div>
       )}
@@ -160,7 +160,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
           {revenue && revenue.length > 0 && (
             <RevenueChart 
               data={revenue}
-              title={`Evolución de Ingresos - ${getPeriodLabel()}`}
+              title={`Revenue Evolution - ${getPeriodLabel()}`}
               period={selectedPeriod === '7days' || selectedPeriod === '30days' ? 'daily' : 'weekly'}
             />
           )}
@@ -170,7 +170,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
             {/* Peak Hours */}
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Horarios Pico
+                Peak Hours
               </h3>
               
               <div className="space-y-3">
@@ -185,7 +185,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
                           {hour.hour}:00 - {(parseInt(hour.hour) + 1).toString().padStart(2, '0')}:00
                         </p>
                         <p className="text-sm text-gray-500">
-                          {hour.reservations} reservas
+                          {hour.reservations} reservations
                         </p>
                       </div>
                     </div>
@@ -198,7 +198,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
 
               {overview.topRevenueHours.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                  <p>No hay datos suficientes para mostrar horarios pico</p>
+                  <p>Not enough data to show peak hours</p>
                 </div>
               )}
             </Card>
@@ -206,12 +206,12 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
             {/* Performance Summary */}
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Resumen de Rendimiento
+                Performance Summary
               </h3>
               
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Ingreso promedio por reserva</span>
+                  <span className="text-gray-600">Average revenue per reservation</span>
                   <span className="font-semibold text-gray-900">
                     {overview.totalReservations > 0 
                       ? formatPrice(overview.totalRevenue / overview.totalReservations)
@@ -221,7 +221,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Tasa de ocupación</span>
+                  <span className="text-gray-600">Occupancy rate</span>
                   <Badge variant={
                     overview.occupancyRate >= 0.8 ? 'success' :
                     overview.occupancyRate >= 0.6 ? 'warning' : 'error'
@@ -231,7 +231,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Calificación promedio</span>
+                  <span className="text-gray-600">Average rating</span>
                   <div className="flex items-center gap-1">
                     <span className="font-semibold text-gray-900">
                       {overview.averageRating.toFixed(1)}
@@ -242,7 +242,7 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
 
                 <div className="pt-4 border-t">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Ingresos por día</span>
+                    <span className="text-gray-600">Revenue per day</span>
                     <span className="font-semibold text-green-600">
                       {formatPrice(overview.totalRevenue / Math.max(overview.revenueByDay.length, 1))}
                     </span>
@@ -260,10 +260,10 @@ export const CourtAnalyticsDashboard: React.FC<CourtAnalyticsDashboardProps> = (
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No hay datos disponibles
+            No data available
           </h3>
           <p className="text-gray-600">
-            Selecciona una cancha y período para ver las analíticas
+            Select a court and period to view analytics
           </p>
         </div>
       )}

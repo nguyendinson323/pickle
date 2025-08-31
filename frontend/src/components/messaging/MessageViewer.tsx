@@ -48,10 +48,10 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
           <UserIcon className="w-8 h-8 text-gray-400" />
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Selecciona un mensaje
+          Select a message
         </h3>
         <p className="text-gray-500">
-          Selecciona un mensaje de la lista para verlo aquí.
+          Select a message from the list to view it here.
         </p>
       </Card>
     );
@@ -69,7 +69,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
 
   const formatFullDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString('es-MX', {
+    return date.toLocaleString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -81,9 +81,9 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
 
   const getMessageTypeLabel = (type: string) => {
     switch (type) {
-      case 'system': return 'Sistema';
-      case 'notification': return 'Notificación';
-      default: return 'Mensaje';
+      case 'system': return 'System';
+      case 'notification': return 'Notification';
+      default: return 'Message';
     }
   };
 
@@ -111,7 +111,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
                 </h2>
                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                   <span>
-                    De: <span className="font-medium">{message.sender.username}</span>
+                    From: <span className="font-medium">{message.sender.username}</span>
                     {message.sender.email && (
                       <span className="text-gray-400 ml-1">({message.sender.email})</span>
                     )}
@@ -127,7 +127,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
                   </Badge>
                   {!message.isRead && (
                     <Badge variant="success" className="ml-2">
-                      Nuevo
+                      New
                     </Badge>
                   )}
                 </div>
@@ -140,7 +140,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
                 variant="ghost"
                 size="sm"
                 onClick={() => window.print()}
-                title="Imprimir"
+                title="Print"
               >
                 <PrinterIcon className="w-4 h-4" />
               </Button>
@@ -154,7 +154,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
                     url: window.location.href
                   });
                 }}
-                title="Compartir"
+                title="Share"
               >
                 <ShareIcon className="w-4 h-4" />
               </Button>
@@ -163,7 +163,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
                 size="sm"
                 onClick={() => setShowDeleteModal(true)}
                 className="text-red-600 hover:text-red-700"
-                title="Eliminar"
+                title="Delete"
               >
                 <TrashIcon className="w-4 h-4" />
               </Button>
@@ -185,10 +185,10 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
           {/* Attachments Section (if any) */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h4 className="text-sm font-medium text-gray-900 mb-3">
-              Archivos adjuntos
+              Attachments
             </h4>
             <p className="text-sm text-gray-500">
-              No hay archivos adjuntos en este mensaje.
+              No attachments in this message.
             </p>
           </div>
         </div>
@@ -198,13 +198,13 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-500">
               {message.type !== 'system' && (
-                <>Puedes responder a este mensaje usando el botón de respuesta.</>
+                <>You can reply to this message using the reply button.</>
               )}
             </div>
             <div className="flex space-x-3">
               {onClose && (
                 <Button variant="outline" onClick={onClose}>
-                  Cerrar
+                  Close
                 </Button>
               )}
               {message.type !== 'system' && onReply && (
@@ -213,7 +213,7 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
                   onClick={() => onReply(message.id)}
                   leftIcon={<ArrowUturnLeftIcon className="w-4 h-4" />}
                 >
-                  Responder
+                  Reply
                 </Button>
               )}
             </div>
@@ -225,25 +225,25 @@ const MessageViewer: React.FC<MessageViewerProps> = ({ message, onReply, onClose
       <Modal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title="Eliminar Mensaje"
+        title="Delete Message"
       >
         <div className="p-6">
           <p className="text-gray-600 mb-6">
-            ¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.
+            Are you sure you want to delete this message? This action cannot be undone.
           </p>
           <div className="flex justify-end space-x-3">
             <Button
               variant="outline"
               onClick={() => setShowDeleteModal(false)}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               variant="error"
               onClick={handleDelete}
               leftIcon={<TrashIcon className="w-4 h-4" />}
             >
-              Eliminar
+              Delete
             </Button>
           </div>
         </div>

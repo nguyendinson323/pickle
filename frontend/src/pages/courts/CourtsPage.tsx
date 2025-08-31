@@ -50,10 +50,10 @@ export const CourtsPage: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Canchas de Pickleball
+                Pickleball Courts
               </h1>
               <p className="text-gray-600 mt-1">
-                Encuentra y reserva canchas en toda México
+                Find and reserve courts throughout Mexico
               </p>
             </div>
 
@@ -67,7 +67,7 @@ export const CourtsPage: React.FC = () => {
                       ? 'bg-blue-500 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
-                  title="Vista en grilla"
+                  title="Grid view"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -80,7 +80,7 @@ export const CourtsPage: React.FC = () => {
                       ? 'bg-blue-500 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
-                  title="Vista en lista"
+                  title="List view"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -97,7 +97,7 @@ export const CourtsPage: React.FC = () => {
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                 </svg>
-                Filtros
+                Filters
                 {hasActiveFilters && (
                   <span className="ml-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     !
@@ -111,7 +111,7 @@ export const CourtsPage: React.FC = () => {
                   variant="primary"
                   onClick={() => window.location.href = '/courts/register'}
                 >
-                  Registrar Cancha
+                  Register Court
                 </Button>
               )}
             </div>
@@ -120,29 +120,29 @@ export const CourtsPage: React.FC = () => {
           {/* Active Filters Summary */}
           {hasActiveFilters && (
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className="text-sm text-gray-600">Filtros activos:</span>
+              <span className="text-sm text-gray-600">Active filters:</span>
               
               {searchParams.query && (
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Búsqueda: "{searchParams.query}"
+                  Search: "{searchParams.query}"
                 </span>
               )}
               
               {searchParams.state && (
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Estado: {searchParams.state}
+                  State: {searchParams.state}
                 </span>
               )}
               
               {searchParams.surfaceType && (
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Superficie: {searchParams.surfaceType}
+                  Surface: {searchParams.surfaceType}
                 </span>
               )}
               
               {(searchParams.minPrice || searchParams.maxPrice) && (
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Precio: {searchParams.minPrice || '0'} - {searchParams.maxPrice || '∞'}
+                  Price: {searchParams.minPrice || '0'} - {searchParams.maxPrice || '∞'}
                 </span>
               )}
 
@@ -152,7 +152,7 @@ export const CourtsPage: React.FC = () => {
                 onClick={clearFilters}
                 className="text-xs"
               >
-                Limpiar filtros
+                Clear filters
               </Button>
             </div>
           )}
@@ -168,11 +168,11 @@ export const CourtsPage: React.FC = () => {
               <div className="sticky top-8">
                 {/* CourtSearch component needs to be updated for correct props */}
                 <div className="bg-white p-4 rounded-lg border">
-                  <h3 className="font-medium text-gray-900 mb-4">Filtros</h3>
+                  <h3 className="font-medium text-gray-900 mb-4">Filters</h3>
                   <div className="space-y-4">
                     <input
                       type="text"
-                      placeholder="Buscar canchas..."
+                      placeholder="Search courts..."
                       className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       onChange={(e) => handleSearch({ ...searchParams, query: e.target.value })}
                     />
@@ -180,10 +180,10 @@ export const CourtsPage: React.FC = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       onChange={(e) => handleSearch({ ...searchParams, surfaceType: e.target.value })}
                     >
-                      <option value="">Tipo de superficie</option>
-                      <option value="concrete">Concreto</option>
-                      <option value="asphalt">Asfalto</option>
-                      <option value="acrylic">Acrílico</option>
+                      <option value="">Surface type</option>
+                      <option value="concrete">Concrete</option>
+                      <option value="asphalt">Asphalt</option>
+                      <option value="acrylic">Acrylic</option>
                     </select>
                   </div>
                 </div>
@@ -199,26 +199,26 @@ export const CourtsPage: React.FC = () => {
                 <p className="text-sm text-gray-600">
                   {pagination.total > 0 ? (
                     <>
-                      Mostrando {((pagination.current - 1) * 12) + 1}-{Math.min(pagination.current * 12, pagination.total)} de {pagination.total} canchas
+                      Showing {((pagination.current - 1) * 12) + 1}-{Math.min(pagination.current * 12, pagination.total)} of {pagination.total} courts
                     </>
                   ) : (
-                    'No se encontraron canchas'
+                    'No courts found'
                   )}
                 </p>
 
                 {courts.length > 0 && (
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <span>Ordenar por:</span>
+                    <span>Sort by:</span>
                     <select
                       value={searchParams.sortBy || 'createdAt'}
                       onChange={(e) => handleSearch({ ...searchParams, sortBy: e.target.value })}
                       className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="createdAt">Más recientes</option>
-                      <option value="hourlyRate">Precio (menor a mayor)</option>
-                      <option value="-hourlyRate">Precio (mayor a menor)</option>
-                      <option value="-averageRating">Mejor calificadas</option>
-                      <option value="name">Nombre (A-Z)</option>
+                      <option value="createdAt">Most recent</option>
+                      <option value="hourlyRate">Price (low to high)</option>
+                      <option value="-hourlyRate">Price (high to low)</option>
+                      <option value="-averageRating">Best rated</option>
+                      <option value="name">Name (A-Z)</option>
                     </select>
                   </div>
                 )}
@@ -240,10 +240,10 @@ export const CourtsPage: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Error al cargar las canchas</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Error loading courts</h3>
                 <p className="text-gray-600 mb-4">{error}</p>
                 <Button onClick={() => dispatch(fetchCourts({ page: 1, limit: 12, ...searchParams }))}>
-                  Intentar de nuevo
+                  Try again
                 </Button>
               </div>
             )}
@@ -257,17 +257,17 @@ export const CourtsPage: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No se encontraron canchas
+                  No courts found
                 </h3>
                 <p className="text-gray-600 mb-4">
                   {hasActiveFilters 
-                    ? 'Prueba ajustar los filtros de búsqueda para encontrar más opciones.'
-                    : 'Aún no hay canchas registradas en la plataforma.'
+                    ? 'Try adjusting your search filters to find more options.'
+                    : 'No courts have been registered on the platform yet.'
                   }
                 </p>
                 {hasActiveFilters && (
                   <Button variant="outline" onClick={clearFilters}>
-                    Limpiar filtros
+                    Clear filters
                   </Button>
                 )}
               </div>
@@ -286,7 +286,7 @@ export const CourtsPage: React.FC = () => {
                       disabled={pagination.current === 1 || loading}
                       onClick={() => handlePageChange(pagination.current - 1)}
                     >
-                      Anterior
+                      Previous
                     </Button>
                     
                     <div className="flex space-x-2">
@@ -321,7 +321,7 @@ export const CourtsPage: React.FC = () => {
                       disabled={pagination.current === pagination.pages || loading}
                       onClick={() => handlePageChange(pagination.current + 1)}
                     >
-                      Siguiente
+                      Next
                     </Button>
                   </div>
                 )}
@@ -331,7 +331,7 @@ export const CourtsPage: React.FC = () => {
                   <div className="flex justify-center mt-4">
                     <div className="flex items-center gap-2 text-blue-600">
                       <LoadingSpinner size="sm" />
-                      <span className="text-sm">Cargando...</span>
+                      <span className="text-sm">Loading...</span>
                     </div>
                   </div>
                 )}

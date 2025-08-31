@@ -40,10 +40,10 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
         data: formData
       })).unwrap();
       
-      alert('Configuración guardada exitosamente');
+      alert('Settings saved successfully');
     } catch (error) {
       console.error('Error saving settings:', error);
-      alert('Error al guardar la configuración');
+      alert('Error saving settings');
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +53,7 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
     <div className="space-y-6">
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-          Título del Sitio
+          Site Title
         </label>
         <input
           type="text"
@@ -61,13 +61,13 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
           value={formData.title}
           onChange={(e) => handleInputChange('title', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Ingresa el título del sitio"
+          placeholder="Enter site title"
         />
       </div>
 
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-          Descripción
+          Description
         </label>
         <textarea
           id="description"
@@ -75,13 +75,13 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
           onChange={(e) => handleInputChange('description', e.target.value)}
           rows={4}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Describe tu sitio web"
+          placeholder="Describe your website"
         />
       </div>
 
       <div>
         <label htmlFor="subdomain" className="block text-sm font-medium text-gray-700 mb-2">
-          Subdominio
+          Subdomain
         </label>
         <div className="flex">
           <input
@@ -90,7 +90,7 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
             value={formData.subdomain}
             onChange={(e) => handleInputChange('subdomain', e.target.value)}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="mi-sitio"
+            placeholder="my-site"
           />
           <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 rounded-r-md">
             .pickleballapp.com
@@ -107,7 +107,7 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
         <div className="flex items-center gap-3">
           <Cog6ToothIcon className="w-6 h-6 text-gray-600" />
           <h2 className="text-xl font-semibold text-gray-900">
-            Configuración del Sitio
+            Site Settings
           </h2>
         </div>
       </div>
@@ -137,7 +137,7 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
               }`}
             >
               <GlobeAltIcon className="w-5 h-5" />
-              Dominio
+              Domain
             </button>
           </nav>
         </div>
@@ -148,9 +148,9 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
             {activeSection === 'general' && renderGeneralSettings()}
             {activeSection === 'domain' && (
               <div className="space-y-6">
-                <h3 className="text-lg font-medium text-gray-900">Configuración de Dominio</h3>
+                <h3 className="text-lg font-medium text-gray-900">Domain Settings</h3>
                 <p className="text-gray-600">
-                  Tu sitio está disponible en: <strong>{formData.subdomain || 'tu-sitio'}.pickleballapp.com</strong>
+                  Your site is available at: <strong>{formData.subdomain || 'your-site'}.pickleballapp.com</strong>
                 </p>
               </div>
             )}
@@ -162,7 +162,7 @@ const MicrositeSettings: React.FC<MicrositeSettingsProps> = ({ microsite }) => {
                 disabled={isLoading}
                 className="px-6 py-2"
               >
-                {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+                {isLoading ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           </div>

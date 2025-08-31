@@ -156,7 +156,7 @@ class ApiService {
       if (error.request) {
         return {
           success: false,
-          error: 'No se pudo conectar con el servidor. Verifica tu conexión a internet.',
+          error: 'Unable to connect to server. Please check your internet connection.',
         };
       }
     }
@@ -164,7 +164,7 @@ class ApiService {
     // Generic error
     return {
       success: false,
-      error: error.message || 'Ha ocurrido un error inesperado',
+      error: error.message || 'An unexpected error occurred',
     };
   }
 

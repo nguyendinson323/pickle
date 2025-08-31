@@ -157,19 +157,19 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
   }
 
   const tabs = [
-    { id: 'rankings', label: 'Rankings Actuales', count: rankings.length },
-    { id: 'history', label: 'Historial', count: history.length },
-    { id: 'tournaments', label: 'Torneos', count: tournaments.length }
+    { id: 'rankings', label: 'Current Rankings', count: rankings.length },
+    { id: 'history', label: 'History', count: history.length },
+    { id: 'tournaments', label: 'Tournaments', count: tournaments.length }
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Perfil de Rankings</h2>
+        <h2 className="text-2xl font-bold">Rankings Profile</h2>
         {onClose && (
           <Button onClick={onClose} variant="secondary">
-            Cerrar
+            Close
           </Button>
         )}
       </div>
@@ -187,7 +187,7 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
           <div className="space-y-4">
             {rankings.length === 0 ? (
               <Card className="p-6 text-center text-gray-500">
-                Este jugador no tiene rankings activos
+                This player has no active rankings
               </Card>
             ) : (
               rankings.map((ranking) => (
@@ -227,7 +227,7 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
                               variant={ranking.isActive ? 'success' : 'secondary'}
                               size="sm"
                             >
-                              {ranking.isActive ? 'Activo' : 'Inactivo'}
+                              {ranking.isActive ? 'Active' : 'Inactive'}
                             </Badge>
                           </div>
                         </div>
@@ -238,11 +238,11 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
                         {ranking.points.toFixed(0)} pts
                       </div>
                       <div className="text-sm text-gray-500">
-                        {ranking.tournamentsPlayed} torneos
+                        {ranking.tournamentsPlayed} tournaments
                       </div>
                       {ranking.lastTournamentDate && (
                         <div className="text-xs text-gray-400">
-                          Último: {new Date(ranking.lastTournamentDate).toLocaleDateString()}
+                          Last: {new Date(ranking.lastTournamentDate).toLocaleDateString()}
                         </div>
                       )}
                     </div>
@@ -257,7 +257,7 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
           <div className="space-y-4">
             {history.length === 0 ? (
               <Card className="p-6 text-center text-gray-500">
-                No hay historial de cambios disponible
+                No change history available
               </Card>
             ) : (
               history.map((record) => (
@@ -309,7 +309,7 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
           <div className="space-y-4">
             {tournaments.length === 0 ? (
               <Card className="p-6 text-center text-gray-500">
-                No hay participaciones en torneos registradas
+                No tournament participations recorded
               </Card>
             ) : (
               tournaments.map((tournament) => (
@@ -328,10 +328,10 @@ export const PlayerRankingProfile: React.FC<PlayerRankingProfileProps> = ({
                         </span>
                       </div>
                       <div className="text-sm text-gray-600 mt-2">
-                        Posición final: #{tournament.finalPlacement} de {tournament.totalPlayers}
+                        Final position: #{tournament.finalPlacement} of {tournament.totalPlayers}
                       </div>
                       <div className="text-sm text-gray-600">
-                        Partidos: {tournament.matchesWon}W - {tournament.matchesLost}L
+                        Matches: {tournament.matchesWon}W - {tournament.matchesLost}L
                       </div>
                     </div>
                     <div className="text-right">

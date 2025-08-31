@@ -61,37 +61,37 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
     const newErrors: Record<string, string> = {};
 
     // Required fields validation
-    if (!formData.fullName.trim()) newErrors.fullName = 'El nombre completo es requerido';
-    if (!formData.dateOfBirth) newErrors.dateOfBirth = 'La fecha de nacimiento es requerida';
-    if (!formData.gender) newErrors.gender = 'El género es requerido';
-    if (!formData.stateId) newErrors.stateId = 'El estado es requerido';
-    if (!formData.curp.trim()) newErrors.curp = 'La CURP es requerida';
-    if (!formData.mobilePhone.trim()) newErrors.mobilePhone = 'El teléfono móvil es requerido';
-    if (!formData.username.trim()) newErrors.username = 'El nombre de usuario es requerido';
-    if (!formData.email.trim()) newErrors.email = 'El correo electrónico es requerido';
-    if (!formData.password) newErrors.password = 'La contraseña es requerida';
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'La confirmación de contraseña es requerida';
-    if (!formData.privacyPolicyAccepted) newErrors.privacyPolicyAccepted = 'Debes aceptar la política de privacidad';
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
+    if (!formData.gender) newErrors.gender = 'Gender is required';
+    if (!formData.stateId) newErrors.stateId = 'State is required';
+    if (!formData.curp.trim()) newErrors.curp = 'CURP is required';
+    if (!formData.mobilePhone.trim()) newErrors.mobilePhone = 'Mobile phone is required';
+    if (!formData.username.trim()) newErrors.username = 'Username is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.confirmPassword) newErrors.confirmPassword = 'Password confirmation is required';
+    if (!formData.privacyPolicyAccepted) newErrors.privacyPolicyAccepted = 'You must accept the privacy policy';
 
     // Format validations
     if (formData.curp && formData.curp.length !== 18) {
-      newErrors.curp = 'La CURP debe tener exactamente 18 caracteres';
+      newErrors.curp = 'CURP must be exactly 18 characters';
     }
     
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'El formato del correo electrónico no es válido';
+      newErrors.email = 'Email format is not valid';
     }
     
     if (formData.mobilePhone && !/^(\+52)?[1-9]\d{9}$/.test(formData.mobilePhone.replace(/\s/g, ''))) {
-      newErrors.mobilePhone = 'El formato del teléfono no es válido (10 dígitos)';
+      newErrors.mobilePhone = 'Phone format is not valid (10 digits)';
     }
     
     if (formData.password && formData.password.length < 8) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
+      newErrors.password = 'Password must be at least 8 characters';
     }
     
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     // Age validation
@@ -106,9 +106,9 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
       }
       
       if (age < 13) {
-        newErrors.dateOfBirth = 'Debes tener al menos 13 años para registrarte';
+        newErrors.dateOfBirth = 'You must be at least 13 years old to register';
       } else if (age > 100) {
-        newErrors.dateOfBirth = 'Por favor verifica tu fecha de nacimiento';
+        newErrors.dateOfBirth = 'Please verify your date of birth';
       }
     }
 
@@ -147,7 +147,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
     return (
       <div className="flex items-center justify-center py-12">
         <LoadingSpinner size="lg" />
-        <span className="ml-3 text-lg text-gray-600">Cargando formulario...</span>
+        <span className="ml-3 text-lg text-gray-600">Loading form...</span>
       </div>
     );
   }
@@ -157,10 +157,10 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Registro de Jugador
+          Player Registration
         </h2>
         <p className="text-lg text-gray-600">
-          Completa la información para crear tu cuenta de jugador en la Federación Mexicana de Pickleball
+          Complete the information to create your player account in the Mexican Pickleball Federation
         </p>
       </div>
 
@@ -171,24 +171,24 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            Información Personal
+            Personal Information
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               name="fullName"
-              label="Nombre Completo"
+              label="Full Name"
               type="text"
               required
               value={formData.fullName}
               onChange={(value) => updateField('fullName', value)}
               error={errors.fullName}
-              placeholder="Juan Pérez García"
+              placeholder="Juan Perez Garcia"
             />
             
             <FormField
               name="dateOfBirth"
-              label="Fecha de Nacimiento"
+              label="Date of Birth"
               type="date"
               required
               value={formData.dateOfBirth}
@@ -198,7 +198,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             
             <SelectField
               name="gender"
-              label="Género"
+              label="Gender"
               required
               value={formData.gender}
               onChange={(value) => updateField('gender', value)}
@@ -208,7 +208,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             
             <SelectField
               name="stateId"
-              label="Estado"
+              label="State"
               required
               value={formData.stateId}
               onChange={(value) => updateField('stateId', parseInt(value))}
@@ -230,7 +230,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             
             <SelectField
               name="nrtpLevel"
-              label="Nivel NRTP (Opcional)"
+              label="NRTP Level (Optional)"
               value={formData.nrtpLevel || ''}
               onChange={(value) => updateField('nrtpLevel', value)}
               options={nrtpLevels}
@@ -239,7 +239,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             
             <FormField
               name="mobilePhone"
-              label="Teléfono Móvil"
+              label="Mobile Phone"
               type="tel"
               required
               value={formData.mobilePhone}
@@ -256,52 +256,52 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
             </svg>
-            Información de Cuenta
+            Account Information
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               name="username"
-              label="Nombre de Usuario"
+              label="Username"
               type="text"
               required
               value={formData.username}
               onChange={(value) => updateField('username', value)}
               error={errors.username}
-              placeholder="jugador123"
+              placeholder="player123"
             />
             
             <FormField
               name="email"
-              label="Correo Electrónico"
+              label="Email"
               type="email"
               required
               value={formData.email}
               onChange={(value) => updateField('email', value)}
               error={errors.email}
-              placeholder="correo@ejemplo.com"
+              placeholder="email@example.com"
             />
             
             <FormField
               name="password"
-              label="Contraseña"
+              label="Password"
               type="password"
               required
               value={formData.password}
               onChange={(value) => updateField('password', value)}
               error={errors.password}
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Minimum 8 characters"
             />
             
             <FormField
               name="confirmPassword"
-              label="Confirmar Contraseña"
+              label="Confirm Password"
               type="password"
               required
               value={formData.confirmPassword}
               onChange={(value) => updateField('confirmPassword', value)}
               error={errors.confirmPassword}
-              placeholder="Repite la contraseña"
+              placeholder="Repeat password"
             />
           </div>
         </div>
@@ -312,26 +312,26 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            Documentos (Opcional)
+            Documents (Optional)
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FileField
               name="profilePhoto"
-              label="Foto de Perfil"
+              label="Profile Photo"
               accept="image/jpeg,image/png"
               maxSize={5 * 1024 * 1024}
               onChange={(file) => updateField('profilePhoto', file)}
-              description="Formato JPG o PNG, máximo 5MB"
+              description="JPG or PNG format, maximum 5MB"
             />
             
             <FileField
               name="idDocument"
-              label="Documento de Identidad"
+              label="Identity Document"
               accept="image/jpeg,image/png,application/pdf"
               maxSize={10 * 1024 * 1024}
               onChange={(file) => updateField('idDocument', file)}
-              description="INE o Pasaporte - JPG, PNG o PDF, máximo 10MB"
+              description="INE or Passport - JPG, PNG or PDF, maximum 10MB"
             />
           </div>
         </div>
@@ -342,13 +342,13 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             name="privacyPolicyAccepted"
             label={
               <span>
-                He leído y acepto la{' '}
+                I have read and accept the{' '}
                 <button
                   type="button"
                   onClick={() => setShowPrivacyModal(true)}
                   className="text-primary-600 hover:text-primary-700 underline"
                 >
-                  Política de Privacidad
+                  Privacy Policy
                 </button>
               </span>
             }
@@ -378,7 +378,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             onClick={onBack}
             className="btn-secondary px-6 py-2"
           >
-            Volver
+            Back
           </button>
           
           <button
@@ -389,10 +389,10 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
             {isSubmitting ? (
               <>
                 <LoadingSpinner size="sm" className="mr-2" />
-                Registrando...
+                Registering...
               </>
             ) : (
-              'Crear Cuenta de Jugador'
+              'Create Player Account'
             )}
           </button>
         </div>

@@ -71,7 +71,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('es-MX', {
+    return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
@@ -87,9 +87,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
     if (diffDays === 0) {
       return formatTime(dateString);
     } else if (diffDays === 1) {
-      return `Ayer ${formatTime(dateString)}`;
+      return `Yesterday ${formatTime(dateString)}`;
     } else {
-      return date.toLocaleDateString('es-MX', {
+      return date.toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'short',
         hour: '2-digit',
@@ -170,7 +170,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
               <img
                 key={index}
                 src={attachment}
-                alt="Imagen adjunta"
+                alt="Attached image"
                 className="max-w-xs rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => window.open(attachment, '_blank')}
               />
@@ -239,7 +239,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             isOwn ? 'bg-blue-50 border-blue-400' : 'bg-gray-50 border-gray-400'
           }`}>
             <div className="text-xs text-gray-600 font-medium mb-1">
-              Respondiendo a {message.replyTo.sender.firstName}
+              Replying to {message.replyTo.sender.firstName}
             </div>
             <div className="text-xs text-gray-700 line-clamp-2">
               {message.replyTo.content}
@@ -278,7 +278,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             <span>{formatDate(message.createdAt)}</span>
             <div className="flex items-center gap-1">
               {message.isEdited && (
-                <span className="opacity-70">editado</span>
+                <span className="opacity-70">edited</span>
               )}
               {isOwn && (
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,7 +334,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                   <button
                     onClick={() => setShowReactionPicker(true)}
                     className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-700"
-                    title="Reaccionar"
+                    title="React"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.01M15 10h1.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -346,7 +346,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                   <button
                     onClick={() => onReply(message)}
                     className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-700"
-                    title="Responder"
+                    title="Reply"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -358,7 +358,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                   <button
                     onClick={() => onEdit(message)}
                     className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-700"
-                    title="Editar"
+                    title="Edit"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -370,7 +370,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                   <button
                     onClick={() => onDelete(message.id)}
                     className="p-1 hover:bg-gray-200 rounded text-red-500 hover:text-red-700"
-                    title="Eliminar"
+                    title="Delete"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

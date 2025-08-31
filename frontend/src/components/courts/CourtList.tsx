@@ -71,11 +71,11 @@ export const CourtList: React.FC<CourtListProps> = ({
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Error al cargar las canchas
+          Error loading courts
         </h3>
         <p className="text-gray-600 mb-4">{error}</p>
         <Button onClick={handleRetry}>
-          Intentar de nuevo
+          Try again
         </Button>
       </div>
     );
@@ -90,12 +90,12 @@ export const CourtList: React.FC<CourtListProps> = ({
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          No se encontraron canchas
+          No courts found
         </h3>
         <p className="text-gray-600">
           {ownerFilter 
-            ? 'No tienes canchas registradas aún.' 
-            : 'Intenta ajustar los filtros de búsqueda.'}
+            ? 'You don\'t have any courts registered yet.' 
+            : 'Try adjusting the search filters.'}
         </p>
       </div>
     );
@@ -116,10 +116,10 @@ export const CourtList: React.FC<CourtListProps> = ({
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">
-            {ownerFilter ? 'Mis Canchas' : 'Canchas Disponibles'}
+            {ownerFilter ? 'My Courts' : 'Available Courts'}
           </h2>
           <p className="text-sm text-gray-600">
-            {pagination.total} cancha{pagination.total !== 1 ? 's' : ''} encontrada{pagination.total !== 1 ? 's' : ''}
+            {pagination.total} court{pagination.total !== 1 ? 's' : ''} found
           </p>
         </div>
       </div>
@@ -145,7 +145,7 @@ export const CourtList: React.FC<CourtListProps> = ({
             disabled={pagination.current === 1 || loading}
             onClick={() => handlePageChange(pagination.current - 1)}
           >
-            Anterior
+            Previous
           </Button>
           
           <div className="flex space-x-2">
@@ -180,7 +180,7 @@ export const CourtList: React.FC<CourtListProps> = ({
             disabled={pagination.current === pagination.pages || loading}
             onClick={() => handlePageChange(pagination.current + 1)}
           >
-            Siguiente
+            Next
           </Button>
         </div>
       )}
@@ -196,14 +196,14 @@ export const CourtList: React.FC<CourtListProps> = ({
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-red-800">
-                Error al actualizar
+                Error updating
               </h3>
               <div className="mt-2 text-sm text-red-700">
                 <p>{error}</p>
               </div>
               <div className="mt-3">
                 <Button size="sm" onClick={handleRetry}>
-                  Reintentar
+                  Retry
                 </Button>
               </div>
             </div>

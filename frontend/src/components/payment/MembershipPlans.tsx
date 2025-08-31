@@ -60,7 +60,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <h3 className="text-red-800 font-medium">Error al cargar los planes</h3>
+        <h3 className="text-red-800 font-medium">Error loading plans</h3>
         <p className="text-red-600 text-sm mt-1">{error}</p>
         <Button 
           variant="secondary" 
@@ -68,7 +68,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
           className="mt-3"
           onClick={() => dispatch(fetchMembershipPlans({ role: userRole || user?.role }))}
         >
-          Reintentar
+          Retry
         </Button>
       </div>
     );
@@ -82,10 +82,10 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Planes de Membresía
+          Membership Plans
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Elige el plan que mejor se adapte a tus necesidades. Todos los planes incluyen IVA.
+          Choose the plan that best fits your needs. All plans include tax.
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
                 : 'text-gray-500 hover:text-gray-900'
             }`}
           >
-            Mensual
+            Monthly
           </button>
           <button
             onClick={() => setBillingType('annual')}
@@ -109,10 +109,10 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
                 : 'text-gray-500 hover:text-gray-900'
             }`}
           >
-            Anual
+            Annual
             {filteredPlans.some((plan: any) => calculateDiscount(plan.annualFee, plan.monthlyFee) > 0) && (
               <Badge variant="success" className="ml-2">
-                Ahorra hasta {Math.max(...filteredPlans.map((plan: any) => calculateDiscount(plan.annualFee, plan.monthlyFee)))}%
+                Save up to {Math.max(...filteredPlans.map((plan: any) => calculateDiscount(plan.annualFee, plan.monthlyFee)))}%
               </Badge>
             )}
           </button>
@@ -139,7 +139,7 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
               {isPremium && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <Badge variant="primary" className="bg-blue-500">
-                    Más Popular
+                    Most Popular
                   </Badge>
                 </div>
               )}
@@ -154,12 +154,12 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
                       {formatPrice(price)}
                     </span>
                     <span className="text-gray-500 ml-2">
-                      /{billingType === 'annual' ? 'año' : 'mes'}
+                      /{billingType === 'annual' ? 'year' : 'month'}
                     </span>
                   </div>
                   {billingType === 'annual' && discount > 0 && (
                     <p className="text-sm text-green-600 font-medium mt-2">
-                      Ahorras {discount}% vs. mensual
+                      You save {discount}% vs. monthly
                     </p>
                   )}
                 </div>
@@ -200,15 +200,15 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
                   {selectedPlan === plan.id ? (
                     <>
                       <LoadingSpinner className="mr-2" />
-                      Procesando...
+                      Processing...
                     </>
                   ) : (
-                    'Seleccionar Plan'
+                    'Select Plan'
                   )}
                 </Button>
 
                 <p className="text-xs text-gray-500 text-center mt-3">
-                  IVA (16%) incluido • Pago seguro con Stripe
+                  VAT (16%) included • Secure payment with Stripe
                 </p>
               </div>
             </Card>
@@ -219,10 +219,10 @@ export const MembershipPlans: React.FC<MembershipPlansProps> = ({ userRole }) =>
       {filteredPlans.length === 0 && !loading && (
         <div className="text-center py-12">
           <h3 className="text-gray-500 text-lg font-medium">
-            No hay planes disponibles
+            No plans available
           </h3>
           <p className="text-gray-400 text-sm mt-2">
-            Por el momento no hay planes de membresía disponibles para tu rol.
+            Currently there are no membership plans available for your role.
           </p>
         </div>
       )}

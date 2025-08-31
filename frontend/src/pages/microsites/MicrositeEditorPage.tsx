@@ -66,22 +66,22 @@ const MicrositeEditorPage: React.FC = () => {
   const tabs = [
     {
       key: 'pages',
-      label: 'Páginas',
+      label: 'Pages',
       icon: DocumentTextIcon,
     },
     {
       key: 'media',
-      label: 'Multimedia',
+      label: 'Media',
       icon: PhotoIcon,
     },
     {
       key: 'theme',
-      label: 'Tema',
+      label: 'Theme',
       icon: PaintBrushIcon,
     },
     {
       key: 'settings',
-      label: 'Configuración',
+      label: 'Settings',
       icon: Cog6ToothIcon,
     },
   ];
@@ -98,11 +98,11 @@ const MicrositeEditorPage: React.FC = () => {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          Error al cargar el micrositio
+          Error loading microsite
         </h2>
-        <p className="text-gray-600 mb-4">{error || 'Micrositio no encontrado'}</p>
+        <p className="text-gray-600 mb-4">{error || 'Microsite not found'}</p>
         <Button onClick={() => navigate('/dashboard/microsites')}>
-          Volver a Micrositios
+          Back to Microsites
         </Button>
       </div>
     );
@@ -146,12 +146,12 @@ const MicrositeEditorPage: React.FC = () => {
                 {previewMode ? (
                   <>
                     <PencilIcon className="w-4 h-4" />
-                    Editar
+                    Edit
                   </>
                 ) : (
                   <>
                     <EyeIcon className="w-4 h-4" />
-                    Vista Previa
+                    Preview
                   </>
                 )}
               </Button>
@@ -162,7 +162,7 @@ const MicrositeEditorPage: React.FC = () => {
                   size="sm"
                   onClick={() => window.open(`https://${currentMicrosite.subdomain}.pickleballfed.mx`, '_blank')}
                 >
-                  Ver Sitio
+                  View Site
                 </Button>
               )}
 
@@ -171,7 +171,7 @@ const MicrositeEditorPage: React.FC = () => {
                 onClick={handlePublish}
                 disabled={currentMicrosite.status === 'published'}
               >
-                {currentMicrosite.status === 'published' ? 'Publicado' : 'Publicar'}
+                {currentMicrosite.status === 'published' ? 'Published' : 'Publish'}
               </Button>
             </div>
           </div>

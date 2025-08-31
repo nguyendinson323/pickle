@@ -41,115 +41,115 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
   const templates = [
     {
       key: 'modern',
-      name: 'Moderno',
-      description: 'Diseño limpio y minimalista con tipografía moderna',
+      name: 'Modern',
+      description: 'Clean and minimalist design with modern typography',
       preview: '/themes/modern-preview.jpg'
     },
     {
       key: 'classic',
-      name: 'Clásico',
-      description: 'Estilo tradicional con elementos elegantes',
+      name: 'Classic',
+      description: 'Traditional style with elegant elements',
       preview: '/themes/classic-preview.jpg'
     },
     {
       key: 'sport',
-      name: 'Deportivo',
-      description: 'Diseño dinámico perfecto para clubes deportivos',
+      name: 'Sport',
+      description: 'Dynamic design perfect for sports clubs',
       preview: '/themes/sport-preview.jpg'
     },
     {
       key: 'elegant',
-      name: 'Elegante',
-      description: 'Sofisticado con toques de lujo y clase',
+      name: 'Elegant',
+      description: 'Sophisticated with touches of luxury and class',
       preview: '/themes/elegant-preview.jpg'
     },
     {
       key: 'vibrant',
-      name: 'Vibrante',
-      description: 'Colores llamativos y diseño energético',
+      name: 'Vibrant',
+      description: 'Eye-catching colors and energetic design',
       preview: '/themes/vibrant-preview.jpg'
     },
     {
       key: 'minimal',
-      name: 'Minimalista',
-      description: 'Menos es más - foco en el contenido',
+      name: 'Minimalist',
+      description: 'Less is more - focus on content',
       preview: '/themes/minimal-preview.jpg'
     }
   ];
 
   const colorPresets = [
-    { name: 'Azul Océano', primary: '#0EA5E9', secondary: '#06B6D4', accent: '#8B5CF6' },
-    { name: 'Verde Naturaleza', primary: '#10B981', secondary: '#059669', accent: '#F59E0B' },
-    { name: 'Rojo Energía', primary: '#EF4444', secondary: '#DC2626', accent: '#F97316' },
-    { name: 'Morado Creatividad', primary: '#8B5CF6', secondary: '#7C3AED', accent: '#EC4899' },
-    { name: 'Naranja Vibrante', primary: '#F97316', secondary: '#EA580C', accent: '#EF4444' },
-    { name: 'Gris Profesional', primary: '#6B7280', secondary: '#4B5563', accent: '#3B82F6' }
+    { name: 'Ocean Blue', primary: '#0EA5E9', secondary: '#06B6D4', accent: '#8B5CF6' },
+    { name: 'Nature Green', primary: '#10B981', secondary: '#059669', accent: '#F59E0B' },
+    { name: 'Energy Red', primary: '#EF4444', secondary: '#DC2626', accent: '#F97316' },
+    { name: 'Creative Purple', primary: '#8B5CF6', secondary: '#7C3AED', accent: '#EC4899' },
+    { name: 'Vibrant Orange', primary: '#F97316', secondary: '#EA580C', accent: '#EF4444' },
+    { name: 'Professional Gray', primary: '#6B7280', secondary: '#4B5563', accent: '#3B82F6' }
   ];
 
   const fontOptions = [
-    { value: 'Inter', label: 'Inter (Moderno)' },
-    { value: 'Roboto', label: 'Roboto (Amigable)' },
-    { value: 'Open Sans', label: 'Open Sans (Legible)' },
-    { value: 'Lato', label: 'Lato (Elegante)' },
-    { value: 'Montserrat', label: 'Montserrat (Impactante)' },
-    { value: 'Poppins', label: 'Poppins (Moderno)' },
-    { value: 'Source Sans Pro', label: 'Source Sans Pro (Profesional)' },
-    { value: 'Raleway', label: 'Raleway (Sofisticado)' }
+    { value: 'Inter', label: 'Inter (Modern)' },
+    { value: 'Roboto', label: 'Roboto (Friendly)' },
+    { value: 'Open Sans', label: 'Open Sans (Readable)' },
+    { value: 'Lato', label: 'Lato (Elegant)' },
+    { value: 'Montserrat', label: 'Montserrat (Striking)' },
+    { value: 'Poppins', label: 'Poppins (Modern)' },
+    { value: 'Source Sans Pro', label: 'Source Sans Pro (Professional)' },
+    { value: 'Raleway', label: 'Raleway (Sophisticated)' }
   ];
 
   const borderRadiusOptions = [
-    { value: 'none', label: 'Sin Bordes Redondeados' },
-    { value: 'small', label: 'Pequeño (4px)' },
-    { value: 'medium', label: 'Medio (8px)' },
-    { value: 'large', label: 'Grande (12px)' },
-    { value: 'xl', label: 'Extra Grande (16px)' }
+    { value: 'none', label: 'No Rounded Borders' },
+    { value: 'small', label: 'Small (4px)' },
+    { value: 'medium', label: 'Medium (8px)' },
+    { value: 'large', label: 'Large (12px)' },
+    { value: 'xl', label: 'Extra Large (16px)' }
   ];
 
   const spacingOptions = [
-    { value: 'compact', label: 'Compacto' },
-    { value: 'medium', label: 'Medio' },
-    { value: 'spacious', label: 'Espacioso' }
+    { value: 'compact', label: 'Compact' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'spacious', label: 'Spacious' }
   ];
 
   const headerStyleOptions = [
-    { value: 'default', label: 'Estándar' },
-    { value: 'centered', label: 'Centrado' },
-    { value: 'sidebar', label: 'Barra Lateral' },
-    { value: 'overlay', label: 'Superpuesto' }
+    { value: 'default', label: 'Standard' },
+    { value: 'centered', label: 'Centered' },
+    { value: 'sidebar', label: 'Sidebar' },
+    { value: 'overlay', label: 'Overlay' }
   ];
 
   const navigationStyleOptions = [
     { value: 'horizontal', label: 'Horizontal' },
     { value: 'vertical', label: 'Vertical' },
-    { value: 'dropdown', label: 'Menú Desplegable' },
-    { value: 'hamburger', label: 'Menú Hamburguesa' }
+    { value: 'dropdown', label: 'Dropdown Menu' },
+    { value: 'hamburger', label: 'Hamburger Menu' }
   ];
 
   const footerStyleOptions = [
     { value: 'simple', label: 'Simple' },
-    { value: 'detailed', label: 'Detallado' },
-    { value: 'minimal', label: 'Minimalista' }
+    { value: 'detailed', label: 'Detailed' },
+    { value: 'minimal', label: 'Minimalist' }
   ];
 
   const sections = [
     {
       key: 'templates',
-      label: 'Plantillas',
+      label: 'Templates',
       icon: SwatchIcon,
     },
     {
       key: 'colors',
-      label: 'Colores',
+      label: 'Colors',
       icon: PaintBrushIcon,
     },
     {
       key: 'typography',
-      label: 'Tipografía',
+      label: 'Typography',
       icon: PhotoIcon,
     },
     {
       key: 'layout',
-      label: 'Diseño',
+      label: 'Layout',
       icon: AdjustmentsHorizontalIcon,
     },
   ];
@@ -193,7 +193,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Elige una Plantilla
+          Choose a Template
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {templates.map((template) => (
@@ -214,7 +214,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
               
               <div className="aspect-video bg-gray-100 rounded-md mb-3 flex items-center justify-center">
                 <PhotoIcon className="w-8 h-8 text-gray-400" />
-                <span className="ml-2 text-sm text-gray-500">Vista Previa</span>
+                <span className="ml-2 text-sm text-gray-500">Preview</span>
               </div>
               
               <h4 className="font-medium text-gray-900 mb-1">{template.name}</h4>
@@ -230,12 +230,12 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Paleta de Colores
+          Color Palette
         </h3>
         
         {/* Color Presets */}
         <div className="mb-6">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Presets Rápidos</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-3">Quick Presets</h4>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {colorPresets.map((preset) => (
               <button
@@ -267,7 +267,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Color Primario
+              Primary Color
             </label>
             <div className="flex gap-3 items-center">
               <input
@@ -288,7 +288,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Color Secundario
+              Secondary Color
             </label>
             <div className="flex gap-3 items-center">
               <input
@@ -309,7 +309,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Color de Acento
+              Accent Color
             </label>
             <div className="flex gap-3 items-center">
               <input
@@ -330,7 +330,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Color de Fondo
+              Background Color
             </label>
             <div className="flex gap-3 items-center">
               <input
@@ -351,7 +351,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Color de Texto
+              Text Color
             </label>
             <div className="flex gap-3 items-center">
               <input
@@ -378,13 +378,13 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Tipografía
+          Typography
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Fuente para Títulos
+              Heading Font
             </label>
             <select
               value={themeSettings.headingFont}
@@ -399,7 +399,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Fuente para Texto
+              Body Font
             </label>
             <select
               value={themeSettings.bodyFont}
@@ -415,15 +415,15 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
         {/* Typography Preview */}
         <div className="mt-6 p-6 border rounded-lg bg-gray-50">
-          <h4 className="text-sm font-medium text-gray-700 mb-4">Vista Previa</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-4">Preview</h4>
           <div 
             style={{ 
               fontFamily: themeSettings.headingFont,
               color: themeSettings.textColor 
             }}
           >
-            <h1 className="text-2xl font-bold mb-2">Título Principal</h1>
-            <h2 className="text-xl font-semibold mb-2">Subtítulo</h2>
+            <h1 className="text-2xl font-bold mb-2">Main Title</h1>
+            <h2 className="text-xl font-semibold mb-2">Subtitle</h2>
           </div>
           <div 
             style={{ 
@@ -433,8 +433,8 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
             className="text-base"
           >
             <p>
-              Este es un ejemplo de cómo se verá el texto del cuerpo con la fuente seleccionada. 
-              Puedes ajustar las fuentes para títulos y texto por separado.
+              This is an example of how the body text will look with the selected font. 
+              You can adjust fonts for headings and text separately.
             </p>
           </div>
         </div>
@@ -446,14 +446,14 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Configuración de Diseño
+          Layout Configuration
         </h3>
         
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Bordes Redondeados
+                Border Radius
               </label>
               <select
                 value={themeSettings.borderRadius}
@@ -468,7 +468,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Espaciado
+                Spacing
               </label>
               <select
                 value={themeSettings.spacing}
@@ -483,7 +483,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Estilo de Encabezado
+                Header Style
               </label>
               <select
                 value={themeSettings.headerStyle}
@@ -498,7 +498,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Estilo de Navegación
+                Navigation Style
               </label>
               <select
                 value={themeSettings.navigationStyle}
@@ -513,7 +513,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Estilo de Pie de Página
+                Footer Style
               </label>
               <select
                 value={themeSettings.footerStyle}
@@ -537,7 +537,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
       <div className="w-64 bg-white border-r border-gray-200 flex-shrink-0">
         <div className="p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">
-            Personalizar Tema
+            Customize Theme
           </h2>
           
           <nav className="space-y-1">
@@ -563,10 +563,10 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
           <div className="mt-8 p-4 bg-blue-50 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <EyeIcon className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-900">Vista Previa</span>
+              <span className="text-sm font-medium text-blue-900">Preview</span>
             </div>
             <p className="text-xs text-blue-700">
-              Los cambios se aplicarán automáticamente en la vista previa de tu micrositio.
+              Changes will be automatically applied to your microsite preview.
             </p>
           </div>
         </div>
@@ -606,14 +606,14 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ microsite }) => {
               }}
               disabled={isLoading}
             >
-              Restablecer
+              Reset
             </Button>
             <Button
               onClick={handleSave}
               disabled={isLoading}
               className="min-w-32"
             >
-              {isLoading ? 'Guardando...' : 'Guardar Tema'}
+              {isLoading ? 'Saving...' : 'Save Theme'}
             </Button>
           </div>
         </div>

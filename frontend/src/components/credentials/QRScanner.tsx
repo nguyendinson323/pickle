@@ -66,7 +66,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
       scanQRCode();
     } catch (err) {
       setHasCamera(false);
-      setError('No se pudo acceder a la cámara. Use verificación manual.');
+      setError('Could not access camera. Please use manual verification.');
     }
   };
 
@@ -128,7 +128,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error('Error al verificar la credencial');
+        throw new Error('Error verifying credential');
       }
 
       const result = await response.json();
@@ -140,10 +140,10 @@ export const QRScanner: React.FC<QRScannerProps> = ({
         }
         stopCamera();
       } else {
-        throw new Error(result.error || 'Error al verificar la credencial');
+        throw new Error(result.error || 'Error verifying credential');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -152,7 +152,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
   const handleManualVerification = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualId.trim()) {
-      setError('Por favor ingrese un ID de credencial válido');
+      setError('Please enter a valid credential ID');
       return;
     }
 
@@ -167,11 +167,11 @@ export const QRScanner: React.FC<QRScannerProps> = ({
 
   const formatStatus = (status: string) => {
     const labels: Record<string, string> = {
-      'active': 'Activa',
-      'expired': 'Expirada',
-      'suspended': 'Suspendida',
-      'revoked': 'Revocada',
-      'pending': 'Pendiente'
+      'active': 'Active',
+      'expired': 'Expired',
+      'suspended': 'Suspended',
+      'revoked': 'Revoked',
+      'pending': 'Pending'
     };
     return labels[status] || status;
   };
@@ -197,10 +197,10 @@ export const QRScanner: React.FC<QRScannerProps> = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Verificación de Credenciales</h2>
+        <h2 className="text-2xl font-bold">Credential Verification</h2>
         {onClose && (
           <Button onClick={onClose} variant="secondary">
-            Cerrar
+            Close
           </Button>
         )}
       </div>
@@ -227,7 +227,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
             <h3 className={`text-xl font-semibold mb-2 ${
               verificationResult.valid ? 'text-green-800' : 'text-red-800'
             }`}>
-              {verificationResult.valid ? 'Credencial Válida' : 'Credencial Inválida'}
+              {verificationResult.valid ? 'Valid Credential' : 'Invalid Credential'}
             </h3>
             
             {!verificationResult.valid && verificationResult.reason && (
@@ -241,32 +241,32 @@ export const QRScanner: React.FC<QRScannerProps> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="font-medium text-gray-700">Nombre:</span>
+                  <span className="font-medium text-gray-700">Name:</span>
                   <div className="text-gray-900">{verificationResult.credential.fullName}</div>
                 </div>
 
                 <div>
-                  <span className="font-medium text-gray-700">ID Federación:</span>
+                  <span className="font-medium text-gray-700">Federation ID:</span>
                   <div className="text-gray-900">{verificationResult.credential.federationIdNumber}</div>
                 </div>
 
                 <div>
-                  <span className="font-medium text-gray-700">Tipo:</span>
+                  <span className="font-medium text-gray-700">Type:</span>
                   <div className="text-gray-900">
-                    {verificationResult.credential.userType === 'player' ? 'Jugador' :
-                     verificationResult.credential.userType === 'coach' ? 'Entrenador' :
-                     verificationResult.credential.userType === 'referee' ? 'Árbitro' :
-                     'Administrador de Club'}
+                    {verificationResult.credential.userType === 'player' ? 'Player' :
+                     verificationResult.credential.userType === 'coach' ? 'Coach' :
+                     verificationResult.credential.userType === 'referee' ? 'Referee' :
+                     'Club Administrator'}
                   </div>
                 </div>
 
                 <div>
-                  <span className="font-medium text-gray-700">Estado:</span>
+                  <span className="font-medium text-gray-700">State:</span>
                   <div className="text-gray-900">{verificationResult.credential.stateName}</div>
                 </div>
 
                 <div>
-                  <span className="font-medium text-gray-700">Estado de Credencial:</span>
+                  <span className="font-medium text-gray-700">Credential Status:</span>
                   <div>
                     <Badge variant={getStatusColor(verificationResult.credential.status) as any}>
                       {formatStatus(verificationResult.credential.status)}
@@ -275,7 +275,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({
                 </div>
 
                 <div>
-                  <span className="font-medium text-gray-700">Afiliación:</span>
+                  <span className="font-medium text-gray-700">Affiliation:</span>
                   <div>
                     <Badge variant="secondary">
                       {verificationResult.credential.affiliationStatus}
@@ -284,27 +284,27 @@ export const QRScanner: React.FC<QRScannerProps> = ({
                 </div>
 
                 <div>
-                  <span className="font-medium text-gray-700">Vigencia:</span>
+                  <span className="font-medium text-gray-700">Valid until:</span>
                   <div className="text-gray-900">
                     {new Date(verificationResult.credential.expirationDate).toLocaleDateString()}
                   </div>
                 </div>
 
                 <div>
-                  <span className="font-medium text-gray-700">Verificaciones:</span>
+                  <span className="font-medium text-gray-700">Verifications:</span>
                   <div className="text-gray-900">{verificationResult.credential.verificationCount}</div>
                 </div>
               </div>
 
               <div className="pt-4 border-t text-center text-xs text-gray-500">
-                ID de Credencial: {verificationResult.credential.id}
+                Credential ID: {verificationResult.credential.id}
               </div>
             </div>
           )}
 
           <div className="mt-6 text-center">
             <Button onClick={resetScanner} variant="secondary">
-              Verificar Otra Credencial
+              Verify Another Credential
             </Button>
           </div>
         </Card>
@@ -315,17 +315,17 @@ export const QRScanner: React.FC<QRScannerProps> = ({
         <>
           {/* QR Scanner */}
           <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Escanear Código QR</h3>
+            <h3 className="text-lg font-semibold mb-4">Scan QR Code</h3>
             
             {hasCamera && (
               <div className="text-center">
                 {!isScanning ? (
                   <div>
                     <p className="text-gray-600 mb-4">
-                      Haga clic en "Iniciar Escáner" para verificar credenciales mediante código QR
+                      Click "Start Scanner" to verify credentials using QR code
                     </p>
                     <Button onClick={startCamera} variant="primary">
-                      Iniciar Escáner
+                      Start Scanner
                     </Button>
                   </div>
                 ) : (
@@ -351,11 +351,11 @@ export const QRScanner: React.FC<QRScannerProps> = ({
                     </div>
                     
                     <p className="text-sm text-gray-600 mt-2 mb-4">
-                      Posicione el código QR dentro del marco de la cámara
+                      Position the QR code within the camera frame
                     </p>
                     
                     <Button onClick={stopCamera} variant="secondary">
-                      Detener Escáner
+                      Stop Scanner
                     </Button>
                   </div>
                 )}
@@ -364,26 +364,26 @@ export const QRScanner: React.FC<QRScannerProps> = ({
 
             {!hasCamera && (
               <div className="text-center text-gray-500">
-                <p className="mb-2">Cámara no disponible</p>
-                <p className="text-sm">Use la verificación manual a continuación</p>
+                <p className="mb-2">Camera not available</p>
+                <p className="text-sm">Please use manual verification below</p>
               </div>
             )}
           </Card>
 
           {/* Manual Verification */}
           <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Verificación Manual</h3>
+            <h3 className="text-lg font-semibold mb-4">Manual Verification</h3>
             
             <form onSubmit={handleManualVerification} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  ID de Credencial
+                  Credential ID
                 </label>
                 <input
                   type="text"
                   value={manualId}
                   onChange={(e) => setManualId(e.target.value)}
-                  placeholder="Ingrese el ID de la credencial..."
+                  placeholder="Enter the credential ID..."
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   disabled={loading}
                 />
@@ -393,10 +393,10 @@ export const QRScanner: React.FC<QRScannerProps> = ({
                 {loading ? (
                   <>
                     <LoadingSpinner size="sm" className="mr-2" />
-                    Verificando...
+                    Verifying...
                   </>
                 ) : (
-                  'Verificar Credencial'
+                  'Verify Credential'
                 )}
               </Button>
             </form>

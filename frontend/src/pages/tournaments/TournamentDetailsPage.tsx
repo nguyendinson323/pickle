@@ -49,7 +49,7 @@ const TournamentDetailsPage: React.FC = () => {
       navigate('/login', { 
         state: { 
           returnUrl: `/tournaments/${tournament.id}`,
-          message: 'Inicia sesión para registrarte en torneos'
+          message: 'Log in to register for tournaments'
         }
       });
       return;
@@ -76,7 +76,7 @@ const TournamentDetailsPage: React.FC = () => {
 
   const handleShare = async (tournament: Tournament) => {
     const url = window.location.href;
-    const title = `${tournament.name} - Torneo de Pickleball`;
+    const title = `${tournament.name} - Pickleball Tournament`;
     
     if (navigator.share) {
       try {
@@ -92,7 +92,7 @@ const TournamentDetailsPage: React.FC = () => {
       // Fallback: copy to clipboard
       try {
         await navigator.clipboard.writeText(url);
-        alert('Enlace copiado al portapapeles');
+        alert('Link copied to clipboard');
       } catch (err) {
         console.log('Error copying to clipboard:', err);
       }
@@ -115,7 +115,7 @@ const TournamentDetailsPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center items-center min-h-64">
           <LoadingSpinner />
-          <span className="ml-3 text-gray-600">Cargando torneo...</span>
+          <span className="ml-3 text-gray-600">Loading tournament...</span>
         </div>
       </div>
     );
@@ -127,18 +127,18 @@ const TournamentDetailsPage: React.FC = () => {
         <div className="text-center py-12">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Error al cargar el torneo
+            Error loading tournament
           </h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <div className="flex justify-center gap-4">
             <Button variant="primary" onClick={handleBackToList}>
-              Volver a Torneos
+              Back to Tournaments
             </Button>
             <Button 
               variant="outline" 
               onClick={() => window.location.reload()}
             >
-              Reintentar
+              Retry
             </Button>
           </div>
         </div>
@@ -152,13 +152,13 @@ const TournamentDetailsPage: React.FC = () => {
         <div className="text-center py-12">
           <div className="text-gray-400 text-6xl mb-4">🏆</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Torneo no encontrado
+            Tournament not found
           </h2>
           <p className="text-gray-600 mb-6">
-            El torneo que buscas no existe o ha sido eliminado.
+            The tournament you are looking for does not exist or has been deleted.
           </p>
           <Button variant="primary" onClick={handleBackToList}>
-            Volver a Torneos
+            Back to Tournaments
           </Button>
         </div>
       </div>
@@ -179,7 +179,7 @@ const TournamentDetailsPage: React.FC = () => {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                Volver a Torneos
+                Back to Tournaments
               </button>
             </div>
             
@@ -194,7 +194,7 @@ const TournamentDetailsPage: React.FC = () => {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
-                  Compartir
+                  Share
                 </Button>
                 
                 {canEditTournament() && (
@@ -207,7 +207,7 @@ const TournamentDetailsPage: React.FC = () => {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    Editar
+                    Edit
                   </Button>
                 )}
               </div>
@@ -258,11 +258,11 @@ const TournamentDetailsPage: React.FC = () => {
         <div className="bg-white border-t border-gray-200 py-12">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Torneos Relacionados
+              Related Tournaments
             </h2>
             <div className="text-center py-8 text-gray-500">
               <div className="text-4xl mb-2">🔍</div>
-              <p>Próximamente verás aquí torneos similares</p>
+              <p>You will soon see similar tournaments here</p>
             </div>
           </div>
         </div>
@@ -273,10 +273,10 @@ const TournamentDetailsPage: React.FC = () => {
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 py-12">
           <div className="container mx-auto px-4 text-center text-white">
             <h3 className="text-2xl font-bold mb-4">
-              ¿Listo para competir?
+              Ready to compete?
             </h3>
             <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-              Únete a {selectedTournament.name} y forma parte de la comunidad de pickleball más activa de México.
+              Join {selectedTournament.name} and become part of Mexico's most active pickleball community.
             </p>
             {user ? (
               <Button
@@ -286,7 +286,7 @@ const TournamentDetailsPage: React.FC = () => {
                 disabled={isRegistering}
                 className="bg-white text-blue-600 hover:bg-blue-50"
               >
-                {isRegistering ? 'Procesando...' : 'Registrarse Ahora'}
+                {isRegistering ? 'Processing...' : 'Register Now'}
               </Button>
             ) : (
               <div className="flex justify-center gap-4">
@@ -296,7 +296,7 @@ const TournamentDetailsPage: React.FC = () => {
                   onClick={() => navigate('/registration')}
                   className="bg-white text-blue-600 hover:bg-blue-50"
                 >
-                  Crear Cuenta
+                  Create Account
                 </Button>
                 <Button
                   variant="outline"
@@ -304,7 +304,7 @@ const TournamentDetailsPage: React.FC = () => {
                   onClick={() => navigate('/login')}
                   className="border-white text-white hover:bg-white hover:text-blue-600"
                 >
-                  Iniciar Sesión
+                  Log In
                 </Button>
               </div>
             )}

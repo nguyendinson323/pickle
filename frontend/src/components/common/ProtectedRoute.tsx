@@ -39,7 +39,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
+          <p className="mt-4 text-gray-600">Verifying authentication...</p>
         </div>
       </div>
     );
@@ -72,10 +72,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               </svg>
             </div>
             <h3 className="mt-2 text-sm font-medium text-gray-900">
-              Acceso Denegado
+              Access Denied
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              No tienes permisos para acceder a esta página.
+              You don't have permission to access this page.
             </p>
             <div className="mt-6">
               <button
@@ -83,7 +83,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 className="inline-flex items-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500"
                 onClick={() => window.history.back()}
               >
-                Volver
+                Go Back
               </button>
             </div>
           </div>

@@ -42,11 +42,11 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
   }, [dispatch, courtId, currentMonth]);
 
   const monthNames = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -191,11 +191,11 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
                   <div className="flex-1 flex flex-col justify-end">
                     {availability.hasAvailability ? (
                       <Badge variant="primary" className="text-xs">
-                        {availability.available} disponibles
+                        {availability.available} available
                       </Badge>
                     ) : (
                       <Badge variant="error" className="text-xs">
-                        Sin disponibilidad
+                        No availability
                       </Badge>
                     )}
                   </div>
@@ -258,7 +258,7 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
                         </Badge>
                       ) : (
                         <Badge variant="error" className="text-xs">
-                          Lleno
+                          Full
                         </Badge>
                       )}
                     </div>
@@ -290,7 +290,7 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              Mes
+              Month
             </button>
             <button
               onClick={() => setViewType('week')}
@@ -300,7 +300,7 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              Semana
+              Week
             </button>
           </div>
         </div>
@@ -311,7 +311,7 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
             size="sm"
             onClick={goToToday}
           >
-            Hoy
+            Today
           </Button>
           
           <Button
@@ -339,25 +339,25 @@ export const ReservationCalendar: React.FC<ReservationCalendarProps> = ({
       <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t text-sm">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-green-100 border border-green-300 rounded"></div>
-          <span>Hoy</span>
+          <span>Today</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-blue-200 border border-blue-300 rounded"></div>
-          <span>Seleccionado</span>
+          <span>Selected</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-gray-100 border border-gray-300 rounded"></div>
-          <span>No disponible</span>
+          <span>Not available</span>
         </div>
       </div>
 
       {/* Instructions */}
       <div className="mt-4 p-3 bg-gray-50 rounded text-sm text-gray-600">
-        <p className="font-medium mb-1">Información:</p>
+        <p className="font-medium mb-1">Information:</p>
         <ul className="space-y-1">
-          <li>• Selecciona una fecha para ver los horarios disponibles</li>
-          <li>• Solo puedes reservar hasta {maxAdvanceDays} días de anticipación</li>
-          <li>• Los números indican la cantidad de horarios disponibles</li>
+          <li>• Select a date to view available time slots</li>
+          <li>• You can only reserve up to {maxAdvanceDays} days in advance</li>
+          <li>• Numbers indicate the amount of available time slots</li>
         </ul>
       </div>
     </div>

@@ -45,43 +45,43 @@ const AdminDashboard: React.FC = () => {
   const tabs = [
     {
       id: 'overview',
-      label: 'Resumen General',
+      label: 'General Overview',
       icon: <ShieldCheckIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'account',
-      label: 'Mi Cuenta',
+      label: 'My Account',
       icon: <CogIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'inbox',
-      label: 'Bandeja',
+      label: 'Inbox',
       icon: <InboxIcon className="w-4 h-4" />,
       count: unreadCount
     },
     {
       id: 'users',
-      label: 'Usuarios',
+      label: 'Users',
       icon: <UserGroupIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.totalUsers || 0
     },
     {
       id: 'analytics',
-      label: 'Analíticas',
+      label: 'Analytics',
       icon: <ChartBarIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'system',
-      label: 'Sistema',
+      label: 'System',
       icon: <ServerIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'issues',
-      label: 'Incidencias',
+      label: 'Issues',
       icon: <ExclamationTriangleIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.openIssues || 0
     }
@@ -93,26 +93,26 @@ const AdminDashboard: React.FC = () => {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold mb-2">Panel de Administración</h3>
+              <h3 className="text-lg font-semibold mb-2">Administration Panel</h3>
               <p className="text-indigo-100 mb-4">
-                Federación Mexicana de Pickleball
+                Mexican Pickleball Federation
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-indigo-200">Administrador:</span>
+                  <span className="text-indigo-200">Administrator:</span>
                   <span className="ml-2 font-medium">{dashboardData?.user?.username || 'Admin'}</span>
                 </div>
                 <div>
-                  <span className="text-indigo-200">Nivel:</span>
+                  <span className="text-indigo-200">Level:</span>
                   <span className="ml-2 font-medium">Super Admin</span>
                 </div>
                 <div>
-                  <span className="text-indigo-200">Último acceso:</span>
-                  <span className="ml-2 font-medium">Hoy</span>
+                  <span className="text-indigo-200">Last access:</span>
+                  <span className="ml-2 font-medium">Today</span>
                 </div>
                 <div>
-                  <span className="text-indigo-200">Estado:</span>
-                  <span className="ml-2 font-medium">Conectado</span>
+                  <span className="text-indigo-200">Status:</span>
+                  <span className="ml-2 font-medium">Connected</span>
                 </div>
               </div>
             </div>
@@ -121,7 +121,7 @@ const AdminDashboard: React.FC = () => {
                 <ShieldCheckIcon className="w-10 h-10 text-white" />
               </div>
               <Button variant="ghost" size="sm" className="text-white border-white/30">
-                Configurar
+                Configure
               </Button>
             </div>
           </div>
@@ -131,19 +131,19 @@ const AdminDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Estado del Sistema</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">System Status</h4>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-500">API</span>
                 <Badge variant="success">Online</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">Base de Datos</span>
-                <Badge variant="success">Conectada</Badge>
+                <span className="text-sm text-gray-500">Database</span>
+                <Badge variant="success">Connected</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">Servicios</span>
-                <Badge variant="success">Activos</Badge>
+                <span className="text-sm text-gray-500">Services</span>
+                <Badge variant="success">Active</Badge>
               </div>
             </div>
           </div>
@@ -151,16 +151,16 @@ const AdminDashboard: React.FC = () => {
 
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Actividad Reciente</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">Recent Activity</h4>
             <div className="space-y-2">
               <div className="text-xs text-gray-500 bg-green-50 p-2 rounded">
-                25 nuevos usuarios registrados
+                25 new users registered
               </div>
               <div className="text-xs text-gray-500 bg-blue-50 p-2 rounded">
-                12 clubes verificados
+                12 clubs verified
               </div>
               <div className="text-xs text-gray-500 bg-yellow-50 p-2 rounded">
-                3 reportes pendientes
+                3 pending reports
               </div>
             </div>
           </div>
@@ -168,18 +168,18 @@ const AdminDashboard: React.FC = () => {
 
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Estadísticas Nacionales</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">National Statistics</h4>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Estados Activos</span>
+                <span className="text-sm text-gray-500">Active States</span>
                 <span className="font-medium">32/32</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Clubes Totales</span>
+                <span className="text-sm text-gray-500">Total Clubs</span>
                 <span className="font-medium">{dashboardData?.statistics?.totalClubs || 245}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Jugadores</span>
+                <span className="text-sm text-gray-500">Players</span>
                 <span className="font-medium">{dashboardData?.statistics?.totalPlayers || 12500}</span>
               </div>
             </div>
@@ -188,18 +188,18 @@ const AdminDashboard: React.FC = () => {
 
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Tareas Pendientes</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">Pending Tasks</h4>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Verificaciones</span>
+                <span className="text-sm text-gray-500">Verifications</span>
                 <span className="font-medium text-orange-600">8</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Reportes</span>
+                <span className="text-sm text-gray-500">Reports</span>
                 <span className="font-medium text-red-600">3</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Actualizaciones</span>
+                <span className="text-sm text-gray-500">Updates</span>
                 <span className="font-medium text-blue-600">2</span>
               </div>
             </div>
@@ -212,12 +212,12 @@ const AdminDashboard: React.FC = () => {
   const renderUsersTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Gestión de Usuarios</h3>
+        <h3 className="text-xl font-semibold text-gray-900">User Management</h3>
         <div className="flex space-x-2">
-          <Button variant="outline">Exportar</Button>
+          <Button variant="outline">Export</Button>
           <Button variant="primary">
             <UserGroupIcon className="w-4 h-4 mr-2" />
-            Crear Usuario
+            Create User
           </Button>
         </div>
       </div>
@@ -228,7 +228,7 @@ const AdminDashboard: React.FC = () => {
             <div className="text-2xl font-bold text-blue-600">
               {dashboardData?.statistics?.totalUsers || 2450}
             </div>
-            <div className="text-sm text-gray-500">Total Usuarios</div>
+            <div className="text-sm text-gray-500">Total Users</div>
           </div>
         </Card>
         <Card>
@@ -236,7 +236,7 @@ const AdminDashboard: React.FC = () => {
             <div className="text-2xl font-bold text-green-600">
               {dashboardData?.statistics?.totalPlayers || 1850}
             </div>
-            <div className="text-sm text-gray-500">Jugadores</div>
+            <div className="text-sm text-gray-500">Players</div>
           </div>
         </Card>
         <Card>
@@ -244,7 +244,7 @@ const AdminDashboard: React.FC = () => {
             <div className="text-2xl font-bold text-purple-600">
               {dashboardData?.statistics?.totalCoaches || 180}
             </div>
-            <div className="text-sm text-gray-500">Entrenadores</div>
+            <div className="text-sm text-gray-500">Coaches</div>
           </div>
         </Card>
         <Card>
@@ -252,7 +252,7 @@ const AdminDashboard: React.FC = () => {
             <div className="text-2xl font-bold text-orange-600">
               {dashboardData?.statistics?.totalClubs || 245}
             </div>
-            <div className="text-sm text-gray-500">Clubes</div>
+            <div className="text-sm text-gray-500">Clubs</div>
           </div>
         </Card>
         <Card>
@@ -267,35 +267,35 @@ const AdminDashboard: React.FC = () => {
 
       <Card>
         <div className="p-6">
-          <h4 className="font-semibold text-gray-900 mb-4">Usuarios Recientes</h4>
+          <h4 className="font-semibold text-gray-900 mb-4">Recent Users</h4>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Usuario
+                    User
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tipo
+                    Type
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Estado
+                    Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Registro
+                    Registration
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
+                    Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {[
-                  { name: 'Juan Pérez', type: 'Jugador', status: 'Activo', date: '2024-03-15' },
-                  { name: 'Club Deportivo', type: 'Club', status: 'Verificado', date: '2024-03-14' },
-                  { name: 'María González', type: 'Entrenador', status: 'Pendiente', date: '2024-03-13' },
-                  { name: 'Empresa XYZ', type: 'Partner', status: 'Activo', date: '2024-03-12' },
-                  { name: 'Carlos López', type: 'Jugador', status: 'Activo', date: '2024-03-11' }
+                  { name: 'Juan Pérez', type: 'Player', status: 'Active', date: '2024-03-15' },
+                  { name: 'Sports Club', type: 'Club', status: 'Verified', date: '2024-03-14' },
+                  { name: 'María González', type: 'Coach', status: 'Pending', date: '2024-03-13' },
+                  { name: 'Empresa XYZ', type: 'Partner', status: 'Active', date: '2024-03-12' },
+                  { name: 'Carlos López', type: 'Player', status: 'Active', date: '2024-03-11' }
                 ].map((user, index) => (
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -314,8 +314,8 @@ const AdminDashboard: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Badge 
                         variant={
-                          user.status === 'Activo' || user.status === 'Verificado' ? 'success' :
-                          user.status === 'Pendiente' ? 'warning' : 'secondary'
+                          user.status === 'Active' || user.status === 'Verified' ? 'success' :
+                          user.status === 'Pending' ? 'warning' : 'secondary'
                         }
                       >
                         {user.status}
@@ -325,7 +325,7 @@ const AdminDashboard: React.FC = () => {
                       {user.date}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <Button variant="outline" size="sm">Ver</Button>
+                      <Button variant="outline" size="sm">View</Button>
                     </td>
                   </tr>
                 ))}
@@ -345,16 +345,16 @@ const AdminDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <CogIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Configuración de Administrador</h3>
-            <p className="text-gray-500">Configuración avanzada del sistema y permisos.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Administrator Settings</h3>
+            <p className="text-gray-500">Advanced system configuration and permissions.</p>
           </div>
         );
       case 'inbox':
         return (
           <div className="text-center py-12">
             <InboxIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Mensajes</h3>
-            <p className="text-gray-500">Tu bandeja de entrada está vacía.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Messages</h3>
+            <p className="text-gray-500">Your inbox is empty.</p>
           </div>
         );
       case 'users':
@@ -363,24 +363,24 @@ const AdminDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <ChartBarIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Analíticas del Sistema</h3>
-            <p className="text-gray-500">Reportes y estadísticas detalladas.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">System Analytics</h3>
+            <p className="text-gray-500">Detailed reports and statistics.</p>
           </div>
         );
       case 'system':
         return (
           <div className="text-center py-12">
             <ServerIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Administración del Sistema</h3>
-            <p className="text-gray-500">Configuración de servidores y mantenimiento.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">System Administration</h3>
+            <p className="text-gray-500">Server configuration and maintenance.</p>
           </div>
         );
       case 'issues':
         return (
           <div className="text-center py-12">
             <ExclamationTriangleIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Gestión de Incidencias</h3>
-            <p className="text-gray-500">Reportes de problemas y tickets de soporte.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Issue Management</h3>
+            <p className="text-gray-500">Problem reports and support tickets.</p>
           </div>
         );
       default:
@@ -400,9 +400,9 @@ const AdminDashboard: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error cargando el dashboard</p>
+          <p className="text-red-600 mb-4">Error loading dashboard</p>
           <Button onClick={() => dispatch(fetchDashboardData())}>
-            Reintentar
+            Retry
           </Button>
         </div>
       </div>
@@ -418,25 +418,25 @@ const AdminDashboard: React.FC = () => {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
-            title="Total Usuarios"
+            title="Total Users"
             value={dashboardData?.statistics?.totalUsers?.toString() || '2,450'}
             trend={{ value: 125, direction: 'up', label: '+125' }}
             icon={<UserGroupIcon className="w-6 h-6" />}
           />
           <StatCard
-            title="Clubes Activos"
+            title="Active Clubs"
             value={dashboardData?.statistics?.totalClubs?.toString() || '245'}
             trend={{ value: 8, direction: 'up', label: '+8' }}
             icon={<ShieldCheckIcon className="w-6 h-6" />}
           />
           <StatCard
-            title="Estados Cubiertos"
+            title="States Covered"
             value="32"
             trend={{ value: 0, direction: 'up', label: '0' }}
             icon={<ChartBarIcon className="w-6 h-6" />}
           />
           <StatCard
-            title="Incidencias Abiertas"
+            title="Open Issues"
             value={dashboardData?.statistics?.openIssues?.toString() || '3'}
             trend={{ value: 2, direction: 'down', label: '-2' }}
             icon={<ExclamationTriangleIcon className="w-6 h-6" />}

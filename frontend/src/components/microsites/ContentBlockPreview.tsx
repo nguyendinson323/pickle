@@ -23,7 +23,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
         return (
           <div 
             className={`prose max-w-none ${textAlignClass}`}
-            dangerouslySetInnerHTML={{ __html: block.content.text || '<p>Texto vacío</p>' }}
+            dangerouslySetInnerHTML={{ __html: block.content.text || '<p>Empty text</p>' }}
           />
         );
 
@@ -49,7 +49,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
             ) : (
               <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                 <div className="text-gray-400 mb-2">🖼️</div>
-                <p className="text-gray-500">No se ha seleccionado ninguna imagen</p>
+                <p className="text-gray-500">No image selected</p>
               </div>
             )}
           </div>
@@ -58,7 +58,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
       case 'gallery':
         return (
           <div>
-            <h3 className="text-lg font-medium mb-4">Galería de Imágenes</h3>
+            <h3 className="text-lg font-medium mb-4">Image Gallery</h3>
             {block.content.images && block.content.images.length > 0 ? (
               <div className={`grid gap-4 ${
                 block.content.columns === 1 ? 'grid-cols-1' :
@@ -84,7 +84,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
             ) : (
               <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                 <div className="text-gray-400 mb-2">🖼️</div>
-                <p className="text-gray-500">No hay imágenes en la galería</p>
+                <p className="text-gray-500">No images in gallery</p>
               </div>
             )}
           </div>
@@ -99,21 +99,21 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
                 {block.content.videoType === 'youtube' ? (
                   <div className="text-white text-center">
                     <div className="text-4xl mb-2">🎥</div>
-                    <p>Video de YouTube</p>
-                    <p className="text-sm opacity-75">Vista previa no disponible</p>
+                    <p>YouTube Video</p>
+                    <p className="text-sm opacity-75">Preview not available</p>
                   </div>
                 ) : (
                   <div className="text-white text-center">
                     <div className="text-4xl mb-2">🎬</div>
-                    <p>Video personalizado</p>
-                    <p className="text-sm opacity-75">Vista previa no disponible</p>
+                    <p>Custom Video</p>
+                    <p className="text-sm opacity-75">Preview not available</p>
                   </div>
                 )}
               </div>
             ) : (
               <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                 <div className="text-gray-400 mb-2">🎥</div>
-                <p className="text-gray-500">No se ha configurado ningún video</p>
+                <p className="text-gray-500">No video configured</p>
               </div>
             )}
           </div>
@@ -123,7 +123,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
         return (
           <div>
             <h3 className="text-lg font-medium mb-4">
-              {block.content.title || 'Información de Contacto'}
+              {block.content.title || 'Contact Information'}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
@@ -148,11 +148,11 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
               </div>
               {block.content.showForm && (
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-3">Formulario de contacto:</p>
+                  <p className="text-sm text-gray-600 mb-3">Contact form:</p>
                   <div className="space-y-2">
                     {(block.content.formFields || ['name', 'email', 'message']).map((field: string) => (
                       <div key={field} className="text-sm text-gray-500">
-                        • Campo: {field}
+                        • Field: {field}
                       </div>
                     ))}
                   </div>
@@ -165,11 +165,11 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
       case 'map':
         return (
           <div>
-            <h3 className="text-lg font-medium mb-4">Mapa de Ubicación</h3>
+            <h3 className="text-lg font-medium mb-4">Location Map</h3>
             <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
               <MapPinIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <p className="text-gray-600">
-                Mapa interactivo - Lat: {block.content.latitude || 0}, Lng: {block.content.longitude || 0}
+                Interactive map - Lat: {block.content.latitude || 0}, Lng: {block.content.longitude || 0}
               </p>
               {block.content.address && (
                 <p className="text-sm text-gray-500 mt-1">{block.content.address}</p>
@@ -182,15 +182,15 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
         return (
           <div>
             <h3 className="text-lg font-medium mb-4">
-              {block.content.title || 'Nuestras Canchas'}
+              {block.content.title || 'Our Courts'}
             </h3>
             <div className="bg-gray-50 p-6 rounded-lg text-center">
               <BuildingOfficeIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-600 mb-2">Lista de canchas disponibles</p>
+              <p className="text-gray-600 mb-2">List of available courts</p>
               <div className="text-sm text-gray-500 space-y-1">
-                {block.content.showAvailability && <div>• Mostrar disponibilidad</div>}
-                {block.content.showPricing && <div>• Mostrar precios</div>}
-                {block.content.showBookingButton && <div>• Botón de reserva</div>}
+                {block.content.showAvailability && <div>• Show availability</div>}
+                {block.content.showPricing && <div>• Show pricing</div>}
+                {block.content.showBookingButton && <div>• Booking button</div>}
                 <div>• Layout: {block.content.layout || 'grid'}</div>
               </div>
             </div>
@@ -201,16 +201,16 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
         return (
           <div>
             <h3 className="text-lg font-medium mb-4">
-              {block.content.title || 'Torneos'}
+              {block.content.title || 'Tournaments'}
             </h3>
             <div className="bg-gray-50 p-6 rounded-lg text-center">
               <TrophyIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-600 mb-2">Lista de torneos</p>
+              <p className="text-gray-600 mb-2">Tournament list</p>
               <div className="text-sm text-gray-500 space-y-1">
-                {block.content.showUpcoming && <div>• Mostrar próximos torneos</div>}
-                {block.content.showPast && <div>• Mostrar torneos pasados</div>}
-                {block.content.showRegistrationButton && <div>• Botón de inscripción</div>}
-                <div>• Límite: {block.content.limit || 10} torneos</div>
+                {block.content.showUpcoming && <div>• Show upcoming tournaments</div>}
+                {block.content.showPast && <div>• Show past tournaments</div>}
+                {block.content.showRegistrationButton && <div>• Registration button</div>}
+                <div>• Limit: {block.content.limit || 10} tournaments</div>
               </div>
             </div>
           </div>
@@ -220,15 +220,15 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
         return (
           <div>
             <h3 className="text-lg font-medium mb-4">
-              {block.content.title || 'Calendario de Eventos'}
+              {block.content.title || 'Event Calendar'}
             </h3>
             <div className="bg-gray-50 p-6 rounded-lg text-center">
               <CalendarIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-600 mb-2">Calendario interactivo</p>
+              <p className="text-gray-600 mb-2">Interactive calendar</p>
               <div className="text-sm text-gray-500 space-y-1">
-                <div>• Eventos: {block.content.showEvents || 'todos'}</div>
-                <div>• Vista: {block.content.view || 'mensual'}</div>
-                {block.content.showFilters && <div>• Filtros habilitados</div>}
+                <div>• Events: {block.content.showEvents || 'all'}</div>
+                <div>• View: {block.content.view || 'monthly'}</div>
+                {block.content.showFilters && <div>• Filters enabled</div>}
               </div>
             </div>
           </div>
@@ -237,7 +237,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
       case 'custom_html':
         return (
           <div>
-            <h3 className="text-lg font-medium mb-4">HTML Personalizado</h3>
+            <h3 className="text-lg font-medium mb-4">Custom HTML</h3>
             {block.content.html ? (
               <div className="bg-gray-50 p-4 rounded-lg">
                 <pre className="text-sm text-gray-700 whitespace-pre-wrap overflow-auto max-h-40">
@@ -245,7 +245,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
                 </pre>
                 {block.content.css && (
                   <div className="mt-3 pt-3 border-t border-gray-200">
-                    <p className="text-xs text-gray-500 mb-1">CSS personalizado:</p>
+                    <p className="text-xs text-gray-500 mb-1">Custom CSS:</p>
                     <pre className="text-xs text-gray-600 whitespace-pre-wrap overflow-auto max-h-20">
                       {block.content.css}
                     </pre>
@@ -255,7 +255,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
             ) : (
               <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                 <div className="text-gray-400 mb-2">💻</div>
-                <p className="text-gray-500">No se ha configurado HTML personalizado</p>
+                <p className="text-gray-500">No custom HTML configured</p>
               </div>
             )}
           </div>
@@ -265,7 +265,7 @@ const ContentBlockPreview: React.FC<ContentBlockPreviewProps> = ({ block }) => {
         return (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <p className="text-yellow-800">
-              Tipo de bloque no soportado: <code>{block.type}</code>
+              Unsupported block type: <code>{block.type}</code>
             </p>
           </div>
         );

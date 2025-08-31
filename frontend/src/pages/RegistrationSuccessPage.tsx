@@ -9,13 +9,13 @@ const RegistrationSuccessPage: React.FC = () => {
 
   const getRoleTitle = (role: UserRole): string => {
     switch (role) {
-      case 'player': return 'Jugador';
-      case 'coach': return 'Entrenador';
+      case 'player': return 'Player';
+      case 'coach': return 'Coach';
       case 'club': return 'Club';
-      case 'partner': return 'Socio Comercial';
-      case 'state': return 'Comité Estatal';
-      case 'federation': return 'Federación';
-      default: return 'Usuario';
+      case 'partner': return 'Commercial Partner';
+      case 'state': return 'State Committee';
+      case 'federation': return 'Federation';
+      default: return 'User';
     }
   };
 
@@ -23,48 +23,48 @@ const RegistrationSuccessPage: React.FC = () => {
     switch (role) {
       case 'player':
         return [
-          'Completa tu perfil con información adicional',
-          'Busca torneos en tu área',
-          'Conéctate con otros jugadores',
-          'Actualiza tu nivel NRTP si es necesario'
+          'Complete your profile with additional information',
+          'Search for tournaments in your area',
+          'Connect with other players',
+          'Update your NRTP level if necessary'
         ];
       case 'coach':
         return [
-          'Verifica tu certificación de entrenador',
-          'Configura tus servicios de entrenamiento',
-          'Busca oportunidades de clínicas',
-          'Únete a la red de entrenadores'
+          'Verify your coach certification',
+          'Set up your training services',
+          'Look for clinic opportunities',
+          'Join the coaches network'
         ];
       case 'club':
         return [
-          'Completa la información de tu club',
-          'Agrega fotos de tus instalaciones',
-          'Configura tus membresías',
-          'Programa tus primeros eventos'
+          'Complete your club information',
+          'Add photos of your facilities',
+          'Set up your memberships',
+          'Schedule your first events'
         ];
       case 'partner':
         return [
-          'Revisa las oportunidades de patrocinio',
-          'Configura tu perfil comercial',
-          'Explora beneficios para socios',
-          'Contacta con el equipo comercial'
+          'Review sponsorship opportunities',
+          'Set up your commercial profile',
+          'Explore partner benefits',
+          'Contact the commercial team'
         ];
       case 'state':
         return [
-          'Coordina con la federación nacional',
-          'Registra clubes en tu estado',
-          'Planifica eventos estatales',
-          'Establece contacto con otros comités'
+          'Coordinate with the national federation',
+          'Register clubs in your state',
+          'Plan state events',
+          'Establish contact with other committees'
         ];
       case 'federation':
         return [
-          'Gestiona la plataforma nacional',
-          'Supervisa comités estatales',
-          'Administra torneos nacionales',
-          'Coordina con organizaciones internacionales'
+          'Manage the national platform',
+          'Supervise state committees',
+          'Administer national tournaments',
+          'Coordinate with international organizations'
         ];
       default:
-        return ['Completa tu perfil', 'Explora las funcionalidades'];
+        return ['Complete your profile', 'Explore the features'];
     }
   };
 
@@ -80,16 +80,16 @@ const RegistrationSuccessPage: React.FC = () => {
           </div>
           
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            ¡Registro Exitoso!
+            Registration Successful!
           </h1>
           
           <p className="text-xl text-gray-600 mb-2">
-            Bienvenido a la Federación Mexicana de Pickleball
+            Welcome to the Mexican Pickleball Federation
           </p>
           
           {user && (
             <p className="text-lg text-gray-500">
-              Te has registrado como <strong>{getRoleTitle(user.role)}</strong>
+              You have registered as <strong>{getRoleTitle(user.role)}</strong>
             </p>
           )}
         </div>
@@ -98,29 +98,29 @@ const RegistrationSuccessPage: React.FC = () => {
         {user && (
           <div className="bg-white rounded-xl shadow-card p-6 mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-              Detalles de tu Cuenta
+              Your Account Details
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-500 mb-1">Nombre de Usuario</p>
+                <p className="text-sm text-gray-500 mb-1">Username</p>
                 <p className="font-medium text-gray-900">{user.username}</p>
               </div>
               
               <div>
-                <p className="text-sm text-gray-500 mb-1">Correo Electrónico</p>
+                <p className="text-sm text-gray-500 mb-1">Email</p>
                 <p className="font-medium text-gray-900">{user.email}</p>
               </div>
               
               <div>
-                <p className="text-sm text-gray-500 mb-1">Tipo de Cuenta</p>
+                <p className="text-sm text-gray-500 mb-1">Account Type</p>
                 <p className="font-medium text-gray-900">{getRoleTitle(user.role)}</p>
               </div>
               
               <div>
-                <p className="text-sm text-gray-500 mb-1">Estado de Cuenta</p>
+                <p className="text-sm text-gray-500 mb-1">Account Status</p>
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  Activa
+                  Active
                 </span>
               </div>
             </div>
@@ -130,7 +130,7 @@ const RegistrationSuccessPage: React.FC = () => {
         {/* Next Steps */}
         <div className="bg-white rounded-xl shadow-card p-6 mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            Próximos Pasos
+            Next Steps
           </h2>
           
           <div className="space-y-4">
@@ -153,13 +153,13 @@ const RegistrationSuccessPage: React.FC = () => {
             </svg>
             <div>
               <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                Información Importante
+                Important Information
               </h3>
               <ul className="space-y-2 text-blue-800">
-                <li>• Tu cuenta ha sido creada y está activa inmediatamente</li>
-                <li>• Recibirás un correo de confirmación en breve</li>
-                <li>• Puedes actualizar tu perfil en cualquier momento</li>
-                <li>• Para dudas o soporte, contacta al equipo de la federación</li>
+                <li>• Your account has been created and is active immediately</li>
+                <li>• You will receive a confirmation email shortly</li>
+                <li>• You can update your profile at any time</li>
+                <li>• For questions or support, contact the federation team</li>
               </ul>
             </div>
           </div>
@@ -171,28 +171,28 @@ const RegistrationSuccessPage: React.FC = () => {
             to="/dashboard"
             className="btn-primary px-8 py-3 text-center"
           >
-            Ir al Panel Principal
+            Go to Dashboard
           </Link>
           
           <Link
             to="/profile"
             className="btn-secondary px-8 py-3 text-center"
           >
-            Completar Perfil
+            Complete Profile
           </Link>
           
           <Link
             to="/"
             className="btn-outline px-8 py-3 text-center"
           >
-            Volver al Inicio
+            Back to Home
           </Link>
         </div>
 
         {/* Contact Support */}
         <div className="text-center mt-12 pt-8 border-t border-gray-200">
           <p className="text-gray-500 mb-4">
-            ¿Necesitas ayuda o tienes alguna pregunta?
+            Need help or have any questions?
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 text-sm">
@@ -203,7 +203,7 @@ const RegistrationSuccessPage: React.FC = () => {
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              Correo de Soporte
+              Support Email
             </a>
             
             <a
@@ -213,7 +213,7 @@ const RegistrationSuccessPage: React.FC = () => {
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              Teléfono de Ayuda
+              Help Phone
             </a>
           </div>
         </div>

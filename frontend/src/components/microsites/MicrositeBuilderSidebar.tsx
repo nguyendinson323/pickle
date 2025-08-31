@@ -47,16 +47,16 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
 
   const handleCreatePage = async () => {
     const existingSlugs = microsite.pages?.map(p => p.slug) || [];
-    let slug = 'nueva-pagina';
+    let slug = 'new-page';
     let counter = 1;
     
     while (existingSlugs.includes(slug)) {
-      slug = `nueva-pagina-${counter}`;
+      slug = `new-page-${counter}`;
       counter++;
     }
 
     const pageData = {
-      title: 'Nueva Página',
+      title: 'New Page',
       slug,
       isHomePage: false,
       isPublished: false,
@@ -87,9 +87,9 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
 
   const getPageStatus = (page: any) => {
     if (!page.isPublished) {
-      return <Badge variant="warning" size="sm">Borrador</Badge>;
+      return <Badge variant="warning" size="sm">Draft</Badge>;
     }
-    return <Badge variant="success" size="sm">Publicado</Badge>;
+    return <Badge variant="success" size="sm">Published</Badge>;
   };
 
   if (isCollapsed) {
@@ -178,13 +178,13 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
               className="w-full flex items-center gap-2"
             >
               <PlusIcon className="w-4 h-4" />
-              Agregar Página
+              Add Page
             </Button>
 
             {/* Pages List */}
             <div className="space-y-2">
               <h3 className="text-sm font-medium text-gray-900 mb-3">
-                Páginas ({microsite.pages?.length || 0})
+                Pages ({microsite.pages?.length || 0})
               </h3>
               
               {microsite.pages && microsite.pages.length > 0 ? (
@@ -231,7 +231,7 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
 
                         {page.contentBlocks && page.contentBlocks.length > 0 && (
                           <div className="text-xs text-gray-500 mt-1">
-                            {page.contentBlocks.length} bloques de contenido
+                            {page.contentBlocks.length} content blocks
                           </div>
                         )}
                       </div>
@@ -240,8 +240,8 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <DocumentTextIcon className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                  <p className="text-sm">No hay páginas</p>
-                  <p className="text-xs">Crea tu primera página</p>
+                  <p className="text-sm">No pages</p>
+                  <p className="text-xs">Create your first page</p>
                 </div>
               )}
             </div>
@@ -256,12 +256,12 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
                 className="w-full flex items-center gap-2"
               >
                 <PlusIcon className="w-4 h-4" />
-                Subir Archivo
+                Upload File
               </Button>
               
               <div className="text-center py-8 text-gray-500">
-                <p className="text-sm">Biblioteca de medios</p>
-                <p className="text-xs">Próximamente...</p>
+                <p className="text-sm">Media Library</p>
+                <p className="text-xs">Coming soon...</p>
               </div>
             </div>
           </div>
@@ -271,12 +271,12 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
           <div className="p-4">
             <div className="space-y-4">
               <h3 className="text-sm font-medium text-gray-900">
-                Personalización
+                Customization
               </h3>
               
               <div className="text-center py-8 text-gray-500">
-                <p className="text-sm">Editor de temas</p>
-                <p className="text-xs">Próximamente...</p>
+                <p className="text-sm">Theme Editor</p>
+                <p className="text-xs">Coming soon...</p>
               </div>
             </div>
           </div>
@@ -286,38 +286,38 @@ const MicrositeBuilderSidebar: React.FC<MicrositeBuilderSidebarProps> = ({
           <div className="p-4">
             <div className="space-y-4">
               <h3 className="text-sm font-medium text-gray-900">
-                Configuración
+                Settings
               </h3>
               
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center">
-                  <span>Estado:</span>
+                  <span>Status:</span>
                   <Badge 
                     variant={microsite.status === 'published' ? 'success' : 'warning'}
                     size="sm"
                   >
-                    {microsite.status === 'published' ? 'Publicado' : 'Borrador'}
+                    {microsite.status === 'published' ? 'Published' : 'Draft'}
                   </Badge>
                 </div>
                 
                 <div className="flex justify-between items-center">
-                  <span>Tema:</span>
+                  <span>Theme:</span>
                   <span className="text-gray-600">
-                    {microsite.themeId || 'Por defecto'}
+                    {microsite.themeId || 'Default'}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span>Páginas:</span>
+                  <span>Pages:</span>
                   <span className="text-gray-600">
                     {microsite.pages?.length || 0}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span>Estado:</span>
+                  <span>Status:</span>
                   <span className="text-gray-600 text-xs">
-                    Activo
+                    Active
                   </span>
                 </div>
               </div>

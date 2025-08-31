@@ -55,18 +55,18 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
             isAutoRenew: true,
             plan: {
               id: 1,
-              name: 'Premium Anual',
+              name: 'Annual Premium',
               planType: 'premium',
               annualFee: 999,
               monthlyFee: 99,
               features: [
-                'Acceso completo a todas las canchas',
-                'Reservas prioritarias',
-                'Descuentos en torneos',
-                'Estadísticas avanzadas',
-                'Soporte 24/7'
+                'Full access to all courts',
+                'Priority reservations',
+                'Tournament discounts',
+                'Advanced statistics',
+                '24/7 support'
               ],
-              description: 'Plan premium con todas las funcionalidades'
+              description: 'Premium plan with all features'
             }
           }
         ];
@@ -88,14 +88,14 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
           id: 1,
           amount: 99900, // in cents
           status: 'completed',
-          description: 'Membresía Premium Anual',
+          description: 'Annual Premium Membership',
           createdAt: '2024-01-15T10:30:00Z'
         },
         {
           id: 2,
           amount: 29900,
           status: 'completed', 
-          description: 'Membresía Básica Mensual',
+          description: 'Monthly Basic Membership',
           createdAt: '2024-01-01T09:15:00Z'
         }
       ];
@@ -144,20 +144,20 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
   const getStatusText = (status: string) => {
     switch (status) {
       case 'active':
-        return 'Activa';
+        return 'Active';
       case 'pending':
-        return 'Pendiente';
+        return 'Pending';
       case 'expired':
-        return 'Expirada';
+        return 'Expired';
       case 'cancelled':
-        return 'Cancelada';
+        return 'Cancelled';
       default:
         return status;
     }
   };
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('es-MX', {
+    return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -173,9 +173,9 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
   };
 
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'MXN'
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -194,7 +194,7 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Estado de Membresía
+          Membership Status
         </h2>
         
         {activeMemberships.length === 0 ? (
@@ -214,13 +214,13 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
                 />
               </svg>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No tienes membresías activas
+                You don't have active memberships
               </h3>
               <p className="text-gray-600 mb-4">
-                Suscríbete a un plan para acceder a todas las funcionalidades de la plataforma.
+                Subscribe to a plan to access all platform features.
               </p>
               <Button variant="primary">
-                Ver Planes Disponibles
+                View Available Plans
               </Button>
             </div>
           </Card>
@@ -248,30 +248,30 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
-                          <span className="text-sm text-gray-500">Fecha de inicio:</span>
+                          <span className="text-sm text-gray-500">Start date:</span>
                           <div className="font-medium text-gray-900">
                             {formatDate(membership.startDate)}
                           </div>
                         </div>
                         
                         <div>
-                          <span className="text-sm text-gray-500">Fecha de expiración:</span>
+                          <span className="text-sm text-gray-500">Expiration date:</span>
                           <div className={`font-medium ${
                             isExpiringSoon ? 'text-orange-600' : 'text-gray-900'
                           }`}>
                             {formatDate(membership.endDate)}
                             {daysLeft > 0 && (
                               <span className="text-sm ml-1">
-                                ({daysLeft} días restantes)
+                                ({daysLeft} days remaining)
                               </span>
                             )}
                           </div>
                         </div>
                         
                         <div>
-                          <span className="text-sm text-gray-500">Renovación automática:</span>
+                          <span className="text-sm text-gray-500">Auto-renewal:</span>
                           <div className="font-medium text-gray-900">
-                            {membership.isAutoRenew ? 'Activada' : 'Desactivada'}
+                            {membership.isAutoRenew ? 'Enabled' : 'Disabled'}
                           </div>
                         </div>
                       </div>
@@ -283,9 +283,9 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
                               <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                             </svg>
                             <div>
-                              <h4 className="text-orange-800 font-medium">Tu membresía expira pronto</h4>
+                              <h4 className="text-orange-800 font-medium">Your membership expires soon</h4>
                               <p className="text-orange-700 text-sm">
-                                Renueva ahora para mantener el acceso a todas las funcionalidades.
+                                Renew now to maintain access to all features.
                               </p>
                             </div>
                           </div>
@@ -294,7 +294,7 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
 
                       {membership.plan?.features && (
                         <div>
-                          <h4 className="font-medium text-gray-900 mb-2">Beneficios incluidos:</h4>
+                          <h4 className="font-medium text-gray-900 mb-2">Included benefits:</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
                             {membership.plan.features.map((feature, index) => (
                               <div key={index} className="flex items-center text-sm text-gray-600">
@@ -311,7 +311,7 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
 
                     <div className="ml-6 flex flex-col gap-2">
                       <Button variant="secondary" size="sm">
-                        Renovar Ahora
+                        Renew Now
                       </Button>
                       <Button
                         variant="secondary"
@@ -319,7 +319,7 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
                         onClick={() => setShowCancelModal(membership.id)}
                         className="text-red-600 border-red-200 hover:bg-red-50"
                       >
-                        Cancelar
+                        Cancel
                       </Button>
                     </div>
                   </div>
@@ -334,7 +334,7 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
       {otherMemberships.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Historial de Membresías
+            Membership History
           </h3>
           <div className="space-y-3">
             {otherMemberships.map((membership) => (
@@ -364,17 +364,17 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
       {payments.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Pagos Recientes
+            Recent Payments
           </h3>
           <div className="space-y-2">
             {payments.slice(0, 3).map((payment) => (
               <div key={payment.id} className="flex justify-between items-center py-2 px-4 bg-white rounded border">
                 <div>
                   <span className="font-medium text-gray-900">
-                    {payment.description || 'Pago de Membresía'}
+                    {payment.description || 'Membership Payment'}
                   </span>
                   <p className="text-sm text-gray-500">
-                    {new Date(payment.createdAt).toLocaleDateString('es-MX')}
+                    {new Date(payment.createdAt).toLocaleDateString('en-US')}
                   </p>
                 </div>
                 <div className="text-right">
@@ -390,7 +390,7 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
           </div>
           <div className="text-center mt-4">
             <Button variant="secondary" size="sm">
-              Ver Todos los Pagos
+              View All Payments
             </Button>
           </div>
         </div>
@@ -403,7 +403,7 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
           setShowCancelModal(null);
           setCancelReason('');
         }}
-        title="Cancelar Membresía"
+        title="Cancel Membership"
       >
         <div className="space-y-4">
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -412,10 +412,10 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
               <div>
-                <h4 className="text-yellow-800 font-medium">¿Estás seguro?</h4>
+                <h4 className="text-yellow-800 font-medium">Are you sure?</h4>
                 <p className="text-yellow-700 text-sm mt-1">
-                  Al cancelar tu membresía perderás el acceso a las funcionalidades premium
-                  al final del período actual. Esta acción no se puede deshacer.
+                  By canceling your membership you will lose access to premium features
+                  at the end of the current period. This action cannot be undone.
                 </p>
               </div>
             </div>
@@ -423,14 +423,14 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Motivo de cancelación (opcional)
+              Reason for cancellation (optional)
             </label>
             <textarea
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Ayúdanos a mejorar contándonos por qué cancelas..."
+              placeholder="Help us improve by telling us why you're canceling..."
             />
           </div>
 
@@ -443,14 +443,14 @@ export const MembershipStatus: React.FC<MembershipStatusProps> = ({ userId }) =>
               }}
               className="flex-1"
             >
-              Mantener Membresía
+              Keep Membership
             </Button>
             <Button
               variant="primary"
               onClick={handleCancelMembership}
               className="flex-1 bg-red-600 hover:bg-red-700"
             >
-              Confirmar Cancelación
+              Confirm Cancellation
             </Button>
           </div>
         </div>

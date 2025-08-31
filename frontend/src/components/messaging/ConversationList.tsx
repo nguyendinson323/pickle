@@ -47,10 +47,10 @@ const ConversationList: React.FC<ConversationListProps> = ({
     if (conversation.type === 'direct') {
       // For direct conversations, show the other participant's name
       // This is a simplified version - you'd typically get participant details from the API
-      return `Chat directo`;
+      return `Direct Chat`;
     }
 
-    return `Conversación de grupo`;
+    return `Group Conversation`;
   };
 
   const getLastMessage = (conversation: Conversation) => {
@@ -58,7 +58,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
     if (!lastMessage) return null;
 
     const isOwn = lastMessage.sender.id === currentUserId;
-    const senderName = isOwn ? 'Tú' : lastMessage.sender.firstName;
+    const senderName = isOwn ? 'You' : lastMessage.sender.firstName;
     
     return {
       ...lastMessage,
@@ -77,20 +77,20 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
     if (diffDays === 0) {
       // Today - show time
-      return date.toLocaleTimeString('es-MX', {
+      return date.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
       });
     } else if (diffDays === 1) {
       // Yesterday
-      return 'Ayer';
+      return 'Yesterday';
     } else if (diffDays < 7) {
       // This week - show day
-      return date.toLocaleDateString('es-MX', { weekday: 'short' });
+      return date.toLocaleDateString('en-US', { weekday: 'short' });
     } else {
       // Older - show date
-      return date.toLocaleDateString('es-MX', {
+      return date.toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'short'
       });
@@ -135,11 +135,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
   const getTypeBadge = (type: string) => {
     switch (type) {
       case 'tournament':
-        return <Badge variant="primary" size="sm">Torneo</Badge>;
+        return <Badge variant="primary" size="sm">Tournament</Badge>;
       case 'finder_request':
-        return <Badge variant="secondary" size="sm">Jugador</Badge>;
+        return <Badge variant="secondary" size="sm">Player</Badge>;
       case 'group':
-        return <Badge variant="info" size="sm">Grupo</Badge>;
+        return <Badge variant="info" size="sm">Group</Badge>;
       default:
         return null;
     }
@@ -159,9 +159,9 @@ const ConversationList: React.FC<ConversationListProps> = ({
         <svg className="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
         </svg>
-        <p className="text-sm">No hay conversaciones</p>
+        <p className="text-sm">No conversations</p>
         <p className="text-xs text-gray-400 mt-1">
-          Inicia una nueva conversación para comenzar
+          Start a new conversation to get started
         </p>
       </div>
     );
@@ -200,7 +200,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
                     </h3>
                     {getTypeBadge(conversation.type)}
                     {conversation.isArchived && (
-                      <Badge variant="warning" size="sm">Archivado</Badge>
+                      <Badge variant="warning" size="sm">Archived</Badge>
                     )}
                   </div>
                   
@@ -222,7 +222,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
                   </div>
                 ) : (
                   <p className="text-xs text-gray-500">
-                    No hay mensajes
+                    No messages
                   </p>
                 )}
 
@@ -233,7 +233,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                     </svg>
                     <span className="text-xs text-gray-400">
-                      {conversation.participantIds.length} participantes
+                      {conversation.participantIds.length} participants
                     </span>
                   </div>
                 )}

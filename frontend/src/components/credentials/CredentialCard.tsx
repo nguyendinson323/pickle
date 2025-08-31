@@ -61,12 +61,16 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
   const getAffiliationStatusColor = (status: string) => {
     switch (status) {
       case 'ACTIVO':
+      case 'ACTIVE':
         return 'success';
       case 'INACTIVO':
+      case 'INACTIVE':
         return 'secondary';
       case 'SUSPENDIDO':
+      case 'SUSPENDED':
         return 'warning';
       case 'PENDIENTE':
+      case 'PENDING':
         return 'info';
       default:
         return 'secondary';
@@ -75,21 +79,21 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
 
   const getUserTypeLabel = (userType: string) => {
     const labels: Record<string, string> = {
-      'player': 'Jugador',
-      'coach': 'Entrenador',
-      'referee': 'Árbitro',
-      'club_admin': 'Administrador de Club'
+      'player': 'Player',
+      'coach': 'Coach',
+      'referee': 'Referee',
+      'club_admin': 'Club Administrator'
     };
     return labels[userType] || userType;
   };
 
   const formatStatus = (status: string) => {
     const labels: Record<string, string> = {
-      'active': 'Activa',
-      'expired': 'Expirada',
-      'suspended': 'Suspendida',
-      'revoked': 'Revocada',
-      'pending': 'Pendiente'
+      'active': 'Active',
+      'expired': 'Expired',
+      'suspended': 'Suspended',
+      'revoked': 'Revoked',
+      'pending': 'Pending'
     };
     return labels[status] || status;
   };
@@ -116,11 +120,11 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
               {credential.photo ? (
                 <img 
                   src={credential.photo} 
-                  alt="Foto"
+                  alt="Photo"
                   className="w-full h-full object-cover rounded"
                 />
               ) : (
-                'FOTO'
+                'PHOTO'
               )}
             </div>
 
@@ -155,7 +159,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
             </div>
             {(isExpiringSoon() || isExpired()) && (
               <div className="text-xs text-red-600 mt-1">
-                {isExpired() ? 'Expirada' : 'Expira pronto'}
+                {isExpired() ? 'Expired' : 'Expires soon'}
               </div>
             )}
           </div>
@@ -164,13 +168,13 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
         {/* Details */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="font-medium text-gray-700">Estado:</span>
+            <span className="font-medium text-gray-700">State:</span>
             <div className="text-gray-900">{credential.stateName}</div>
           </div>
 
           {credential.nrtpLevel && (
             <div>
-              <span className="font-medium text-gray-700">Nivel NRTP:</span>
+              <span className="font-medium text-gray-700">NRTP Level:</span>
               <div className="text-gray-900">{credential.nrtpLevel}</div>
             </div>
           )}
@@ -190,14 +194,14 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
           )}
 
           <div>
-            <span className="font-medium text-gray-700">Emisión:</span>
+            <span className="font-medium text-gray-700">Issued:</span>
             <div className="text-gray-900">
               {new Date(credential.issuedDate).toLocaleDateString()}
             </div>
           </div>
 
           <div>
-            <span className="font-medium text-gray-700">Vigencia:</span>
+            <span className="font-medium text-gray-700">Valid until:</span>
             <div className={`${isExpired() ? 'text-red-600' : isExpiringSoon() ? 'text-yellow-600' : 'text-gray-900'}`}>
               {new Date(credential.expirationDate).toLocaleDateString()}
             </div>
@@ -208,11 +212,11 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div>
-              Verificaciones: {credential.verificationCount}
+              Verifications: {credential.verificationCount}
             </div>
             {credential.lastVerified && (
               <div>
-                Última verificación: {new Date(credential.lastVerified).toLocaleDateString()}
+                Last verification: {new Date(credential.lastVerified).toLocaleDateString()}
               </div>
             )}
           </div>
@@ -227,7 +231,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                 variant="secondary"
                 size="sm"
               >
-                Ver QR
+                View QR
               </Button>
             )}
             
@@ -247,7 +251,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                 variant="secondary"
                 size="sm"
               >
-                Imagen
+                Image
               </Button>
             )}
           </div>
@@ -258,7 +262,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
               variant="primary"
               size="sm"
             >
-              Acciones
+              Actions
             </Button>
           )}
         </div>
@@ -268,7 +272,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
       <Modal
         isOpen={showQRModal}
         onClose={() => setShowQRModal(false)}
-        title="Código QR de Credencial"
+        title="Credential QR Code"
       >
         <div className="text-center p-6">
           {credential.qrCode ? (
@@ -279,7 +283,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                 className="mx-auto mb-4 w-48 h-48 border rounded"
               />
               <p className="text-sm text-gray-600">
-                Escanea este código para verificar la credencial
+                Scan this code to verify the credential
               </p>
               <div className="mt-2 text-xs text-gray-500 font-mono">
                 ID: {credential.id}
@@ -287,7 +291,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
             </div>
           ) : (
             <div className="text-gray-500">
-              Código QR no disponible
+              QR Code not available
             </div>
           )}
         </div>
@@ -297,17 +301,17 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
       <Modal
         isOpen={showActionsModal}
         onClose={() => setShowActionsModal(false)}
-        title="Acciones de Credencial"
+        title="Credential Actions"
       >
         <div className="p-6 space-y-4">
           <div className="text-sm text-gray-600 mb-4">
-            Credencial: {credential.fullName} ({credential.federationIdNumber})
+            Credential: {credential.fullName} ({credential.federationIdNumber})
           </div>
 
           {onStatusUpdate && (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Cambiar Estado:
+                Change Status:
               </label>
               <div className="flex space-x-2">
                 <Button
@@ -318,7 +322,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                   variant={credential.status === 'active' ? 'primary' : 'secondary'}
                   size="sm"
                 >
-                  Activar
+                  Activate
                 </Button>
                 <Button
                   onClick={() => {
@@ -328,7 +332,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                   variant={credential.status === 'suspended' ? 'primary' : 'secondary'}
                   size="sm"
                 >
-                  Suspender
+                  Suspend
                 </Button>
                 <Button
                   onClick={() => {
@@ -338,7 +342,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                   variant={credential.status === 'revoked' ? 'primary' : 'secondary'}
                   size="sm"
                 >
-                  Revocar
+                  Revoke
                 </Button>
               </div>
             </div>
@@ -354,7 +358,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
                 variant="primary"
                 className="w-full"
               >
-                Renovar Credencial
+                Renew Credential
               </Button>
             </div>
           )}
@@ -365,7 +369,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
               variant="secondary"
               className="w-full"
             >
-              Cancelar
+              Cancel
             </Button>
           </div>
         </div>

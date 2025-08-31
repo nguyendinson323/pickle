@@ -32,10 +32,10 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
     
-    if (diffInHours < 1) return 'Hace unos minutos';
-    if (diffInHours < 24) return `Hace ${diffInHours}h`;
-    if (diffInHours < 48) return 'Ayer';
-    return date.toLocaleDateString('es-MX', { 
+    if (diffInHours < 1) return 'A few minutes ago';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    if (diffInHours < 48) return 'Yesterday';
+    return date.toLocaleDateString('en-US', { 
       day: 'numeric', 
       month: 'short' 
     });
@@ -54,9 +54,9 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
       {/* Filter Tabs */}
       <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
         {[
-          { key: 'all', label: 'Todos' },
-          { key: 'unread', label: 'No leídos' },
-          { key: 'read', label: 'Leídos' }
+          { key: 'all', label: 'All' },
+          { key: 'unread', label: 'Unread' },
+          { key: 'read', label: 'Read' }
         ].map((tab) => (
           <button
             key={tab.key}
@@ -85,12 +85,12 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {filter === 'unread' ? 'No hay mensajes sin leer' : 'No hay mensajes'}
+              {filter === 'unread' ? 'No unread messages' : 'No messages'}
             </h3>
             <p className="text-gray-500">
               {filter === 'unread' 
-                ? 'Todos tus mensajes han sido leídos.'
-                : 'Tu bandeja de entrada está vacía.'}
+                ? 'All your messages have been read.'
+                : 'Your inbox is empty.'}
             </p>
           </Card>
         ) : (
@@ -123,7 +123,7 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                       <h4 className={`text-sm font-medium truncate ${
                         !message.isRead ? 'text-gray-900' : 'text-gray-700'
                       }`}>
-                        {message.senderName || 'Usuario'}
+                        {message.senderName || 'User'}
                       </h4>
                       {!message.isRead && (
                         <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
@@ -169,9 +169,9 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                         }
                         className="text-xs"
                       >
-                        {message.senderRole === 'system' ? 'Sistema' :
-                         message.senderRole === 'notification' ? 'Notificación' :
-                         'Mensaje'}
+                        {message.senderRole === 'system' ? 'System' :
+                         message.senderRole === 'notification' ? 'Notification' :
+                         'Message'}
                       </Badge>
                     </div>
                   )}
@@ -203,7 +203,7 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
       {filteredMessages.length > 0 && (
         <div className="text-center pt-4">
           <Button variant="secondary" size="sm">
-            Cargar más mensajes
+            Load more messages
           </Button>
         </div>
       )}

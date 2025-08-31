@@ -39,7 +39,7 @@ const AppContent: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-4 text-gray-600">Cargando aplicación...</p>
+          <p className="mt-4 text-gray-600">Loading application...</p>
         </div>
       </div>
     );
@@ -122,8 +122,8 @@ const AppContent: React.FC = () => {
             <ProtectedRoute>
               <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Perfil</h1>
-                  <p className="text-gray-600">Esta página se implementará en el siguiente paso.</p>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Profile</h1>
+                  <p className="text-gray-600">This page will be implemented in the next step.</p>
                 </div>
               </div>
             </ProtectedRoute>
@@ -135,8 +135,8 @@ const AppContent: React.FC = () => {
           element={
             <div className="min-h-screen flex items-center justify-center">
               <div className="text-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Torneos</h1>
-                <p className="text-gray-600">Esta página se implementará en pasos futuros.</p>
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">Tournaments</h1>
+                <p className="text-gray-600">This page will be implemented in future steps.</p>
               </div>
             </div>
           }
@@ -147,8 +147,8 @@ const AppContent: React.FC = () => {
           element={
             <div className="min-h-screen flex items-center justify-center">
               <div className="text-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Canchas</h1>
-                <p className="text-gray-600">Esta página se implementará en pasos futuros.</p>
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">Courts</h1>
+                <p className="text-gray-600">This page will be implemented in future steps.</p>
               </div>
             </div>
           }
@@ -160,7 +160,7 @@ const AppContent: React.FC = () => {
             <div className="min-h-screen flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-4">Rankings</h1>
-                <p className="text-gray-600">Esta página se implementará en pasos futuros.</p>
+                <p className="text-gray-600">This page will be implemented in future steps.</p>
               </div>
             </div>
           }
@@ -172,8 +172,8 @@ const AppContent: React.FC = () => {
             <ProtectedRoute requiredRoles={['player', 'coach']}>
               <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Buscador de Jugadores</h1>
-                  <p className="text-gray-600">Esta funcionalidad premium se implementará en pasos futuros.</p>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Player Finder</h1>
+                  <p className="text-gray-600">This premium functionality will be implemented in future steps.</p>
                 </div>
               </div>
             </ProtectedRoute>
@@ -186,8 +186,8 @@ const AppContent: React.FC = () => {
             <ProtectedRoute>
               <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Mensajería</h1>
-                  <p className="text-gray-600">Esta página se implementará en pasos futuros.</p>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Messaging</h1>
+                  <p className="text-gray-600">This page will be implemented in future steps.</p>
                 </div>
               </div>
             </ProtectedRoute>
@@ -201,9 +201,9 @@ const AppContent: React.FC = () => {
             <div className="min-h-screen flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-                <p className="text-gray-600 mb-8">Página no encontrada</p>
+                <p className="text-gray-600 mb-8">Page not found</p>
                 <a href={ROUTES.HOME} className="btn-primary">
-                  Volver al Inicio
+                  Back to Home
                 </a>
               </div>
             </div>

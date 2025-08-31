@@ -33,16 +33,16 @@ interface MicrositePageEditorProps {
 }
 
 const CONTENT_BLOCK_TYPES = [
-  { type: 'text', label: 'Texto', icon: '📝', description: 'Texto enriquecido con formato' },
-  { type: 'image', label: 'Imagen', icon: '🖼️', description: 'Imagen con texto alternativo' },
-  { type: 'gallery', label: 'Galería', icon: '🖼️', description: 'Colección de imágenes' },
-  { type: 'video', label: 'Video', icon: '🎥', description: 'Video de YouTube o archivo' },
-  { type: 'contact', label: 'Contacto', icon: '📞', description: 'Información y formulario de contacto' },
-  { type: 'map', label: 'Mapa', icon: '🗺️', description: 'Mapa de ubicación interactivo' },
-  { type: 'court_list', label: 'Lista de Canchas', icon: '🏟️', description: 'Lista de canchas disponibles' },
-  { type: 'tournament_list', label: 'Torneos', icon: '🏆', description: 'Lista de torneos' },
-  { type: 'calendar', label: 'Calendario', icon: '📅', description: 'Calendario de eventos' },
-  { type: 'custom_html', label: 'HTML Personalizado', icon: '💻', description: 'Código HTML personalizado' },
+  { type: 'text', label: 'Text', icon: '📝', description: 'Rich text with formatting' },
+  { type: 'image', label: 'Image', icon: '🖼️', description: 'Image with alternative text' },
+  { type: 'gallery', label: 'Gallery', icon: '🖼️', description: 'Collection of images' },
+  { type: 'video', label: 'Video', icon: '🎥', description: 'YouTube video or file' },
+  { type: 'contact', label: 'Contact', icon: '📞', description: 'Contact information and form' },
+  { type: 'map', label: 'Map', icon: '🗺️', description: 'Interactive location map' },
+  { type: 'court_list', label: 'Court List', icon: '🏟️', description: 'List of available courts' },
+  { type: 'tournament_list', label: 'Tournaments', icon: '🏆', description: 'Tournament list' },
+  { type: 'calendar', label: 'Calendar', icon: '📅', description: 'Event calendar' },
+  { type: 'custom_html', label: 'Custom HTML', icon: '💻', description: 'Custom HTML code' },
 ];
 
 const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, page }) => {
@@ -99,7 +99,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
   };
 
   const handleDeleteBlock = async (blockId: number) => {
-    if (confirm('¿Estás seguro de que deseas eliminar este bloque?')) {
+    if (confirm('Are you sure you want to delete this block?')) {
       await dispatch(deleteContentBlock(blockId));
     }
   };
@@ -158,7 +158,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
   const getDefaultBlockContent = (type: string) => {
     switch (type) {
       case 'text':
-        return { text: '<p>Escribe tu contenido aquí...</p>', textAlign: 'left' };
+        return { text: '<p>Write your content here...</p>', textAlign: 'left' };
       case 'image':
         return { imageUrl: '', alt: '', caption: '', alignment: 'center' };
       case 'gallery':
@@ -167,7 +167,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
         return { videoUrl: '', videoType: 'youtube', autoplay: false };
       case 'contact':
         return { 
-          title: 'Contáctanos', 
+          title: 'Contact Us', 
           email: microsite.contactEmail, 
           phone: microsite.contactPhone,
           showForm: true 
@@ -184,8 +184,8 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
       <div className="h-full flex items-center justify-center text-gray-500">
         <div className="text-center">
           <DocumentDuplicateIcon className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <h3 className="text-lg font-medium mb-2">Selecciona una página</h3>
-          <p>Elige una página del panel izquierdo para comenzar a editar</p>
+          <h3 className="text-lg font-medium mb-2">Select a page</h3>
+          <p>Choose a page from the left panel to start editing</p>
         </div>
       </div>
     );
@@ -203,12 +203,12 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               </h2>
               {page.isHomePage && (
                 <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-                  Página de inicio
+                  Home page
                 </span>
               )}
               {!page.isPublished && (
                 <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded">
-                  Borrador
+                  Draft
                 </span>
               )}
             </div>
@@ -225,7 +225,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               className="flex items-center gap-2"
             >
               <Cog6ToothIcon className="w-4 h-4" />
-              Configuración
+              Settings
             </Button>
             
             <Button
@@ -234,7 +234,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               className="flex items-center gap-2"
             >
               <PlusIcon className="w-4 h-4" />
-              Agregar Bloque
+              Add Block
             </Button>
           </div>
         </div>
@@ -262,7 +262,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
                     <div className="flex flex-col gap-1">
                       <button
                         className="p-1 text-gray-400 hover:text-gray-600 cursor-move"
-                        title="Arrastrar para reordenar"
+                        title="Drag to reorder"
                       >
                         <Bars3Icon className="w-4 h-4" />
                       </button>
@@ -280,7 +280,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
                               ? 'text-green-600 hover:bg-green-50' 
                               : 'text-gray-400 hover:bg-gray-50'
                           }`}
-                          title={block.isVisible ? 'Ocultar bloque' : 'Mostrar bloque'}
+                          title={block.isVisible ? 'Hide block' : 'Show block'}
                         >
                           {block.isVisible ? (
                             <EyeIcon className="w-4 h-4" />
@@ -292,7 +292,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
                         <button
                           onClick={() => handleEditBlock(block)}
                           className="p-1 text-blue-600 hover:bg-blue-50 rounded"
-                          title="Editar bloque"
+                          title="Edit block"
                         >
                           <PencilIcon className="w-4 h-4" />
                         </button>
@@ -300,7 +300,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
                         <button
                           onClick={() => handleDeleteBlock(block.id)}
                           className="p-1 text-red-600 hover:bg-red-50 rounded"
-                          title="Eliminar bloque"
+                          title="Delete block"
                         >
                           <TrashIcon className="w-4 h-4" />
                         </button>
@@ -327,17 +327,17 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
             <div className="max-w-md mx-auto">
               <PlusIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Esta página está vacía
+                This page is empty
               </h3>
               <p className="text-gray-600 mb-4">
-                Comienza agregando bloques de contenido para crear tu página.
+                Start by adding content blocks to create your page.
               </p>
               <Button
                 onClick={() => setShowBlockSelector(true)}
                 className="flex items-center gap-2 mx-auto"
               >
                 <PlusIcon className="w-4 h-4" />
-                Agregar Primer Bloque
+                Add First Block
               </Button>
             </div>
           </div>
@@ -348,7 +348,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
       <Modal
         isOpen={showBlockSelector}
         onClose={() => setShowBlockSelector(false)}
-        title="Agregar Bloque de Contenido"
+        title="Add Content Block"
         size="lg"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -389,12 +389,12 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
       <Modal
         isOpen={showPageSettings}
         onClose={() => setShowPageSettings(false)}
-        title="Configuración de Página"
+        title="Page Settings"
       >
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Título de la Página
+              Page Title
             </label>
             <input
               type="text"
@@ -413,7 +413,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               value={pageSettings.slug}
               onChange={(e) => setPageSettings(prev => ({ ...prev, slug: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              placeholder="mi-pagina"
+              placeholder="my-page"
             />
             <p className="text-xs text-gray-500 mt-1">
               {microsite.subdomain}.pickleballfed.mx/{pageSettings.slug}
@@ -422,7 +422,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Título SEO
+              SEO Title
             </label>
             <input
               type="text"
@@ -432,13 +432,13 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               maxLength={60}
             />
             <p className="text-xs text-gray-500 mt-1">
-              {pageSettings.metaTitle.length}/60 caracteres
+              {pageSettings.metaTitle.length}/60 characters
             </p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción SEO
+              SEO Description
             </label>
             <textarea
               value={pageSettings.metaDescription}
@@ -448,7 +448,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               maxLength={160}
             />
             <p className="text-xs text-gray-500 mt-1">
-              {pageSettings.metaDescription.length}/160 caracteres
+              {pageSettings.metaDescription.length}/160 characters
             </p>
           </div>
 
@@ -461,7 +461,7 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="isPublished" className="ml-2 text-sm text-gray-700">
-              Página publicada
+              Published page
             </label>
           </div>
 
@@ -470,10 +470,10 @@ const MicrositePageEditor: React.FC<MicrositePageEditorProps> = ({ microsite, pa
               variant="outline"
               onClick={() => setShowPageSettings(false)}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button onClick={handleSavePageSettings}>
-              Guardar Cambios
+              Save Changes
             </Button>
           </div>
         </div>

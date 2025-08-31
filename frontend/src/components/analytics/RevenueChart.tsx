@@ -16,7 +16,7 @@ interface RevenueChartProps {
 
 export const RevenueChart: React.FC<RevenueChartProps> = ({ 
   data, 
-  title = "Ingresos", 
+  title = "Revenue", 
   period = 'daily' 
 }) => {
   const [viewType, setViewType] = useState<'revenue' | 'reservations'>('revenue');
@@ -33,13 +33,13 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
     const date = new Date(dateString);
     switch (period) {
       case 'daily':
-        return date.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+        return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
       case 'weekly':
-        return `Sem ${Math.ceil(date.getDate() / 7)}`;
+        return `Week ${Math.ceil(date.getDate() / 7)}`;
       case 'monthly':
-        return date.toLocaleDateString('es-MX', { month: 'short', year: '2-digit' });
+        return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
       default:
-        return date.toLocaleDateString('es-MX');
+        return date.toLocaleDateString('en-US');
     }
   };
 
@@ -69,7 +69,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
-          <p className="text-gray-600">No hay datos disponibles para el período seleccionado</p>
+          <p className="text-gray-600">No data available for the selected period</p>
         </div>
       </Card>
     );
@@ -86,14 +86,14 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
             variant={viewType === 'revenue' ? 'primary' : 'outline'}
             onClick={() => setViewType('revenue')}
           >
-            Ingresos
+            Revenue
           </Button>
           <Button
             size="sm"
             variant={viewType === 'reservations' ? 'primary' : 'outline'}
             onClick={() => setViewType('reservations')}
           >
-            Reservas
+            Reservations
           </Button>
         </div>
       </div>
@@ -142,7 +142,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
                         <div className="font-medium">
                           {viewType === 'revenue' 
                             ? formatPrice(point.revenue)
-                            : `${point.reservations} reservas`
+                            : `${point.reservations} reservations`
                           }
                         </div>
                         <div className="text-gray-300 text-xs">
@@ -194,7 +194,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
           </p>
         </div>
         <div className="text-center">
-          <p className="text-xs text-gray-500 mb-1">Promedio</p>
+          <p className="text-xs text-gray-500 mb-1">Average</p>
           <p className="font-semibold text-gray-900">
             {viewType === 'revenue' 
               ? formatPrice(data.reduce((sum, d) => sum + d.revenue, 0) / data.length)
@@ -203,7 +203,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
           </p>
         </div>
         <div className="text-center">
-          <p className="text-xs text-gray-500 mb-1">Máximo</p>
+          <p className="text-xs text-gray-500 mb-1">Maximum</p>
           <p className="font-semibold text-gray-900">
             {viewType === 'revenue' 
               ? formatPrice(Math.max(...data.map(d => d.revenue)))
@@ -212,7 +212,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
           </p>
         </div>
         <div className="text-center">
-          <p className="text-xs text-gray-500 mb-1">Mínimo</p>
+          <p className="text-xs text-gray-500 mb-1">Minimum</p>
           <p className="font-semibold text-gray-900">
             {viewType === 'revenue' 
               ? formatPrice(Math.min(...data.map(d => d.revenue)))

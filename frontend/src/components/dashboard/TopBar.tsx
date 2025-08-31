@@ -26,12 +26,12 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
 
   const getUserRoleLabel = (role: string) => {
     const roleLabels = {
-      player: 'Jugador',
-      coach: 'Entrenador',
+      player: 'Player',
+      coach: 'Coach',
       club: 'Club',
-      partner: 'Socio',
-      state: 'Comité Estatal',
-      federation: 'Administrador'
+      partner: 'Partner',
+      state: 'State Committee',
+      federation: 'Administrator'
     };
     return roleLabels[role as keyof typeof roleLabels] || role;
   };
@@ -60,7 +60,7 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
                 <img
                   className="h-8 w-auto"
                   src="/logo-horizontal.png"
-                  alt="Federación Mexicana de Pickleball"
+                  alt="Mexican Pickleball Federation"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjMyIiB2aWV3Qm94PSIwIDAgMTIwIDMyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMzIiIGZpbGw9IiMzYjgyZjYiLz48dGV4dCB4PSI2MCIgeT0iMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZNUDwvdGV4dD48L3N2Zz4=';
                   }}
@@ -121,7 +121,7 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Mi Perfil
+                      My Profile
                     </button>
                     <button
                       onClick={() => {
@@ -130,7 +130,7 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Membresía
+                      Membership
                     </button>
                     <button
                       onClick={() => {
@@ -139,7 +139,7 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Configuración
+                      Settings
                     </button>
                     <div className="border-t border-gray-100 my-1"></div>
                     <button
@@ -149,7 +149,7 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Cerrar Sesión
+                      Sign Out
                     </button>
                   </div>
                 )}
@@ -171,26 +171,26 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
       <Modal
         isOpen={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}
-        title="Cerrar Sesión"
+        title="Sign Out"
         footer={
           <div className="flex justify-end space-x-3">
             <Button
               variant="secondary"
               onClick={() => setShowLogoutModal(false)}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               variant="error"
               onClick={handleLogout}
             >
-              Cerrar Sesión
+              Sign Out
             </Button>
           </div>
         }
       >
         <p className="text-gray-600">
-          ¿Estás seguro de que deseas cerrar sesión? Tendrás que iniciar sesión nuevamente para acceder a tu cuenta.
+          Are you sure you want to sign out? You'll need to sign in again to access your account.
         </p>
       </Modal>
     </>

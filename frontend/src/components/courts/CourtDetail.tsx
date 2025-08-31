@@ -36,35 +36,35 @@ export const CourtDetail: React.FC = () => {
 
   const getSurfaceTypeLabel = (type: string) => {
     const labels = {
-      'concrete': 'Concreto',
-      'asphalt': 'Asfalto',
-      'acrylic': 'Acrílico',
-      'composite': 'Compuesto'
+      'concrete': 'Concrete',
+      'asphalt': 'Asphalt',
+      'acrylic': 'Acrylic',
+      'composite': 'Composite'
     };
     return labels[type as keyof typeof labels] || type;
   };
 
   const getAmenityLabel = (amenity: string) => {
     const labels = {
-      'lighting': '💡 Iluminación',
-      'seating': '🪑 Asientos',
-      'parking': '🚗 Estacionamiento',
-      'restrooms': '🚻 Sanitarios',
-      'water_fountain': '⛲ Bebedero',
-      'equipment_rental': '🏓 Renta de Equipo',
-      'cafeteria': '☕ Cafetería',
-      'pro_shop': '🏪 Tienda Pro',
-      'coaching_area': '👨‍🏫 Área de Entrenamiento',
-      'professional_lighting': '💡 Iluminación Profesional',
-      'vip_seating': '💺 Asientos VIP',
+      'lighting': '💡 Lighting',
+      'seating': '🪑 Seating',
+      'parking': '🚗 Parking',
+      'restrooms': '🚻 Restrooms',
+      'water_fountain': '⛲ Water Fountain',
+      'equipment_rental': '🏓 Equipment Rental',
+      'cafeteria': '☕ Cafeteria',
+      'pro_shop': '🏪 Pro Shop',
+      'coaching_area': '👨‍🏫 Coaching Area',
+      'professional_lighting': '💡 Professional Lighting',
+      'vip_seating': '💺 VIP Seating',
       'valet_parking': '🅿️ Valet Parking',
-      'premium_restrooms': '🚻 Sanitarios Premium'
+      'premium_restrooms': '🚻 Premium Restrooms'
     };
     return labels[amenity as keyof typeof labels] || amenity;
   };
 
   const getDayName = (dayIndex: number) => {
-    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[dayIndex];
   };
 
@@ -107,10 +107,10 @@ export const CourtDetail: React.FC = () => {
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          {error || 'Cancha no encontrada'}
+          {error || 'Court not found'}
         </h3>
         <Link to="/courts">
-          <Button>Volver a las canchas</Button>
+          <Button>Back to Courts</Button>
         </Link>
       </div>
     );
@@ -132,11 +132,11 @@ export const CourtDetail: React.FC = () => {
             <div className="flex items-center gap-1">
               <span className="text-yellow-500">⭐</span>
               <span className="font-semibold">
-                {currentCourt.averageRating?.toFixed(1) || 'Sin calificación'}
+                {currentCourt.averageRating?.toFixed(1) || 'No rating'}
               </span>
               {currentCourt.totalReviews && (
                 <span className="text-gray-500">
-                  ({currentCourt.totalReviews} reseña{currentCourt.totalReviews !== 1 ? 's' : ''})
+                  ({currentCourt.totalReviews} review{currentCourt.totalReviews !== 1 ? 's' : ''})
                 </span>
               )}
             </div>
@@ -144,7 +144,7 @@ export const CourtDetail: React.FC = () => {
               {getSurfaceTypeLabel(currentCourt.surfaceType)}
             </Badge>
             {!currentCourt.isActive && (
-              <Badge variant="error">Inactiva</Badge>
+              <Badge variant="error">Inactive</Badge>
             )}
           </div>
         </div>
@@ -153,14 +153,14 @@ export const CourtDetail: React.FC = () => {
           {user && (
             <Link to={`/courts/${currentCourt.id}/book`}>
               <Button variant="primary">
-                Reservar Ahora
+                Book Now
               </Button>
             </Link>
           )}
           
           {canManageCourt && (
             <Button variant="outline">
-              Administrar
+              Manage
             </Button>
           )}
         </div>
@@ -174,7 +174,7 @@ export const CourtDetail: React.FC = () => {
             <div className="relative h-96">
               <img
                 src={images[currentImageIndex]}
-                alt={`${currentCourt.name} - Imagen ${currentImageIndex + 1}`}
+                alt={`${currentCourt.name} - Image ${currentImageIndex + 1}`}
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = '/placeholder-court.jpg';
@@ -219,7 +219,7 @@ export const CourtDetail: React.FC = () => {
 
           {/* Description */}
           <Card>
-            <h2 className="text-xl font-semibold mb-4">Descripción</h2>
+            <h2 className="text-xl font-semibold mb-4">Description</h2>
             <p className="text-gray-700 leading-relaxed">
               {currentCourt.description}
             </p>
@@ -228,7 +228,7 @@ export const CourtDetail: React.FC = () => {
           {/* Amenities */}
           {currentCourt.amenities && currentCourt.amenities.length > 0 && (
             <Card>
-              <h2 className="text-xl font-semibold mb-4">Servicios Disponibles</h2>
+              <h2 className="text-xl font-semibold mb-4">Available Amenities</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {currentCourt.amenities.map((amenity, index) => (
                   <div key={index} className="flex items-center gap-2 text-gray-700">
@@ -241,7 +241,7 @@ export const CourtDetail: React.FC = () => {
 
           {/* Operating Hours */}
           <Card>
-            <h2 className="text-xl font-semibold mb-4">Horarios de Operación</h2>
+            <h2 className="text-xl font-semibold mb-4">Operating Hours</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(currentCourt.operatingHours).map(([dayIndex, hours]) => (
                 <div key={dayIndex} className="flex justify-between items-center">
@@ -251,7 +251,7 @@ export const CourtDetail: React.FC = () => {
                   <span className="text-gray-600">
                     {hours.isOpen 
                       ? `${hours.startTime} - ${hours.endTime}`
-                      : 'Cerrado'
+                      : 'Closed'
                     }
                   </span>
                 </div>
@@ -261,24 +261,24 @@ export const CourtDetail: React.FC = () => {
 
           {/* Policies */}
           <Card>
-            <h2 className="text-xl font-semibold mb-4">Políticas de Reserva</h2>
+            <h2 className="text-xl font-semibold mb-4">Booking Policies</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-700">Reserva máxima con anticipación:</span>
-                <span className="font-medium">{currentCourt.maxAdvanceBookingDays} días</span>
+                <span className="text-gray-700">Maximum advance booking:</span>
+                <span className="font-medium">{currentCourt.maxAdvanceBookingDays} days</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-700">Duración mínima:</span>
-                <span className="font-medium">{currentCourt.minBookingDuration} minutos</span>
+                <span className="text-gray-700">Minimum duration:</span>
+                <span className="font-medium">{currentCourt.minBookingDuration} minutes</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-700">Duración máxima:</span>
-                <span className="font-medium">{currentCourt.maxBookingDuration} minutos</span>
+                <span className="text-gray-700">Maximum duration:</span>
+                <span className="font-medium">{currentCourt.maxBookingDuration} minutes</span>
               </div>
             </div>
             
             <div className="mt-4 pt-4 border-t">
-              <h3 className="font-medium text-gray-900 mb-2">Política de Cancelación</h3>
+              <h3 className="font-medium text-gray-900 mb-2">Cancellation Policy</h3>
               <p className="text-gray-700 text-sm">
                 {currentCourt.cancellationPolicy}
               </p>
@@ -290,10 +290,10 @@ export const CourtDetail: React.FC = () => {
         <div className="space-y-6">
           {/* Pricing */}
           <Card>
-            <h2 className="text-xl font-semibold mb-4">Precios</h2>
+            <h2 className="text-xl font-semibold mb-4">Pricing</h2>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-gray-700">Precio regular:</span>
+                <span className="text-gray-700">Regular price:</span>
                 <span className="text-xl font-bold text-green-600">
                   {formatPrice(currentCourt.hourlyRate)}/h
                 </span>
@@ -301,7 +301,7 @@ export const CourtDetail: React.FC = () => {
               
               {currentCourt.peakHourRate && (
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Hora pico:</span>
+                  <span className="text-gray-700">Peak hour:</span>
                   <span className="font-semibold text-orange-600">
                     {formatPrice(currentCourt.peakHourRate)}/h
                   </span>
@@ -310,7 +310,7 @@ export const CourtDetail: React.FC = () => {
               
               {currentCourt.weekendRate && (
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Fin de semana:</span>
+                  <span className="text-gray-700">Weekend:</span>
                   <span className="font-semibold text-blue-600">
                     {formatPrice(currentCourt.weekendRate)}/h
                   </span>
@@ -320,11 +320,11 @@ export const CourtDetail: React.FC = () => {
             
             <div className="mt-4 pt-4 border-t">
               <p className="text-sm text-gray-600">
-                * Los precios incluyen 16% de IVA
+                * Prices include 16% VAT
               </p>
               {currentCourt.peakHourRate && (
                 <p className="text-sm text-gray-600 mt-1">
-                  * Hora pico: 6-8 AM y 6-10 PM
+                  * Peak hour: 6-8 AM and 6-10 PM
                 </p>
               )}
             </div>
@@ -332,7 +332,7 @@ export const CourtDetail: React.FC = () => {
 
           {/* Location */}
           <Card>
-            <h2 className="text-xl font-semibold mb-4">Ubicación</h2>
+            <h2 className="text-xl font-semibold mb-4">Location</h2>
             <div className="space-y-3">
               <div className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -356,23 +356,23 @@ export const CourtDetail: React.FC = () => {
           {/* Statistics */}
           {courtStats && (
             <Card>
-              <h2 className="text-xl font-semibold mb-4">Estadísticas</h2>
+              <h2 className="text-xl font-semibold mb-4">Statistics</h2>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-700">Calificación promedio:</span>
+                  <span className="text-gray-700">Average rating:</span>
                   <span className="font-semibold">
                     {courtStats.averageRating.toFixed(1)} ⭐
                   </span>
                 </div>
                 
                 <div className="flex justify-between">
-                  <span className="text-gray-700">Total de reseñas:</span>
+                  <span className="text-gray-700">Total reviews:</span>
                   <span className="font-semibold">{courtStats.totalReviews}</span>
                 </div>
 
                 {courtStats.amenityRatings && (
                   <div className="pt-3 border-t">
-                    <h3 className="font-medium text-gray-900 mb-2">Calificaciones por Aspecto</h3>
+                    <h3 className="font-medium text-gray-900 mb-2">Ratings by Aspect</h3>
                     <div className="space-y-2">
                       {Object.entries(courtStats.amenityRatings).map(([aspect, rating]) => (
                         <div key={aspect} className="flex justify-between text-sm">
@@ -390,7 +390,7 @@ export const CourtDetail: React.FC = () => {
           {/* Owner Information */}
           {(currentCourt.clubOwner || currentCourt.partnerOwner) && (
             <Card>
-              <h2 className="text-xl font-semibold mb-4">Información del Propietario</h2>
+              <h2 className="text-xl font-semibold mb-4">Owner Information</h2>
               {currentCourt.clubOwner && (
                 <div className="space-y-2">
                   <h3 className="font-medium text-gray-900">

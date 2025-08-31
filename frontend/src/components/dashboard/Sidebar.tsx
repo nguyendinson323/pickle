@@ -53,16 +53,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, content }) => {
               {/* Quick Stats */}
               <div>
                 <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                  Estado de Cuenta
+                  Account Status
                 </h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Membresía</span>
-                    <span className="text-green-600 font-medium">Activa</span>
+                    <span className="text-gray-600">Membership</span>
+                    <span className="text-green-600 font-medium">Active</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Renovación</span>
-                    <span className="text-gray-900">31 Dic 2025</span>
+                    <span className="text-gray-600">Renewal</span>
+                    <span className="text-gray-900">Dec 31, 2025</span>
                   </div>
                 </div>
               </div>
@@ -70,17 +70,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, content }) => {
               {/* Quick Actions */}
               <div>
                 <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                  Acciones Rápidas
+                  Quick Actions
                 </h3>
                 <div className="space-y-2">
                   <button className="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
-                    Actualizar Perfil
+                    Update Profile
                   </button>
                   <button className="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
-                    Ver Mensajes
+                    View Messages
                   </button>
                   <button className="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
-                    Descargar Credencial
+                    Download Credential
                   </button>
                 </div>
               </div>
@@ -88,14 +88,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, content }) => {
               {/* Support */}
               <div>
                 <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                  Soporte
+                  Support
                 </h3>
                 <div className="space-y-2">
                   <button className="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
-                    Centro de Ayuda
+                    Help Center
                   </button>
                   <button className="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
-                    Contactar Soporte
+                    Contact Support
                   </button>
                 </div>
               </div>
@@ -106,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, content }) => {
         {/* Footer */}
         <div className="p-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Federación Mexicana de Pickleball
+            Mexican Pickleball Federation
           </p>
         </div>
       </div>

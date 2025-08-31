@@ -22,36 +22,36 @@ export const CourtSearch: React.FC = () => {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const surfaceTypeOptions = [
-    { value: '', label: 'Cualquier superficie' },
-    { value: 'concrete', label: 'Concreto' },
-    { value: 'asphalt', label: 'Asfalto' },
-    { value: 'acrylic', label: 'Acrílico' },
-    { value: 'composite', label: 'Compuesto' }
+    { value: '', label: 'Any surface' },
+    { value: 'concrete', label: 'Concrete' },
+    { value: 'asphalt', label: 'Asphalt' },
+    { value: 'acrylic', label: 'Acrylic' },
+    { value: 'composite', label: 'Composite' }
   ];
 
   const sortOptions = [
-    { value: 'created_at:DESC', label: 'Más recientes' },
-    { value: 'created_at:ASC', label: 'Más antiguos' },
-    { value: 'hourlyRate:ASC', label: 'Precio: menor a mayor' },
-    { value: 'hourlyRate:DESC', label: 'Precio: mayor a menor' },
-    { value: 'name:ASC', label: 'Nombre: A-Z' },
-    { value: 'name:DESC', label: 'Nombre: Z-A' }
+    { value: 'created_at:DESC', label: 'Most recent' },
+    { value: 'created_at:ASC', label: 'Oldest' },
+    { value: 'hourlyRate:ASC', label: 'Price: low to high' },
+    { value: 'hourlyRate:DESC', label: 'Price: high to low' },
+    { value: 'name:ASC', label: 'Name: A-Z' },
+    { value: 'name:DESC', label: 'Name: Z-A' }
   ];
 
   const amenityOptions = [
-    { value: 'lighting', label: 'Iluminación' },
-    { value: 'seating', label: 'Asientos' },
-    { value: 'parking', label: 'Estacionamiento' },
-    { value: 'restrooms', label: 'Sanitarios' },
-    { value: 'water_fountain', label: 'Bebedero' },
-    { value: 'equipment_rental', label: 'Renta de Equipo' },
-    { value: 'cafeteria', label: 'Cafetería' },
-    { value: 'pro_shop', label: 'Tienda Pro' },
-    { value: 'coaching_area', label: 'Área de Entrenamiento' }
+    { value: 'lighting', label: 'Lighting' },
+    { value: 'seating', label: 'Seating' },
+    { value: 'parking', label: 'Parking' },
+    { value: 'restrooms', label: 'Restrooms' },
+    { value: 'water_fountain', label: 'Water Fountain' },
+    { value: 'equipment_rental', label: 'Equipment Rental' },
+    { value: 'cafeteria', label: 'Cafeteria' },
+    { value: 'pro_shop', label: 'Pro Shop' },
+    { value: 'coaching_area', label: 'Coaching Area' }
   ];
 
   const stateOptions = [
-    { value: '', label: 'Cualquier estado' },
+    { value: '', label: 'Any state' },
     ...states.map(state => ({ value: state.id.toString(), label: state.name }))
   ];
 
@@ -136,34 +136,34 @@ export const CourtSearch: React.FC = () => {
     <div className="bg-white shadow rounded-lg p-6 mb-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-900">
-          Buscar Canchas
+          Search Courts
         </h2>
         <Button
           variant="secondary"
           size="sm"
           onClick={() => setShowAdvanced(!showAdvanced)}
         >
-          {showAdvanced ? 'Ocultar filtros' : 'Más filtros'}
+          {showAdvanced ? 'Hide filters' : 'More filters'}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="lg:col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Buscar por nombre o ubicación
+            Search by name or location
           </label>
           <input
             type="text"
             value={localFilters.search}
             onChange={(e) => handleInputChange('search', e.target.value)}
-            placeholder="Nombre de la cancha, dirección..."
+            placeholder="Court name, address..."
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Estado
+            State
           </label>
           <select
             value={localFilters.stateId}
@@ -180,7 +180,7 @@ export const CourtSearch: React.FC = () => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Ordenar por
+            Sort by
           </label>
           <select
             value={`${localFilters.sortBy}:${localFilters.sortOrder}`}
@@ -201,7 +201,7 @@ export const CourtSearch: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Superficie
+                Surface
               </label>
               <select
                 value={localFilters.surfaceType}
@@ -218,7 +218,7 @@ export const CourtSearch: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Precio mínimo (MXN/h)
+                Minimum price (MXN/h)
               </label>
               <input
                 type="number"
@@ -232,7 +232,7 @@ export const CourtSearch: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Precio máximo (MXN/h)
+                Maximum price (MXN/h)
               </label>
               <input
                 type="number"
@@ -247,7 +247,7 @@ export const CourtSearch: React.FC = () => {
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-3">
-              Servicios disponibles
+              Available services
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {amenityOptions.map((amenity) => (
@@ -275,7 +275,7 @@ export const CourtSearch: React.FC = () => {
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          Buscar
+          Search
         </Button>
         
         <Button
@@ -286,7 +286,7 @@ export const CourtSearch: React.FC = () => {
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          Limpiar
+          Clear
         </Button>
       </div>
     </div>

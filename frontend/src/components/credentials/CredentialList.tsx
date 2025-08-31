@@ -66,20 +66,20 @@ export const CredentialList: React.FC<CredentialListProps> = ({
   const [currentPage, setCurrentPage] = useState(0);
 
   const userTypeOptions = [
-    { value: '', label: 'Todos los tipos' },
-    { value: 'player', label: 'Jugadores' },
-    { value: 'coach', label: 'Entrenadores' },
-    { value: 'referee', label: 'Árbitros' },
-    { value: 'club_admin', label: 'Administradores de Club' }
+    { value: '', label: 'All types' },
+    { value: 'player', label: 'Players' },
+    { value: 'coach', label: 'Coaches' },
+    { value: 'referee', label: 'Referees' },
+    { value: 'club_admin', label: 'Club Administrators' }
   ];
 
   const statusOptions = [
-    { value: '', label: 'Todos los estados' },
-    { value: 'active', label: 'Activas' },
-    { value: 'expired', label: 'Expiradas' },
-    { value: 'suspended', label: 'Suspendidas' },
-    { value: 'revoked', label: 'Revocadas' },
-    { value: 'pending', label: 'Pendientes' }
+    { value: '', label: 'All statuses' },
+    { value: 'active', label: 'Active' },
+    { value: 'expired', label: 'Expired' },
+    { value: 'suspended', label: 'Suspended' },
+    { value: 'revoked', label: 'Revoked' },
+    { value: 'pending', label: 'Pending' }
   ];
 
   const fetchCredentials = async (offset: number = 0) => {
@@ -170,7 +170,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
       }
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      alert('Error al descargar el PDF');
+      alert('Error downloading PDF');
     }
   };
 
@@ -197,7 +197,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
       }
     } catch (error) {
       console.error('Error downloading image:', error);
-      alert('Error al descargar la imagen');
+      alert('Error downloading image');
     }
   };
 
@@ -223,7 +223,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
       }
     } catch (error) {
       console.error('Error updating status:', error);
-      alert('Error al actualizar el estado');
+      alert('Error updating status');
     }
   };
 
@@ -241,13 +241,13 @@ export const CredentialList: React.FC<CredentialListProps> = ({
       if (response.ok) {
         // Refresh the list
         fetchCredentials(currentPage * pagination.limit);
-        alert('Credencial renovada exitosamente');
+        alert('Credential renewed successfully');
       } else {
         throw new Error('Failed to renew credential');
       }
     } catch (error) {
       console.error('Error renewing credential:', error);
-      alert('Error al renovar la credencial');
+      alert('Error renewing credential');
     }
   };
 
@@ -264,7 +264,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
       <div className="text-center py-8">
         <div className="text-red-600 mb-4">{error}</div>
         <Button onClick={handleRefresh} variant="secondary">
-          Reintentar
+          Retry
         </Button>
       </div>
     );
@@ -276,20 +276,20 @@ export const CredentialList: React.FC<CredentialListProps> = ({
       {!userId && (
         <div className="bg-white p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium">Filtros</h3>
+            <h3 className="text-lg font-medium">Filters</h3>
             <Button
               onClick={() => setFilters({ userType: '', status: '' })}
               variant="secondary"
               size="sm"
             >
-              Resetear
+              Reset
             </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tipo de Usuario
+                User Type
               </label>
               <select
                 value={filters.userType}
@@ -306,7 +306,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Estado
+                Status
               </label>
               <select
                 value={filters.status}
@@ -327,7 +327,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="text-lg font-semibold">
-          Credenciales ({pagination.total || credentials.length})
+          Credentials ({pagination.total || credentials.length})
         </div>
         <Button 
           onClick={handleRefresh}
@@ -335,16 +335,16 @@ export const CredentialList: React.FC<CredentialListProps> = ({
           size="sm"
           disabled={loading}
         >
-          {loading ? 'Actualizando...' : 'Actualizar'}
+          {loading ? 'Updating...' : 'Update'}
         </Button>
       </div>
 
       {/* Credentials List */}
       {credentials.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          <div className="text-lg mb-2">No se encontraron credenciales</div>
+          <div className="text-lg mb-2">No credentials found</div>
           <div className="text-sm">
-            No hay credenciales que coincidan con los criterios seleccionados.
+            No credentials match the selected criteria.
           </div>
         </div>
       ) : (
@@ -372,7 +372,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
             variant="secondary"
             size="sm"
           >
-            Anterior
+            Previous
           </Button>
           
           <div className="flex space-x-1">
@@ -408,7 +408,7 @@ export const CredentialList: React.FC<CredentialListProps> = ({
             variant="secondary"
             size="sm"
           >
-            Siguiente
+            Next
           </Button>
         </div>
       )}

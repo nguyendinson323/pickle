@@ -45,43 +45,43 @@ const ClubDashboard: React.FC = () => {
   const tabs = [
     {
       id: 'profile',
-      label: 'Perfil Club',
+      label: 'Club Profile',
       icon: <BuildingOfficeIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'account',
-      label: 'Mi Cuenta',
+      label: 'My Account',
       icon: <CogIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'inbox',
-      label: 'Bandeja',
+      label: 'Inbox',
       icon: <InboxIcon className="w-4 h-4" />,
       count: unreadCount
     },
     {
       id: 'members',
-      label: 'Miembros',
+      label: 'Members',
       icon: <UsersIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.members || 0
     },
     {
       id: 'events',
-      label: 'Eventos',
+      label: 'Events',
       icon: <CalendarIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.upcomingEvents || 0
     },
     {
       id: 'facilities',
-      label: 'Instalaciones',
+      label: 'Facilities',
       icon: <MapIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.courts || 0
     },
     {
       id: 'finances',
-      label: 'Finanzas',
+      label: 'Finances',
       icon: <CurrencyDollarIcon className="w-4 h-4" />,
       count: 0
     }
@@ -93,26 +93,26 @@ const ClubDashboard: React.FC = () => {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold mb-2">Perfil del Club</h3>
+              <h3 className="text-lg font-semibold mb-2">Club Profile</h3>
               <p className="text-green-100 mb-4">
-                {dashboardData?.user?.club_name || 'Club de Pickleball Ejemplo'}
+                {dashboardData?.user?.club_name || 'Example Pickleball Club'}
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-green-200">ID Club:</span>
+                  <span className="text-green-200">Club ID:</span>
                   <span className="ml-2 font-medium">{dashboardData?.user?.id || 'CLUB001'}</span>
                 </div>
                 <div>
-                  <span className="text-green-200">Estado:</span>
+                  <span className="text-green-200">State:</span>
                   <span className="ml-2 font-medium">{dashboardData?.user?.state || 'CDMX'}</span>
                 </div>
                 <div>
-                  <span className="text-green-200">Fundado:</span>
+                  <span className="text-green-200">Founded:</span>
                   <span className="ml-2 font-medium">2020</span>
                 </div>
                 <div>
-                  <span className="text-green-200">Estatus:</span>
-                  <span className="ml-2 font-medium">Activo</span>
+                  <span className="text-green-200">Status:</span>
+                  <span className="ml-2 font-medium">Active</span>
                 </div>
               </div>
             </div>
@@ -121,7 +121,7 @@ const ClubDashboard: React.FC = () => {
                 <BuildingOfficeIcon className="w-10 h-10 text-white" />
               </div>
               <Button variant="ghost" size="sm" className="text-white border-white/30">
-                Editar Perfil
+                Edit Profile
               </Button>
             </div>
           </div>
@@ -131,14 +131,14 @@ const ClubDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Información General</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">General Information</h4>
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-gray-500">Dirección</label>
+                <label className="text-sm font-medium text-gray-500">Address</label>
                 <p className="text-gray-900">Av. Reforma 123, Col. Centro, CDMX</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Teléfono</label>
+                <label className="text-sm font-medium text-gray-500">Phone</label>
                 <p className="text-gray-900">+52 55 1234 5678</p>
               </div>
               <div>
@@ -146,7 +146,7 @@ const ClubDashboard: React.FC = () => {
                 <p className="text-gray-900">info@clubpickleball.com</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Sitio Web</label>
+                <label className="text-sm font-medium text-gray-500">Website</label>
                 <p className="text-gray-900">www.clubpickleball.com</p>
               </div>
             </div>
@@ -155,16 +155,16 @@ const ClubDashboard: React.FC = () => {
 
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Servicios</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">Services</h4>
             <div className="space-y-2">
-              <Badge variant="primary">Membresías</Badge>
-              <Badge variant="success">Clases Grupales</Badge>
-              <Badge variant="warning">Entrenamientos Privados</Badge>
-              <Badge variant="secondary">Torneos</Badge>
-              <Badge variant="secondary">Renta de Canchas</Badge>
+              <Badge variant="primary">Memberships</Badge>
+              <Badge variant="success">Group Classes</Badge>
+              <Badge variant="warning">Private Training</Badge>
+              <Badge variant="secondary">Tournaments</Badge>
+              <Badge variant="secondary">Court Rental</Badge>
             </div>
             <Button variant="outline" size="sm" fullWidth className="mt-4">
-              Editar Servicios
+              Edit Services
             </Button>
           </div>
         </Card>
@@ -175,10 +175,10 @@ const ClubDashboard: React.FC = () => {
   const renderMembersTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Gestión de Miembros</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Member Management</h3>
         <Button variant="primary">
           <UsersIcon className="w-4 h-4 mr-2" />
-          Agregar Miembro
+          Add Member
         </Button>
       </div>
 
@@ -188,7 +188,7 @@ const ClubDashboard: React.FC = () => {
             <div className="text-2xl font-bold text-blue-600">
               {dashboardData?.statistics?.members || 245}
             </div>
-            <div className="text-sm text-gray-500">Miembros Activos</div>
+            <div className="text-sm text-gray-500">Active Members</div>
           </div>
         </Card>
         <Card>
@@ -196,7 +196,7 @@ const ClubDashboard: React.FC = () => {
             <div className="text-2xl font-bold text-green-600">
               {dashboardData?.statistics?.newMembersThisMonth || 23}
             </div>
-            <div className="text-sm text-gray-500">Nuevos Este Mes</div>
+            <div className="text-sm text-gray-500">New This Month</div>
           </div>
         </Card>
         <Card>
@@ -204,14 +204,14 @@ const ClubDashboard: React.FC = () => {
             <div className="text-2xl font-bold text-yellow-600">
               {dashboardData?.statistics?.membershipRenewalsDue || 12}
             </div>
-            <div className="text-sm text-gray-500">Renovaciones Pendientes</div>
+            <div className="text-sm text-gray-500">Renewals Pending</div>
           </div>
         </Card>
       </div>
 
       <Card>
         <div className="p-6">
-          <h4 className="font-semibold text-gray-900 mb-4">Miembros Recientes</h4>
+          <h4 className="font-semibold text-gray-900 mb-4">Recent Members</h4>
           <div className="space-y-3">
             {[1, 2, 3, 4, 5].map((member) => (
               <div key={member} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -220,12 +220,12 @@ const ClubDashboard: React.FC = () => {
                     <UsersIcon className="w-5 h-5 text-gray-500" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">Miembro {member}</div>
-                    <div className="text-sm text-gray-500">Membresía Premium</div>
+                    <div className="font-medium text-gray-900">Member {member}</div>
+                    <div className="text-sm text-gray-500">Premium Membership</div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-medium text-gray-900">Activo</div>
+                  <div className="text-sm font-medium text-gray-900">Active</div>
                   <div className="text-xs text-gray-500">Desde Mar 2024</div>
                 </div>
               </div>
@@ -239,19 +239,19 @@ const ClubDashboard: React.FC = () => {
   const renderEventsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Eventos del Club</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Club Events</h3>
         <Button variant="primary">
           <CalendarIcon className="w-4 h-4 mr-2" />
-          Crear Evento
+          Create Event
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
-          { title: 'Torneo Mensual', date: '15 Mar 2024', participants: 32, status: 'upcoming' },
-          { title: 'Clínica para Principiantes', date: '20 Mar 2024', participants: 16, status: 'upcoming' },
-          { title: 'Liga de Verano', date: '1 Jun 2024', participants: 48, status: 'registration' },
-          { title: 'Torneo de Parejas', date: '10 Mar 2024', participants: 24, status: 'completed' }
+          { title: 'Monthly Tournament', date: '15 Mar 2024', participants: 32, status: 'upcoming' },
+          { title: 'Beginner Clinic', date: '20 Mar 2024', participants: 16, status: 'upcoming' },
+          { title: 'Summer League', date: '1 Jun 2024', participants: 48, status: 'registration' },
+          { title: 'Doubles Tournament', date: '10 Mar 2024', participants: 24, status: 'completed' }
         ].map((event, index) => (
           <Card key={index} className="hover:shadow-lg transition-shadow">
             <div className="p-6">
@@ -264,25 +264,25 @@ const ClubDashboard: React.FC = () => {
                     'success'
                   }
                 >
-                  {event.status === 'upcoming' ? 'Próximo' :
-                   event.status === 'registration' ? 'Inscripciones' :
-                   'Completado'}
+                  {event.status === 'upcoming' ? 'Upcoming' :
+                   event.status === 'registration' ? 'Registration' :
+                   'Completed'}
                 </Badge>
               </div>
               
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex justify-between">
-                  <span>Fecha:</span>
+                  <span>Date:</span>
                   <span className="font-medium">{event.date}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Participantes:</span>
+                  <span>Participants:</span>
                   <span className="font-medium">{event.participants}</span>
                 </div>
               </div>
               
               <Button variant="outline" size="sm" fullWidth>
-                Ver Detalles
+                View Details
               </Button>
             </div>
           </Card>
@@ -294,10 +294,10 @@ const ClubDashboard: React.FC = () => {
   const renderFacilitiesTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Instalaciones</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Facilities</h3>
         <Button variant="primary">
           <MapIcon className="w-4 h-4 mr-2" />
-          Agregar Cancha
+          Add Court
         </Button>
       </div>
 
@@ -306,33 +306,33 @@ const ClubDashboard: React.FC = () => {
           <Card key={court} className="hover:shadow-lg transition-shadow">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <h4 className="font-medium text-gray-900">Cancha {court}</h4>
+                <h4 className="font-medium text-gray-900">Court {court}</h4>
                 <Badge variant={court % 3 === 0 ? 'warning' : 'success'}>
-                  {court % 3 === 0 ? 'Mantenimiento' : 'Disponible'}
+                  {court % 3 === 0 ? 'Maintenance' : 'Available'}
                 </Badge>
               </div>
               
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex justify-between">
-                  <span>Tipo:</span>
-                  <span className="font-medium">Exterior</span>
+                  <span>Type:</span>
+                  <span className="font-medium">Outdoor</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Superficie:</span>
-                  <span className="font-medium">Acrílico</span>
+                  <span>Surface:</span>
+                  <span className="font-medium">Acrylic</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Iluminación:</span>
+                  <span>Lighting:</span>
                   <span className="font-medium">LED</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Reservas hoy:</span>
+                  <span>Bookings today:</span>
                   <span className="font-medium">{Math.floor(Math.random() * 8) + 1}</span>
                 </div>
               </div>
               
               <Button variant="outline" size="sm" fullWidth>
-                Ver Horarios
+                View Schedule
               </Button>
             </div>
           </Card>
@@ -349,16 +349,16 @@ const ClubDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <CogIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Configuración de Cuenta</h3>
-            <p className="text-gray-500">Gestiona la información de tu club y preferencias.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Account Settings</h3>
+            <p className="text-gray-500">Manage your club information and preferences.</p>
           </div>
         );
       case 'inbox':
         return (
           <div className="text-center py-12">
             <InboxIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Mensajes</h3>
-            <p className="text-gray-500">Tu bandeja de entrada está vacía.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Messages</h3>
+            <p className="text-gray-500">Your inbox is empty.</p>
           </div>
         );
       case 'members':
@@ -371,8 +371,8 @@ const ClubDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <CurrencyDollarIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Gestión Financiera</h3>
-            <p className="text-gray-500">Revisa ingresos, gastos y reportes financieros.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Financial Management</h3>
+            <p className="text-gray-500">Review income, expenses, and financial reports.</p>
           </div>
         );
       default:
@@ -392,9 +392,9 @@ const ClubDashboard: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error cargando el dashboard</p>
+          <p className="text-red-600 mb-4">Error loading dashboard</p>
           <Button onClick={() => dispatch(fetchDashboardData())}>
-            Reintentar
+            Retry
           </Button>
         </div>
       </div>
@@ -410,25 +410,25 @@ const ClubDashboard: React.FC = () => {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
-            title="Miembros Activos"
+            title="Active Members"
             value={dashboardData?.statistics?.members?.toString() || '245'}
             trend={{ value: 12, direction: 'up', label: '+12' }}
             icon={<UsersIcon className="w-6 h-6" />}
           />
           <StatCard
-            title="Eventos Este Mes"
+            title="Events This Month"
             value={dashboardData?.statistics?.eventsThisMonth?.toString() || '8'}
             trend={{ value: 2, direction: 'up', label: '+2' }}
             icon={<CalendarIcon className="w-6 h-6" />}
           />
           <StatCard
-            title="Canchas"
+            title="Courts"
             value={dashboardData?.statistics?.courts?.toString() || '6'}
             trend={{ value: 0, direction: 'up', label: '0' }}
             icon={<MapIcon className="w-6 h-6" />}
           />
           <StatCard
-            title="Ingresos Mes"
+            title="Monthly Revenue"
             value="$45,200"
             trend={{ value: 18, direction: 'up', label: '+18%' }}
             icon={<CurrencyDollarIcon className="w-6 h-6" />}

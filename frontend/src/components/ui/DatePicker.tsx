@@ -45,7 +45,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('es-MX', {
+      return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'

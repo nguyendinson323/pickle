@@ -38,7 +38,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
 }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-MX', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -75,11 +75,11 @@ const LocationCard: React.FC<LocationCardProps> = ({
         <div className="flex flex-col gap-2 ml-4">
           {location.isCurrentLocation && (
             <Badge variant="success" size="sm">
-              Actual
+              Current
             </Badge>
           )}
           <Badge variant={location.isPublic ? 'primary' : 'secondary'} size="sm">
-            {location.isPublic ? 'Público' : 'Privado'}
+            {location.isPublic ? 'Public' : 'Private'}
           </Badge>
         </div>
       </div>
@@ -94,7 +94,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
           <button
             onClick={handleMapClick}
             className="text-blue-600 hover:text-blue-800 hover:underline"
-            title="Ver en Google Maps"
+            title="View on Google Maps"
           >
             {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
           </button>
@@ -104,7 +104,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
           <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3" />
           </svg>
-          Radio de búsqueda: {location.radius} km
+          Search radius: {location.radius} km
         </div>
 
         {location.zipCode && (
@@ -112,7 +112,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
             <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            CP: {location.zipCode}
+            ZIP: {location.zipCode}
           </div>
         )}
 
@@ -120,7 +120,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
           <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Actualizada: {formatDate(location.lastUpdated)}
+          Updated: {formatDate(location.lastUpdated)}
         </div>
       </div>
 
@@ -137,7 +137,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              Marcar como actual
+              Mark as current
             </Button>
           )}
 
@@ -151,7 +151,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
-              Editar
+              Edit
             </Button>
           )}
 
@@ -164,7 +164,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3" />
             </svg>
-            Ver en Mapa
+            View on Map
           </Button>
 
           {onDelete && (
@@ -177,7 +177,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-              Eliminar
+              Delete
             </Button>
           )}
         </div>

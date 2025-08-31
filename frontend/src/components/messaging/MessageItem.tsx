@@ -80,7 +80,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
               
               {message.isUrgent && (
                 <Badge variant="warning" size="sm" className="flex-shrink-0">
-                  Urgente
+                  Urgent
                 </Badge>
               )}
             </div>
@@ -126,8 +126,8 @@ const MessageItem: React.FC<MessageItemProps> = ({
                   }
                   size="sm"
                 >
-                  {message.senderRole === 'system' ? 'Sistema' :
-                   message.senderRole === 'federation' ? 'Federación' :
+                  {message.senderRole === 'system' ? 'System' :
+                   message.senderRole === 'federation' ? 'Federation' :
                    message.senderRole}
                 </Badge>
               )}
@@ -137,7 +137,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
                   <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
-                  {message.attachments.length} archivo{message.attachments.length > 1 ? 's' : ''}
+                  {message.attachments.length} file{message.attachments.length > 1 ? 's' : ''}
                 </div>
               )}
             </div>
@@ -151,7 +151,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
                   onClick={handleMarkAsRead}
                   className="text-xs px-2 py-1"
                 >
-                  Marcar leído
+                  Mark as read
                 </Button>
               )}
               

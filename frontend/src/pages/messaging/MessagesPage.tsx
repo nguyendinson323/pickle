@@ -235,7 +235,7 @@ const MessagesPage: React.FC = () => {
   };
 
   const handleDelete = async (messageId: number) => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar este mensaje?')) {
+    if (!window.confirm('Are you sure you want to delete this message?')) {
       return;
     }
 
@@ -296,7 +296,7 @@ const MessagesPage: React.FC = () => {
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-bold text-gray-900">
-              Mensajes
+              Messages
             </h1>
             <Button
               variant="primary"
@@ -306,7 +306,7 @@ const MessagesPage: React.FC = () => {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Nuevo
+              New
             </Button>
           </div>
 
@@ -314,7 +314,7 @@ const MessagesPage: React.FC = () => {
           <div className="relative mb-4">
             <input
               type="text"
-              placeholder="Buscar conversaciones..."
+              placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -331,14 +331,14 @@ const MessagesPage: React.FC = () => {
               size="sm"
               onClick={() => setShowArchived(false)}
             >
-              Activos
+              Active
             </Button>
             <Button
               variant={showArchived ? "primary" : "outline"}
               size="sm"
               onClick={() => setShowArchived(true)}
             >
-              Archivados
+              Archived
             </Button>
           </div>
         </div>
@@ -370,10 +370,10 @@ const MessagesPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">
-                      {getSelectedConversation()?.name || 'Conversación'}
+                      {getSelectedConversation()?.name || 'Conversation'}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      {getSelectedConversation()?.participantIds.length} participantes
+                      {getSelectedConversation()?.participantIds.length} participants
                     </p>
                   </div>
                 </div>
@@ -399,7 +399,7 @@ const MessagesPage: React.FC = () => {
                   <svg className="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  <p className="text-gray-500">No hay mensajes en esta conversación</p>
+                  <p className="text-gray-500">No messages in this conversation</p>
                 </div>
               ) : (
                 messages.map((message, index) => {
@@ -434,7 +434,7 @@ const MessagesPage: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                     </svg>
                     <span className="text-sm text-gray-600">
-                      Respondiendo a <strong>{replyingTo.sender.firstName}</strong>: {replyingTo.content.substring(0, 50)}...
+                      Replying to <strong>{replyingTo.sender.firstName}</strong>: {replyingTo.content.substring(0, 50)}...
                     </span>
                   </div>
                   <button
@@ -458,7 +458,7 @@ const MessagesPage: React.FC = () => {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Escribe un mensaje..."
+                    placeholder="Write a message..."
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows={1}
                     style={{ minHeight: '40px', maxHeight: '120px' }}
@@ -474,7 +474,7 @@ const MessagesPage: React.FC = () => {
                         size="sm"
                         onClick={cancelEdit}
                       >
-                        Cancelar
+                        Cancel
                       </Button>
                       <Button
                         variant="primary"
@@ -482,7 +482,7 @@ const MessagesPage: React.FC = () => {
                         onClick={saveEdit}
                         disabled={!newMessage.trim()}
                       >
-                        Guardar
+                        Save
                       </Button>
                     </>
                   ) : (
@@ -499,7 +499,7 @@ const MessagesPage: React.FC = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
                       )}
-                      Enviar
+                      Send
                     </Button>
                   )}
                 </div>
@@ -514,10 +514,10 @@ const MessagesPage: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Selecciona una conversación
+                Select a conversation
               </h3>
               <p className="text-gray-600">
-                Elige una conversación de la lista para comenzar a chatear
+Choose a conversation from the list to start chatting
               </p>
             </div>
           </div>

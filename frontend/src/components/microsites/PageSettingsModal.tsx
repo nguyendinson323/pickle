@@ -138,12 +138,12 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
   };
 
   const templates = [
-    { value: 'default', label: 'Por Defecto' },
-    { value: 'landing', label: 'Página de Aterrizaje' },
-    { value: 'about', label: 'Acerca de' },
-    { value: 'contact', label: 'Contacto' },
-    { value: 'events', label: 'Eventos' },
-    { value: 'gallery', label: 'Galería' },
+    { value: 'default', label: 'Default' },
+    { value: 'landing', label: 'Landing Page' },
+    { value: 'about', label: 'About' },
+    { value: 'contact', label: 'Contact' },
+    { value: 'events', label: 'Events' },
+    { value: 'gallery', label: 'Gallery' },
   ];
 
   const tabs = [
@@ -159,51 +159,51 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
     },
     {
       key: 'visibility',
-      label: 'Visibilidad',
+      label: 'Visibility',
       icon: EyeIcon,
     },
     {
       key: 'advanced',
-      label: 'Avanzado',
+      label: 'Advanced',
       icon: Cog6ToothIcon,
     },
   ];
 
   const renderGeneralTab = () => (
     <div className="space-y-4">
-      <FormField label="Título de la Página" required>
+      <FormField label="Page Title" required>
         <input
           type="text"
           value={formData.title}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e.target.value)}
-          placeholder="Ej: Acerca de Nosotros"
+          placeholder="e.g. About Us"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </FormField>
 
       {!page?.isHomePage && (
-        <FormField label="URL (Slug)" required help="La URL será: /tu-slug">
+        <FormField label="URL (Slug)" required help="The URL will be: /your-slug">
           <input
             type="text"
             value={formData.slug}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('slug', generateSlug(e.target.value))}
-            placeholder="acerca-de-nosotros"
+            placeholder="about-us"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </FormField>
       )}
 
-      <FormField label="Descripción">
+      <FormField label="Description">
         <textarea
           value={formData.description}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('description', e.target.value)}
-          placeholder="Describe el contenido de esta página..."
+          placeholder="Describe the content of this page..."
           rows={3}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </FormField>
 
-      <FormField label="Plantilla">
+      <FormField label="Template">
         <select
           value={formData.template}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('template', e.target.value)}
@@ -217,7 +217,7 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Orden en Navegación
+          Navigation Order
         </label>
         <input
           type="number"
@@ -235,34 +235,34 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
       <div>
         <h3 className="text-sm font-medium text-gray-900 mb-3">Meta Tags</h3>
         <div className="space-y-4">
-          <FormField label="Meta Título">
+          <FormField label="Meta Title">
             <input
               type="text"
               value={formData.seoSettings.metaTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.metaTitle', e.target.value)}
-              placeholder="Título que aparece en Google (50-60 caracteres)"
+              placeholder="Title that appears on Google (50-60 characters)"
               maxLength={60}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </FormField>
 
-          <FormField label="Meta Descripción">
+          <FormField label="Meta Description">
             <textarea
               value={formData.seoSettings.metaDescription}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('seoSettings.metaDescription', e.target.value)}
-              placeholder="Descripción que aparece en Google (150-160 caracteres)"
+              placeholder="Description that appears on Google (150-160 characters)"
               maxLength={160}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </FormField>
 
-          <FormField label="Palabras Clave">
+          <FormField label="Keywords">
             <input
               type="text"
               value={formData.seoSettings.metaKeywords}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.metaKeywords', e.target.value)}
-              placeholder="palabra1, palabra2, palabra3"
+              placeholder="keyword1, keyword2, keyword3"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </FormField>
@@ -270,34 +270,34 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
       </div>
 
       <div className="border-t pt-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">Open Graph (Redes Sociales)</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Open Graph (Social Media)</h3>
         <div className="space-y-4">
-          <FormField label="Título OG">
+          <FormField label="OG Title">
             <input
               type="text"
               value={formData.seoSettings.ogTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.ogTitle', e.target.value)}
-              placeholder="Título al compartir en redes sociales"
+              placeholder="Title when sharing on social media"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </FormField>
 
-          <FormField label="Descripción OG">
+          <FormField label="OG Description">
             <textarea
               value={formData.seoSettings.ogDescription}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('seoSettings.ogDescription', e.target.value)}
-              placeholder="Descripción al compartir en redes sociales"
+              placeholder="Description when sharing on social media"
               rows={2}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </FormField>
 
-          <FormField label="Imagen OG (URL)">
+          <FormField label="OG Image (URL)">
             <input
               type="text"
               value={formData.seoSettings.ogImage}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('seoSettings.ogImage', e.target.value)}
-              placeholder="https://ejemplo.com/imagen-compartir.jpg"
+              placeholder="https://example.com/share-image.jpg"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </FormField>
@@ -305,18 +305,18 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
       </div>
 
       <div className="border-t pt-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">Indexación</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Indexing</h3>
         <div className="space-y-3">
           <Switch
             label="No Index"
-            description="Evitar que los motores de búsqueda indexen esta página"
+            description="Prevent search engines from indexing this page"
             checked={formData.seoSettings.noIndex}
             onChange={(checked) => handleInputChange('seoSettings.noIndex', checked)}
           />
 
           <Switch
             label="No Follow"
-            description="Evitar que los motores de búsqueda sigan los enlaces en esta página"
+            description="Prevent search engines from following links on this page"
             checked={formData.seoSettings.noFollow}
             onChange={(checked) => handleInputChange('seoSettings.noFollow', checked)}
           />
@@ -328,30 +328,30 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
   const renderVisibilityTab = () => (
     <div className="space-y-4">
       <div>
-        <h3 className="text-sm font-medium text-gray-900 mb-3">Estado de Publicación</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Publication Status</h3>
         <Switch
-          label="Página Publicada"
-          description="La página será visible para los visitantes del sitio"
+          label="Page Published"
+          description="The page will be visible to site visitors"
           checked={formData.isPublished}
           onChange={(checked) => handleInputChange('isPublished', checked)}
         />
       </div>
 
       <div className="border-t pt-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">Navegación</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Navigation</h3>
         <Switch
-          label="Mostrar en Navegación"
-          description="La página aparecerá en el menú de navegación principal"
+          label="Show in Navigation"
+          description="The page will appear in the main navigation menu"
           checked={formData.settings.showInNavigation}
           onChange={(checked) => handleInputChange('settings.showInNavigation', checked)}
         />
       </div>
 
       <div className="border-t pt-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">Acceso</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Access</h3>
         <Switch
-          label="Requiere Autenticación"
-          description="Solo los usuarios autenticados pueden ver esta página"
+          label="Requires Authentication"
+          description="Only authenticated users can view this page"
           checked={formData.settings.requireAuth}
           onChange={(checked) => handleInputChange('settings.requireAuth', checked)}
         />
@@ -362,12 +362,12 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
   const renderAdvancedTab = () => (
     <div className="space-y-4">
       <div>
-        <h3 className="text-sm font-medium text-gray-900 mb-3">CSS Personalizado</h3>
-        <FormField label="CSS Personalizado para esta Página">
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Custom CSS</h3>
+        <FormField label="Custom CSS for this Page">
           <textarea
             value={formData.settings.customCSS}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('settings.customCSS', e.target.value)}
-            placeholder="/* Agrega tu CSS personalizado aquí */"
+            placeholder="/* Add your custom CSS here */"
             rows={6}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
           />
@@ -375,12 +375,12 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
       </div>
 
       <div>
-        <h3 className="text-sm font-medium text-gray-900 mb-3">JavaScript Personalizado</h3>
-        <FormField label="JavaScript Personalizado para esta Página">
+        <h3 className="text-sm font-medium text-gray-900 mb-3">Custom JavaScript</h3>
+        <FormField label="Custom JavaScript for this Page">
           <textarea
             value={formData.settings.customJS}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('settings.customJS', e.target.value)}
-            placeholder="// Agrega tu JavaScript personalizado aquí"
+            placeholder="// Add your custom JavaScript here"
             rows={6}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
           />
@@ -395,7 +395,7 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Configuración de Página"
+      title="Page Settings"
       size="xl"
     >
       <div className="flex h-96">
@@ -438,13 +438,13 @@ const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
           onClick={onClose}
           disabled={isLoading}
         >
-          Cancelar
+          Cancel
         </Button>
         <Button
           onClick={handleSave}
           disabled={isLoading}
         >
-          {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+          {isLoading ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
     </Modal>

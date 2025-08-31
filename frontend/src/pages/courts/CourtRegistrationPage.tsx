@@ -33,7 +33,7 @@ export const CourtRegistrationPage: React.FC = () => {
       // Navigate to the newly created court
       navigate(`/courts/${result.id}`, {
         state: { 
-          message: 'Cancha registrada exitosamente. Será revisada por nuestro equipo antes de ser publicada.' 
+          message: 'Court registered successfully. It will be reviewed by our team before being published.' 
         }
       });
     } catch (err) {
@@ -54,12 +54,12 @@ export const CourtRegistrationPage: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Acceso Restringido</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Restricted Access</h3>
           <p className="text-gray-600 mb-4">
-            Solo los clubes, socios y la federación pueden registrar canchas.
+            Only clubs, partners and the federation can register courts.
           </p>
           <Button onClick={() => navigate('/courts')}>
-            Volver a Canchas
+            Back to Courts
           </Button>
         </div>
       </div>
@@ -79,28 +79,28 @@ export const CourtRegistrationPage: React.FC = () => {
                   onClick={() => navigate('/courts')}
                   className="text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                  Canchas
+                  Courts
                 </button>
               </li>
               <li className="flex items-center">
                 <svg className="flex-shrink-0 h-4 w-4 text-gray-400 mx-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 font-medium">Registrar Cancha</span>
+                <span className="text-gray-700 font-medium">Register Court</span>
               </li>
             </ol>
           </nav>
 
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Registrar Nueva Cancha</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Register New Court</h1>
               <p className="text-gray-600 mt-1">
-                Completa la información para registrar tu cancha en la red de pickleball
+                Complete the information to register your court in the pickleball network
               </p>
             </div>
 
             <Button variant="outline" onClick={handleCancel}>
-              Cancelar
+              Cancel
             </Button>
           </div>
         </div>
@@ -117,14 +117,14 @@ export const CourtRegistrationPage: React.FC = () => {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-900">Información Importante</h3>
+              <h3 className="text-sm font-medium text-blue-900">Important Information</h3>
               <div className="mt-2 text-sm text-blue-800">
                 <ul className="list-disc list-inside space-y-1">
-                  <li>Tu cancha será revisada por nuestro equipo antes de ser publicada</li>
-                  <li>Asegúrate de proporcionar información precisa y completa</li>
-                  <li>Las imágenes deben ser claras y representativas de la cancha</li>
-                  <li>Los precios deben incluir todos los impuestos aplicables</li>
-                  <li>Podrás editar la información después de la aprobación</li>
+                  <li>Your court will be reviewed by our team before being published</li>
+                  <li>Make sure to provide accurate and complete information</li>
+                  <li>Images must be clear and representative of the court</li>
+                  <li>Prices must include all applicable taxes</li>
+                  <li>You will be able to edit the information after approval</li>
                 </ul>
               </div>
             </div>
@@ -155,7 +155,7 @@ export const CourtRegistrationPage: React.FC = () => {
               <div className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                    Nombre de la Cancha *
+                    Court Name *
                   </label>
                   <input
                     type="text"
@@ -168,7 +168,7 @@ export const CourtRegistrationPage: React.FC = () => {
 
                 <div>
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                    Descripción
+                    Description
                   </label>
                   <textarea
                     name="description"
@@ -180,7 +180,7 @@ export const CourtRegistrationPage: React.FC = () => {
 
                 <div>
                   <label htmlFor="surfaceType" className="block text-sm font-medium text-gray-700">
-                    Tipo de Superficie *
+                    Surface Type *
                   </label>
                   <select
                     name="surfaceType"
@@ -188,17 +188,17 @@ export const CourtRegistrationPage: React.FC = () => {
                     required
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   >
-                    <option value="">Seleccionar...</option>
-                    <option value="concrete">Concreto</option>
-                    <option value="asphalt">Asfalto</option>
-                    <option value="acrylic">Acrílico</option>
+                    <option value="">Select...</option>
+                    <option value="concrete">Concrete</option>
+                    <option value="asphalt">Asphalt</option>
+                    <option value="acrylic">Acrylic</option>
                     <option value="composite">Composite</option>
                   </select>
                 </div>
 
                 <div>
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    Dirección *
+                    Address *
                   </label>
                   <input
                     type="text"
@@ -211,7 +211,7 @@ export const CourtRegistrationPage: React.FC = () => {
 
                 <div>
                   <label htmlFor="hourlyRate" className="block text-sm font-medium text-gray-700">
-                    Tarifa por Hora (MXN) *
+                    Hourly Rate (MXN) *
                   </label>
                   <input
                     type="number"
@@ -235,10 +235,10 @@ export const CourtRegistrationPage: React.FC = () => {
 
                 <div className="flex justify-end gap-3">
                   <Button type="button" variant="outline" onClick={handleCancel} disabled={loading}>
-                    Cancelar
+                    Cancel
                   </Button>
                   <Button type="submit" variant="primary" disabled={loading}>
-                    {loading ? 'Registrando...' : 'Registrar Cancha'}
+                    {loading ? 'Registering...' : 'Register Court'}
                   </Button>
                 </div>
               </div>
@@ -248,28 +248,28 @@ export const CourtRegistrationPage: React.FC = () => {
 
         {/* Help Section */}
         <div className="mt-8 bg-gray-50 rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">¿Necesitas Ayuda?</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Need Help?</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-gray-900 mb-2">Requisitos para Canchas</h4>
+              <h4 className="font-medium text-gray-900 mb-2">Court Requirements</h4>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Dimensiones reglamentarias de pickleball</li>
-                <li>• Superficie adecuada (concreto, asfalto, etc.)</li>
-                <li>• Iluminación para juegos nocturnos (opcional)</li>
-                <li>• Acceso seguro para jugadores</li>
-                <li>• Seguro de responsabilidad civil</li>
+                <li>• Official pickleball dimensions</li>
+                <li>• Suitable surface (concrete, asphalt, etc.)</li>
+                <li>• Lighting for night games (optional)</li>
+                <li>• Safe access for players</li>
+                <li>• Civil liability insurance</li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-medium text-gray-900 mb-2">Documentación Necesaria</h4>
+              <h4 className="font-medium text-gray-900 mb-2">Required Documentation</h4>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Registro ante la federación mexicana</li>
-                <li>• Comprobante de domicilio de la cancha</li>
-                <li>• Identificación oficial del responsable</li>
-                <li>• Póliza de seguro vigente</li>
-                <li>• Permisos municipales requeridos</li>
+                <li>• Registration with the Mexican federation</li>
+                <li>• Proof of address for the court</li>
+                <li>• Official identification of the person in charge</li>
+                <li>• Current insurance policy</li>
+                <li>• Required municipal permits</li>
               </ul>
             </div>
           </div>
@@ -278,10 +278,10 @@ export const CourtRegistrationPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">
-                  ¿Tienes preguntas sobre el proceso de registro?
+                  Do you have questions about the registration process?
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
-                  Nuestro equipo está aquí para ayudarte
+                  Our team is here to help you
                 </p>
               </div>
               <div className="flex gap-3">
@@ -293,7 +293,7 @@ export const CourtRegistrationPage: React.FC = () => {
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  Contactar por Email
+                  Contact by Email
                 </Button>
                 <Button 
                   variant="outline" 

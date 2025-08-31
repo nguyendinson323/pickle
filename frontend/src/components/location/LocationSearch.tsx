@@ -23,7 +23,7 @@ interface LocationSearchProps {
 
 const LocationSearch: React.FC<LocationSearchProps> = ({
   onLocationSelect,
-  placeholder = "Buscar ubicación...",
+  placeholder = "Search location...",
   className = "",
   allowCurrentLocation = true,
   initialAddress = ""
@@ -71,11 +71,11 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
         setSuggestions([result.data]);
         setShowSuggestions(true);
       } else {
-        setError('No se pudo encontrar la ubicación');
+        setError('Could not find location');
         setSuggestions([]);
       }
     } catch (err) {
-      setError('Error al buscar la ubicación');
+      setError('Error searching location');
       setSuggestions([]);
       console.error('Location search error:', err);
     } finally {
@@ -108,7 +108,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
-      setError('Geolocalización no disponible');
+      setError('Geolocation not available');
       return;
     }
 
@@ -136,17 +136,17 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
             setAddress(result.data.address);
             onLocationSelect(result.data);
           } else {
-            setError('No se pudo obtener la dirección');
+            setError('Could not get address');
           }
         } catch (err) {
-          setError('Error al obtener la ubicación');
+          setError('Error getting location');
           console.error('Reverse geocoding error:', err);
         } finally {
           setIsGettingLocation(false);
         }
       },
       (err) => {
-        setError('No se pudo acceder a la ubicación');
+        setError('Could not access location');
         setIsGettingLocation(false);
         console.error('Geolocation error:', err);
       },
@@ -213,7 +213,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                     {suggestion.city}, {suggestion.state}
                     {suggestion.accuracy && (
                       <span className="ml-2 text-green-600">
-                        Precisión: {Math.round(suggestion.accuracy * 100)}%
+                        Accuracy: {Math.round(suggestion.accuracy * 100)}%
                       </span>
                     )}
                   </div>
@@ -230,7 +230,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
             onClick={getCurrentLocation}
             disabled={isGettingLocation || isLoading}
             className="flex items-center gap-2 px-3"
-            title="Usar ubicación actual"
+            title="Use current location"
           >
             {isGettingLocation ? (
               <LoadingSpinner size="sm" />
@@ -240,7 +240,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             )}
-            <span className="hidden sm:inline">Actual</span>
+            <span className="hidden sm:inline">Current</span>
           </Button>
         )}
       </div>

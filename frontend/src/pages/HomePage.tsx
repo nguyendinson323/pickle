@@ -19,37 +19,37 @@ const HomePage: React.FC = () => {
 
   const features = [
     {
-      name: 'Torneos Oficiales',
-      description: 'Participa en torneos nacionales, estatales y locales organizados por la federación.',
+      name: 'Official Tournaments',
+      description: 'Participate in national, state and local tournaments organized by the federation.',
       icon: TrophyIcon,
       href: ROUTES.TOURNAMENTS,
     },
     {
-      name: 'Búsqueda de Jugadores',
-      description: 'Encuentra jugadores cerca de ti para entrenar y jugar partidos.',
+      name: 'Player Search',
+      description: 'Find players near you to train and play matches.',
       icon: UserGroupIcon,
       href: ROUTES.PLAYER_FINDER,
       premium: true,
     },
     {
-      name: 'Canchas Disponibles',
-      description: 'Descubre y reserva canchas de pickleball en tu área.',
+      name: 'Available Courts',
+      description: 'Discover and book pickleball courts in your area.',
       icon: MapIcon,
       href: ROUTES.COURTS,
     },
     {
-      name: 'Rankings Oficiales',
-      description: 'Consulta los rankings nacionales y estatales de jugadores.',
+      name: 'Official Rankings',
+      description: 'Check national and state player rankings.',
       icon: ChartBarIcon,
       href: ROUTES.RANKINGS,
     },
   ];
 
   const stats = [
-    { name: 'Jugadores Registrados', value: '2,500+', icon: UserGroupIcon },
-    { name: 'Torneos Organizados', value: '150+', icon: TrophyIcon },
-    { name: 'Estados Participantes', value: '32', icon: MapIcon },
-    { name: 'Canchas Registradas', value: '200+', icon: StarIcon },
+    { name: 'Registered Players', value: '2,500+', icon: UserGroupIcon },
+    { name: 'Tournaments Organized', value: '150+', icon: TrophyIcon },
+    { name: 'Participating States', value: '32', icon: MapIcon },
+    { name: 'Registered Courts', value: '200+', icon: StarIcon },
   ];
 
   const getDashboardLink = () => {
@@ -65,13 +65,13 @@ const HomePage: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Federación Mexicana
-              <span className="block text-primary-200">de Pickleball</span>
+              Mexican Pickleball
+              <span className="block text-primary-200">Federation</span>
             </h1>
             <p className="text-xl text-primary-100 max-w-3xl mx-auto mb-8 leading-relaxed">
-              La plataforma oficial que conecta a jugadores, entrenadores, clubes y 
-              organizadores de pickleball en todo México. Únete a la comunidad de 
-              crecimiento más rápido en el deporte de raqueta.
+              The official platform that connects players, coaches, clubs and 
+              pickleball organizers throughout Mexico. Join the fastest growing 
+              community in racket sports.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {isAuthenticated ? (
@@ -79,7 +79,7 @@ const HomePage: React.FC = () => {
                   to={getDashboardLink()}
                   className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg"
                 >
-                  Ir al Dashboard
+                  Go to Dashboard
                 </Link>
               ) : (
                 <>
@@ -87,13 +87,13 @@ const HomePage: React.FC = () => {
                     to="/register"
                     className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg"
                   >
-                    Registrarse Ahora
+                    Register Now
                   </Link>
                   <Link
                     to={ROUTES.LOGIN}
                     className="btn-ghost border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg"
                   >
-                    Iniciar Sesión
+                    Sign In
                   </Link>
                 </>
               )}
@@ -128,11 +128,11 @@ const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Todo lo que necesitas para el pickleball
+              Everything you need for pickleball
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Nuestra plataforma ofrece todas las herramientas necesarias para 
-              jugadores, entrenadores, clubes y organizadores.
+              Our platform offers all the tools necessary for 
+              players, coaches, clubs and organizers.
             </p>
           </div>
           
@@ -159,7 +159,7 @@ const HomePage: React.FC = () => {
                   to={feature.href}
                   className="btn-primary w-full group-hover:bg-primary-700 transition-colors duration-200"
                 >
-                  Explorar
+                  Explore
                 </Link>
               </div>
             ))}
@@ -171,11 +171,11 @@ const HomePage: React.FC = () => {
       <div className="bg-primary-600 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            ¿Listo para unirte a la federación?
+            Ready to join the federation?
           </h2>
           <p className="text-xl text-primary-100 max-w-2xl mx-auto mb-8">
-            Regístrate hoy y comienza a disfrutar de todos los beneficios de ser 
-            parte de la comunidad oficial de pickleball en México.
+            Register today and start enjoying all the benefits of being 
+            part of the official pickleball community in Mexico.
           </p>
           {!isAuthenticated && (
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -184,13 +184,13 @@ const HomePage: React.FC = () => {
                 className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg"
               >
                 <PlayIcon className="w-5 h-5 mr-2" />
-                Comenzar Ahora
+                Start Now
               </Link>
               <Link
                 to="/about"
                 className="btn-ghost border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg"
               >
-                Conocer Más
+                Learn More
               </Link>
             </div>
           )}
@@ -203,21 +203,21 @@ const HomePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h3 className="text-lg font-medium text-success-900 mb-2">
-                ¡Bienvenido de vuelta, {user.username}!
+                Welcome back, {user.username}!
               </h3>
               <p className="text-success-700 mb-4">
-                Como {user.role === USER_ROLES.PLAYER ? 'jugador' : 
-                     user.role === USER_ROLES.COACH ? 'entrenador' :
+                As a registered {user.role === USER_ROLES.PLAYER ? 'player' : 
+                     user.role === USER_ROLES.COACH ? 'coach' :
                      user.role === USER_ROLES.CLUB ? 'club' :
                      user.role === USER_ROLES.PARTNER ? 'partner' :
-                     user.role === USER_ROLES.STATE ? 'comité estatal' : 'usuario'} 
-                registrado, tienes acceso a todas las funcionalidades de la plataforma.
+                     user.role === USER_ROLES.STATE ? 'state committee' : 'user'}, 
+                you have access to all platform functionalities.
               </p>
               <Link
                 to={ROUTES.DASHBOARD}
                 className="btn-success"
               >
-                Ir a mi Dashboard
+                Go to my Dashboard
               </Link>
             </div>
           </div>

@@ -41,15 +41,15 @@ const LoginForm: React.FC = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = 'El email es requerido';
+      newErrors.email = 'Email is required';
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Por favor ingresa un email válido';
+      newErrors.email = 'Please enter a valid email';
     }
 
     if (!formData.password.trim()) {
-      newErrors.password = 'La contraseña es requerida';
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+      newErrors.password = 'Password must be at least 6 characters';
     }
 
     setErrors(newErrors);
@@ -99,10 +99,10 @@ const LoginForm: React.FC = () => {
             <span className="text-white font-bold text-2xl">🏓</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900">
-            Iniciar Sesión
+            Sign In
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Accede a tu cuenta de la Federación Mexicana de Pickleball
+            Access your Mexican Pickleball Federation account
           </p>
         </div>
 
@@ -120,7 +120,7 @@ const LoginForm: React.FC = () => {
             {/* Email field */}
             <div>
               <label htmlFor="email" className="form-label">
-                Correo Electrónico
+                Email
               </label>
               <input
                 id="email"
@@ -131,7 +131,7 @@ const LoginForm: React.FC = () => {
                 className={`form-input ${
                   errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
                 }`}
-                placeholder="tu@email.com"
+                placeholder="your@email.com"
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -144,7 +144,7 @@ const LoginForm: React.FC = () => {
             {/* Password field */}
             <div>
               <label htmlFor="password" className="form-label">
-                Contraseña
+                Password
               </label>
               <div className="relative">
                 <input
@@ -190,10 +190,10 @@ const LoginForm: React.FC = () => {
               {isLoading ? (
                 <>
                   <LoadingSpinner size="sm" className="mr-2" />
-                  Iniciando sesión...
+                  Signing in...
                 </>
               ) : (
-                'Iniciar Sesión'
+                'Sign In'
               )}
             </button>
           </div>
@@ -204,13 +204,13 @@ const LoginForm: React.FC = () => {
               href="/forgot-password"
               className="text-primary-600 hover:text-primary-500 transition-colors duration-200"
             >
-              ¿Olvidaste tu contraseña?
+              Forgot your password?
             </a>
             <a
               href="/register"
               className="text-primary-600 hover:text-primary-500 transition-colors duration-200"
             >
-              Crear cuenta
+              Create account
             </a>
           </div>
         </form>
@@ -219,11 +219,11 @@ const LoginForm: React.FC = () => {
         {(import.meta as any).env?.MODE === 'development' && (
           <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
             <h3 className="text-sm font-medium text-yellow-800">
-              Credenciales de prueba:
+              Test credentials:
             </h3>
             <p className="text-xs text-yellow-600 mt-1">
               Email: admin@pickleballfed.mx<br />
-              Contraseña: admin123
+              Password: admin123
             </p>
           </div>
         )}

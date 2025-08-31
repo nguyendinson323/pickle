@@ -64,16 +64,16 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
     
-    if (diffInMinutes < 1) return 'Ahora mismo';
-    if (diffInMinutes < 60) return `Hace ${diffInMinutes}m`;
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     
     const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `Hace ${diffInHours}h`;
+    if (diffInHours < 24) return `${diffInHours}h ago`;
     
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `Hace ${diffInDays}d`;
+    if (diffInDays < 7) return `${diffInDays}d ago`;
     
-    return date.toLocaleDateString('es-MX', { 
+    return date.toLocaleDateString('en-US', { 
       day: 'numeric', 
       month: 'short' 
     });
@@ -113,7 +113,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                 <div className="flex items-center space-x-2">
                   <BellIcon className="w-6 h-6 text-gray-700" />
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Notificaciones
+                    Notifications
                   </h2>
                   {unreadCount > 0 && (
                     <Badge variant="primary">
@@ -140,7 +140,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  Todas
+                  All
                 </button>
                 <button
                   onClick={() => setFilter('unread')}
@@ -150,7 +150,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  No leídas {unreadCount > 0 && `(${unreadCount})`}
+                  Unread {unreadCount > 0 && `(${unreadCount})`}
                 </button>
               </div>
             </div>
@@ -164,7 +164,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                   onClick={handleMarkAllAsRead}
                   leftIcon={<CheckIcon className="w-4 h-4" />}
                 >
-                  Marcar todas como leídas
+                  Mark all as read
                 </Button>
               </div>
             )}
@@ -179,12 +179,12 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                 <div className="p-8 text-center">
                   <BellIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    {filter === 'unread' ? 'No hay notificaciones sin leer' : 'No hay notificaciones'}
+                    {filter === 'unread' ? 'No unread notifications' : 'No notifications'}
                   </h3>
                   <p className="text-gray-500">
                     {filter === 'unread' 
-                      ? 'Todas tus notificaciones han sido leídas.'
-                      : 'Te notificaremos cuando tengas algo nuevo.'}
+                      ? 'All your notifications have been read.'
+                      : 'We\'ll notify you when you have something new.'}
                   </p>
                 </div>
               ) : (
@@ -230,10 +230,10 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                               variant={getNotificationVariant(notification.type)}
                               className="text-xs"
                             >
-                              {notification.type === 'success' ? 'Éxito' :
-                               notification.type === 'warning' ? 'Aviso' :
+                              {notification.type === 'success' ? 'Success' :
+                               notification.type === 'warning' ? 'Warning' :
                                notification.type === 'error' ? 'Error' :
-                               'Información'}
+                               'Information'}
                             </Badge>
                             
                             {/* Actions */}
@@ -245,7 +245,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                                   onClick={() => handleMarkAsRead(notification.id)}
                                   className="text-xs px-2 py-1"
                                 >
-                                  Marcar leída
+                                  Mark read
                                 </Button>
                               )}
                               <Button
@@ -270,7 +270,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
             <div className="p-4 border-t border-gray-200 bg-gray-50">
               <div className="text-center">
                 <Button variant="outline" size="sm" onClick={onClose}>
-                  Cerrar Centro de Notificaciones
+                  Close Notification Center
                 </Button>
               </div>
             </div>

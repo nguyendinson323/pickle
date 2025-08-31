@@ -99,7 +99,7 @@ const RegistrationPage: React.FC = () => {
                     '1'
                   )}
                 </div>
-                <span className="ml-2 text-sm font-medium">Seleccionar Tipo</span>
+                <span className="ml-2 text-sm font-medium">Select Type</span>
               </div>
               
               {/* Connector */}
@@ -118,7 +118,7 @@ const RegistrationPage: React.FC = () => {
                 }`}>
                   2
                 </div>
-                <span className="ml-2 text-sm font-medium">Completar Registro</span>
+                <span className="ml-2 text-sm font-medium">Complete Registration</span>
               </div>
             </div>
           </div>
@@ -139,7 +139,7 @@ const RegistrationPage: React.FC = () => {
                   onClick={handleContinueToForm}
                   className="btn-primary px-8 py-3 text-lg"
                 >
-                  Continuar con el Registro
+                  Continue with Registration
                 </button>
               </div>
             )}

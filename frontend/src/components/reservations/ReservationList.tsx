@@ -50,10 +50,10 @@ export const ReservationList: React.FC = () => {
           endTime: '10:30',
           status: 'confirmed',
           totalAmount: 450,
-          notes: 'Entrenamiento matutino',
+          notes: 'Morning training',
           court: {
-            name: 'Cancha Principal',
-            address: 'Club Deportivo Central'
+            name: 'Main Court',
+            address: 'Central Sports Club'
           }
         },
         {
@@ -65,8 +65,8 @@ export const ReservationList: React.FC = () => {
           status: 'pending',
           totalAmount: 600,
           court: {
-            name: 'Cancha Norte',
-            address: 'Club Deportivo Norte'
+            name: 'North Court',
+            address: 'North Sports Club'
           }
         }
       ];
@@ -76,7 +76,7 @@ export const ReservationList: React.FC = () => {
   }, []);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'MXN'
     }).format(price);
@@ -85,12 +85,12 @@ export const ReservationList: React.FC = () => {
   const formatDateTime = (date: string, time: string) => {
     const dateObj = new Date(`${date}T${time}`);
     return {
-      date: dateObj.toLocaleDateString('es-MX', {
+      date: dateObj.toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'short',
         year: 'numeric'
       }),
-      time: dateObj.toLocaleTimeString('es-MX', {
+      time: dateObj.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: true
@@ -100,11 +100,11 @@ export const ReservationList: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
-      pending: { variant: 'warning', label: 'Pendiente' },
-      confirmed: { variant: 'success', label: 'Confirmada' },
+      pending: { variant: 'warning', label: 'Pending' },
+      confirmed: { variant: 'success', label: 'Confirmed' },
       checked_in: { variant: 'primary', label: 'Check-in' },
-      completed: { variant: 'success', label: 'Completada' },
-      cancelled: { variant: 'error', label: 'Cancelada' }
+      completed: { variant: 'success', label: 'Completed' },
+      cancelled: { variant: 'error', label: 'Cancelled' }
     };
 
     const config = statusMap[status as keyof typeof statusMap] || { variant: 'outline', label: status };
@@ -155,7 +155,7 @@ export const ReservationList: React.FC = () => {
         
         setReservations(prev => prev.map(r => 
           r.id === cancelModal.reservation!.id 
-            ? { ...r, status: 'cancelled' as const, cancellationReason: cancelReason.trim() || 'Cancelada por el usuario' }
+            ? { ...r, status: 'cancelled' as const, cancellationReason: cancelReason.trim() || 'Cancelled by user' }
             : r
         ));
         
@@ -228,11 +228,11 @@ export const ReservationList: React.FC = () => {
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Error al cargar las reservas
+          Error loading reservations
         </h3>
         <p className="text-gray-600 mb-4">{error}</p>
         <Button onClick={() => window.location.reload()}>
-          Intentar de nuevo
+          Try again
         </Button>
       </div>
     );
@@ -247,14 +247,14 @@ export const ReservationList: React.FC = () => {
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          No tienes reservas
+          You have no reservations
         </h3>
         <p className="text-gray-600 mb-4">
-          Cuando hagas una reserva aparecerá aquí.
+          When you make a reservation it will appear here.
         </p>
         <Link to="/courts">
           <Button variant="primary">
-            Explorar Canchas
+            Explore Courts
           </Button>
         </Link>
       </div>
@@ -266,15 +266,15 @@ export const ReservationList: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mis Reservas</h1>
+          <h1 className="text-2xl font-bold text-gray-900">My Reservations</h1>
           <p className="text-gray-600 mt-1">
-            {pagination.total} reserva{pagination.total !== 1 ? 's' : ''} encontrada{pagination.total !== 1 ? 's' : ''}
+            {pagination.total} reservation{pagination.total !== 1 ? 's' : ''} found
           </p>
         </div>
         
         <Link to="/courts">
           <Button variant="primary">
-            Nueva Reserva
+            New Reservation
           </Button>
         </Link>
       </div>
@@ -293,7 +293,7 @@ export const ReservationList: React.FC = () => {
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {reservation.court?.name || 'Cancha'}
+                        {reservation.court?.name || 'Court'}
                       </h3>
                       <p className="text-gray-600 text-sm">
                         {reservation.court?.address}
@@ -306,11 +306,11 @@ export const ReservationList: React.FC = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500">Fecha:</span>
+                      <span className="text-gray-500">Date:</span>
                       <p className="font-medium">{startDateTime.date}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">Horario:</span>
+                      <span className="text-gray-500">Time:</span>
                       <p className="font-medium">{startDateTime.time} - {endTime}</p>
                     </div>
                     <div>
@@ -323,14 +323,14 @@ export const ReservationList: React.FC = () => {
 
                   {reservation.notes && (
                     <div className="mt-3">
-                      <span className="text-gray-500 text-sm">Notas:</span>
+                      <span className="text-gray-500 text-sm">Notes:</span>
                       <p className="text-sm text-gray-700">{reservation.notes}</p>
                     </div>
                   )}
 
                   {reservation.cancellationReason && (
                     <div className="mt-3">
-                      <span className="text-red-500 text-sm">Motivo de cancelación:</span>
+                      <span className="text-red-500 text-sm">Cancellation reason:</span>
                       <p className="text-sm text-red-600">{reservation.cancellationReason}</p>
                     </div>
                   )}
@@ -340,7 +340,7 @@ export const ReservationList: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Link to={`/reservations/${reservation.id}`}>
                     <Button variant="secondary" size="sm" className="w-full sm:w-auto">
-                      Ver Detalles
+                      View Details
                     </Button>
                   </Link>
 
@@ -352,7 +352,7 @@ export const ReservationList: React.FC = () => {
                       disabled={actionLoading[`checkin-${reservation.id}`]}
                       onClick={() => handleCheckIn(reservation.id)}
                     >
-                      {actionLoading[`checkin-${reservation.id}`] ? 'Procesando...' : 'Check-in'}
+                      {actionLoading[`checkin-${reservation.id}`] ? 'Processing...' : 'Check-in'}
                     </Button>
                   )}
 
@@ -364,7 +364,7 @@ export const ReservationList: React.FC = () => {
                       disabled={actionLoading[`checkout-${reservation.id}`]}
                       onClick={() => handleCheckOut(reservation.id)}
                     >
-                      {actionLoading[`checkout-${reservation.id}`] ? 'Procesando...' : 'Check-out'}
+                      {actionLoading[`checkout-${reservation.id}`] ? 'Processing...' : 'Check-out'}
                     </Button>
                   )}
 
@@ -376,7 +376,7 @@ export const ReservationList: React.FC = () => {
                       disabled={actionLoading[`cancel-${reservation.id}`]}
                       onClick={() => handleCancelClick(reservation)}
                     >
-                      Cancelar
+                      Cancel
                     </Button>
                   )}
 
@@ -387,7 +387,7 @@ export const ReservationList: React.FC = () => {
                         size="sm"
                         className="w-full sm:w-auto"
                       >
-                        Reseñar
+                        Review
                       </Button>
                     </Link>
                   )}
@@ -406,7 +406,7 @@ export const ReservationList: React.FC = () => {
             disabled={pagination.current === 1 || loading}
             onClick={() => handlePageChange(pagination.current - 1)}
           >
-            Anterior
+            Previous
           </Button>
           
           <div className="flex space-x-2">
@@ -441,7 +441,7 @@ export const ReservationList: React.FC = () => {
             disabled={pagination.current === pagination.pages || loading}
             onClick={() => handlePageChange(pagination.current + 1)}
           >
-            Siguiente
+            Next
           </Button>
         </div>
       )}
@@ -450,11 +450,11 @@ export const ReservationList: React.FC = () => {
       <Modal
         isOpen={cancelModal.isOpen}
         onClose={() => setCancelModal({ isOpen: false, reservation: null })}
-        title="Cancelar Reserva"
+        title="Cancel Reservation"
       >
         <div className="space-y-4">
           <p className="text-gray-700">
-            ¿Estás seguro de que deseas cancelar esta reserva?
+            Are you sure you want to cancel this reservation?
           </p>
           
           {cancelModal.reservation && (
@@ -475,12 +475,12 @@ export const ReservationList: React.FC = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Motivo de cancelación (opcional)
+              Cancellation reason (optional)
             </label>
             <textarea
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
-              placeholder="Escribe el motivo de la cancelación..."
+              placeholder="Write the reason for cancellation..."
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
             />
@@ -493,14 +493,14 @@ export const ReservationList: React.FC = () => {
               disabled={actionLoading[`cancel-${cancelModal.reservation?.id}`]}
               className="flex-1"
             >
-              {actionLoading[`cancel-${cancelModal.reservation?.id}`] ? 'Cancelando...' : 'Confirmar Cancelación'}
+              {actionLoading[`cancel-${cancelModal.reservation?.id}`] ? 'Cancelling...' : 'Confirm Cancellation'}
             </Button>
             <Button
               variant="secondary"
               onClick={() => setCancelModal({ isOpen: false, reservation: null })}
               disabled={actionLoading[`cancel-${cancelModal.reservation?.id}`]}
             >
-              Mantener Reserva
+              Keep Reservation
             </Button>
           </div>
         </div>

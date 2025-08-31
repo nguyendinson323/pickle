@@ -24,7 +24,7 @@ const StateDashboard: React.FC = () => {
   // Mock data since slices don't exist
   const dashboardData = {
     user: user || {
-      firstName: 'Estado',
+      firstName: 'State',
       lastName: 'de México'
     },
     statistics: {
@@ -45,43 +45,43 @@ const StateDashboard: React.FC = () => {
   const tabs = [
     {
       id: 'overview',
-      label: 'Resumen Estatal',
+      label: 'State Overview',
       icon: <FlagIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'account',
-      label: 'Mi Cuenta',
+      label: 'My Account',
       icon: <CogIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'inbox',
-      label: 'Bandeja',
+      label: 'Inbox',
       icon: <InboxIcon className="w-4 h-4" />,
       count: unreadCount
     },
     {
       id: 'clubs',
-      label: 'Clubes',
+      label: 'Clubs',
       icon: <BuildingOfficeIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.registeredClubs || 0
     },
     {
       id: 'tournaments',
-      label: 'Torneos',
+      label: 'Tournaments',
       icon: <TrophyIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.stateTournaments || 0
     },
     {
       id: 'players',
-      label: 'Jugadores',
+      label: 'Players',
       icon: <UserGroupIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.registeredPlayers || 0
     },
     {
       id: 'reports',
-      label: 'Reportes',
+      label: 'Reports',
       icon: <DocumentTextIcon className="w-4 h-4" />,
       count: 0
     }
@@ -93,26 +93,26 @@ const StateDashboard: React.FC = () => {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold mb-2">Comité Estatal</h3>
+              <h3 className="text-lg font-semibold mb-2">State Committee</h3>
               <p className="text-red-100 mb-4">
-                Estado de México
+                State of Mexico
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-red-200">Código:</span>
+                  <span className="text-red-200">Code:</span>
                   <span className="ml-2 font-medium">MEX</span>
                 </div>
                 <div>
-                  <span className="text-red-200">Región:</span>
-                  <span className="ml-2 font-medium">Centro</span>
+                  <span className="text-red-200">Region:</span>
+                  <span className="ml-2 font-medium">Central</span>
                 </div>
                 <div>
-                  <span className="text-red-200">Establecido:</span>
+                  <span className="text-red-200">Established:</span>
                   <span className="ml-2 font-medium">2019</span>
                 </div>
                 <div>
-                  <span className="text-red-200">Estatus:</span>
-                  <span className="ml-2 font-medium">Activo</span>
+                  <span className="text-red-200">Status:</span>
+                  <span className="ml-2 font-medium">Active</span>
                 </div>
               </div>
             </div>
@@ -121,7 +121,7 @@ const StateDashboard: React.FC = () => {
                 <FlagIcon className="w-10 h-10 text-white" />
               </div>
               <Button variant="ghost" size="sm" className="text-white border-white/30">
-                Ver Certificado
+                View Certificate
               </Button>
             </div>
           </div>
@@ -131,18 +131,18 @@ const StateDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Desarrollo del Estado</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">State Development</h4>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Clubes Registrados</span>
+                <span className="text-sm text-gray-500">Registered Clubs</span>
                 <span className="font-medium">{dashboardData?.statistics?.registeredClubs || 28}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Jugadores Activos</span>
+                <span className="text-sm text-gray-500">Active Players</span>
                 <span className="font-medium">{dashboardData?.statistics?.registeredPlayers || 1240}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Entrenadores</span>
+                <span className="text-sm text-gray-500">Coaches</span>
                 <span className="font-medium">{dashboardData?.statistics?.certifiedCoaches || 45}</span>
               </div>
             </div>
@@ -151,16 +151,16 @@ const StateDashboard: React.FC = () => {
 
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Actividad Reciente</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">Recent Activity</h4>
             <div className="space-y-2">
               <div className="text-xs text-gray-500 bg-green-50 p-2 rounded">
-                Nuevo club registrado: Club Deportivo Toluca
+                New club registered: Toluca Sports Club
               </div>
               <div className="text-xs text-gray-500 bg-blue-50 p-2 rounded">
-                Torneo estatal programado para Mayo
+                State tournament scheduled for May
               </div>
               <div className="text-xs text-gray-500 bg-yellow-50 p-2 rounded">
-                15 nuevos jugadores certificados
+                15 new players certified
               </div>
             </div>
           </div>
@@ -168,11 +168,11 @@ const StateDashboard: React.FC = () => {
 
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Objetivos 2024</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">2024 Goals</h4>
             <div className="space-y-3">
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span>Nuevos Clubes</span>
+                  <span>New Clubs</span>
                   <span>28/35</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -181,7 +181,7 @@ const StateDashboard: React.FC = () => {
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span>Jugadores</span>
+                  <span>Players</span>
                   <span>1240/1500</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -198,19 +198,19 @@ const StateDashboard: React.FC = () => {
   const renderClubsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Clubes Registrados</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Registered Clubs</h3>
         <Button variant="primary">
           <BuildingOfficeIcon className="w-4 h-4 mr-2" />
-          Registrar Club
+          Register Club
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
-          { name: 'Club Deportivo Toluca', city: 'Toluca', members: 45, status: 'active' },
+          { name: 'Toluca Sports Club', city: 'Toluca', members: 45, status: 'active' },
           { name: 'Pickleball Naucalpan', city: 'Naucalpan', members: 67, status: 'active' },
           { name: 'Club Satélite', city: 'Ciudad Satélite', members: 38, status: 'active' },
-          { name: 'Deportivo Texcoco', city: 'Texcoco', members: 29, status: 'pending' },
+          { name: 'Texcoco Sports Club', city: 'Texcoco', members: 29, status: 'pending' },
           { name: 'Club Valle de Bravo', city: 'Valle de Bravo', members: 52, status: 'active' },
           { name: 'Pickleball Ecatepec', city: 'Ecatepec', members: 41, status: 'active' }
         ].map((club, index) => (
@@ -224,23 +224,23 @@ const StateDashboard: React.FC = () => {
                 <Badge 
                   variant={club.status === 'active' ? 'success' : 'warning'}
                 >
-                  {club.status === 'active' ? 'Activo' : 'Pendiente'}
+                  {club.status === 'active' ? 'Active' : 'Pending'}
                 </Badge>
               </div>
               
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex justify-between">
-                  <span>Miembros:</span>
+                  <span>Members:</span>
                   <span className="font-medium">{club.members}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Última actualización:</span>
-                  <span className="font-medium">Hace {Math.floor(Math.random() * 10) + 1} días</span>
+                  <span>Last update:</span>
+                  <span className="font-medium">{Math.floor(Math.random() * 10) + 1} days ago</span>
                 </div>
               </div>
               
               <Button variant="secondary" size="sm" className="w-full">
-                Ver Detalles
+                View Details
               </Button>
             </div>
           </Card>
@@ -252,38 +252,38 @@ const StateDashboard: React.FC = () => {
   const renderTournamentsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Torneos Estatales</h3>
+        <h3 className="text-xl font-semibold text-gray-900">State Tournaments</h3>
         <Button variant="primary">
           <TrophyIcon className="w-4 h-4 mr-2" />
-          Nuevo Torneo
+          New Tournament
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
           { 
-            name: 'Campeonato Estatal 2024',
+            name: 'State Championship 2024',
             date: '15-17 Jun 2024',
             location: 'Toluca',
             participants: 128,
             status: 'upcoming'
           },
           { 
-            name: 'Liga Regional Norte',
+            name: 'North Regional League',
             date: '2-4 Ago 2024',
             location: 'Naucalpan',
             participants: 64,
             status: 'registration'
           },
           { 
-            name: 'Torneo Juvenil Estatal',
+            name: 'State Youth Tournament',
             date: '5-7 Jul 2024',
             location: 'Texcoco',
             participants: 32,
             status: 'planning'
           },
           { 
-            name: 'Copa Estado de México',
+            name: 'State of Mexico Cup',
             date: '10-12 Mar 2024',
             location: 'Valle de Bravo',
             participants: 96,
@@ -302,30 +302,30 @@ const StateDashboard: React.FC = () => {
                     'success'
                   }
                 >
-                  {tournament.status === 'upcoming' ? 'Próximo' :
-                   tournament.status === 'registration' ? 'Inscripciones' :
-                   tournament.status === 'planning' ? 'Planeación' :
-                   'Completado'}
+                  {tournament.status === 'upcoming' ? 'Upcoming' :
+                   tournament.status === 'registration' ? 'Registration' :
+                   tournament.status === 'planning' ? 'Planning' :
+                   'Completed'}
                 </Badge>
               </div>
               
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex justify-between">
-                  <span>Fecha:</span>
+                  <span>Date:</span>
                   <span className="font-medium">{tournament.date}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Sede:</span>
+                  <span>Venue:</span>
                   <span className="font-medium">{tournament.location}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Participantes:</span>
+                  <span>Participants:</span>
                   <span className="font-medium">{tournament.participants}</span>
                 </div>
               </div>
               
               <Button variant="secondary" size="sm" className="w-full">
-                Gestionar
+                Manage
               </Button>
             </div>
           </Card>
@@ -342,16 +342,16 @@ const StateDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <CogIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Configuración de Cuenta</h3>
-            <p className="text-gray-500">Gestiona la información del comité estatal.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Account Settings</h3>
+            <p className="text-gray-500">Manage state committee information.</p>
           </div>
         );
       case 'inbox':
         return (
           <div className="text-center py-12">
             <InboxIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Mensajes</h3>
-            <p className="text-gray-500">Tu bandeja de entrada está vacía.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Messages</h3>
+            <p className="text-gray-500">Your inbox is empty.</p>
           </div>
         );
       case 'clubs':
@@ -362,16 +362,16 @@ const StateDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <UserGroupIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Jugadores Registrados</h3>
-            <p className="text-gray-500">Base de datos de jugadores del estado.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Registered Players</h3>
+            <p className="text-gray-500">State players database.</p>
           </div>
         );
       case 'reports':
         return (
           <div className="text-center py-12">
             <DocumentTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Reportes Estatales</h3>
-            <p className="text-gray-500">Genera reportes y estadísticas del estado.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">State Reports</h3>
+            <p className="text-gray-500">Generate state reports and statistics.</p>
           </div>
         );
       default:
@@ -391,9 +391,9 @@ const StateDashboard: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error cargando el dashboard</p>
+          <p className="text-red-600 mb-4">Error loading dashboard</p>
           <Button onClick={() => window.location.reload()}>
-            Reintentar
+            Retry
           </Button>
         </div>
       </div>
@@ -405,41 +405,41 @@ const StateDashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-            Panel Estatal
+            State Panel
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Bienvenido al sistema de gestión estatal
+            Welcome to the state management system
           </p>
         </div>
         <div className="space-y-8">
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
-            title="Clubes Registrados"
+            title="Registered Clubs"
             value={dashboardData?.statistics?.registeredClubs?.toString() || '28'}
             icon={<BuildingOfficeIcon className="w-6 h-6" />}
-            trend={{ direction: 'up', value: 4, label: 'este mes' }}
+            trend={{ direction: 'up', value: 4, label: 'this month' }}
             color="blue"
           />
           <StatCard
-            title="Jugadores Activos"
+            title="Active Players"
             value={dashboardData?.statistics?.registeredPlayers?.toString() || '1,240'}
             icon={<UserGroupIcon className="w-6 h-6" />}
-            trend={{ direction: 'up', value: 85, label: 'este mes' }}
+            trend={{ direction: 'up', value: 85, label: 'this month' }}
             color="green"
           />
           <StatCard
-            title="Torneos Anuales"
+            title="Annual Tournaments"
             value={dashboardData?.statistics?.stateTournaments?.toString() || '12'}
             icon={<TrophyIcon className="w-6 h-6" />}
-            trend={{ direction: 'up', value: 3, label: 'este mes' }}
+            trend={{ direction: 'up', value: 3, label: 'this month' }}
             color="purple"
           />
           <StatCard
-            title="Entrenadores"
+            title="Coaches"
             value={dashboardData?.statistics?.certifiedCoaches?.toString() || '45'}
             icon={<UserGroupIcon className="w-6 h-6" />}
-            trend={{ direction: 'up', value: 7, label: 'este mes' }}
+            trend={{ direction: 'up', value: 7, label: 'this month' }}
             color="yellow"
           />
         </div>

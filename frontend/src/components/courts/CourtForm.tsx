@@ -47,30 +47,30 @@ export const CourtForm: React.FC<CourtFormProps> = ({
     maxAdvanceBookingDays: '30',
     minBookingDuration: '60',
     maxBookingDuration: '180',
-    cancellationPolicy: 'Cancelación gratuita hasta 24 horas antes. 50% de reembolso entre 2-24 horas antes.'
+    cancellationPolicy: 'Free cancellation up to 24 hours before. 50% refund between 2-24 hours before.'
   });
 
   const surfaceOptions = [
-    { value: 'concrete', label: 'Concreto' },
-    { value: 'asphalt', label: 'Asfalto' },
-    { value: 'acrylic', label: 'Acrílico' },
-    { value: 'composite', label: 'Compuesto' }
+    { value: 'concrete', label: 'Concrete' },
+    { value: 'asphalt', label: 'Asphalt' },
+    { value: 'acrylic', label: 'Acrylic' },
+    { value: 'composite', label: 'Composite' }
   ];
 
   const amenityOptions = [
-    { value: 'lighting', label: 'Iluminación' },
-    { value: 'seating', label: 'Asientos' },
-    { value: 'parking', label: 'Estacionamiento' },
-    { value: 'restrooms', label: 'Sanitarios' },
-    { value: 'water_fountain', label: 'Bebedero' },
-    { value: 'equipment_rental', label: 'Renta de Equipo' },
-    { value: 'cafeteria', label: 'Cafetería' },
-    { value: 'pro_shop', label: 'Tienda Pro' },
-    { value: 'coaching_area', label: 'Área de Entrenamiento' },
-    { value: 'professional_lighting', label: 'Iluminación Profesional' },
-    { value: 'vip_seating', label: 'Asientos VIP' },
+    { value: 'lighting', label: 'Lighting' },
+    { value: 'seating', label: 'Seating' },
+    { value: 'parking', label: 'Parking' },
+    { value: 'restrooms', label: 'Restrooms' },
+    { value: 'water_fountain', label: 'Water Fountain' },
+    { value: 'equipment_rental', label: 'Equipment Rental' },
+    { value: 'cafeteria', label: 'Cafeteria' },
+    { value: 'pro_shop', label: 'Pro Shop' },
+    { value: 'coaching_area', label: 'Coaching Area' },
+    { value: 'professional_lighting', label: 'Professional Lighting' },
+    { value: 'vip_seating', label: 'VIP Seating' },
     { value: 'valet_parking', label: 'Valet Parking' },
-    { value: 'premium_restrooms', label: 'Sanitarios Premium' }
+    { value: 'premium_restrooms', label: 'Premium Restrooms' }
   ];
 
   const stateOptions = states.map(state => ({
@@ -126,7 +126,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
         maxAdvanceBookingDays: '30',
         minBookingDuration: '60',
         maxBookingDuration: '180',
-        cancellationPolicy: 'Cancelación gratuita hasta 24 horas antes. 50% de reembolso entre 2-24 horas antes.'
+        cancellationPolicy: 'Free cancellation up to 24 hours before. 50% refund between 2-24 hours before.'
       });
     }
   }, [court, isOpen]);
@@ -179,7 +179,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={court ? 'Editar Cancha' : 'Registrar Nueva Cancha'}
+      title={court ? 'Edit Court' : 'Register New Court'}
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
@@ -202,12 +202,12 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
         {/* Basic Information */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Información Básica</h3>
+          <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre de la Cancha *
+                Court Name *
               </label>
               <input
                 type="text"
@@ -220,7 +220,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Estado *
+                State *
               </label>
               <select
                 value={formData.stateId}
@@ -228,7 +228,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Seleccionar estado</option>
+                <option value="">Select state</option>
                 {stateOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -240,7 +240,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción
+              Description
             </label>
             <textarea
               value={formData.description}
@@ -252,7 +252,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Dirección *
+              Address *
             </label>
             <input
               type="text"
@@ -266,7 +266,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tipo de Superficie *
+                Surface Type *
               </label>
               <select
                 value={formData.surfaceType}
@@ -284,7 +284,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Latitud
+                Latitude
               </label>
               <input
                 type="number"
@@ -297,7 +297,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Longitud
+                Longitude
               </label>
               <input
                 type="number"
@@ -312,12 +312,12 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
         {/* Pricing */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Precios</h3>
+          <h3 className="text-lg font-medium text-gray-900">Pricing</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Precio por Hora (MXN) *
+                Hourly Rate (MXN) *
               </label>
               <input
                 type="number"
@@ -332,7 +332,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Precio en Hora Pico (MXN)
+                Peak Hour Rate (MXN)
               </label>
               <input
                 type="number"
@@ -340,14 +340,14 @@ export const CourtForm: React.FC<CourtFormProps> = ({
                 step="0.01"
                 value={formData.peakHourRate}
                 onChange={(e) => handleInputChange('peakHourRate', e.target.value)}
-                placeholder="Opcional"
+                placeholder="Optional"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Precio Fin de Semana (MXN)
+                Weekend Rate (MXN)
               </label>
               <input
                 type="number"
@@ -355,7 +355,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
                 step="0.01"
                 value={formData.weekendRate}
                 onChange={(e) => handleInputChange('weekendRate', e.target.value)}
-                placeholder="Opcional"
+                placeholder="Optional"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -364,7 +364,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
 
         {/* Amenities */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Servicios Disponibles</h3>
+          <h3 className="text-lg font-medium text-gray-900">Available Services</h3>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {amenityOptions.map((amenity) => (
@@ -389,7 +389,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
             disabled={loading}
             className="flex-1"
           >
-            {loading ? 'Guardando...' : court ? 'Actualizar Cancha' : 'Registrar Cancha'}
+            {loading ? 'Saving...' : court ? 'Update Court' : 'Register Court'}
           </Button>
           
           <Button
@@ -398,7 +398,7 @@ export const CourtForm: React.FC<CourtFormProps> = ({
             onClick={onClose}
             disabled={loading}
           >
-            Cancelar
+            Cancel
           </Button>
         </div>
       </form>

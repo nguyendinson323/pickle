@@ -56,13 +56,13 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-              Buscar torneos
+              Search tournaments
             </label>
             <div className="relative">
               <input
                 type="text"
                 id="search"
-                placeholder="Nombre del torneo, descripción..."
+                placeholder="Tournament name, description..."
                 value={localFilters.search || ''}
                 onChange={(e) => handleInputChange('search', e.target.value)}
                 className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -82,11 +82,11 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
               onChange={(e) => handleInputChange('status', e.target.value || undefined)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             >
-              <option value="">Todos los estados</option>
-              <option value="registration_open">Registro Abierto</option>
-              <option value="registration_closed">Registro Cerrado</option>
-              <option value="in_progress">En Progreso</option>
-              <option value="completed">Completado</option>
+              <option value="">All statuses</option>
+              <option value="registration_open">Registration Open</option>
+              <option value="registration_closed">Registration Closed</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
             </select>
 
             <select
@@ -94,9 +94,9 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
               onChange={(e) => handleInputChange('level', e.target.value || undefined)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             >
-              <option value="">Todos los niveles</option>
-              <option value="National">Nacional</option>
-              <option value="State">Estatal</option>
+              <option value="">All levels</option>
+              <option value="National">National</option>
+              <option value="State">State</option>
               <option value="Municipal">Municipal</option>
               <option value="Local">Local</option>
             </select>
@@ -106,7 +106,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
               onClick={() => setShowAdvanced(!showAdvanced)}
               className="px-4 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             >
-              {showAdvanced ? 'Menos filtros' : 'Más filtros'}
+              {showAdvanced ? 'Fewer filters' : 'More filters'}
             </button>
           </div>
         </div>
@@ -118,34 +118,34 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
               {/* Tournament Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Tipo de Torneo
+                  Tournament Type
                 </label>
                 <select
                   value={localFilters.tournamentType || ''}
                   onChange={(e) => handleInputChange('tournamentType', e.target.value || undefined)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                 >
-                  <option value="">Todos los tipos</option>
-                  <option value="Championship">Campeonato</option>
-                  <option value="League">Liga</option>
-                  <option value="Open">Abierto</option>
-                  <option value="Friendly">Amistoso</option>
+                  <option value="">All types</option>
+                  <option value="Championship">Championship</option>
+                  <option value="League">League</option>
+                  <option value="Open">Open</option>
+                  <option value="Friendly">Friendly</option>
                   <option value="Tour">Tour</option>
-                  <option value="Youth">Juvenil</option>
+                  <option value="Youth">Youth</option>
                 </select>
               </div>
 
               {/* State */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Estado
+                  State
                 </label>
                 <select
                   value={localFilters.stateId || ''}
                   onChange={(e) => handleInputChange('stateId', e.target.value ? Number(e.target.value) : undefined)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                 >
-                  <option value="">Todos los estados</option>
+                  <option value="">All states</option>
                   {states.map(state => (
                     <option key={state.id} value={state.id}>
                       {state.name}
@@ -157,7 +157,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
               {/* Start Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha de inicio (desde)
+                  Start date (from)
                 </label>
                 <input
                   type="date"
@@ -170,7 +170,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
               {/* End Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha de inicio (hasta)
+                  Start date (to)
                 </label>
                 <input
                   type="date"
@@ -192,7 +192,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
                 onClick={clearFilters}
                 className="text-sm text-gray-600 hover:text-gray-900 underline"
               >
-                Limpiar filtros
+                Clear filters
               </button>
             )}
             {hasActiveFilters() && (
@@ -200,10 +200,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
                 ({Object.keys(localFilters).filter(key => {
                   const value = localFilters[key as keyof TournamentSearchFilters];
                   return value && value !== '' && key !== 'page' && key !== 'limit';
-                }).length} filtro{Object.keys(localFilters).filter(key => {
-                  const value = localFilters[key as keyof TournamentSearchFilters];
-                  return value && value !== '' && key !== 'page' && key !== 'limit';
-                }).length !== 1 ? 's' : ''} activo{Object.keys(localFilters).filter(key => {
+                }).length} active filter{Object.keys(localFilters).filter(key => {
                   const value = localFilters[key as keyof TournamentSearchFilters];
                   return value && value !== '' && key !== 'page' && key !== 'limit';
                 }).length !== 1 ? 's' : ''})
@@ -217,7 +214,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
               disabled={isLoading}
               className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             >
-              {isLoading ? 'Buscando...' : 'Buscar'}
+              {isLoading ? 'Searching...' : 'Search'}
             </button>
           </div>
         </div>
@@ -227,10 +224,10 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
       {hasActiveFilters() && (
         <div className="mt-4 pt-4 border-t">
           <div className="flex flex-wrap gap-2">
-            <span className="text-sm font-medium text-gray-700">Filtros activos:</span>
+            <span className="text-sm font-medium text-gray-700">Active filters:</span>
             {localFilters.search && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                Búsqueda: "{localFilters.search}"
+                Search: "{localFilters.search}"
                 <button
                   onClick={() => handleInputChange('search', undefined)}
                   className="text-blue-600 hover:text-blue-800"
@@ -241,7 +238,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
             )}
             {localFilters.status && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                Estado: {localFilters.status.replace('_', ' ')}
+                Status: {localFilters.status.replace('_', ' ')}
                 <button
                   onClick={() => handleInputChange('status', undefined)}
                   className="text-blue-600 hover:text-blue-800"
@@ -252,7 +249,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
             )}
             {localFilters.level && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                Nivel: {localFilters.level}
+                Level: {localFilters.level}
                 <button
                   onClick={() => handleInputChange('level', undefined)}
                   className="text-blue-600 hover:text-blue-800"
@@ -263,7 +260,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
             )}
             {localFilters.tournamentType && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                Tipo: {localFilters.tournamentType}
+                Type: {localFilters.tournamentType}
                 <button
                   onClick={() => handleInputChange('tournamentType', undefined)}
                   className="text-blue-600 hover:text-blue-800"
@@ -274,7 +271,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
             )}
             {localFilters.stateId && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                Estado: {states.find(s => s.id === localFilters.stateId)?.name}
+                State: {states.find(s => s.id === localFilters.stateId)?.name}
                 <button
                   onClick={() => handleInputChange('stateId', undefined)}
                   className="text-blue-600 hover:text-blue-800"
@@ -285,7 +282,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
             )}
             {localFilters.startDate && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                Desde: {localFilters.startDate}
+                From: {localFilters.startDate}
                 <button
                   onClick={() => handleInputChange('startDate', undefined)}
                   className="text-blue-600 hover:text-blue-800"
@@ -296,7 +293,7 @@ const TournamentSearch: React.FC<TournamentSearchProps> = ({
             )}
             {localFilters.endDate && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                Hasta: {localFilters.endDate}
+                To: {localFilters.endDate}
                 <button
                   onClick={() => handleInputChange('endDate', undefined)}
                   className="text-blue-600 hover:text-blue-800"

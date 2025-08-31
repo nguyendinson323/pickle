@@ -79,14 +79,14 @@ export const CourtDetailPage: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Error al cargar la cancha</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Error loading court</h3>
           <p className="text-gray-600 mb-4">{error}</p>
           <div className="flex gap-3 justify-center">
             <Button onClick={() => dispatch(fetchCourtById(courtId!))}>
-              Intentar de nuevo
+              Try again
             </Button>
             <Button variant="outline" onClick={() => navigate('/courts')}>
-              Volver a canchas
+              Back to courts
             </Button>
           </div>
         </div>
@@ -103,12 +103,12 @@ export const CourtDetailPage: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Cancha no encontrada</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Court not found</h3>
           <p className="text-gray-600 mb-4">
-            La cancha que buscas no existe o ha sido eliminada.
+            The court you are looking for does not exist or has been deleted.
           </p>
           <Button onClick={() => navigate('/courts')}>
-            Volver a canchas
+            Back to courts
           </Button>
         </div>
       </div>
@@ -127,7 +127,7 @@ export const CourtDetailPage: React.FC = () => {
                   onClick={() => navigate('/courts')}
                   className="text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                  Canchas
+                  Courts
                 </button>
               </li>
               <li className="flex items-center">
@@ -154,9 +154,9 @@ export const CourtDetailPage: React.FC = () => {
                 </h1>
                 
                 {currentCourt.isActive ? (
-                  <Badge variant="success">Activa</Badge>
+                  <Badge variant="success">Active</Badge>
                 ) : (
-                  <Badge variant="error">Inactiva</Badge>
+                  <Badge variant="error">Inactive</Badge>
                 )}
 
                 {/* Featured badge removed - isFeatured property not available */}
@@ -180,7 +180,7 @@ export const CourtDetailPage: React.FC = () => {
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Editar
+                  Edit
                 </Button>
               )}
 
@@ -193,7 +193,7 @@ export const CourtDetailPage: React.FC = () => {
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h6l2 2h6a2 2 0 012 2v4m-8 16H8a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v1" />
                   </svg>
-                  Reservar
+                  Reserve
                 </Button>
               )}
             </div>
@@ -213,7 +213,7 @@ export const CourtDetailPage: React.FC = () => {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              Detalles
+              Details
             </button>
             
             {user && (
@@ -225,7 +225,7 @@ export const CourtDetailPage: React.FC = () => {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                Reservar
+                Reserve
               </button>
             )}
             
@@ -238,7 +238,7 @@ export const CourtDetailPage: React.FC = () => {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                Analíticas
+                Analytics
               </button>
             )}
           </nav>
@@ -251,7 +251,7 @@ export const CourtDetailPage: React.FC = () => {
           <div className="flex justify-center mb-4">
             <div className="flex items-center gap-2 text-blue-600">
               <LoadingSpinner size="sm" />
-              <span className="text-sm">Actualizando...</span>
+              <span className="text-sm">Updating...</span>
             </div>
           </div>
         )}
@@ -283,23 +283,23 @@ export const CourtDetailPage: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Inicia sesión para reservar
+              Log in to reserve
             </h3>
             <p className="text-gray-600 mb-4">
-              Necesitas tener una cuenta para poder hacer reservas en esta cancha.
+              You need to have an account to make reservations at this court.
             </p>
             <div className="flex gap-3 justify-center">
               <Button 
                 variant="primary"
                 onClick={() => navigate('/login', { state: { returnUrl: window.location.pathname } })}
               >
-                Iniciar Sesión
+                Log In
               </Button>
               <Button 
                 variant="outline"
                 onClick={() => navigate('/register', { state: { returnUrl: window.location.pathname } })}
               >
-                Crear Cuenta
+                Create Account
               </Button>
             </div>
           </div>

@@ -6,22 +6,22 @@ const Footer: React.FC = () => {
 
   const footerLinks = {
     platform: [
-      { name: 'Inicio', href: ROUTES.HOME },
-      { name: 'Torneos', href: ROUTES.TOURNAMENTS },
-      { name: 'Canchas', href: ROUTES.COURTS },
+      { name: 'Home', href: ROUTES.HOME },
+      { name: 'Tournaments', href: ROUTES.TOURNAMENTS },
+      { name: 'Courts', href: ROUTES.COURTS },
       { name: 'Rankings', href: ROUTES.RANKINGS },
     ],
     legal: [
-      { name: 'Términos y Condiciones', href: '/terms' },
-      { name: 'Política de Privacidad', href: '/privacy' },
-      { name: 'Aviso de Privacidad', href: '/privacy-notice' },
-      { name: 'Contacto', href: '/contact' },
+      { name: 'Terms and Conditions', href: '/terms' },
+      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Privacy Notice', href: '/privacy-notice' },
+      { name: 'Contact', href: '/contact' },
     ],
     federation: [
-      { name: 'Acerca de la Federación', href: '/about' },
-      { name: 'Reglamento Oficial', href: '/rules' },
-      { name: 'Certificaciones', href: '/certifications' },
-      { name: 'Noticias', href: '/news' },
+      { name: 'About the Federation', href: '/about' },
+      { name: 'Official Rules', href: '/rules' },
+      { name: 'Certifications', href: '/certifications' },
+      { name: 'News', href: '/news' },
     ],
   };
 
@@ -40,8 +40,8 @@ const Footer: React.FC = () => {
               </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              La plataforma oficial de la Federación Mexicana de Pickleball. 
-              Conectando jugadores, entrenadores, clubes y organizadores en todo México.
+              The official platform of the Mexican Pickleball Federation. 
+              Connecting players, coaches, clubs and organizers throughout Mexico.
             </p>
             <div className="flex space-x-4">
               {/* Social media icons can be added here */}
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
 
           {/* Platform links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Plataforma</h3>
+            <h3 className="text-white font-semibold mb-4">Platform</h3>
             <ul className="space-y-3">
               {footerLinks.platform.map((link) => (
                 <li key={link.name}>
@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
 
           {/* Federation links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Federación</h3>
+            <h3 className="text-white font-semibold mb-4">Federation</h3>
             <ul className="space-y-3">
               {footerLinks.federation.map((link) => (
                 <li key={link.name}>
@@ -108,7 +108,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm">
               <p>
-                Desarrollado para promover el crecimiento del pickleball en México
+                Developed to promote the growth of pickleball in Mexico
               </p>
             </div>
             <div className="mt-4 md:mt-0 flex items-center space-x-6 text-sm text-gray-400">

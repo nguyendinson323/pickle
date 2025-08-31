@@ -67,13 +67,13 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'Completado';
+        return 'Completed';
       case 'pending':
-        return 'Pendiente';
+        return 'Pending';
       case 'failed':
-        return 'Fallido';
+        return 'Failed';
       case 'refunded':
-        return 'Reembolsado';
+        return 'Refunded';
       default:
         return status;
     }
@@ -82,14 +82,14 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
   const formatAmount = (amount: number, currency = 'MXN') => {
     // Check if amount is already in the correct format (has decimals) or in cents
     const finalAmount = amount > 1000 && amount % 1 === 0 ? amount / 100 : amount;
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency
     }).format(finalAmount);
   };
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('es-MX', {
+    return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -119,7 +119,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <h3 className="text-red-800 font-medium">Error al cargar el historial</h3>
+        <h3 className="text-red-800 font-medium">Error loading history</h3>
         <p className="text-red-600 text-sm mt-1">{error}</p>
         <Button 
           variant="outline" 
@@ -127,7 +127,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
           className="mt-3"
           onClick={() => dispatch(fetchPayments({ page, limit }))}
         >
-          Reintentar
+          Retry
         </Button>
       </div>
     );
@@ -137,10 +137,10 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">
-          Historial de Pagos
+          Payment History
         </h2>
         <div className="text-sm text-gray-500">
-          Total: {payments.length} pagos
+          Total: {payments.length} payments
         </div>
       </div>
 
@@ -160,10 +160,10 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
             />
           </svg>
           <h3 className="text-gray-500 text-lg font-medium mt-4">
-            No hay pagos registrados
+            No payments recorded
           </h3>
           <p className="text-gray-400 text-sm mt-2">
-            Tus pagos aparecerán aquí una vez que realices tu primera compra.
+            Your payments will appear here once you make your first purchase.
           </p>
         </div>
       ) : (
@@ -174,7 +174,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      {payment.description || 'Pago de Membresía'}
+                      {payment.description || 'Membership Payment'}
                     </h3>
                     <Badge variant={getStatusVariant(payment.status)}>
                       {getStatusText(payment.status)}
@@ -183,28 +183,28 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500">Monto:</span>
+                      <span className="text-gray-500">Amount:</span>
                       <div className="font-semibold text-gray-900">
                         {formatAmount(payment.amount, payment.currency)}
                       </div>
                     </div>
                     
                     <div>
-                      <span className="text-gray-500">Fecha:</span>
+                      <span className="text-gray-500">Date:</span>
                       <div className="font-medium text-gray-900">
                         {formatDate(payment.createdAt)}
                       </div>
                     </div>
                     
                     <div>
-                      <span className="text-gray-500">Método:</span>
+                      <span className="text-gray-500">Method:</span>
                       <div className="font-medium text-gray-900">
-                        {payment.paymentMethod || 'Tarjeta de crédito'}
+                        {payment.paymentMethod || 'Credit card'}
                       </div>
                     </div>
                     
                     <div>
-                      <span className="text-gray-500">ID de transacción:</span>
+                      <span className="text-gray-500">Transaction ID:</span>
                       <div className="font-mono text-xs text-gray-600">
                         {payment.stripeChargeId || payment.id}
                       </div>
@@ -214,7 +214,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
                   {payment.description && (
                     <div className="mt-4 p-3 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-medium text-gray-700 mb-2">
-                        Descripción:
+                        Description:
                       </h4>
                       <div className="text-sm text-gray-600">
                         {payment.description}
@@ -231,7 +231,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
                       onClick={() => setShowRefundModal(payment.id)}
                       className="text-red-600 border-red-200 hover:bg-red-50"
                     >
-                      Solicitar reembolso
+                      Request refund
                     </Button>
                   )}
                   
@@ -240,7 +240,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
                     size="sm"
                     onClick={() => window.open(`/invoices/${payment.id}`, '_blank')}
                   >
-                    Ver factura
+                    View invoice
                   </Button>
                 </div>
               </div>
@@ -256,24 +256,24 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
           setShowRefundModal(null);
           setRefundReason('');
         }}
-        title="Solicitar Reembolso"
+        title="Request Refund"
       >
         <div className="space-y-4">
           <p className="text-gray-600">
-            ¿Estás seguro de que quieres solicitar un reembolso para este pago?
-            Los reembolsos pueden tardar 5-10 días hábiles en procesarse.
+            Are you sure you want to request a refund for this payment?
+            Refunds may take 5-10 business days to process.
           </p>
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Motivo del reembolso (opcional)
+              Refund reason (optional)
             </label>
             <textarea
               value={refundReason}
               onChange={(e) => setRefundReason(e.target.value)}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Explica el motivo de tu solicitud de reembolso..."
+              placeholder="Explain the reason for your refund request..."
             />
           </div>
 
@@ -286,7 +286,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
               }}
               className="flex-1"
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               variant="primary"
@@ -297,10 +297,10 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
               {loading ? (
                 <>
                   <LoadingSpinner className="mr-2" />
-                  Procesando...
+                  Processing...
                 </>
               ) : (
-                'Confirmar Reembolso'
+                'Confirm Refund'
               )}
             </Button>
           </div>
@@ -315,17 +315,17 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = () => {
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1 || loading}
           >
-            Anterior
+            Previous
           </Button>
           <span className="flex items-center px-4 text-sm text-gray-600">
-            Página {page}
+            Page {page}
           </span>
           <Button
             variant="outline"
             onClick={() => setPage(p => p + 1)}
             disabled={payments.length < limit || loading}
           >
-            Siguiente
+            Next
           </Button>
         </div>
       )}

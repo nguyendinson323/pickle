@@ -41,12 +41,12 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
       {isLoggingOut ? (
         <>
           <LoadingSpinner size="sm" className="mr-2" />
-          Cerrando sesión...
+          Signing out...
         </>
       ) : (
         <>
           {showIcon && <ArrowRightOnRectangleIcon className="w-4 h-4 mr-2" />}
-          {children || 'Cerrar Sesión'}
+          {children || 'Sign Out'}
         </>
       )}
     </button>

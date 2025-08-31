@@ -34,17 +34,17 @@ export const MembershipPage: React.FC = () => {
   const tabs = [
     {
       id: 'status',
-      label: 'Mi Membresía',
+      label: 'My Membership',
       content: <MembershipStatus />
     },
     {
       id: 'plans',
-      label: 'Planes Disponibles',
+      label: 'Available Plans',
       content: <MembershipPlans userRole={user?.role} />
     },
     {
       id: 'history',
-      label: 'Historial de Pagos',
+      label: 'Payment History',
       content: <PaymentHistory />
     }
   ];
@@ -56,10 +56,10 @@ export const MembershipPage: React.FC = () => {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">
-              Gestión de Membresía
+              Membership Management
             </h1>
             <p className="mt-2 text-gray-600">
-              Administra tu suscripción, revisa tu historial de pagos y explora planes disponibles.
+              Manage your subscription, review your payment history and explore available plans.
             </p>
           </div>
 
@@ -72,11 +72,11 @@ export const MembershipPage: React.FC = () => {
                 </svg>
                 <div>
                   <h3 className="text-blue-900 font-semibold text-lg">
-                    ¡Bienvenido a la Federación Mexicana de Pickleball!
+                    Welcome to the Mexican Pickleball Federation!
                   </h3>
                   <p className="text-blue-800 mt-1">
-                    Para acceder a todas las funcionalidades de la plataforma, necesitas una membresía activa. 
-                    Explora nuestros planes y elige el que mejor se adapte a tus necesidades.
+                    To access all platform functionalities, you need an active membership. 
+                    Explore our plans and choose the one that best fits your needs.
                   </p>
                   <div className="mt-4">
                     <Button
@@ -84,7 +84,7 @@ export const MembershipPage: React.FC = () => {
                       onClick={() => setActiveTab('plans')}
                       className="bg-blue-600 hover:bg-blue-700"
                     >
-                      Ver Planes Disponibles
+                      View Available Plans
                     </Button>
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export const MembershipPage: React.FC = () => {
           <Modal
             isOpen={showPaymentModal}
             onClose={handlePaymentCancel}
-            title="Procesar Pago"
+            title="Process Payment"
             size="lg"
           >
             <div className="p-4">
@@ -122,31 +122,31 @@ export const MembershipPage: React.FC = () => {
             <div className="grid md:grid-cols-3 gap-6">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">
-                  Pago Seguro
+                  Secure Payment
                 </h4>
                 <p className="text-gray-600 text-sm">
-                  Todos los pagos son procesados de forma segura a través de Stripe. 
-                  No almacenamos tu información de tarjeta de crédito.
+                  All payments are processed securely through Stripe. 
+                  We do not store your credit card information.
                 </p>
               </div>
               
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">
-                  Soporte
+                  Support
                 </h4>
                 <p className="text-gray-600 text-sm">
-                  ¿Necesitas ayuda? Contacta a nuestro equipo de soporte en 
-                  <span className="text-blue-600"> soporte@federacionpickleball.mx</span>
+                  Need help? Contact our support team at 
+                  <span className="text-blue-600"> support@pickleballfederation.mx</span>
                 </p>
               </div>
               
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">
-                  Política de Reembolso
+                  Refund Policy
                 </h4>
                 <p className="text-gray-600 text-sm">
-                  Puedes solicitar un reembolso completo dentro de los primeros 30 días 
-                  desde la fecha de compra.
+                  You can request a full refund within the first 30 days 
+                  from the purchase date.
                 </p>
               </div>
             </div>

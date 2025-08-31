@@ -44,15 +44,15 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
     const newErrors: Record<string, string> = {};
     
     if (!formData.recipientId) {
-      newErrors.recipientId = 'Debes seleccionar un destinatario';
+      newErrors.recipientId = 'You must select a recipient';
     }
     
     if (!formData.subject.trim()) {
-      newErrors.subject = 'El asunto es obligatorio';
+      newErrors.subject = 'Subject is required';
     }
     
     if (!formData.content.trim()) {
-      newErrors.content = 'El mensaje no puede estar vacío';
+      newErrors.content = 'Message cannot be empty';
     }
 
     setErrors(newErrors);
@@ -100,7 +100,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       onSent?.();
     } catch (error) {
       console.error('Error sending message:', error);
-      setErrors({ submit: 'Error al enviar el mensaje. Inténtalo de nuevo.' });
+      setErrors({ submit: 'Error sending message. Please try again.' });
     } finally {
       setSending(false);
     }
@@ -123,7 +123,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
-            {replyToId ? 'Responder Mensaje' : 'Nuevo Mensaje'}
+            {replyToId ? 'Reply Message' : 'New Message'}
           </h2>
           <Button
             variant="secondary"
@@ -141,7 +141,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
         {/* Recipient Field */}
         <div>
           <label htmlFor="recipient" className="block text-sm font-medium text-gray-700 mb-2">
-            Para
+            To
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -159,7 +159,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
                   ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
                   : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
               }`}
-              placeholder="Buscar usuario por nombre o email..."
+              placeholder="Search user by name or email..."
               disabled={!!recipientId}
             />
           </div>
@@ -171,7 +171,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
         {/* Subject Field */}
         <div>
           <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-            Asunto
+            Subject
           </label>
           <input
             type="text"
@@ -183,7 +183,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
                 ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
                 : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
             }`}
-            placeholder="Ingresa el asunto del mensaje"
+            placeholder="Enter message subject"
           />
           {errors.subject && (
             <p className="mt-1 text-sm text-red-600">{errors.subject}</p>
@@ -193,7 +193,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
         {/* Message Content */}
         <div>
           <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-            Mensaje
+            Message
           </label>
           <textarea
             id="content"
@@ -205,34 +205,34 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
                 ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
                 : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
             }`}
-            placeholder="Escribe tu mensaje aquí..."
+            placeholder="Write your message here..."
           />
           {errors.content && (
             <p className="mt-1 text-sm text-red-600">{errors.content}</p>
           )}
           <p className="mt-1 text-sm text-gray-500">
-            {formData.content.length}/1000 caracteres
+            {formData.content.length}/1000 characters
           </p>
         </div>
 
         {/* Attachments Section */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Archivos adjuntos
+            Attachments
           </label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
             <PaperClipIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
             <p className="text-sm text-gray-600">
-              Arrastra archivos aquí o{' '}
+              Drag files here or{' '}
               <button
                 type="button"
                 className="text-primary-600 hover:text-primary-700 font-medium"
               >
-                selecciona archivos
+                select files
               </button>
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              Máximo 10MB por archivo. Formatos: PDF, DOC, DOCX, JPG, PNG
+              Maximum 10MB per file. Formats: PDF, DOC, DOCX, JPG, PNG
             </p>
           </div>
         </div>
@@ -247,7 +247,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
         {/* Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200">
           <div className="text-sm text-gray-500">
-            Tip: Usa Ctrl+Enter para enviar rápidamente
+            Tip: Use Ctrl+Enter to send quickly
           </div>
           <div className="flex space-x-3">
             <Button
@@ -256,7 +256,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
               onClick={handleCancel}
               disabled={sending}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -264,7 +264,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
               loading={sending}
               leftIcon={<PaperAirplaneIcon className="w-4 h-4" />}
             >
-              {sending ? 'Enviando...' : 'Enviar Mensaje'}
+              {sending ? 'Sending...' : 'Send Message'}
             </Button>
           </div>
         </div>

@@ -95,7 +95,7 @@ const MicrositesPage: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-MX', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -115,9 +115,9 @@ const MicrositesPage: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mis Micrositios</h1>
+          <h1 className="text-2xl font-bold text-gray-900">My Microsites</h1>
           <p className="text-gray-600 mt-1">
-            Gestiona tus micrositios personalizados para tu organización
+            Manage your personalized microsites for your organization
           </p>
         </div>
         <Button
@@ -125,7 +125,7 @@ const MicrositesPage: React.FC = () => {
           className="flex items-center gap-2"
         >
           <PlusIcon className="w-4 h-4" />
-          Crear Micrositio
+          Create Microsite
         </Button>
       </div>
 
@@ -146,12 +146,12 @@ const MicrositesPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label htmlFor="search" className="sr-only">
-                Buscar micrositios
+                Search microsites
               </label>
               <input
                 type="text"
                 id="search"
-                placeholder="Buscar por nombre o subdominio..."
+                placeholder="Search by name or subdomain..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -163,10 +163,10 @@ const MicrositesPage: React.FC = () => {
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="all">Todos los estados</option>
-                <option value="published">Publicados</option>
-                <option value="draft">Borradores</option>
-                <option value="suspended">Suspendidos</option>
+                <option value="all">All statuses</option>
+                <option value="published">Published</option>
+                <option value="draft">Drafts</option>
+                <option value="suspended">Suspended</option>
               </select>
             </div>
           </div>
@@ -179,17 +179,17 @@ const MicrositesPage: React.FC = () => {
           <div className="text-center py-12">
             <GlobeAltIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {microsites.length === 0 ? 'No tienes micrositios' : 'No se encontraron micrositios'}
+              {microsites.length === 0 ? 'You have no microsites' : 'No microsites found'}
             </h3>
             <p className="text-gray-600 mb-4">
               {microsites.length === 0 
-                ? 'Crea tu primer micrositio para comenzar a compartir tu contenido.'
-                : 'Intenta ajustar los filtros de búsqueda.'
+                ? 'Create your first microsite to start sharing your content.'
+                : 'Try adjusting the search filters.'
               }
             </p>
             {microsites.length === 0 && (
               <Button onClick={() => setShowCreateModal(true)}>
-                Crear Primer Micrositio
+                Create First Microsite
               </Button>
             )}
           </div>
@@ -231,8 +231,8 @@ const MicrositesPage: React.FC = () => {
                   )}
 
                   <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>Páginas: {microsite.pages?.length || 0}</span>
-                    <span>Páginas disponibles</span>
+                    <span>Pages: {microsite.pages?.length || 0}</span>
+                    <span>Available pages</span>
                   </div>
                 </div>
 
@@ -280,7 +280,7 @@ const MicrositesPage: React.FC = () => {
                     variant={microsite.status === 'published' ? 'outline' : 'primary'}
                     onClick={() => handlePublish(microsite)}
                   >
-                    {microsite.status === 'published' ? 'Despublicar' : 'Publicar'}
+                    {microsite.status === 'published' ? 'Unpublish' : 'Publish'}
                   </Button>
                 </div>
               </div>
@@ -294,17 +294,17 @@ const MicrositesPage: React.FC = () => {
         <Modal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
-          title="Crear Micrositio"
+          title="Create Microsite"
         >
           <div className="p-6">
             <p className="text-gray-600 mb-4">
-              Funcionalidad de creación de micrositios en desarrollo.
+              Microsite creation functionality in development.
             </p>
             <Button 
               onClick={() => setShowCreateModal(false)}
               className="w-full"
             >
-              Cerrar
+              Close
             </Button>
           </div>
         </Modal>
@@ -314,26 +314,26 @@ const MicrositesPage: React.FC = () => {
       <Modal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title="Eliminar Micrositio"
+        title="Delete Microsite"
       >
         <div className="space-y-4">
           <p className="text-gray-600">
-            ¿Estás seguro que deseas eliminar el micrositio "{selectedMicrosite?.name}"? 
-            Esta acción no se puede deshacer y se perderán todos los datos asociados.
+            Are you sure you want to delete the microsite "{selectedMicrosite?.name}"? 
+            This action cannot be undone and all associated data will be lost.
           </p>
           <div className="flex justify-end gap-3">
             <Button
               variant="outline"
               onClick={() => setShowDeleteModal(false)}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               variant="outline"
               onClick={handleDelete}
               className="text-red-600 border-red-300 hover:bg-red-50"
             >
-              Eliminar
+              Delete
             </Button>
           </div>
         </div>
@@ -343,15 +343,15 @@ const MicrositesPage: React.FC = () => {
       <Modal
         isOpen={showDuplicateModal}
         onClose={() => setShowDuplicateModal(false)}
-        title="Duplicar Micrositio"
+        title="Duplicate Microsite"
       >
         <div className="space-y-4">
           <p className="text-gray-600">
-            Crear una copia de "{selectedMicrosite?.name}" con un nuevo subdominio.
+            Create a copy of "{selectedMicrosite?.name}" with a new subdomain.
           </p>
           <div>
             <label htmlFor="subdomain" className="block text-sm font-medium text-gray-700">
-              Nuevo Subdominio
+              New Subdomain
             </label>
             <div className="mt-1 flex rounded-md shadow-sm">
               <input
@@ -360,7 +360,7 @@ const MicrositesPage: React.FC = () => {
                 value={duplicateSubdomain}
                 onChange={(e) => setDuplicateSubdomain(e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:ring-blue-500 focus:border-blue-500"
-                placeholder="mi-nuevo-sitio"
+                placeholder="my-new-site"
               />
               <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                 .pickleballfed.mx
@@ -372,13 +372,13 @@ const MicrositesPage: React.FC = () => {
               variant="outline"
               onClick={() => setShowDuplicateModal(false)}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               onClick={handleDuplicate}
               disabled={!duplicateSubdomain}
             >
-              Duplicar
+              Duplicate
             </Button>
           </div>
         </div>

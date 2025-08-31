@@ -50,15 +50,15 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
   const [searchUser, setSearchUser] = useState('');
 
   const userTypeOptions = [
-    { value: '', label: 'Seleccionar tipo' },
-    { value: 'player', label: 'Jugador' },
-    { value: 'coach', label: 'Entrenador' },
-    { value: 'referee', label: 'Árbitro' },
-    { value: 'club_admin', label: 'Administrador de Club' }
+    { value: '', label: 'Select type' },
+    { value: 'player', label: 'Player' },
+    { value: 'coach', label: 'Coach' },
+    { value: 'referee', label: 'Referee' },
+    { value: 'club_admin', label: 'Club Administrator' }
   ];
 
   const nrtpLevelOptions = [
-    { value: '', label: 'Sin nivel asignado' },
+    { value: '', label: 'No level assigned' },
     { value: '2.0', label: '2.0' },
     { value: '2.5', label: '2.5' },
     { value: '3.0', label: '3.0' },
@@ -175,7 +175,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
     
     if (!formData.userId || !formData.userType || !formData.fullName || 
         !formData.stateId || !formData.federationIdNumber) {
-      setError('Por favor complete todos los campos requeridos');
+      setError('Please complete all required fields');
       return;
     }
 
@@ -202,7 +202,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al crear la credencial');
+        throw new Error(errorData.error || 'Error creating credential');
       }
 
       const result = await response.json();
@@ -231,12 +231,12 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
         });
         setSearchUser('');
         
-        alert('Credencial creada exitosamente');
+        alert('Credential created successfully');
       } else {
-        throw new Error(result.error || 'Error al crear la credencial');
+        throw new Error(result.error || 'Error creating credential');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -245,10 +245,10 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold">Generar Nueva Credencial</h2>
+        <h2 className="text-xl font-bold">Generate New Credential</h2>
         {onClose && (
           <Button onClick={onClose} variant="secondary">
-            Cerrar
+            Close
           </Button>
         )}
       </div>
@@ -263,14 +263,14 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
         {/* User Search */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Buscar Usuario *
+            Search User *
           </label>
           <div className="relative">
             <input
               type="text"
               value={searchUser}
               onChange={(e) => setSearchUser(e.target.value)}
-              placeholder="Escriba el nombre del usuario..."
+              placeholder="Enter user name..."
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -297,7 +297,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {/* User Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tipo de Usuario *
+              User Type *
             </label>
             <select
               value={formData.userType}
@@ -316,7 +316,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {/* Full Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre Completo *
+              Full Name *
             </label>
             <input
               type="text"
@@ -330,7 +330,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {/* State */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Estado *
+              State *
             </label>
             <select
               value={formData.stateId}
@@ -338,7 +338,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Seleccionar estado</option>
+              <option value="">Select state</option>
               {states.map(state => (
                 <option key={state.id} value={state.id.toString()}>
                   {state.name}
@@ -351,7 +351,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           <div className="flex space-x-2">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                ID de Federación *
+                Federation ID *
               </label>
               <input
                 type="text"
@@ -369,7 +369,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
                 size="sm"
                 disabled={!formData.userType || !formData.stateId}
               >
-                Generar
+                Generate
               </Button>
             </div>
           </div>
@@ -378,7 +378,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {formData.userType === 'player' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nivel NRTP
+                NRTP Level
               </label>
               <select
                 value={formData.nrtpLevel}
@@ -398,7 +398,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {formData.userType === 'player' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Posición en Ranking
+                Ranking Position
               </label>
               <input
                 type="number"
@@ -427,7 +427,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {['coach', 'referee'].includes(formData.userType) && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tipo de Licencia
+                License Type
               </label>
               <input
                 type="text"
@@ -441,7 +441,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {/* Nationality */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nacionalidad
+              Nationality
             </label>
             <input
               type="text"
@@ -454,7 +454,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {/* Photo URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              URL de Foto
+              Photo URL
             </label>
             <input
               type="text"
@@ -468,7 +468,7 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
           {/* Expiration Date */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Fecha de Vencimiento *
+              Expiration Date *
             </label>
             <input
               type="date"
@@ -484,17 +484,17 @@ export const CredentialGenerator: React.FC<CredentialGeneratorProps> = ({
         <div className="flex justify-end space-x-3 pt-6">
           {onClose && (
             <Button type="button" onClick={onClose} variant="secondary">
-              Cancelar
+              Cancel
             </Button>
           )}
           <Button type="submit" disabled={loading}>
             {loading ? (
               <>
                 <LoadingSpinner size="sm" className="mr-2" />
-                Generando...
+                Generating...
               </>
             ) : (
-              'Generar Credencial'
+              'Generate Credential'
             )}
           </Button>
         </div>

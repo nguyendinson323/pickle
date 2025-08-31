@@ -113,7 +113,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
   };
 
   const handleDelete = async (file: MediaFile) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este archivo?')) {
+    if (window.confirm('Are you sure you want to delete this file?')) {
       try {
         // TODO: Implement delete file functionality
         console.log('Delete file:', file.id);
@@ -291,7 +291,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
     <Modal
       isOpen={!!previewFile}
       onClose={() => setPreviewFile(null)}
-      title="Vista Previa del Archivo"
+      title="File Preview"
       size="lg"
     >
       {previewFile && (
@@ -320,15 +320,15 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
           <div className="border-t pt-4">
             <dl className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <dt className="font-medium text-gray-900">Nombre:</dt>
+                <dt className="font-medium text-gray-900">Name:</dt>
                 <dd className="text-gray-600">{previewFile.filename}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-900">Tamaño:</dt>
+                <dt className="font-medium text-gray-900">Size:</dt>
                 <dd className="text-gray-600">{formatFileSize(previewFile.size)}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-900">Tipo:</dt>
+                <dt className="font-medium text-gray-900">Type:</dt>
                 <dd className="text-gray-600">{previewFile.mimeType}</dd>
               </div>
             </dl>
@@ -339,13 +339,13 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
               variant="outline"
               onClick={() => window.open(previewFile.url, '_blank')}
             >
-              Descargar
+              Download
             </Button>
             <Button
               onClick={() => handleDelete(previewFile)}
               className="bg-red-600 hover:bg-red-700"
             >
-              Eliminar
+              Delete
             </Button>
           </div>
         </div>
@@ -359,7 +359,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
       <div className="border-b border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900">
-            {isSelectMode ? 'Seleccionar Archivos' : 'Biblioteca de Medios'}
+            {isSelectMode ? 'Select Files' : 'Media Library'}
           </h2>
 
           <div className="flex items-center gap-3">
@@ -385,7 +385,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
                 className="flex items-center gap-2"
               >
                 <CloudArrowUpIcon className="w-4 h-4" />
-                Subir Archivos
+                Upload Files
               </Button>
             )}
           </div>
@@ -397,7 +397,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
             <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Buscar archivos..."
+              placeholder="Search files..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -409,17 +409,17 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
             onChange={(e) => setFilterType(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="all">Todos los tipos</option>
-            <option value="image">Imágenes</option>
+            <option value="all">All types</option>
+            <option value="image">Images</option>
             <option value="video">Videos</option>
-            <option value="application">Documentos</option>
+            <option value="application">Documents</option>
           </select>
         </div>
 
         {isSelectMode && selectedItems.length > 0 && (
           <div className="mt-4 p-3 bg-blue-50 rounded-lg flex items-center justify-between">
             <span className="text-sm text-blue-700">
-              {selectedItems.length} de {maxSelection} archivos seleccionados
+              {selectedItems.length} of {maxSelection} files selected
             </span>
             <Button
               size="sm"
@@ -429,7 +429,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
                 onSelect?.([]);
               }}
             >
-              Limpiar selección
+              Clear selection
             </Button>
           </div>
         )}
@@ -446,7 +446,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
             <div className="space-y-3">
               <LoadingSpinner />
               <p className="text-sm text-gray-600">
-                Subiendo archivos... {Math.round(uploadProgress)}%
+                Uploading files... {Math.round(uploadProgress)}%
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -459,17 +459,17 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
             <div>
               <CloudArrowUpIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-lg font-medium text-gray-900 mb-2">
-                Arrastra archivos aquí o haz clic para seleccionar
+                Drag files here or click to select
               </p>
               <p className="text-sm text-gray-500">
-                Soporta imágenes, videos y documentos hasta 10MB
+                Supports images, videos and documents up to 10MB
               </p>
               <Button
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
                 className="mt-4"
               >
-                Seleccionar Archivos
+                Select Files
               </Button>
             </div>
           )}
@@ -488,12 +488,12 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({
           <div className="text-center py-12">
             <FolderIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No hay archivos
+              No files
             </h3>
             <p className="text-gray-500">
               {searchQuery || filterType !== 'all' 
-                ? 'No se encontraron archivos con los filtros aplicados.'
-                : 'Sube tu primer archivo para comenzar.'
+                ? 'No files found with the applied filters.'
+                : 'Upload your first file to get started.'
               }
             </p>
           </div>

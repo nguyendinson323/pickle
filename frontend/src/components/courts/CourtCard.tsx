@@ -27,29 +27,29 @@ export const CourtCard: React.FC<CourtCardProps> = ({
 
   const getSurfaceTypeLabel = (type: string) => {
     const labels = {
-      'concrete': 'Concreto',
-      'asphalt': 'Asfalto',
-      'acrylic': 'Acrílico',
-      'composite': 'Compuesto'
+      'concrete': 'Concrete',
+      'asphalt': 'Asphalt',
+      'acrylic': 'Acrylic',
+      'composite': 'Composite'
     };
     return labels[type as keyof typeof labels] || type;
   };
 
   const getAmenityLabel = (amenity: string) => {
     const labels = {
-      'lighting': '💡 Iluminación',
-      'seating': '🪑 Asientos',
-      'parking': '🚗 Estacionamiento',
-      'restrooms': '🚻 Sanitarios',
-      'water_fountain': '⛲ Bebedero',
-      'equipment_rental': '🏓 Renta de Equipo',
-      'cafeteria': '☕ Cafetería',
-      'pro_shop': '🏪 Tienda Pro',
-      'coaching_area': '👨‍🏫 Área de Entrenamiento',
-      'professional_lighting': '💡 Iluminación Profesional',
-      'vip_seating': '💺 Asientos VIP',
+      'lighting': '💡 Lighting',
+      'seating': '🪑 Seating',
+      'parking': '🚗 Parking',
+      'restrooms': '🚻 Restrooms',
+      'water_fountain': '⛲ Water Fountain',
+      'equipment_rental': '🏓 Equipment Rental',
+      'cafeteria': '☕ Cafeteria',
+      'pro_shop': '🏪 Pro Shop',
+      'coaching_area': '👨‍🏫 Coaching Area',
+      'professional_lighting': '💡 Professional Lighting',
+      'vip_seating': '💺 VIP Seating',
       'valet_parking': '🅿️ Valet Parking',
-      'premium_restrooms': '🚻 Sanitarios Premium'
+      'premium_restrooms': '🚻 Premium Restrooms'
     };
     return labels[amenity as keyof typeof labels] || amenity;
   };
@@ -76,7 +76,7 @@ export const CourtCard: React.FC<CourtCardProps> = ({
             </Badge>
           )}
           {!court.isActive && (
-            <Badge variant="error">Inactiva</Badge>
+            <Badge variant="error">Inactive</Badge>
           )}
         </div>
       </div>
@@ -92,7 +92,7 @@ export const CourtCard: React.FC<CourtCardProps> = ({
             </div>
             {court.peakHourRate && (
               <div className="text-sm text-gray-500">
-                Pico: {formatPrice(court.peakHourRate)}/h
+                Peak: {formatPrice(court.peakHourRate)}/h
               </div>
             )}
           </div>
@@ -130,7 +130,7 @@ export const CourtCard: React.FC<CourtCardProps> = ({
               ))}
               {court.amenities.length > 3 && (
                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  +{court.amenities.length - 3} más
+                  +{court.amenities.length - 3} more
                 </span>
               )}
             </div>
@@ -139,14 +139,14 @@ export const CourtCard: React.FC<CourtCardProps> = ({
 
         {court.totalReviews && court.totalReviews > 0 && (
           <div className="text-sm text-gray-500 mb-3">
-            {court.totalReviews} reseña{court.totalReviews !== 1 ? 's' : ''}
+            {court.totalReviews} review{court.totalReviews !== 1 ? 's' : ''}
           </div>
         )}
 
         <div className="flex gap-2 mt-4">
           <Link to={`/courts/${court.id}`} className="flex-1">
             <Button variant="primary" size="sm" className="w-full">
-              Ver Detalles
+              View Details
             </Button>
           </Link>
           
@@ -158,7 +158,7 @@ export const CourtCard: React.FC<CourtCardProps> = ({
                   size="sm"
                   onClick={() => onEdit(court)}
                 >
-                  Editar
+                  Edit
                 </Button>
               )}
               {onDelete && (
@@ -167,7 +167,7 @@ export const CourtCard: React.FC<CourtCardProps> = ({
                   size="sm"
                   onClick={() => onDelete(court.id)}
                 >
-                  Eliminar
+                  Delete
                 </Button>
               )}
             </>

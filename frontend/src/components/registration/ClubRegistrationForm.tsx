@@ -52,9 +52,9 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
 
   // Club type options
   const clubTypeOptions = [
-    { value: 'competitive', label: 'Competitivo' },
-    { value: 'recreational', label: 'Recreativo' },
-    { value: 'mixed', label: 'Mixto' }
+    { value: 'competitive', label: 'Competitive' },
+    { value: 'recreational', label: 'Recreational' },
+    { value: 'mixed', label: 'Mixed' }
   ];
 
   // Load data on component mount
@@ -66,46 +66,46 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
     const newErrors: Record<string, string> = {};
 
     // Required fields validation
-    if (!formData.name.trim()) newErrors.name = 'El nombre del club es requerido';
-    if (!formData.managerName.trim()) newErrors.managerName = 'El nombre del gerente es requerido';
-    if (!formData.managerRole.trim()) newErrors.managerRole = 'El cargo del gerente es requerido';
-    if (!formData.contactEmail.trim()) newErrors.contactEmail = 'El correo de contacto es requerido';
-    if (!formData.phone.trim()) newErrors.phone = 'El teléfono es requerido';
-    if (!formData.stateId) newErrors.stateId = 'El estado es requerido';
-    if (!formData.clubType) newErrors.clubType = 'El tipo de club es requerido';
-    if (!formData.username.trim()) newErrors.username = 'El nombre de usuario es requerido';
-    if (!formData.email.trim()) newErrors.email = 'El correo electrónico es requerido';
-    if (!formData.password) newErrors.password = 'La contraseña es requerida';
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'La confirmación de contraseña es requerida';
-    if (!formData.privacyPolicyAccepted) newErrors.privacyPolicyAccepted = 'Debes aceptar la política de privacidad';
+    if (!formData.name.trim()) newErrors.name = 'Club name is required';
+    if (!formData.managerName.trim()) newErrors.managerName = 'Manager name is required';
+    if (!formData.managerRole.trim()) newErrors.managerRole = 'Manager role is required';
+    if (!formData.contactEmail.trim()) newErrors.contactEmail = 'Contact email is required';
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!formData.stateId) newErrors.stateId = 'State is required';
+    if (!formData.clubType) newErrors.clubType = 'Club type is required';
+    if (!formData.username.trim()) newErrors.username = 'Username is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.confirmPassword) newErrors.confirmPassword = 'Password confirmation is required';
+    if (!formData.privacyPolicyAccepted) newErrors.privacyPolicyAccepted = 'You must accept the privacy policy';
 
     // Format validations
     if (formData.rfc && formData.rfc.length !== 12 && formData.rfc.length !== 13) {
-      newErrors.rfc = 'El RFC debe tener 12 o 13 caracteres';
+      newErrors.rfc = 'RFC must have 12 or 13 characters';
     }
     
     if (formData.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
-      newErrors.contactEmail = 'El formato del correo de contacto no es válido';
+      newErrors.contactEmail = 'Contact email format is not valid';
     }
     
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'El formato del correo electrónico no es válido';
+      newErrors.email = 'Email format is not valid';
     }
     
     if (formData.phone && !/^(\+52)?[1-9]\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'El formato del teléfono no es válido (10 dígitos)';
+      newErrors.phone = 'Phone format is not valid (10 digits)';
     }
     
     if (formData.website && formData.website.trim() && !/^https?:\/\/.+\..+/.test(formData.website)) {
-      newErrors.website = 'El formato del sitio web no es válido';
+      newErrors.website = 'Website format is not valid';
     }
     
     if (formData.password && formData.password.length < 8) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
+      newErrors.password = 'Password must have at least 8 characters';
     }
     
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     setErrors(newErrors);
@@ -153,7 +153,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
     return (
       <div className="flex items-center justify-center py-12">
         <LoadingSpinner size="lg" />
-        <span className="ml-3 text-lg text-gray-600">Cargando formulario...</span>
+        <span className="ml-3 text-lg text-gray-600">Loading form...</span>
       </div>
     );
   }
@@ -163,10 +163,10 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Registro de Club
+          Club Registration
         </h2>
         <p className="text-lg text-gray-600">
-          Completa la información para registrar tu club en la Federación Mexicana de Pickleball
+          Complete the information to register your club with the Mexican Pickleball Federation
         </p>
       </div>
 
@@ -177,24 +177,24 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            Información del Club
+            Club Information
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               name="name"
-              label="Nombre del Club"
+              label="Club Name"
               type="text"
               required
               value={formData.name}
               onChange={(value) => updateField('name', value)}
               error={errors.name}
-              placeholder="Club de Pickleball México"
+              placeholder="Mexico Pickleball Club"
             />
             
             <FormField
               name="rfc"
-              label="RFC (Opcional)"
+              label="RFC (Optional)"
               type="text"
               value={formData.rfc || ''}
               onChange={(value) => updateField('rfc', value.toUpperCase())}
@@ -204,7 +204,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             
             <SelectField
               name="clubType"
-              label="Tipo de Club"
+              label="Club Type"
               required
               value={formData.clubType}
               onChange={(value) => updateField('clubType', value)}
@@ -214,7 +214,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             
             <SelectField
               name="stateId"
-              label="Estado"
+              label="State"
               required
               value={formData.stateId}
               onChange={(value) => updateField('stateId', parseInt(value))}
@@ -224,12 +224,12 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             
             <FormField
               name="website"
-              label="Sitio Web (Opcional)"
+              label="Website (Optional)"
               type="url"
               value={formData.website || ''}
               onChange={(value) => updateField('website', value)}
               error={errors.website}
-              placeholder="https://www.miclub.com"
+              placeholder="https://www.myclub.com"
               className="md:col-span-2"
             />
           </div>
@@ -241,46 +241,46 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            Información del Gerente/Representante
+            Manager/Representative Information
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               name="managerName"
-              label="Nombre del Gerente"
+              label="Manager Name"
               type="text"
               required
               value={formData.managerName}
               onChange={(value) => updateField('managerName', value)}
               error={errors.managerName}
-              placeholder="Juan Pérez García"
+              placeholder="Juan Perez Garcia"
             />
             
             <FormField
               name="managerRole"
-              label="Cargo"
+              label="Position"
               type="text"
               required
               value={formData.managerRole}
               onChange={(value) => updateField('managerRole', value)}
               error={errors.managerRole}
-              placeholder="Gerente General, Presidente, etc."
+              placeholder="General Manager, President, etc."
             />
             
             <FormField
               name="contactEmail"
-              label="Correo de Contacto"
+              label="Contact Email"
               type="email"
               required
               value={formData.contactEmail}
               onChange={(value) => updateField('contactEmail', value)}
               error={errors.contactEmail}
-              placeholder="contacto@miclub.com"
+              placeholder="contact@myclub.com"
             />
             
             <FormField
               name="phone"
-              label="Teléfono"
+              label="Phone"
               type="tel"
               required
               value={formData.phone}
@@ -297,7 +297,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
-            Redes Sociales (Opcional)
+            Social Media (Optional)
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -307,7 +307,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
               type="url"
               value={formData.socialMedia?.facebook || ''}
               onChange={(value) => updateSocialMedia('facebook', value)}
-              placeholder="https://facebook.com/miclub"
+              placeholder="https://facebook.com/myclub"
             />
             
             <FormField
@@ -316,7 +316,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
               type="url"
               value={formData.socialMedia?.instagram || ''}
               onChange={(value) => updateSocialMedia('instagram', value)}
-              placeholder="https://instagram.com/miclub"
+              placeholder="https://instagram.com/myclub"
             />
             
             <FormField
@@ -325,7 +325,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
               type="url"
               value={formData.socialMedia?.twitter || ''}
               onChange={(value) => updateSocialMedia('twitter', value)}
-              placeholder="https://twitter.com/miclub"
+              placeholder="https://twitter.com/myclub"
             />
             
             <FormField
@@ -334,7 +334,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
               type="url"
               value={formData.socialMedia?.youtube || ''}
               onChange={(value) => updateSocialMedia('youtube', value)}
-              placeholder="https://youtube.com/@miclub"
+              placeholder="https://youtube.com/@myclub"
             />
           </div>
         </div>
@@ -345,13 +345,13 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
             </svg>
-            Información de Cuenta
+            Account Information
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               name="username"
-              label="Nombre de Usuario"
+              label="Username"
               type="text"
               required
               value={formData.username}
@@ -362,35 +362,35 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             
             <FormField
               name="email"
-              label="Correo Electrónico"
+              label="Email"
               type="email"
               required
               value={formData.email}
               onChange={(value) => updateField('email', value)}
               error={errors.email}
-              placeholder="admin@miclub.com"
+              placeholder="admin@myclub.com"
             />
             
             <FormField
               name="password"
-              label="Contraseña"
+              label="Password"
               type="password"
               required
               value={formData.password}
               onChange={(value) => updateField('password', value)}
               error={errors.password}
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Minimum 8 characters"
             />
             
             <FormField
               name="confirmPassword"
-              label="Confirmar Contraseña"
+              label="Confirm Password"
               type="password"
               required
               value={formData.confirmPassword}
               onChange={(value) => updateField('confirmPassword', value)}
               error={errors.confirmPassword}
-              placeholder="Repite la contraseña"
+              placeholder="Repeat the password"
             />
           </div>
         </div>
@@ -401,16 +401,16 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            Logo del Club (Opcional)
+            Club Logo (Optional)
           </h3>
           
           <FileField
             name="logo"
-            label="Logo del Club"
+            label="Club Logo"
             accept="image/jpeg,image/png"
             maxSize={5 * 1024 * 1024}
             onChange={(file) => updateField('logo', file)}
-            description="Formato JPG o PNG, máximo 5MB"
+            description="JPG or PNG format, maximum 5MB"
           />
         </div>
 
@@ -420,13 +420,13 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             name="privacyPolicyAccepted"
             label={
               <span>
-                He leído y acepto la{' '}
+                I have read and accept the{' '}
                 <button
                   type="button"
                   onClick={() => setShowPrivacyModal(true)}
                   className="text-primary-600 hover:text-primary-700 underline"
                 >
-                  Política de Privacidad
+                  Privacy Policy"
                 </button>
               </span>
             }
@@ -456,7 +456,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             onClick={onBack}
             className="btn-secondary px-6 py-2"
           >
-            Volver
+            Back
           </button>
           
           <button
@@ -467,10 +467,10 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
             {isSubmitting ? (
               <>
                 <LoadingSpinner size="sm" className="mr-2" />
-                Registrando...
+                Registering...
               </>
             ) : (
-              'Registrar Club'
+              'Register Club'
             )}
           </button>
         </div>

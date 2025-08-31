@@ -25,7 +25,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
   const [activeTab, setActiveTab] = useState('info');
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-MX', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -35,9 +35,9 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
 
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'MXN'
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -78,11 +78,11 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
   };
 
   const tabs = [
-    { id: 'info', label: 'Información General', icon: '📋' },
-    { id: 'categories', label: 'Categorías', icon: '🏅' },
-    { id: 'venue', label: 'Sede', icon: '📍' },
-    { id: 'rules', label: 'Reglas', icon: '📜' },
-    { id: 'prizes', label: 'Premios', icon: '🏆' }
+    { id: 'info', label: 'General Information', icon: '📋' },
+    { id: 'categories', label: 'Categories', icon: '🏅' },
+    { id: 'venue', label: 'Venue', icon: '📍' },
+    { id: 'rules', label: 'Rules', icon: '📜' },
+    { id: 'prizes', label: 'Prizes', icon: '🏆' }
   ];
 
   const renderGeneralInfo = () => (
@@ -104,7 +104,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
         </div>
         {canEdit && (
           <Button variant="outline" onClick={() => onEdit?.(tournament)}>
-            Editar
+            Edit
           </Button>
         )}
       </div>
@@ -114,23 +114,23 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
         {/* Dates */}
         <Card className="p-4">
           <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-            📅 Fechas Importantes
+            📅 Important Dates
           </h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600">Inicio del torneo:</span>
+              <span className="text-gray-600">Tournament start:</span>
               <span className="font-medium">{formatDate(tournament.startDate)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Fin del torneo:</span>
+              <span className="text-gray-600">Tournament end:</span>
               <span className="font-medium">{formatDate(tournament.endDate)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Inicio de registros:</span>
+              <span className="text-gray-600">Registration start:</span>
               <span className="font-medium">{formatDate(tournament.registrationStart)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Cierre de registros:</span>
+              <span className="text-gray-600">Registration end:</span>
               <span className="font-medium">{formatDate(tournament.registrationEnd)}</span>
             </div>
           </div>
@@ -139,11 +139,11 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
         {/* Participation */}
         <Card className="p-4">
           <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-            👥 Participación
+            👥 Participation
           </h4>
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Participantes actuales:</span>
+              <span className="text-gray-600">Current participants:</span>
               <span className="font-medium">
                 {tournament.currentParticipants} / {tournament.maxParticipants}
               </span>
@@ -161,17 +161,17 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
             
             <div className="space-y-1 text-xs text-gray-600">
               <div className="flex justify-between">
-                <span>Cuota de inscripción:</span>
+                <span>Entry fee:</span>
                 <span className="font-medium">{formatCurrency(tournament.entryFee)}</span>
               </div>
               {tournament.lateRegistrationAllowed && (
                 <div className="text-yellow-600">
-                  ⚠️ Se permite registro tardío
+                  ⚠️ Late registration allowed
                 </div>
               )}
               {tournament.waitingListEnabled && (
                 <div className="text-blue-600">
-                  📋 Lista de espera habilitada
+                  📋 Waiting list enabled
                 </div>
               )}
             </div>
@@ -182,22 +182,22 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
       {/* Organizer Info */}
       <Card className="p-4">
         <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-          🏢 Organizador
+          🏢 Organizer
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="text-gray-600">Tipo:</span>
+            <span className="text-gray-600">Type:</span>
             <span className="ml-2 font-medium capitalize">{tournament.organizerType}</span>
           </div>
           {tournament.organizer && (
             <div>
-              <span className="text-gray-600">Organizador:</span>
+              <span className="text-gray-600">Organizer:</span>
               <span className="ml-2 font-medium">{tournament.organizer.username}</span>
             </div>
           )}
           {tournament.state && (
             <div>
-              <span className="text-gray-600">Estado:</span>
+              <span className="text-gray-600">State:</span>
               <span className="ml-2 font-medium">{tournament.state.name}</span>
             </div>
           )}
@@ -210,9 +210,9 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
           <div className="flex items-center text-green-800">
             <span className="text-2xl mr-3">✅</span>
             <div>
-              <h4 className="font-semibold">Ya estás registrado en este torneo</h4>
+              <h4 className="font-semibold">You are already registered for this tournament</h4>
               <p className="text-sm mt-1">
-                Puedes ver tus registros en la sección "Mis Torneos"
+                You can view your registrations in the "My Tournaments" section
               </p>
             </div>
           </div>
@@ -229,7 +229,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
             disabled={isRegistering}
             className="px-8 py-3"
           >
-            {isRegistering ? 'Procesando...' : 'Registrarse en el Torneo'}
+            {isRegistering ? 'Processing...' : 'Register for Tournament'}
           </Button>
         </div>
       )}
@@ -261,29 +261,29 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
             {/* Category Details */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-600 mb-3">
               <div>
-                <span className="font-medium">Formato:</span>
+                <span className="font-medium">Format:</span>
                 <div className="capitalize">{category.playFormat.replace('_', ' ')}</div>
               </div>
               <div>
-                <span className="font-medium">Género:</span>
+                <span className="font-medium">Gender:</span>
                 <div className="capitalize">{category.genderRequirement}</div>
               </div>
               {(category.minAge || category.maxAge) && (
                 <div>
-                  <span className="font-medium">Edad:</span>
+                  <span className="font-medium">Age:</span>
                   <div>
                     {category.minAge && category.maxAge 
-                      ? `${category.minAge}-${category.maxAge} años`
+                      ? `${category.minAge}-${category.maxAge} years`
                       : category.minAge 
-                        ? `${category.minAge}+ años`
-                        : `Hasta ${category.maxAge} años`
+                        ? `${category.minAge}+ years`
+                        : `Up to ${category.maxAge} years`
                     }
                   </div>
                 </div>
               )}
               {category.skillLevel && (
                 <div>
-                  <span className="font-medium">Nivel:</span>
+                  <span className="font-medium">Level:</span>
                   <div className="capitalize">{category.skillLevel}</div>
                 </div>
               )}
@@ -307,13 +307,13 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
                   onClick={() => onRegister?.(tournament, category.id)}
                   disabled={isRegistering || category.currentParticipants >= category.maxParticipants}
                 >
-                  {category.currentParticipants >= category.maxParticipants ? 'Lleno' : 'Registrarse'}
+                  {category.currentParticipants >= category.maxParticipants ? 'Full' : 'Register'}
                 </Button>
               )}
               
               {isUserRegistered(category.id) && (
                 <Badge variant="success" className="text-xs">
-                  Registrado
+                  Registered
                 </Badge>
               )}
             </div>
@@ -322,7 +322,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
       ) : (
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">🏅</div>
-          <p>Las categorías serán anunciadas pronto</p>
+          <p>Categories will be announced soon</p>
         </div>
       )}
     </div>
@@ -332,7 +332,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
     <Card className="p-6">
       <div className="space-y-4">
         <div>
-          <h4 className="font-semibold text-gray-900 mb-2">📍 Ubicación</h4>
+          <h4 className="font-semibold text-gray-900 mb-2">📍 Location</h4>
           <div className="text-gray-700">
             <div className="font-medium">{tournament.venueName}</div>
             <div className="text-sm mt-1">{tournament.venueAddress}</div>
@@ -343,8 +343,8 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
         <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
           <div className="text-center text-gray-500">
             <div className="text-4xl mb-2">🗺️</div>
-            <p>Mapa de la ubicación</p>
-            <p className="text-sm">(Funcionalidad próximamente)</p>
+            <p>Location map</p>
+            <p className="text-sm">(Feature coming soon)</p>
           </div>
         </div>
 
@@ -353,13 +353,13 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
           <div className="border-t pt-4 space-y-3">
             {(tournament as any).transportationInfo && (
               <div>
-                <h5 className="font-medium text-gray-900 mb-1">🚗 Transporte</h5>
+                <h5 className="font-medium text-gray-900 mb-1">🚗 Transportation</h5>
                 <p className="text-sm text-gray-600">{(tournament as any).transportationInfo}</p>
               </div>
             )}
             {(tournament as any).accommodationInfo && (
               <div>
-                <h5 className="font-medium text-gray-900 mb-1">🏨 Alojamiento</h5>
+                <h5 className="font-medium text-gray-900 mb-1">🏨 Accommodation</h5>
                 <p className="text-sm text-gray-600">{(tournament as any).accommodationInfo}</p>
               </div>
             )}
@@ -374,22 +374,22 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
       {tournament.rulesDocument ? (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-semibold text-gray-900">📜 Reglamento del Torneo</h4>
+            <h4 className="font-semibold text-gray-900">📜 Tournament Rules</h4>
             <Button variant="outline" size="sm">
-              Descargar PDF
+              Download PDF
             </Button>
           </div>
           <div className="prose prose-sm max-w-none">
             <p className="text-gray-600">
-              El reglamento completo está disponible para descarga. Asegúrate de leerlo 
-              antes de registrarte en el torneo.
+              The complete rules are available for download. Make sure to read them 
+              before registering for the tournament.
             </p>
           </div>
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">📜</div>
-          <p>El reglamento será publicado pronto</p>
+          <p>The rules will be published soon</p>
         </div>
       )}
     </Card>
@@ -399,7 +399,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
     <Card className="p-6">
       <div className="space-y-4">
         <div className="text-center">
-          <h4 className="font-semibold text-gray-900 mb-2">🏆 Premio Total</h4>
+          <h4 className="font-semibold text-gray-900 mb-2">🏆 Total Prize</h4>
           <div className="text-3xl font-bold text-green-600 mb-4">
             {formatCurrency(tournament.prizePool)}
           </div>
@@ -407,12 +407,12 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
 
         {tournament.prizeDistribution && (
           <div className="space-y-3">
-            <h5 className="font-medium text-gray-900">Distribución de Premios</h5>
+            <h5 className="font-medium text-gray-900">Prize Distribution</h5>
             <div className="grid grid-cols-2 gap-3">
               {tournament.prizeDistribution.first && (
                 <div className="bg-yellow-50 p-3 rounded-lg text-center">
                   <div className="text-2xl mb-1">🥇</div>
-                  <div className="font-medium text-gray-900">1er Lugar</div>
+                  <div className="font-medium text-gray-900">1st Place</div>
                   <div className="text-sm text-green-600 font-medium">
                     {(tournament.prizeDistribution.first * 100)}%
                   </div>
@@ -421,7 +421,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
               {tournament.prizeDistribution.second && (
                 <div className="bg-gray-50 p-3 rounded-lg text-center">
                   <div className="text-2xl mb-1">🥈</div>
-                  <div className="font-medium text-gray-900">2do Lugar</div>
+                  <div className="font-medium text-gray-900">2nd Place</div>
                   <div className="text-sm text-green-600 font-medium">
                     {(tournament.prizeDistribution.second * 100)}%
                   </div>
@@ -430,7 +430,7 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
               {tournament.prizeDistribution.third && (
                 <div className="bg-orange-50 p-3 rounded-lg text-center">
                   <div className="text-2xl mb-1">🥉</div>
-                  <div className="font-medium text-gray-900">3er Lugar</div>
+                  <div className="font-medium text-gray-900">3rd Place</div>
                   <div className="text-sm text-green-600 font-medium">
                     {(tournament.prizeDistribution.third * 100)}%
                   </div>
@@ -442,9 +442,9 @@ const TournamentDetails: React.FC<TournamentDetailsProps> = ({
 
         {tournament.sponsorInfo && (
           <div className="border-t pt-4">
-            <h5 className="font-medium text-gray-900 mb-2">🤝 Patrocinadores</h5>
+            <h5 className="font-medium text-gray-900 mb-2">🤝 Sponsors</h5>
             <div className="text-sm text-gray-600">
-              Información sobre patrocinadores disponible pronto
+              Sponsor information available soon
             </div>
           </div>
         )}

@@ -163,7 +163,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
           <div className="flex items-center text-sm text-gray-600">
             <span className="mr-2">👥</span>
             <span>
-              {tournament.currentParticipants} / {tournament.maxParticipants} participantes
+              {tournament.currentParticipants} / {tournament.maxParticipants} participants
             </span>
           </div>
 
@@ -172,7 +172,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
             <div className="flex items-center text-sm text-gray-600">
               <span className="mr-2">⏰</span>
               <span>
-                Registro hasta: {formatDate(tournament.registrationEnd)}
+                Registration until: {formatDate(tournament.registrationEnd)}
               </span>
             </div>
           )}
@@ -181,7 +181,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
           {tournament.categories && tournament.categories.length > 0 && (
             <div className="flex items-center text-sm text-gray-600">
               <span className="mr-2">🏅</span>
-              <span>{tournament.categories.length} categorías</span>
+              <span>{tournament.categories.length} categories</span>
             </div>
           )}
         </div>
@@ -190,7 +190,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
         {tournament.maxParticipants > 0 && (
           <div className="mb-4">
             <div className="flex justify-between text-xs text-gray-600 mb-1">
-              <span>Registros</span>
+              <span>Registrations</span>
               <span>
                 {Math.round((tournament.currentParticipants / tournament.maxParticipants) * 100)}%
               </span>
@@ -211,7 +211,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
           <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
             <div className="flex items-center text-green-800 text-sm">
               <span className="mr-2">✅</span>
-              <span className="font-medium">Ya estás registrado</span>
+              <span className="font-medium">You are already registered</span>
             </div>
           </div>
         )}
@@ -225,7 +225,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
               onClick={() => onView?.(tournament)}
               className="flex-1"
             >
-              Ver Detalles
+              View Details
             </Button>
             
             {canRegister() && onRegister && (
@@ -235,7 +235,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
                 onClick={() => onRegister(tournament)}
                 className="flex-1"
               >
-                Registrarse
+                Register
               </Button>
             )}
 
@@ -246,7 +246,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
                 disabled
                 className="flex-1"
               >
-                Registro Cerrado
+                Registration Closed
               </Button>
             )}
 
@@ -258,7 +258,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
                 onClick={() => tournament.waitingListEnabled && onRegister?.(tournament)}
                 className="flex-1"
               >
-                {tournament.waitingListEnabled ? 'Lista de Espera' : 'Lleno'}
+                {tournament.waitingListEnabled ? 'Waiting List' : 'Full'}
               </Button>
             )}
           </div>
@@ -267,7 +267,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
         {/* Warning Messages */}
         {tournament.lateRegistrationAllowed && new Date() > new Date(tournament.registrationEnd) && (
           <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-yellow-800 text-xs">
-            ⚠️ Registro tardío permitido (pueden aplicar cargos adicionales)
+            ⚠️ Late registration allowed (additional fees may apply)
           </div>
         )}
       </div>

@@ -40,9 +40,9 @@ export const CredentialVerifier: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const tabs = [
-    { id: 'single', label: 'Verificación Individual', count: verificationHistory.length },
-    { id: 'bulk', label: 'Verificación Masiva', count: bulkResults.length },
-    { id: 'history', label: 'Historial', count: verificationHistory.length }
+    { id: 'single', label: 'Individual Verification', count: verificationHistory.length },
+    { id: 'bulk', label: 'Bulk Verification', count: bulkResults.length },
+    { id: 'history', label: 'History', count: verificationHistory.length }
   ];
 
   // const handleScanResult = (result: VerificationResult) => {
@@ -53,7 +53,7 @@ export const CredentialVerifier: React.FC = () => {
     e.preventDefault();
     
     if (!bulkIds.trim()) {
-      setError('Por favor ingrese los IDs de credenciales');
+      setError('Please enter credential IDs');
       return;
     }
 
@@ -68,11 +68,11 @@ export const CredentialVerifier: React.FC = () => {
         .filter(id => id.length > 0);
 
       if (ids.length === 0) {
-        throw new Error('No se encontraron IDs válidos');
+        throw new Error('No valid IDs found');
       }
 
       if (ids.length > 50) {
-        throw new Error('Máximo 50 credenciales por verificación masiva');
+        throw new Error('Maximum 50 credentials per bulk verification');
       }
 
       const response = await fetch('/api/credentials/verify-bulk', {
@@ -85,7 +85,7 @@ export const CredentialVerifier: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al verificar credenciales');
+        throw new Error('Error verifying credentials');
       }
 
       const result = await response.json();
@@ -94,10 +94,10 @@ export const CredentialVerifier: React.FC = () => {
         setBulkResults(result.data);
         setActiveTab('bulk');
       } else {
-        throw new Error(result.error || 'Error al verificar credenciales');
+        throw new Error(result.error || 'Error verifying credentials');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -109,10 +109,10 @@ export const CredentialVerifier: React.FC = () => {
     let mimeType: string;
 
     if (format === 'csv') {
-      const headers = ['ID', 'Válida', 'Nombre', 'Tipo', 'Estado', 'Razón'];
+      const headers = ['ID', 'Valid', 'Name', 'Type', 'Status', 'Reason'];
       const rows = results.map(r => [
         r.id,
-        r.valid ? 'Sí' : 'No',
+        r.valid ? 'Yes' : 'No',
         r.credential?.fullName || 'N/A',
         r.credential?.userType || 'N/A',
         r.credential?.status || 'N/A',
@@ -123,11 +123,11 @@ export const CredentialVerifier: React.FC = () => {
         .map(row => row.map(cell => `"${cell}"`).join(','))
         .join('\n');
       
-      filename = `verificacion-${new Date().toISOString().split('T')[0]}.csv`;
+      filename = `verification-${new Date().toISOString().split('T')[0]}.csv`;
       mimeType = 'text/csv';
     } else {
       content = JSON.stringify(results, null, 2);
-      filename = `verificacion-${new Date().toISOString().split('T')[0]}.json`;
+      filename = `verification-${new Date().toISOString().split('T')[0]}.json`;
       mimeType = 'application/json';
     }
 
@@ -161,11 +161,11 @@ export const CredentialVerifier: React.FC = () => {
 
   const formatStatus = (status: string) => {
     const labels: Record<string, string> = {
-      'active': 'Activa',
-      'expired': 'Expirada',
-      'suspended': 'Suspendida',
-      'revoked': 'Revocada',
-      'pending': 'Pendiente'
+      'active': 'Active',
+      'expired': 'Expired',
+      'suspended': 'Suspended',
+      'revoked': 'Revoked',
+      'pending': 'Pending'
     };
     return labels[status] || status;
   };
@@ -174,9 +174,9 @@ export const CredentialVerifier: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Verificador de Credenciales</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Credential Verifier</h1>
         <p className="mt-2 text-gray-600">
-          Verifique la autenticidad y validez de las credenciales de la federación
+          Verify the authenticity and validity of federation credentials
         </p>
       </div>
 
@@ -222,11 +222,11 @@ export const CredentialVerifier: React.FC = () => {
       <div className="mt-6">
         {activeTab === 'single' && (
           <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Verificación Individual</h3>
+            <h3 className="text-lg font-semibold mb-4">Individual Verification</h3>
             <div className="text-center py-8 text-gray-500">
-              <div className="text-lg mb-2">Escáner QR no disponible</div>
+              <div className="text-lg mb-2">QR Scanner not available</div>
               <div className="text-sm">
-                El componente QRScanner necesita ser implementado
+                QRScanner component needs to be implemented
               </div>
             </div>
           </Card>
@@ -236,23 +236,23 @@ export const CredentialVerifier: React.FC = () => {
           <div className="space-y-6">
             {/* Bulk Verification Form */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Verificación Masiva</h3>
+              <h3 className="text-lg font-semibold mb-4">Bulk Verification</h3>
               
               <form onSubmit={handleBulkVerification} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    IDs de Credenciales
+                    Credential IDs
                   </label>
                   <textarea
                     value={bulkIds}
                     onChange={(e) => setBulkIds(e.target.value)}
-                    placeholder="Ingrese los IDs de credenciales, uno por línea o separados por comas..."
+                    placeholder="Enter credential IDs, one per line or separated by commas..."
                     rows={6}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     disabled={loading}
                   />
                   <div className="text-sm text-gray-500 mt-1">
-                    Máximo 50 credenciales por verificación
+                    Maximum 50 credentials per verification
                   </div>
                 </div>
 
@@ -261,10 +261,10 @@ export const CredentialVerifier: React.FC = () => {
                     {loading ? (
                       <>
                         <LoadingSpinner size="sm" className="mr-2" />
-                        Verificando...
+                        Verifying...
                       </>
                     ) : (
-                      'Verificar Credenciales'
+                      'Verify Credentials'
                     )}
                   </Button>
                   
@@ -275,14 +275,14 @@ export const CredentialVerifier: React.FC = () => {
                         variant="secondary"
                         onClick={() => exportResults(bulkResults, 'csv')}
                       >
-                        Exportar CSV
+                        Export CSV
                       </Button>
                       <Button
                         type="button"
                         variant="secondary"
                         onClick={() => exportResults(bulkResults, 'json')}
                       >
-                        Exportar JSON
+                        Export JSON
                       </Button>
                     </>
                   )}
@@ -295,15 +295,15 @@ export const CredentialVerifier: React.FC = () => {
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold">
-                    Resultados de Verificación ({bulkResults.length})
+                    Verification Results ({bulkResults.length})
                   </h3>
                   
                   <div className="flex space-x-4 text-sm">
                     <span className="text-green-600">
-                      Válidas: {bulkResults.filter(r => r.valid).length}
+                      Valid: {bulkResults.filter(r => r.valid).length}
                     </span>
                     <span className="text-red-600">
-                      Inválidas: {bulkResults.filter(r => !r.valid).length}
+                      Invalid: {bulkResults.filter(r => !r.valid).length}
                     </span>
                   </div>
                 </div>
@@ -370,13 +370,13 @@ export const CredentialVerifier: React.FC = () => {
 
         {activeTab === 'history' && (
           <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Historial de Verificaciones</h3>
+            <h3 className="text-lg font-semibold mb-4">Verification History</h3>
             
             {verificationHistory.length === 0 ? (
               <div className="text-center text-gray-500 py-8">
-                <div className="text-lg mb-2">Sin historial</div>
+                <div className="text-lg mb-2">No history</div>
                 <div className="text-sm">
-                  Las verificaciones aparecerán aquí conforme las vaya realizando
+                  Verifications will appear here as you perform them
                 </div>
               </div>
             ) : (
@@ -417,7 +417,7 @@ export const CredentialVerifier: React.FC = () => {
                         ) : (
                           <div>
                             <div className="font-semibold text-red-800">
-                              Credencial Inválida
+                              Invalid Credential
                             </div>
                             <div className="text-sm text-red-600">
                               {result.reason}
@@ -432,7 +432,7 @@ export const CredentialVerifier: React.FC = () => {
                             {formatStatus(result.credential.status)}
                           </Badge>
                           <div className="text-xs text-gray-500 mt-1">
-                            Expira: {new Date(result.credential.expirationDate).toLocaleDateString()}
+                            Expires: {new Date(result.credential.expirationDate).toLocaleDateString()}
                           </div>
                         </div>
                       )}

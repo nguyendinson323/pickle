@@ -165,7 +165,7 @@ export const RankingCard: React.FC<RankingCardProps> = ({
           
           {ranking.lastTournamentDate && (
             <div className="text-xs text-gray-500 mt-2">
-              Last tournament: {new Date(ranking.lastTournamentDate).toLocaleDateString()}
+              Last tournament: {new Date(ranking.lastTournamentDate).toLocaleDateString('en-US')}
             </div>
           )}
         </div>

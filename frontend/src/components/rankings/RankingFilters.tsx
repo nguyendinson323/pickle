@@ -37,35 +37,35 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
 
   // Category options
   const categoryOptions = [
-    { value: 'national', label: 'Nacional' },
-    { value: 'state', label: 'Estatal' },
-    { value: 'age_group', label: 'Grupo de Edad' },
-    { value: 'gender', label: 'Género' }
+    { value: 'national', label: 'National' },
+    { value: 'state', label: 'State' },
+    { value: 'age_group', label: 'Age Group' },
+    { value: 'gender', label: 'Gender' }
   ];
 
   // Ranking type options
   const rankingTypeOptions = [
-    { value: 'overall', label: 'General' },
+    { value: 'overall', label: 'Overall' },
     { value: 'singles', label: 'Singles' },
-    { value: 'doubles', label: 'Dobles' },
-    { value: 'mixed_doubles', label: 'Dobles Mixtos' }
+    { value: 'doubles', label: 'Doubles' },
+    { value: 'mixed_doubles', label: 'Mixed Doubles' }
   ];
 
   // Age group options
   const ageGroupOptions = [
-    { value: '', label: 'Todas las edades' },
-    { value: 'Under 19', label: 'Menores de 19' },
-    { value: '19-34', label: '19-34 años' },
-    { value: '35-49', label: '35-49 años' },
-    { value: '50-64', label: '50-64 años' },
-    { value: '65+', label: '65+ años' }
+    { value: '', label: 'All ages' },
+    { value: 'Under 19', label: 'Under 19' },
+    { value: '19-34', label: '19-34 years' },
+    { value: '35-49', label: '35-49 years' },
+    { value: '50-64', label: '50-64 years' },
+    { value: '65+', label: '65+ years' }
   ];
 
   // Gender options
   const genderOptions = [
-    { value: '', label: 'Ambos géneros' },
-    { value: 'male', label: 'Masculino' },
-    { value: 'female', label: 'Femenino' }
+    { value: '', label: 'Both genders' },
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' }
   ];
 
   // Fetch states for state filter
@@ -113,13 +113,13 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium">Filtros de Ranking</h3>
+        <h3 className="text-lg font-medium">Ranking Filters</h3>
         <Button
           onClick={handleReset}
           variant="secondary"
           size="sm"
         >
-          Resetear
+          Reset
         </Button>
       </div>
 
@@ -127,7 +127,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
         {/* Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Categoría
+            Category
           </label>
           <select
             value={category}
@@ -153,7 +153,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
         {/* Ranking Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Tipo de Ranking
+            Ranking Type
           </label>
           <select
             value={rankingType}
@@ -173,7 +173,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
         {category === 'state' && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Estado
+              State
             </label>
             <select
               value={stateId?.toString() || ''}
@@ -181,7 +181,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option value="">Seleccionar estado</option>
+              <option value="">Select state</option>
               {states.map(state => (
                 <option key={state.id} value={state.id.toString()}>
                   {state.name}
@@ -195,7 +195,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
         {(category === 'age_group' || category === 'national' || category === 'state') && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Grupo de Edad
+              Age Group
             </label>
             <select
               value={ageGroup || ''}
@@ -216,7 +216,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
         {(category === 'gender' || category === 'national' || category === 'state' || category === 'age_group') && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Género
+              Gender
             </label>
             <select
               value={gender || ''}
@@ -236,7 +236,7 @@ export const RankingFilters: React.FC<RankingFiltersProps> = ({
 
       {/* Filter Summary */}
       <div className="mt-4 text-sm text-gray-600">
-        <span className="font-medium">Mostrando:</span>
+        <span className="font-medium">Showing:</span>
         {` ${categoryOptions.find(c => c.value === category)?.label} - ${rankingTypeOptions.find(r => r.value === rankingType)?.label}`}
         {stateId && states.length > 0 && ` - ${states.find(s => s.id === stateId)?.name}`}
         {ageGroup && ` - ${ageGroup}`}

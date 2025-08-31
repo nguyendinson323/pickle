@@ -31,7 +31,7 @@ const FileField: React.FC<FileFieldProps> = ({
     if (file) {
       // Check file size
       if (file.size > maxSize) {
-        alert(`El archivo es demasiado grande. Máximo ${Math.round(maxSize / (1024 * 1024))}MB`);
+        alert(`File is too large. Maximum ${Math.round(maxSize / (1024 * 1024))}MB`);
         return;
       }
       
@@ -46,7 +46,7 @@ const FileField: React.FC<FileFieldProps> = ({
       );
       
       if (!isValidType) {
-        alert(`Tipo de archivo no válido. Tipos aceptados: ${accept}`);
+        alert(`Invalid file type. Accepted types: ${accept}`);
         return;
       }
     }
@@ -164,10 +164,10 @@ const FileField: React.FC<FileFieldProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
             <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium text-primary-600">Haz clic para seleccionar</span> o arrastra el archivo aquí
+              <span className="font-medium text-primary-600">Click to select</span> or drag file here
             </p>
             <p className="text-xs text-gray-500">
-              Máximo {Math.round(maxSize / (1024 * 1024))}MB • {accept}
+              Maximum {Math.round(maxSize / (1024 * 1024))}MB • {accept}
             </p>
           </div>
         )}

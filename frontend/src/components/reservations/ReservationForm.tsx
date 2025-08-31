@@ -87,12 +87,12 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
     e.preventDefault();
 
     if (!selectedStartTime || !selectedEndTime) {
-      alert('Por favor selecciona un horario');
+      alert('Please select a time slot');
       return;
     }
 
     if (conflicts.length > 0) {
-      alert('No se puede procesar la reserva debido a los conflictos detectados');
+      alert('Cannot process reservation due to detected conflicts');
       return;
     }
 
@@ -119,12 +119,12 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
       // Navigate to confirmation
       navigate(`/reservations/${mockReservation.id}`, { 
         state: { 
-          message: 'Reserva creada exitosamente. Procede con el pago para confirmarla.',
+          message: 'Reservation created successfully. Proceed with payment to confirm it.',
           reservation: mockReservation
         } 
       });
     } catch (err) {
-      setError('Error al crear la reserva. Inténtalo de nuevo.');
+      setError('Error creating reservation. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -137,11 +137,11 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
     <div className="max-w-6xl mx-auto px-4 py-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Reservar Cancha
+          Reserve Court
         </h1>
         {court && (
           <p className="text-gray-600">
-            {court.name} - {formatPrice(court.hourlyRate)}/hora
+            {court.name} - {formatPrice(court.hourlyRate)}/hour
           </p>
         )}
       </div>
@@ -154,7 +154,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
             <div className="p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">
                 <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3">1</span>
-                Selecciona la Fecha
+                Select Date
               </h2>
               
               <ReservationCalendar
@@ -173,12 +173,12 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
               <div className="p-6">
                 <h2 className="text-xl font-semibold mb-4 flex items-center">
                   <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3">2</span>
-                  Selecciona el Horario
+                  Select Time
                 </h2>
                 
                 <div className="mb-4 p-4 bg-blue-50 rounded-lg">
                   <p className="text-blue-800 font-medium">
-                    Fecha seleccionada: {new Date(selectedDate).toLocaleDateString('es-MX', {
+                    Selected date: {new Date(selectedDate).toLocaleDateString('en-US', {
                       weekday: 'long',
                       year: 'numeric',
                       month: 'long',
@@ -204,18 +204,18 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
               <div className="p-6">
                 <h2 className="text-xl font-semibold mb-4 flex items-center">
                   <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3">3</span>
-                  Información Adicional
+                  Additional Information
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Notas adicionales (opcional)
+                      Additional notes (optional)
                     </label>
                     <textarea
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      placeholder="Escribe cualquier información adicional sobre tu reserva..."
+                      placeholder="Write any additional information about your reservation..."
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -246,7 +246,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
                       disabled={loading || conflicts.length > 0}
                       className="flex-1"
                     >
-                      {loading ? 'Procesando...' : 'Crear Reserva'}
+                      {loading ? 'Processing...' : 'Create Reservation'}
                     </Button>
                     
                     <Button
@@ -254,7 +254,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
                       variant="secondary"
                       onClick={() => navigate(-1)}
                     >
-                      Cancelar
+                      Cancel
                     </Button>
                   </div>
                 </form>
@@ -267,7 +267,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
         <div className="space-y-6">
           <Card className="sticky top-6">
             <div className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Resumen de Reserva</h2>
+              <h2 className="text-xl font-semibold mb-4">Reservation Summary</h2>
 
               {court && (
                 <div className="space-y-3 mb-6">
@@ -276,12 +276,12 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
                   </div>
                   
                   <div className="text-sm text-gray-600">
-                    <p>Precio base: {formatPrice(court.hourlyRate)}/hora</p>
+                    <p>Base price: {formatPrice(court.hourlyRate)}/hour</p>
                     {court.peakHourRate && (
-                      <p>Hora pico: {formatPrice(court.peakHourRate)}/hora</p>
+                      <p>Peak hour: {formatPrice(court.peakHourRate)}/hour</p>
                     )}
                     {court.weekendRate && (
-                      <p>Fin de semana: {formatPrice(court.weekendRate)}/hora</p>
+                      <p>Weekend: {formatPrice(court.weekendRate)}/hour</p>
                     )}
                   </div>
                 </div>
@@ -290,9 +290,9 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
               {selectedDate && (
                 <div className="space-y-3 border-t pt-4">
                   <div className="flex justify-between">
-                    <span className="text-gray-700">Fecha:</span>
+                    <span className="text-gray-700">Date:</span>
                     <span className="font-medium">
-                      {new Date(selectedDate).toLocaleDateString('es-MX', {
+                      {new Date(selectedDate).toLocaleDateString('en-US', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric'
@@ -303,16 +303,16 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
                   {selectedStartTime && selectedEndTime && (
                     <>
                       <div className="flex justify-between">
-                        <span className="text-gray-700">Horario:</span>
+                        <span className="text-gray-700">Time:</span>
                         <span className="font-medium">
                           {formatTime(selectedStartTime)} - {formatTime(selectedEndTime)}
                         </span>
                       </div>
 
                       <div className="flex justify-between">
-                        <span className="text-gray-700">Duración:</span>
+                        <span className="text-gray-700">Duration:</span>
                         <span className="font-medium">
-                          {duration} minutos
+                          {duration} minutes
                         </span>
                       </div>
 
@@ -324,7 +324,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
                       </div>
 
                       <div className="text-xs text-gray-500 mt-2">
-                        * Precio incluye 16% de IVA
+                        * Price includes 16% VAT
                       </div>
                     </>
                   )}
@@ -336,7 +336,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
                   <svg className="mx-auto h-8 w-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <p className="text-sm">Selecciona fecha y horario para ver el precio</p>
+                  <p className="text-sm">Select date and time to see the price</p>
                 </div>
               )}
             </div>
@@ -346,15 +346,15 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ courtId, court
           {court && (
             <Card>
               <div className="p-6">
-                <h3 className="font-semibold mb-3">Políticas de la Cancha</h3>
+                <h3 className="font-semibold mb-3">Court Policies</h3>
                 <div className="space-y-2 text-sm text-gray-600">
-                  <p>• Duración mínima: {court.minBookingDuration} minutos</p>
-                  <p>• Duración máxima: {court.maxBookingDuration} minutos</p>
-                  <p>• Reserva máxima: {court.maxAdvanceBookingDays} días de anticipación</p>
+                  <p>• Minimum duration: {court.minBookingDuration} minutes</p>
+                  <p>• Maximum duration: {court.maxBookingDuration} minutes</p>
+                  <p>• Maximum advance booking: {court.maxAdvanceBookingDays} days</p>
                 </div>
                 
                 <div className="mt-4 pt-4 border-t">
-                  <h4 className="font-medium mb-2">Política de Cancelación</h4>
+                  <h4 className="font-medium mb-2">Cancellation Policy</h4>
                   <p className="text-sm text-gray-600">
                     {court.cancellationPolicy}
                   </p>

@@ -22,7 +22,7 @@ const Header: React.FC = () => {
   };
 
   const getUserDisplayName = () => {
-    if (!user?.profile) return user?.username || 'Usuario';
+    if (!user?.profile) return user?.username || 'User';
     
     switch (user.role) {
       case USER_ROLES.PLAYER:
@@ -35,7 +35,7 @@ const Header: React.FC = () => {
       case USER_ROLES.STATE:
         return (user.profile as any).name || user.username;
       default:
-        return user.username || 'Usuario';
+        return user.username || 'User';
     }
   };
 
@@ -59,9 +59,9 @@ const Header: React.FC = () => {
   };
 
   const navigation = [
-    { name: 'Inicio', href: ROUTES.HOME },
-    { name: 'Torneos', href: ROUTES.TOURNAMENTS },
-    { name: 'Canchas', href: ROUTES.COURTS },
+    { name: 'Home', href: ROUTES.HOME },
+    { name: 'Tournaments', href: ROUTES.TOURNAMENTS },
+    { name: 'Courts', href: ROUTES.COURTS },
     { name: 'Rankings', href: ROUTES.RANKINGS },
   ];
 
@@ -151,7 +151,7 @@ const Header: React.FC = () => {
                         onClick={() => setIsUserMenuOpen(false)}
                       >
                         <UserCircleIcon className="w-4 h-4 mr-3" />
-                        Perfil
+                        Profile
                       </Link>
                       
                       <button
@@ -159,7 +159,7 @@ const Header: React.FC = () => {
                         className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
                       >
                         <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
-                        Cerrar Sesión
+                        Sign Out
                       </button>
                     </div>
                   </div>
@@ -170,7 +170,7 @@ const Header: React.FC = () => {
                 to={ROUTES.LOGIN}
                 className="btn-primary"
               >
-                Iniciar Sesión
+                Sign In
               </Link>
             )}
 

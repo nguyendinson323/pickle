@@ -20,7 +20,7 @@ const MediaSelector: React.FC<MediaSelectorProps> = ({
   onSelect,
   allowedTypes = ['image'],
   maxSelection = 1,
-  title = 'Seleccionar Archivo'
+  title = 'Select File'
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<any[]>([]);
 
@@ -59,7 +59,7 @@ const MediaSelector: React.FC<MediaSelectorProps> = ({
 
         <div className="border-t border-gray-200 p-4 flex justify-end gap-3">
           <Button variant="outline" onClick={handleCancel}>
-            Cancelar
+            Cancel
           </Button>
           <Button 
             onClick={handleConfirm}
@@ -67,7 +67,7 @@ const MediaSelector: React.FC<MediaSelectorProps> = ({
             className="flex items-center gap-2"
           >
             <PhotoIcon className="w-4 h-4" />
-            Seleccionar {selectedFiles.length > 0 ? `(${selectedFiles.length})` : ''}
+            Select {selectedFiles.length > 0 ? `(${selectedFiles.length})` : ''}
           </Button>
         </div>
       </div>

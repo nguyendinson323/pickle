@@ -1,5 +1,5 @@
 export const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api';
-export const APP_NAME = (import.meta as any).env?.VITE_APP_NAME || 'Federación Mexicana de Pickleball';
+export const APP_NAME = (import.meta as any).env?.VITE_APP_NAME || 'Mexican Pickleball Federation';
 
 export const ROUTES = {
   HOME: '/',
@@ -72,7 +72,7 @@ export const NRTP_LEVELS = [
 ] as const;
 
 export const GENDER_OPTIONS = [
-  { value: 'masculino', label: 'Masculino' },
-  { value: 'femenino', label: 'Femenino' },
-  { value: 'otro', label: 'Otro' },
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'other', label: 'Other' },
 ] as const;

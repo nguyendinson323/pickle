@@ -106,7 +106,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
   };
 
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'MXN'
     }).format(amount / 100);
@@ -116,10 +116,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
     return (
       <div className="text-center py-8">
         <h3 className="text-gray-500 text-lg font-medium">
-          No hay pago pendiente
+          No pending payment
         </h3>
         <p className="text-gray-400 text-sm mt-2">
-          Selecciona un plan de membresía para continuar.
+          Select a membership plan to continue.
         </p>
       </div>
     );
@@ -130,17 +130,17 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
       <Card className="p-6">
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Finalizar Pago
+            Complete Payment
           </h3>
           <div className="bg-blue-50 rounded-lg p-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Total a pagar:</span>
+              <span className="text-sm text-gray-600">Total to pay:</span>
               <span className="text-xl font-bold text-gray-900">
                 {formatAmount(currentPaymentIntent.amount)}
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              IVA incluido • Pago único
+              Tax included • One-time payment
             </p>
           </div>
         </div>
@@ -148,7 +148,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nombre completo
+              Full name
             </label>
             <input
               type="text"
@@ -174,7 +174,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Teléfono (opcional)
+              Phone (optional)
             </label>
             <input
               type="tel"
@@ -187,7 +187,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ciudad
+                City
               </label>
               <input
                 type="text"
@@ -201,7 +201,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Estado
+                State
               </label>
               <input
                 type="text"
@@ -217,7 +217,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Código Postal
+              Postal Code
             </label>
             <input
               type="text"
@@ -232,7 +232,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Información de la tarjeta
+              Card information
             </label>
             <div className="p-3 border border-gray-300 rounded-lg">
               <CardElement 
@@ -256,7 +256,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
               className="flex-1"
               disabled={processing}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -267,17 +267,17 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
               {processing ? (
                 <>
                   <LoadingSpinner className="mr-2" />
-                  Procesando...
+                  Processing...
                 </>
               ) : (
-                `Pagar ${formatAmount(currentPaymentIntent.amount)}`
+                `Pay ${formatAmount(currentPaymentIntent.amount)}`
               )}
             </Button>
           </div>
 
           <div className="text-center pt-4">
             <p className="text-xs text-gray-500">
-              Tu pago está protegido por Stripe. No almacenamos tu información de tarjeta.
+              Your payment is protected by Stripe. We don't store your card information.
             </p>
           </div>
         </form>

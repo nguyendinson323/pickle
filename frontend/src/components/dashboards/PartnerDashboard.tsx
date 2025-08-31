@@ -33,7 +33,7 @@ const PartnerDashboard: React.FC = () => {
     ? user.profile.businessName
     : user?.profile && 'contactPersonName' in user.profile
     ? user.profile.contactPersonName
-    : 'Empresa Patrocinadora';
+    : 'Sponsoring Company';
 
   useEffect(() => {
     // Mock loading effect
@@ -44,43 +44,43 @@ const PartnerDashboard: React.FC = () => {
   const tabs = [
     {
       id: 'profile',
-      label: 'Perfil Partner',
+      label: 'Partner Profile',
       icon: <BriefcaseIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'account',
-      label: 'Mi Cuenta',
+      label: 'My Account',
       icon: <CogIcon className="w-4 h-4" />,
       count: 0
     },
     {
       id: 'inbox',
-      label: 'Bandeja',
+      label: 'Inbox',
       icon: <InboxIcon className="w-4 h-4" />,
       count: unreadCount
     },
     {
       id: 'campaigns',
-      label: 'Campañas',
+      label: 'Campaigns',
       icon: <PresentationChartBarIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.activeCampaigns || 0
     },
     {
       id: 'sponsorships',
-      label: 'Patrocinios',
+      label: 'Sponsorships',
       icon: <BriefcaseIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.activeSponshorships || 0
     },
     {
       id: 'contracts',
-      label: 'Contratos',
+      label: 'Contracts',
       icon: <DocumentTextIcon className="w-4 h-4" />,
       count: dashboardData?.statistics?.pendingContracts || 0
     },
     {
       id: 'billing',
-      label: 'Facturación',
+      label: 'Billing',
       icon: <CurrencyDollarIcon className="w-4 h-4" />,
       count: 0
     }
@@ -92,25 +92,25 @@ const PartnerDashboard: React.FC = () => {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold mb-2">Perfil del Partner</h3>
+              <h3 className="text-lg font-semibold mb-2">Partner Profile</h3>
               <p className="text-purple-100 mb-4">
                 {userDisplayName}
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-purple-200">ID Partner:</span>
+                  <span className="text-purple-200">Partner ID:</span>
                   <span className="ml-2 font-medium">{user?.id || 'PART001'}</span>
                 </div>
                 <div>
-                  <span className="text-purple-200">Industria:</span>
-                  <span className="ml-2 font-medium">Deportes</span>
+                  <span className="text-purple-200">Industry:</span>
+                  <span className="ml-2 font-medium">Sports</span>
                 </div>
                 <div>
-                  <span className="text-purple-200">Desde:</span>
+                  <span className="text-purple-200">Since:</span>
                   <span className="ml-2 font-medium">2023</span>
                 </div>
                 <div>
-                  <span className="text-purple-200">Estatus:</span>
+                  <span className="text-purple-200">Status:</span>
                   <span className="ml-2 font-medium">Premium</span>
                 </div>
               </div>
@@ -120,7 +120,7 @@ const PartnerDashboard: React.FC = () => {
                 <BriefcaseIcon className="w-10 h-10 text-white" />
               </div>
               <Button variant="secondary" size="sm" className="text-white border-white/30">
-                Editar Perfil
+                Edit Profile
               </Button>
             </div>
           </div>
@@ -130,19 +130,19 @@ const PartnerDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Información Comercial</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">Business Information</h4>
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-gray-500">Razón Social</label>
-                <p className="text-gray-900">Empresa Deportiva S.A. de C.V.</p>
+                <label className="text-sm font-medium text-gray-500">Company Name</label>
+                <p className="text-gray-900">Sports Company LLC</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">RFC</label>
                 <p className="text-gray-900">EDS123456ABC</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Contacto Principal</label>
-                <p className="text-gray-900">Director Comercial</p>
+                <label className="text-sm font-medium text-gray-500">Primary Contact</label>
+                <p className="text-gray-900">Commercial Director</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">Email</label>
@@ -154,16 +154,16 @@ const PartnerDashboard: React.FC = () => {
 
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Productos/Servicios</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">Products/Services</h4>
             <div className="space-y-2">
-              <Badge variant="primary">Equipamiento Deportivo</Badge>
-              <Badge variant="success">Raquetas de Pickleball</Badge>
-              <Badge variant="warning">Pelotas Oficiales</Badge>
-              <Badge variant="secondary">Ropa Deportiva</Badge>
-              <Badge variant="secondary">Accesorios</Badge>
+              <Badge variant="primary">Sports Equipment</Badge>
+              <Badge variant="success">Pickleball Paddles</Badge>
+              <Badge variant="warning">Official Balls</Badge>
+              <Badge variant="secondary">Sports Apparel</Badge>
+              <Badge variant="secondary">Accessories</Badge>
             </div>
             <Button variant="secondary" size="sm" className="w-full mt-4">
-              Actualizar Catálogo
+              Update Catalog
             </Button>
           </div>
         </Card>
@@ -174,31 +174,31 @@ const PartnerDashboard: React.FC = () => {
   const renderCampaignsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Campañas Activas</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Active Campaigns</h3>
         <Button variant="primary">
           <PresentationChartBarIcon className="w-4 h-4 mr-2" />
-          Nueva Campaña
+          New Campaign
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
           { 
-            name: 'Torneo Nacional 2024', 
+            name: 'National Tournament 2024', 
             status: 'active', 
             budget: '$50,000', 
             reach: '15,000',
             engagement: '8.5%'
           },
           { 
-            name: 'Liga Estatal CDMX', 
+            name: 'CDMX State League', 
             status: 'active', 
             budget: '$25,000', 
             reach: '8,500',
             engagement: '12.3%'
           },
           { 
-            name: 'Clínicas Juveniles', 
+            name: 'Youth Clinics', 
             status: 'planning', 
             budget: '$15,000', 
             reach: '3,200',
@@ -216,19 +216,19 @@ const PartnerDashboard: React.FC = () => {
                     'secondary'
                   }
                 >
-                  {campaign.status === 'active' ? 'Activa' :
-                   campaign.status === 'planning' ? 'Planeación' :
-                   'Pausada'}
+                  {campaign.status === 'active' ? 'Active' :
+                   campaign.status === 'planning' ? 'Planning' :
+                   'Paused'}
                 </Badge>
               </div>
               
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex justify-between">
-                  <span>Presupuesto:</span>
+                  <span>Budget:</span>
                   <span className="font-medium">{campaign.budget}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Alcance:</span>
+                  <span>Reach:</span>
                   <span className="font-medium">{campaign.reach}</span>
                 </div>
                 <div className="flex justify-between">
@@ -238,7 +238,7 @@ const PartnerDashboard: React.FC = () => {
               </div>
               
               <Button variant="secondary" size="sm" className="w-full">
-                Ver Métricas
+                View Metrics
               </Button>
             </div>
           </Card>
@@ -250,38 +250,38 @@ const PartnerDashboard: React.FC = () => {
   const renderSponsorshipsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900">Patrocinios</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Sponsorships</h3>
         <Button variant="primary">
           <BriefcaseIcon className="w-4 h-4 mr-2" />
-          Nuevo Patrocinio
+          New Sponsorship
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
         <Card>
           <div className="p-6">
-            <h4 className="font-semibold text-gray-900 mb-4">Patrocinios Activos</h4>
+            <h4 className="font-semibold text-gray-900 mb-4">Active Sponsorships</h4>
             <div className="space-y-4">
               {[
                 { 
-                  event: 'Torneo Nacional de Pickleball 2024',
-                  type: 'Patrocinio Principal',
+                  event: 'National Pickleball Tournament 2024',
+                  type: 'Main Sponsorship',
                   amount: '$100,000',
-                  duration: '12 meses',
+                  duration: '12 months',
                   status: 'active'
                 },
                 { 
-                  event: 'Liga Regional Norte',
-                  type: 'Patrocinio Equipamiento',
+                  event: 'Northern Regional League',
+                  type: 'Equipment Sponsorship',
                   amount: '$35,000',
-                  duration: '6 meses',
+                  duration: '6 months',
                   status: 'active'
                 },
                 { 
-                  event: 'Campeonato Juvenil',
-                  type: 'Patrocinio Premios',
+                  event: 'Youth Championship',
+                  type: 'Prize Sponsorship',
                   amount: '$20,000',
-                  duration: '3 meses',
+                  duration: '3 months',
                   status: 'pending'
                 }
               ].map((sponsorship, index) => (
@@ -295,19 +295,19 @@ const PartnerDashboard: React.FC = () => {
                         'secondary'
                       }
                     >
-                      {sponsorship.status === 'active' ? 'Activo' :
-                       sponsorship.status === 'pending' ? 'Pendiente' :
-                       'Inactivo'}
+                      {sponsorship.status === 'active' ? 'Active' :
+                       sponsorship.status === 'pending' ? 'Pending' :
+                       'Inactive'}
                     </Badge>
                   </div>
                   <p className="text-sm text-gray-600 mb-3">{sponsorship.type}</p>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500">Monto:</span>
+                      <span className="text-gray-500">Amount:</span>
                       <span className="ml-2 font-medium">{sponsorship.amount}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Duración:</span>
+                      <span className="text-gray-500">Duration:</span>
                       <span className="ml-2 font-medium">{sponsorship.duration}</span>
                     </div>
                   </div>
@@ -328,16 +328,16 @@ const PartnerDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <CogIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Configuración de Cuenta</h3>
-            <p className="text-gray-500">Gestiona la información de tu empresa y preferencias.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Account Settings</h3>
+            <p className="text-gray-500">Manage your company information and preferences.</p>
           </div>
         );
       case 'inbox':
         return (
           <div className="text-center py-12">
             <InboxIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Mensajes</h3>
-            <p className="text-gray-500">Tu bandeja de entrada está vacía.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Messages</h3>
+            <p className="text-gray-500">Your inbox is empty.</p>
           </div>
         );
       case 'campaigns':
@@ -348,16 +348,16 @@ const PartnerDashboard: React.FC = () => {
         return (
           <div className="text-center py-12">
             <DocumentTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Gestión de Contratos</h3>
-            <p className="text-gray-500">Revisa y gestiona tus contratos de patrocinio.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Contract Management</h3>
+            <p className="text-gray-500">Review and manage your sponsorship contracts.</p>
           </div>
         );
       case 'billing':
         return (
           <div className="text-center py-12">
             <CurrencyDollarIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Facturación</h3>
-            <p className="text-gray-500">Gestiona facturas y pagos de patrocinios.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Billing</h3>
+            <p className="text-gray-500">Manage invoices and sponsorship payments.</p>
           </div>
         );
       default:
@@ -377,9 +377,9 @@ const PartnerDashboard: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error cargando el dashboard</p>
+          <p className="text-red-600 mb-4">Error loading dashboard</p>
           <Button onClick={() => window.location.reload()}>
-            Reintentar
+            Retry
           </Button>
         </div>
       </div>
@@ -396,7 +396,7 @@ const PartnerDashboard: React.FC = () => {
           </h1>
           {user && (
             <p className="mt-1 text-sm text-gray-500">
-              Bienvenido, {userDisplayName}
+              Welcome, {userDisplayName}
             </p>
           )}
         </div>
@@ -407,31 +407,31 @@ const PartnerDashboard: React.FC = () => {
           {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-              title="Campañas Activas"
+              title="Active Campaigns"
               value={dashboardData?.statistics?.activeCampaigns?.toString() || '3'}
               icon={<PresentationChartBarIcon className="w-6 h-6" />}
-              trend={{ direction: 'up', value: 1, label: 'este mes' }}
+              trend={{ direction: 'up', value: 1, label: 'this month' }}
               color="blue"
             />
             <StatCard
-              title="Patrocinios"
+              title="Sponsorships"
               value={dashboardData?.statistics?.activeSponshorships?.toString() || '5'}
               icon={<BriefcaseIcon className="w-6 h-6" />}
-              trend={{ direction: 'up', value: 2, label: 'este mes' }}
+              trend={{ direction: 'up', value: 2, label: 'this month' }}
               color="green"
             />
             <StatCard
-              title="Inversión Total"
+              title="Total Investment"
               value="$155,000"
               icon={<CurrencyDollarIcon className="w-6 h-6" />}
-              trend={{ direction: 'up', value: 12, label: 'este mes' }}
+              trend={{ direction: 'up', value: 12, label: 'this month' }}
               color="purple"
             />
             <StatCard
-              title="ROI Promedio"
+              title="Average ROI"
               value="285%"
               icon={<PresentationChartBarIcon className="w-6 h-6" />}
-              trend={{ direction: 'up', value: 25, label: 'este mes' }}
+              trend={{ direction: 'up', value: 25, label: 'this month' }}
               color="yellow"
             />
           </div>

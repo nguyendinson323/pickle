@@ -35,7 +35,7 @@ const PlayerDashboard: React.FC = () => {
   const tabs: TabItem[] = [
     {
       id: 'credential',
-      label: 'Credencial',
+      label: 'Credential',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0a2 2 0 104 0m-4 0a2 2 0 014 0z" />
@@ -44,7 +44,7 @@ const PlayerDashboard: React.FC = () => {
     },
     {
       id: 'account',
-      label: 'Cuenta',
+      label: 'Account',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -53,7 +53,7 @@ const PlayerDashboard: React.FC = () => {
     },
     {
       id: 'inbox',
-      label: 'Mensajes',
+      label: 'Messages',
       badge: 3,
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@ const PlayerDashboard: React.FC = () => {
     },
     {
       id: 'connection',
-      label: 'Conexión',
+      label: 'Connection',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -72,7 +72,7 @@ const PlayerDashboard: React.FC = () => {
     },
     {
       id: 'documents',
-      label: 'Documentos',
+      label: 'Documents',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -81,7 +81,7 @@ const PlayerDashboard: React.FC = () => {
     },
     {
       id: 'tournaments',
-      label: 'Torneos',
+      label: 'Tournaments',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -90,7 +90,7 @@ const PlayerDashboard: React.FC = () => {
     },
     {
       id: 'courts',
-      label: 'Canchas',
+      label: 'Courts',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -123,7 +123,7 @@ const PlayerDashboard: React.FC = () => {
             {/* Statistics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
-                title="Torneos Activos"
+                title="Active Tournaments"
                 value={statistics?.activeTournaments || 0}
                 color="blue"
                 icon={
@@ -134,7 +134,7 @@ const PlayerDashboard: React.FC = () => {
               />
               
               <StatCard
-                title="Reservas de Cancha"
+                title="Court Reservations"
                 value={statistics?.courtReservations || 0}
                 color="green"
                 icon={
@@ -145,8 +145,8 @@ const PlayerDashboard: React.FC = () => {
               />
               
               <StatCard
-                title="Estado de Membresía"
-                value={statistics?.membershipStatus === 'active' ? 'Activa' : 'Inactiva'}
+                title="Membership Status"
+                value={statistics?.membershipStatus === 'active' ? 'Active' : 'Inactive'}
                 color={statistics?.membershipStatus === 'active' ? 'green' : 'red'}
                 icon={
                   <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
@@ -156,7 +156,7 @@ const PlayerDashboard: React.FC = () => {
               />
               
               <StatCard
-                title="Próxima Renovación"
+                title="Next Renewal"
                 value={statistics?.nextRenewal ? new Date(statistics.nextRenewal).toLocaleDateString() : 'N/A'}
                 color="purple"
                 icon={
@@ -174,13 +174,13 @@ const PlayerDashboard: React.FC = () => {
                   <span className="text-white font-bold text-lg">ID</span>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Credencial Digital de Jugador
+                  Digital Player Credential
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Tu identificación oficial como jugador federado
+                  Your official identification as a federated player
                 </p>
                 <Button variant="primary">
-                  Descargar Credencial
+                  Download Credential
                 </Button>
               </div>
             </Card>
@@ -192,14 +192,14 @@ const PlayerDashboard: React.FC = () => {
           <div className="space-y-6">
             <Card>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Información Personal
+                Personal Information
               </h3>
               <p className="text-gray-600">
-                Gestiona tu información personal y configuraciones de cuenta.
+                Manage your personal information and account settings.
               </p>
               <div className="mt-4">
                 <Button variant="primary">
-                  Editar Perfil
+                  Edit Profile
                 </Button>
               </div>
             </Card>
@@ -211,13 +211,13 @@ const PlayerDashboard: React.FC = () => {
           <div className="space-y-6">
             <Card>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Mensajes y Comunicaciones
+                Messages and Communications
               </h3>
               <p className="text-gray-600 mb-4">
-                Mantente comunicado con la federación y otros jugadores.
+                Stay connected with the federation and other players.
               </p>
               <Button variant="primary">
-                Ver Todos los Mensajes
+                View All Messages
               </Button>
             </Card>
           </div>
@@ -229,17 +229,17 @@ const PlayerDashboard: React.FC = () => {
             <Card>
               <div className="text-center py-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Buscador de Jugadores
+                  Player Finder
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Conecta con otros jugadores de tu nivel y área
+                  Connect with other players in your skill level and area
                 </p>
                 <Badge variant="warning" className="mb-4">
-                  Función Premium
+                  Premium Feature
                 </Badge>
                 <div>
                   <Button variant="primary">
-                    Activar Premium
+                    Activate Premium
                   </Button>
                 </div>
               </div>
@@ -252,13 +252,13 @@ const PlayerDashboard: React.FC = () => {
           <div className="space-y-6">
             <Card>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Torneos Disponibles
+                Available Tournaments
               </h3>
               <p className="text-gray-600 mb-4">
-                Encuentra y regístrate en torneos oficiales.
+                Find and register for official tournaments.
               </p>
               <Button variant="primary">
-                Explorar Torneos
+                Explore Tournaments
               </Button>
             </Card>
           </div>
@@ -271,7 +271,7 @@ const PlayerDashboard: React.FC = () => {
               {tabs.find(t => t.id === activeTab)?.label}
             </h3>
             <p className="text-gray-600">
-              Contenido de {tabs.find(t => t.id === activeTab)?.label} estará disponible próximamente.
+              {tabs.find(t => t.id === activeTab)?.label} content will be available soon.
             </p>
           </Card>
         );

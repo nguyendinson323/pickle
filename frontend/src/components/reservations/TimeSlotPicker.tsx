@@ -39,7 +39,7 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
   }, [selectedDate]);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'MXN'
     }).format(price);
@@ -120,7 +120,7 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
         </div>
         <p className="text-gray-600 mb-4">{availabilityError}</p>
         <Button onClick={() => dispatch(fetchAvailableSlots({ courtId, date: selectedDate }))}>
-          Intentar de nuevo
+          Try again
         </Button>
       </div>
     );
@@ -135,10 +135,10 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          No hay horarios disponibles
+          No time slots available
         </h3>
         <p className="text-gray-600">
-          Esta cancha no tiene horarios disponibles para la fecha seleccionada.
+          This court has no available time slots for the selected date.
         </p>
       </div>
     );
@@ -159,27 +159,27 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-medium text-blue-900">Horario Seleccionado</h3>
+              <h3 className="font-medium text-blue-900">Selected Time Slot</h3>
               <p className="text-blue-700">
                 {formatTime(selectedSlots[0].startTime)} - {formatTime(selectedSlots[selectedSlots.length - 1].endTime)}
               </p>
               <p className="text-blue-700">
-                Precio total: {formatPrice(selectedSlots.reduce((sum, s) => sum + s.price, 0))}
+                Total price: {formatPrice(selectedSlots.reduce((sum, s) => sum + s.price, 0))}
               </p>
               {isSelecting && (
                 <p className="text-sm text-blue-600 mt-1">
-                  Haz clic en el siguiente horario para extender tu reserva
+                  Click on the next time slot to extend your reservation
                 </p>
               )}
             </div>
             <div className="flex gap-2">
               {isSelecting && (
                 <Button size="sm" variant="primary" onClick={handleFinishSelection}>
-                  Confirmar
+                  Confirm
                 </Button>
               )}
               <Button size="sm" variant="secondary" onClick={handleClearSelection}>
-                Limpiar
+                Clear
               </Button>
             </div>
           </div>
@@ -189,7 +189,7 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
       {/* Conflicts Warning */}
       {conflicts.length > 0 && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h3 className="font-medium text-red-900 mb-2">Conflictos Detectados</h3>
+          <h3 className="font-medium text-red-900 mb-2">Conflicts Detected</h3>
           <ul className="space-y-1">
             {conflicts.map((conflict, index) => (
               <li key={index} className="text-red-700 text-sm">
@@ -204,19 +204,19 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
       <div className="flex flex-wrap gap-4 text-sm">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-green-200 border border-green-300 rounded"></div>
-          <span>Disponible</span>
+          <span>Available</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-red-200 border border-red-300 rounded"></div>
-          <span>Ocupado</span>
+          <span>Occupied</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-gray-200 border border-gray-300 rounded"></div>
-          <span>Bloqueado</span>
+          <span>Blocked</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-blue-200 border border-blue-300 rounded"></div>
-          <span>Seleccionado</span>
+          <span>Selected</span>
         </div>
       </div>
 
@@ -279,7 +279,7 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
                         
                         {slot.reservationId && (
                           <Badge variant="error" className="text-xs">
-                            Reservado
+                            Reserved
                           </Badge>
                         )}
                       </div>
@@ -293,11 +293,11 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
 
       {/* Instructions */}
       <div className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
-        <p className="font-medium mb-1">Instrucciones:</p>
+        <p className="font-medium mb-1">Instructions:</p>
         <ul className="space-y-1">
-          <li>• Haz clic en un horario disponible para seleccionarlo</li>
-          <li>• Puedes seleccionar horarios consecutivos para reservas más largas</li>
-          <li>• Los precios mostrados incluyen 16% de IVA</li>
+          <li>• Click on an available time slot to select it</li>
+          <li>• You can select consecutive time slots for longer reservations</li>
+          <li>• Prices shown include 16% VAT</li>
         </ul>
       </div>
     </div>

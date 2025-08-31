@@ -29,7 +29,7 @@ const TournamentsPage: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   
   const [states] = useState([
-    { id: 1, name: 'Ciudad de México' },
+    { id: 1, name: 'Mexico City' },
     { id: 2, name: 'Jalisco' },
     { id: 3, name: 'Quintana Roo' },
     // Add more states as needed
@@ -59,7 +59,7 @@ const TournamentsPage: React.FC = () => {
       navigate('/login', { 
         state: { 
           returnUrl: `/tournaments/${tournament.id}`,
-          message: 'Inicia sesión para registrarte en torneos'
+          message: 'Log in to register for tournaments'
         }
       });
       return;
@@ -86,10 +86,10 @@ const TournamentsPage: React.FC = () => {
       <div className="flex justify-between items-start mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Torneos de Pickleball
+            Pickleball Tournaments
           </h1>
           <p className="text-gray-600">
-            Descubre y participa en torneos de pickleball en todo México
+            Discover and participate in pickleball tournaments throughout Mexico
           </p>
         </div>
         
@@ -100,7 +100,7 @@ const TournamentsPage: React.FC = () => {
             className="flex items-center gap-2"
           >
             <span>➕</span>
-            Crear Torneo
+            Create Tournament
           </Button>
         )}
       </div>
@@ -142,7 +142,7 @@ const TournamentsPage: React.FC = () => {
       ) && (
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Torneos Destacados
+            Featured Tournaments
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {tournaments.slice(0, 3).map((tournament) => (
@@ -150,7 +150,7 @@ const TournamentsPage: React.FC = () => {
                 {/* Featured badge */}
                 <div className="absolute top-4 left-4 z-10">
                   <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    ⭐ DESTACADO
+                    ⭐ FEATURED
                   </div>
                 </div>
                 {/* Tournament card would go here */}
@@ -167,25 +167,25 @@ const TournamentsPage: React.FC = () => {
             <div className="text-2xl font-bold text-blue-600">
               {tournaments.filter(t => t.status === 'registration_open').length}
             </div>
-            <div className="text-sm text-blue-800">Registro Abierto</div>
+            <div className="text-sm text-blue-800">Registration Open</div>
           </div>
           <div className="bg-green-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-green-600">
               {tournaments.filter(t => t.status === 'in_progress').length}
             </div>
-            <div className="text-sm text-green-800">En Progreso</div>
+            <div className="text-sm text-green-800">In Progress</div>
           </div>
           <div className="bg-purple-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-purple-600">
               {tournaments.filter(t => t.level === 'National').length}
             </div>
-            <div className="text-sm text-purple-800">Torneos Nacionales</div>
+            <div className="text-sm text-purple-800">National Tournaments</div>
           </div>
           <div className="bg-yellow-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-yellow-600">
               {user ? userRegistrations.length : 0}
             </div>
-            <div className="text-sm text-yellow-800">Mis Registros</div>
+            <div className="text-sm text-yellow-800">My Registrations</div>
           </div>
         </div>
       )}
@@ -205,10 +205,10 @@ const TournamentsPage: React.FC = () => {
       {!user && tournaments.length > 0 && (
         <div className="mt-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 text-center text-white">
           <h3 className="text-2xl font-bold mb-4">
-            ¡Únete a la Comunidad de Pickleball!
+            Join the Pickleball Community!
           </h3>
           <p className="text-blue-100 mb-6">
-            Regístrate para participar en torneos, conectar con otros jugadores y mejorar tu ranking.
+            Register to participate in tournaments, connect with other players and improve your ranking.
           </p>
           <div className="flex justify-center gap-4">
             <Button
@@ -216,14 +216,14 @@ const TournamentsPage: React.FC = () => {
               onClick={() => navigate('/registration')}
               className="bg-white text-blue-600 hover:bg-blue-50"
             >
-              Crear Cuenta
+              Create Account
             </Button>
             <Button
               variant="outline"
               onClick={() => navigate('/login')}
               className="border-white text-white hover:bg-white hover:text-blue-600"
             >
-              Iniciar Sesión
+              Log In
             </Button>
           </div>
         </div>
@@ -233,23 +233,23 @@ const TournamentsPage: React.FC = () => {
       <div className="mt-12 bg-gray-50 rounded-xl p-8">
         <div className="text-center">
           <h3 className="text-xl font-bold text-gray-900 mb-4">
-            📧 Mantente Informado
+            📧 Stay Informed
           </h3>
           <p className="text-gray-600 mb-6">
-            Recibe notificaciones sobre nuevos torneos y eventos de pickleball.
+            Receive notifications about new tournaments and pickleball events.
           </p>
           <div className="max-w-md mx-auto flex gap-3">
             <input
               type="email"
-              placeholder="Tu correo electrónico"
+              placeholder="Your email address"
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <Button variant="primary">
-              Suscribirse
+              Subscribe
             </Button>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            No spam. Cancela tu suscripción en cualquier momento.
+            No spam. Cancel your subscription at any time.
           </p>
         </div>
       </div>

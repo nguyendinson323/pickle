@@ -56,7 +56,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
+              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
               <p className="text-2xl font-bold text-gray-900">
                 {formatPrice(analytics.totalRevenue)}
               </p>
@@ -74,7 +74,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Reservas</p>
+              <p className="text-sm font-medium text-gray-600">Total Reservations</p>
               <p className="text-2xl font-bold text-gray-900">
                 {analytics.totalReservations.toLocaleString()}
               </p>
@@ -92,11 +92,11 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Calificación Promedio</p>
+              <p className="text-sm font-medium text-gray-600">Average Rating</p>
               <p className={`text-2xl font-bold ${getRatingColor(analytics.averageRating)}`}>
                 {analytics.averageRating.toFixed(1)} ⭐
               </p>
-              <p className="text-xs text-gray-500 mt-1">Basado en reseñas</p>
+              <p className="text-xs text-gray-500 mt-1">Based on reviews</p>
             </div>
             <div className="p-3 bg-yellow-100 rounded-full">
               <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Tasa de Ocupación</p>
+              <p className="text-sm font-medium text-gray-600">Occupancy Rate</p>
               <p className="text-2xl font-bold text-gray-900">
                 {formatPercentage(analytics.occupancyRate)}
               </p>
@@ -118,9 +118,9 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
                 variant="info" 
                 className={`mt-1 ${getOccupancyColor(analytics.occupancyRate)}`}
               >
-                {analytics.occupancyRate >= 0.8 ? 'Excelente' :
-                 analytics.occupancyRate >= 0.6 ? 'Buena' :
-                 analytics.occupancyRate >= 0.4 ? 'Regular' : 'Baja'}
+                {analytics.occupancyRate >= 0.8 ? 'Excellent' :
+                 analytics.occupancyRate >= 0.6 ? 'Good' :
+                 analytics.occupancyRate >= 0.4 ? 'Fair' : 'Low'}
               </Badge>
             </div>
             <div className="p-3 bg-purple-100 rounded-full">
@@ -135,7 +135,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
       {/* Top Revenue Hours */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Horarios de Mayor Ingreso
+          Top Revenue Hours
         </h3>
         <div className="space-y-3">
           {analytics.topRevenueHours.slice(0, 5).map((hour, index) => (
@@ -154,7 +154,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
                     {hour.hour}:00 - {(parseInt(hour.hour) + 1).toString().padStart(2, '0')}:00
                   </p>
                   <p className="text-sm text-gray-500">
-                    {hour.reservations} reservas
+                    {hour.reservations} reservations
                   </p>
                 </div>
               </div>
@@ -171,21 +171,21 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({ analytics,
       {/* Revenue Trend */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Tendencia de Ingresos ({period})
+          Revenue Trend ({period})
         </h3>
         <div className="space-y-2">
           {analytics.revenueByDay.slice(-7).map((day) => (
             <div key={day.date} className="flex items-center justify-between py-2">
               <div>
                 <p className="font-medium text-gray-900">
-                  {new Date(day.date).toLocaleDateString('es-MX', {
+                  {new Date(day.date).toLocaleDateString('en-US', {
                     weekday: 'long',
                     day: 'numeric',
                     month: 'short'
                   })}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {day.reservations} reservas
+                  {day.reservations} reservations
                 </p>
               </div>
               <div className="text-right">
