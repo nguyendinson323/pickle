@@ -1,12 +1,15 @@
 import { QueryInterface } from 'sequelize';
+import bcrypt from 'bcrypt';
 
 export async function up(queryInterface: QueryInterface): Promise<void> {
+  const passwordHash = await bcrypt.hash('a', 10);
+  
   await queryInterface.bulkInsert('users', [
     // 1 Admin
     {
       username: 'admin',
       email: 'admin@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'federation',
       is_active: true,
       email_verified: true,
@@ -17,7 +20,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'player001',
       email: 'player1@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'player',
       is_active: true,
       email_verified: true,
@@ -27,7 +30,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'player002',
       email: 'player2@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'player',
       is_active: true,
       email_verified: true,
@@ -37,7 +40,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'player003',
       email: 'player3@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'player',
       is_active: true,
       email_verified: true,
@@ -48,7 +51,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'coach001',
       email: 'coach1@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'coach',
       is_active: true,
       email_verified: true,
@@ -58,7 +61,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'coach002',
       email: 'coach2@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'coach',
       is_active: true,
       email_verified: true,
@@ -69,7 +72,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'partner001',
       email: 'partner1@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'partner',
       is_active: true,
       email_verified: true,
@@ -79,7 +82,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'partner002',
       email: 'partner2@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'partner',
       is_active: true,
       email_verified: true,
@@ -90,7 +93,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'club001',
       email: 'club1@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'club',
       is_active: true,
       email_verified: true,
@@ -100,7 +103,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     {
       username: 'club002',
       email: 'club2@federacionpickleball.mx',
-      password_hash: '$2b$10$WhVTkh6VhBfCGwrREsssDuIzVnQ.z4qS.NlzAE6Q0/D2AoTYsJ92e', // password: "a"
+      password_hash: passwordHash,
       role: 'club',
       is_active: true,
       email_verified: true,
