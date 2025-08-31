@@ -26,7 +26,7 @@ interface FilterState {
 }
 
 const PlayerFinderPage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
   
   const [requests, setRequests] = useState<any[]>([]);

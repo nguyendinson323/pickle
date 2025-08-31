@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './auth';
 import registrationRoutes from './registration';
+import profileRoutes from './profile';
 import dataRoutes from './data';
 import uploadRoutes from './upload';
 import dashboardRoutes from './dashboard';
@@ -36,6 +37,7 @@ router.get('/health', (req, res) => {
 // API routes
 router.use('/auth', authRoutes);
 router.use('/registration', registrationRoutes);
+router.use('/profile', profileRoutes);
 router.use('/data', dataRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/dashboard', dashboardRoutes);

@@ -33,7 +33,7 @@ interface BulkVerificationResult {
 
 export const CredentialVerifier: React.FC = () => {
   const [activeTab, setActiveTab] = useState('single');
-  const [verificationHistory, setVerificationHistory] = useState<VerificationResult[]>([]);
+  const [verificationHistory] = useState<VerificationResult[]>([]);
   const [bulkIds, setBulkIds] = useState('');
   const [bulkResults, setBulkResults] = useState<BulkVerificationResult[]>([]);
   const [loading, setLoading] = useState(false);

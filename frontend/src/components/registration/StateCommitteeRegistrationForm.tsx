@@ -48,7 +48,7 @@ const StateCommitteeRegistrationForm: React.FC<StateCommitteeRegistrationFormPro
 
   // Form validation
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [, setShowPrivacyModal] = useState(false);
 
   // Load data on component mount
   useEffect(() => {

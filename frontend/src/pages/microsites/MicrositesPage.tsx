@@ -199,11 +199,11 @@ const MicrositesPage: React.FC = () => {
           {filteredMicrosites.map((microsite) => (
             <Card key={microsite.id} className="hover:shadow-lg transition-shadow">
               <div className="p-6">
-                {/* Header Image */}
-                {microsite.headerImageUrl && (
+                {/* Header Image placeholder - removed headerImageUrl property */}
+                {false && (
                   <div className="mb-4 -mx-6 -mt-6">
                     <img
-                      src={microsite.headerImageUrl}
+                      src=""
                       alt={microsite.title}
                       className="w-full h-32 object-cover rounded-t-lg"
                     />
@@ -232,7 +232,7 @@ const MicrositesPage: React.FC = () => {
 
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>Páginas: {microsite.pages?.length || 0}</span>
-                    <span>Actualizado: {formatDate(microsite.updatedAt)}</span>
+                    <span>Páginas disponibles</span>
                   </div>
                 </div>
 

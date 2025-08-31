@@ -2,11 +2,23 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Install required system dependencies for canvas and other native modules
+RUN apk add --no-cache \
+    cairo-dev \
+    pango-dev \
+    libjpeg-turbo-dev \
+    giflib-dev \
+    python3 \
+    make \
+    g++ \
+    pkgconfig \
+    pixman-dev
+
 # Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Copy source code
 COPY . .

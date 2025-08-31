@@ -43,7 +43,7 @@ const PartnerRegistrationForm: React.FC<PartnerRegistrationFormProps> = ({
 
   // Form validation
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [, setShowPrivacyModal] = useState(false);
 
   // Partner type options
   const partnerTypeOptions = [

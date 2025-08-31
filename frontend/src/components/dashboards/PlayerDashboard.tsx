@@ -20,12 +20,12 @@ import { TabItem } from '@/components/ui/Tabs';
 
 const PlayerDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
-  const dashboardData = useAppSelector(selectDashboardData);
+  // const dashboardData = useAppSelector(selectDashboardData);
   const loading = useAppSelector(selectDashboardLoading);
   const activeTab = useAppSelector(selectActiveTab);
   const statistics = useAppSelector(selectDashboardStatistics);
-  const quickActions = useAppSelector(selectQuickActions);
-  const recentActivity = useAppSelector(selectRecentActivity);
+  // const quickActions = useAppSelector(selectQuickActions);
+  // const recentActivity = useAppSelector(selectRecentActivity);
 
   useEffect(() => {
     dispatch(fetchDashboardData());

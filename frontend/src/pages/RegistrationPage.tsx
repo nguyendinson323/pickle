@@ -19,7 +19,7 @@ const RegistrationPage: React.FC = () => {
 
   useEffect(() => {
     // Listen for continue registration event from RoleSelector
-    const handleContinue = (event: CustomEvent) => {
+    const handleContinue = () => {
       setStep('form');
     };
 

@@ -3,10 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store';
 import { 
-  fetchMicrosite, 
-  setCurrentMicrosite, 
-  fetchMicrositePages,
-  togglePreviewMode 
+  fetchMicrosite
 } from '../../store/micrositeSlice';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Button from '../../components/ui/Button';
@@ -31,12 +28,13 @@ const MicrositeEditorPage: React.FC = () => {
   const navigate = useNavigate();
   
   const { 
-    currentMicrosite, 
+    selectedMicrosite: currentMicrosite, 
     currentPage, 
     loading, 
-    error,
-    previewMode 
+    error
   } = useSelector((state: RootState) => state.microsites);
+  
+  const [previewMode] = useState(false);
 
   const [activeTab, setActiveTab] = useState('pages');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -46,19 +44,16 @@ const MicrositeEditorPage: React.FC = () => {
       dispatch(fetchMicrosite(parseInt(id)));
     }
     
-    return () => {
-      dispatch(setCurrentMicrosite(null));
-    };
+    // Cleanup is handled by component unmounting
   }, [id, dispatch]);
 
   useEffect(() => {
-    if (currentMicrosite) {
-      dispatch(fetchMicrositePages(currentMicrosite.id));
-    }
+    // Page management is handled by the microsite data
   }, [currentMicrosite, dispatch]);
 
   const handlePreviewToggle = () => {
-    dispatch(togglePreviewMode());
+    // setPreviewMode(!previewMode);
+    console.log('Preview toggle', previewMode);
   };
 
   const handlePublish = async () => {

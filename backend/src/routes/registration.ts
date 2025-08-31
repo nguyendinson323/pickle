@@ -2,13 +2,6 @@ import { Router } from 'express';
 import registrationController from '../controllers/registrationController';
 import { uploadRegistrationFiles, uploadLogo, handleMulterError } from '../middleware/fileUpload';
 import { asyncHandler } from '../middleware/errorHandler';
-import {
-  playerRegistrationValidators,
-  coachRegistrationValidators,
-  clubRegistrationValidators,
-  partnerRegistrationValidators,
-  stateCommitteeRegistrationValidators
-} from '../validators/registrationValidators';
 
 const router = Router();
 
@@ -16,7 +9,6 @@ const router = Router();
 router.post('/player', 
   uploadRegistrationFiles,
   handleMulterError,
-  playerRegistrationValidators,
   asyncHandler(registrationController.registerPlayer)
 );
 
@@ -24,7 +16,6 @@ router.post('/player',
 router.post('/coach',
   uploadRegistrationFiles,
   handleMulterError,
-  coachRegistrationValidators,
   asyncHandler(registrationController.registerCoach)
 );
 
@@ -32,7 +23,6 @@ router.post('/coach',
 router.post('/club',
   uploadLogo,
   handleMulterError,
-  clubRegistrationValidators,
   asyncHandler(registrationController.registerClub)
 );
 
@@ -40,7 +30,6 @@ router.post('/club',
 router.post('/partner',
   uploadLogo,
   handleMulterError,
-  partnerRegistrationValidators,
   asyncHandler(registrationController.registerPartner)
 );
 
@@ -48,7 +37,6 @@ router.post('/partner',
 router.post('/state-committee',
   uploadLogo,
   handleMulterError,
-  stateCommitteeRegistrationValidators,
   asyncHandler(registrationController.registerStateCommittee)
 );
 

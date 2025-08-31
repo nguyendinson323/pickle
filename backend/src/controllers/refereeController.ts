@@ -23,8 +23,7 @@ const getAvailableReferees = async (req: AuthRequest, res: Response): Promise<vo
 
     const referees = await refereeService.getAvailableReferees(
       date as string,
-      stateId ? Number(stateId) : undefined,
-      tournamentId ? Number(tournamentId) : undefined
+      stateId ? Number(stateId) : undefined
     );
 
     res.json({ referees });

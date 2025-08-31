@@ -8,8 +8,6 @@ frontend/src/components/microsites/ThemeCustomizer.tsx
 frontend/src/components/notifications/NotificationCenter.tsx
 frontend/src/components/notifications/NotificationToast.tsx
 
-
-
 frontend/src/components/payment/MembershipPlans.tsx
 frontend/src/components/payment/MembershipStatus.tsx
 frontend/src/components/payment/PaymentForm.tsx
@@ -22,9 +20,12 @@ frontend/src/components/ranking/RankingFilters.tsx
 frontend/src/components/ranking/RankingList.tsx
 
 frontend/src/components/registration/CoachRegistrationForm.tsx
-frontend/src/components/registration/PlayerRegistrationForm.tsx
 
+
+
+frontend/src/components/registration/PlayerRegistrationForm.tsx
 frontend/src/components/reservations/ReservationCalendar.tsx
+
 frontend/src/components/reservations/ReservationForm.tsx
 frontend/src/components/reservations/ReservationList.tsx
 frontend/src/components/reservations/TimeSlotPicker.tsx

@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/store';
-import { selectMessages, selectMessagesLoading, markAsReadLocally } from '@/store/messageSlice';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
-import {
-  EnvelopeIcon,
-  EnvelopeOpenIcon,
-  UserIcon,
-  ClockIcon,
-  TrashIcon
-} from '@heroicons/react/24/outline';
+import { useAppSelector, useAppDispatch } from '../../store';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import LoadingSpinner from '../common/LoadingSpinner';
+// Using simple SVG icons instead of Heroicons
 
 interface MessageListProps {
   onMessageSelect?: (messageId: string) => void;
@@ -20,14 +13,11 @@ interface MessageListProps {
 
 const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMessageId }) => {
   const dispatch = useAppDispatch();
-  const messages = useAppSelector(selectMessages);
-  const loading = useAppSelector(selectMessagesLoading);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
 
   const handleMessageClick = (messageId: string, isRead: boolean) => {
-    if (!isRead) {
-      dispatch(markAsReadLocally(parseInt(messageId)));
-    }
     onMessageSelect?.(messageId);
   };
 
@@ -91,7 +81,9 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
       <div className="space-y-2">
         {filteredMessages.length === 0 ? (
           <Card className="p-8 text-center">
-            <EnvelopeIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               {filter === 'unread' ? 'No hay mensajes sin leer' : 'No hay mensajes'}
             </h3>
@@ -118,7 +110,9 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                 {/* Avatar/Icon */}
                 <div className="flex-shrink-0">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <UserIcon className="w-5 h-5 text-gray-500" />
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
                   </div>
                 </div>
 
@@ -137,13 +131,19 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                     </div>
                     <div className="flex items-center space-x-2 flex-shrink-0">
                       <span className="text-xs text-gray-500 flex items-center">
-                        <ClockIcon className="w-3 h-3 mr-1" />
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                         {formatDate(message.sentAt)}
                       </span>
                       {!message.isRead ? (
-                        <EnvelopeIcon className="w-4 h-4 text-blue-600" />
+                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
                       ) : (
-                        <EnvelopeOpenIcon className="w-4 h-4 text-gray-400" />
+                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M12 12l-6.75 4.5M12 12l6.75 4.5" />
+                        </svg>
                       )}
                     </div>
                   </div>
@@ -180,7 +180,7 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                 {/* Actions */}
                 <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="sm"
                     className="text-red-600 hover:text-red-700"
                     onClick={(e) => {
@@ -188,7 +188,9 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
                       // Handle delete message
                     }}
                   >
-                    <TrashIcon className="w-4 h-4" />
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                   </Button>
                 </div>
               </div>
@@ -200,7 +202,7 @@ const MessageList: React.FC<MessageListProps> = ({ onMessageSelect, selectedMess
       {/* Load More Button */}
       {filteredMessages.length > 0 && (
         <div className="text-center pt-4">
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="sm">
             Cargar más mensajes
           </Button>
         </div>

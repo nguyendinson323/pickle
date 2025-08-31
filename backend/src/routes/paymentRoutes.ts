@@ -2,18 +2,11 @@ import express from 'express';
 import { body } from 'express-validator';
 import { authenticate } from '../middleware/auth';
 import { asyncHandler } from '../middleware/errorHandler';
-import {
-  getPlans,
-  createPaymentIntent,
-  confirmPayment,
-  getPayments,
-  cancelPayment,
-  refundPayment
-} from '../controllers/paymentController';
+import paymentController from '../controllers/paymentController';
 
 const router = express.Router();
 
-router.get('/plans', asyncHandler(getPlans));
+router.get('/plans', asyncHandler(paymentController.getPlans));
 
 router.post('/payment-intent', 
   authenticate,
@@ -26,25 +19,40 @@ router.post('/payment-intent',
       .isIn(['card', 'transfer', 'oxxo'])
       .withMessage('Payment method must be card, transfer, or oxxo')
   ],
-  asyncHandler(createPaymentIntent)
+  asyncHandler(paymentController.createPaymentIntent)
 );
 
-router.post('/confirm/:paymentId', 
+router.post('/confirm/:paymentIntentId', 
   authenticate,
-  asyncHandler(confirmPayment)
+  asyncHandler(paymentController.confirmPayment)
 );
 
 router.get('/history', 
   authenticate,
-  asyncHandler(getPayments)
+  asyncHandler(paymentController.getPaymentHistory)
 );
 
-router.post('/cancel/:paymentId', 
+router.get('/:id', 
   authenticate,
-  asyncHandler(cancelPayment)
+  asyncHandler(paymentController.getPaymentDetails)
 );
 
-router.post('/refund/:paymentId', 
+router.post('/subscription/create', 
+  authenticate,
+  [
+    body('planId')
+      .isInt({ min: 1 })
+      .withMessage('Valid plan ID is required')
+  ],
+  asyncHandler(paymentController.createSubscription)
+);
+
+router.post('/subscription/cancel', 
+  authenticate,
+  asyncHandler(paymentController.cancelSubscription)
+);
+
+router.post('/refund/:id', 
   authenticate,
   [
     body('reason')
@@ -52,7 +60,7 @@ router.post('/refund/:paymentId',
       .isLength({ min: 5, max: 500 })
       .withMessage('Reason must be between 5 and 500 characters')
   ],
-  asyncHandler(refundPayment)
+  asyncHandler(paymentController.refundPayment)
 );
 
 export default router;

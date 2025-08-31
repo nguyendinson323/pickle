@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useAppDispatch } from '@/store';
-import { sendMessage } from '@/store/messageSlice';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import {
-  PaperAirplaneIcon,
-  XMarkIcon,
-  UserIcon,
-  PaperClipIcon
-} from '@heroicons/react/24/outline';
+import { useAppDispatch } from '../../store';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import { PaperClipIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
 
 interface ComposeMessageProps {
   recipientId?: string;
@@ -23,7 +17,6 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
   onSent,
   onCancel
 }) => {
-  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     recipientId: recipientId || '',
     subject: replyToId ? 'Re: ' : '',
@@ -76,13 +69,25 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
     setSending(true);
     try {
       const messageData = {
-        receiverId: parseInt(formData.recipientId),
+        recipientId: formData.recipientId,
         subject: formData.subject,
         content: formData.content,
         isUrgent: false
       };
       
-      await dispatch(sendMessage(messageData)).unwrap();
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/messages/send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(messageData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
       
       // Reset form
       setFormData({
@@ -121,11 +126,13 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
             {replyToId ? 'Responder Mensaje' : 'Nuevo Mensaje'}
           </h2>
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             onClick={handleCancel}
           >
-            <XMarkIcon className="w-4 h-4" />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </Button>
         </div>
       </div>
@@ -138,7 +145,9 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <UserIcon className="h-4 w-4 text-gray-400" />
+              <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
             </div>
             <input
               type="text"

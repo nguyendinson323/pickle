@@ -125,3 +125,11 @@ import { Request } from 'express';
 export interface AuthRequest extends Request {
   user: UserProfile;
 }
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: number;
+    email: string;
+    role: UserRole;
+  };
+}

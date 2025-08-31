@@ -48,7 +48,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
 
   // Form validation
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [, setShowPrivacyModal] = useState(false);
 
   // Club type options
   const clubTypeOptions = [

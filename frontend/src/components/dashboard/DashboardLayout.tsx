@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useAppSelector } from '@/store';
-import { selectUser } from '@/store/authSlice';
-import { selectActiveTab } from '@/store/dashboardSlice';
-import Tabs, { TabItem } from '@/components/ui/Tabs';
+import { useAppSelector } from '../../store';
+import Tabs, { TabItem } from '../ui/Tabs';
 import TopBar from './TopBar';
 import Sidebar from './Sidebar';
 
@@ -20,8 +18,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   sidebarContent
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const user = useAppSelector(selectUser);
-  const activeTab = useAppSelector(selectActiveTab);
+  const { user } = useAppSelector(state => state.auth);
+  const [activeTab, setActiveTab] = useState(tabs[0]?.id || '');
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -64,7 +62,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               <Tabs
                 items={tabs}
                 activeTab={activeTab}
-                onChange={onTabChange}
+                onChange={(tabId) => {
+                  setActiveTab(tabId);
+                  onTabChange(tabId);
+                }}
                 variant="underline"
                 fullWidth={false}
                 className="border-b border-gray-200"
