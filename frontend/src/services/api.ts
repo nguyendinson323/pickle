@@ -1,5 +1,7 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
 import { API_BASE_URL, STORAGE_KEYS } from '@/utils/constants';
+import cacheService from './cacheService';
+import { ApiResponse } from '../types/api';
 
 export interface ApiError {
   success: false;
@@ -77,8 +79,25 @@ class ApiService {
     window.location.href = '/login';
   }
 
-  // Generic API methods
-  async get<T>(url: string, params?: any): Promise<T> {
+  // Generic API methods with caching support
+  async get<T>(url: string, params?: any, useCache: boolean = true): Promise<T> {
+    const cacheKey = cacheService.createApiKey('GET', url, params);
+    
+    if (useCache) {
+      return cacheService.cachedFetch(
+        async () => {
+          try {
+            const response = await this.api.get<T>(url, { params });
+            return { success: true, data: response.data } as ApiResponse<T>;
+          } catch (error) {
+            throw this.handleError(error);
+          }
+        },
+        cacheKey,
+        { ttl: 5 * 60 * 1000 } // 5 minutes default cache
+      ).then(result => result.data || result as any);
+    }
+
     try {
       const response = await this.api.get<T>(url, { params });
       return response.data;
@@ -90,6 +109,10 @@ class ApiService {
   async post<T>(url: string, data?: any): Promise<T> {
     try {
       const response = await this.api.post<T>(url, data);
+      
+      // Invalidate relevant caches after successful POST
+      this.invalidateRelatedCache(url);
+      
       return response.data;
     } catch (error) {
       throw this.handleError(error);
@@ -99,6 +122,10 @@ class ApiService {
   async put<T>(url: string, data?: any): Promise<T> {
     try {
       const response = await this.api.put<T>(url, data);
+      
+      // Invalidate relevant caches after successful PUT
+      this.invalidateRelatedCache(url);
+      
       return response.data;
     } catch (error) {
       throw this.handleError(error);
@@ -108,6 +135,10 @@ class ApiService {
   async patch<T>(url: string, data?: any): Promise<T> {
     try {
       const response = await this.api.patch<T>(url, data);
+      
+      // Invalidate relevant caches after successful PATCH
+      this.invalidateRelatedCache(url);
+      
       return response.data;
     } catch (error) {
       throw this.handleError(error);
@@ -117,6 +148,10 @@ class ApiService {
   async delete<T>(url: string): Promise<T> {
     try {
       const response = await this.api.delete<T>(url);
+      
+      // Invalidate relevant caches after successful DELETE
+      this.invalidateRelatedCache(url);
+      
       return response.data;
     } catch (error) {
       throw this.handleError(error);
@@ -168,9 +203,40 @@ class ApiService {
     };
   }
 
+  // Cache invalidation logic
+  private invalidateRelatedCache(url: string): void {
+    if (url.includes('/tournament')) {
+      cacheService.invalidateByEntity('tournament');
+    } else if (url.includes('/user') || url.includes('/auth') || url.includes('/profile')) {
+      cacheService.invalidateByEntity('user');
+    } else if (url.includes('/payment')) {
+      cacheService.invalidateByEntity('payment');
+    } else if (url.includes('/notification')) {
+      cacheService.invalidateByEntity('notification');
+    }
+  }
+
+  // Cache management methods
+  clearCache(): void {
+    cacheService.clear();
+  }
+
+  invalidateCache(pattern: string): void {
+    cacheService.invalidate(pattern);
+  }
+
+  getCacheStats(): any {
+    return cacheService.getStats();
+  }
+
   // Health check method
   async healthCheck(): Promise<{ success: boolean; message: string }> {
-    return this.get('/health');
+    return this.get('/health', undefined, false); // Don't cache health checks
+  }
+
+  // Initialize user session cache
+  async initializeUserCache(userId: number): Promise<void> {
+    await cacheService.warmup(userId);
   }
 }
 

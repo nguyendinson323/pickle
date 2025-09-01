@@ -34,7 +34,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
       <select
         id={name}
         name={name}
-        required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './index';
 import { DashboardData, DashboardState } from '@/types/dashboard';
 import { UserRole } from '@/types/registration';
+import { API_BASE_URL } from '@/utils/constants';
 
 const initialState: DashboardState = {
   data: null,
@@ -24,7 +25,7 @@ export const fetchDashboardData = createAsyncThunk(
         throw new Error('Authentication required');
       }
 
-      const response = await fetch('/api/dashboard', {
+      const response = await fetch(`${API_BASE_URL}/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -55,7 +56,7 @@ export const fetchRoleSpecificDashboard = createAsyncThunk(
         throw new Error('Authentication required');
       }
 
-      const response = await fetch(`/api/dashboard/${params.role}/${params.userId}`, {
+      const response = await fetch(`${API_BASE_URL}/dashboard/${params.role}/${params.userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

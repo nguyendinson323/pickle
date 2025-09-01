@@ -9,6 +9,7 @@ export interface CardProps {
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   header?: React.ReactNode;
   footer?: React.ReactNode;
+  title?: string;
   loading?: boolean;
   onClick?: () => void;
 }
@@ -22,6 +23,7 @@ const Card: React.FC<CardProps> = ({
   rounded = 'lg',
   header,
   footer,
+  title,
   loading = false,
   onClick
 }) => {
@@ -96,9 +98,11 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div className={cardClasses} onClick={handleClick}>
-      {header && (
+      {(header || title) && (
         <div className={`${padding !== 'none' ? 'pb-4 border-b border-gray-200 mb-4' : ''}`}>
-          {header}
+          {header || (title && (
+            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          ))}
         </div>
       )}
       

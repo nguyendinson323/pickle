@@ -1,36 +1,37 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
 interface PlayerFinderMatchAttributes {
   id: number;
   requestId: number;
-  playerId: number;
-  matchScore: number; // compatibility score 0-100
-  distance: number; // in kilometers
-  status: string; // pending, accepted, declined, expired
-  requestedAt: Date;
+  matchedUserId: number;
+  distance: number;
+  compatibilityScore: number;
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  responseMessage?: string;
+  matchedAt: Date;
   respondedAt?: Date;
-  message?: string;
-  isViewed: boolean;
-  matchReasons: string[]; // array of reasons why they matched
-  createdAt: Date;
-  updatedAt: Date;
+  contactShared: boolean;
 }
 
-interface PlayerFinderMatchCreationAttributes extends Optional<PlayerFinderMatchAttributes, 'id' | 'isViewed' | 'createdAt' | 'updatedAt'> {}
+interface PlayerFinderMatchCreationAttributes 
+  extends Optional<PlayerFinderMatchAttributes, 'id' | 'contactShared'> {}
 
-class PlayerFinderMatch extends Model<PlayerFinderMatchAttributes, PlayerFinderMatchCreationAttributes> implements PlayerFinderMatchAttributes {
+class PlayerFinderMatch extends Model<
+  PlayerFinderMatchAttributes,
+  PlayerFinderMatchCreationAttributes
+> implements PlayerFinderMatchAttributes {
   public id!: number;
   public requestId!: number;
-  public playerId!: number;
-  public matchScore!: number;
+  public matchedUserId!: number;
   public distance!: number;
-  public status!: string;
-  public requestedAt!: Date;
+  public compatibilityScore!: number;
+  public status!: 'pending' | 'accepted' | 'declined' | 'expired';
+  public responseMessage?: string;
+  public matchedAt!: Date;
   public respondedAt?: Date;
-  public message?: string;
-  public isViewed!: boolean;
-  public matchReasons!: string[];
+  public contactShared!: boolean;
+
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -39,7 +40,7 @@ PlayerFinderMatch.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   requestId: {
     type: DataTypes.INTEGER,
@@ -48,104 +49,87 @@ PlayerFinderMatch.init({
       model: 'player_finder_requests',
       key: 'id'
     },
-    onDelete: 'CASCADE',
     field: 'request_id'
   },
-  playerId: {
+  matchedUserId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'players',
+      model: 'users',
       key: 'id'
     },
-    onDelete: 'CASCADE',
-    field: 'player_id'
+    field: 'matched_user_id'
   },
-  matchScore: {
+  distance: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+    validate: {
+      min: 0,
+      max: 1000
+    }
+  },
+  compatibilityScore: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    field: 'match_score',
     validate: {
       min: 0,
       max: 100
-    }
-  },
-  distance: {
-    type: DataTypes.DECIMAL(8, 2),
-    allowNull: false,
-    validate: {
-      min: 0
-    }
+    },
+    field: 'compatibility_score'
   },
   status: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.ENUM('pending', 'accepted', 'declined', 'expired'),
     allowNull: false,
-    defaultValue: 'pending',
-    validate: {
-      isIn: [['pending', 'accepted', 'declined', 'expired']]
-    }
+    defaultValue: 'pending'
   },
-  requestedAt: {
+  responseMessage: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    validate: {
+      len: [0, 500]
+    },
+    field: 'response_message'
+  },
+  matchedAt: {
     type: DataTypes.DATE,
     allowNull: false,
-    defaultValue: DataTypes.NOW,
-    field: 'requested_at'
+    field: 'matched_at'
   },
   respondedAt: {
     type: DataTypes.DATE,
     allowNull: true,
     field: 'responded_at'
   },
-  message: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  isViewed: {
+  contactShared: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
-    field: 'is_viewed'
-  },
-  matchReasons: {
-    type: DataTypes.JSON,
-    allowNull: false,
-    defaultValue: [],
-    field: 'match_reasons'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
+    field: 'contact_shared'
   }
 }, {
   sequelize,
-  modelName: 'PlayerFinderMatch',
   tableName: 'player_finder_matches',
+  modelName: 'PlayerFinderMatch',
   timestamps: true,
   indexes: [
     {
       fields: ['request_id']
     },
     {
-      fields: ['player_id']
+      fields: ['matched_user_id']
     },
     {
       fields: ['status']
     },
     {
-      fields: ['match_score']
+      fields: ['matched_at']
     },
     {
-      fields: ['is_viewed']
+      fields: ['compatibility_score']
     },
     {
       unique: true,
-      fields: ['request_id', 'player_id']
+      fields: ['request_id', 'matched_user_id']
     }
   ]
 });

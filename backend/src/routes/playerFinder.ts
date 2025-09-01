@@ -1,31 +1,35 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
-import playerFinderController from '../controllers/playerFinderController';
+import {
+  createFinderRequest,
+  getUserFinderRequests,
+  getUserMatches,
+  respondToMatch,
+  getMatchDetails,
+  getUserLocation,
+  updateUserLocation,
+  cancelFinderRequest,
+  triggerMatchSearch
+} from '../controllers/playerFinderController';
 
 const router = Router();
 
-// Create a new finder request
-router.post('/requests', authenticate, playerFinderController.createFinderRequest);
+// All player finder routes require authentication
+router.use(authenticate);
 
-// Get active finder requests with filters
-router.get('/requests', authenticate, playerFinderController.getActiveRequests);
+// Player finder requests
+router.post('/requests', createFinderRequest);
+router.get('/requests', getUserFinderRequests);
+router.delete('/requests/:requestId', cancelFinderRequest);
+router.post('/requests/:requestId/search', triggerMatchSearch);
 
-// Get user's own finder requests
-router.get('/my-requests', authenticate, playerFinderController.getMyRequests);
+// Player matches
+router.get('/matches', getUserMatches);
+router.post('/matches/:matchId/respond', respondToMatch);
+router.get('/matches/:matchId', getMatchDetails);
 
-// Get matches for current user
-router.get('/matches', authenticate, playerFinderController.getMatches);
-
-// Get matches for a specific request
-router.get('/requests/:requestId/matches', authenticate, playerFinderController.getRequestMatches);
-
-// Accept or decline a match
-router.patch('/matches/:matchId', authenticate, playerFinderController.updateMatchStatus);
-
-// Cancel a finder request
-router.patch('/requests/:requestId/cancel', authenticate, playerFinderController.cancelRequest);
-
-// Force find new matches for a request
-router.post('/requests/:requestId/find-matches', authenticate, playerFinderController.findMatches);
+// Location management
+router.get('/location', getUserLocation);
+router.post('/location', updateUserLocation);
 
 export default router;

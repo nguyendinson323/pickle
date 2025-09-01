@@ -3,18 +3,22 @@ import sequelize from '../config/database';
 
 interface PlayerLocationAttributes {
   id: number;
-  playerId: number;
+  userId: number;
   latitude: number;
   longitude: number;
-  address: string;
+  address?: string;
   city: string;
   state: string;
   zipCode?: string;
   country: string;
   isCurrentLocation: boolean;
+  isTravelLocation: boolean;
+  travelStartDate?: Date;
+  travelEndDate?: Date;
   locationName?: string;
-  radius: number; // in kilometers
-  isPublic: boolean;
+  searchRadius: number; // in kilometers
+  isActive: boolean;
+  privacyLevel: 'exact' | 'city' | 'state';
   accuracy?: number;
   lastUpdated: Date;
   createdAt: Date;
@@ -25,22 +29,29 @@ interface PlayerLocationCreationAttributes extends Optional<PlayerLocationAttrib
 
 class PlayerLocation extends Model<PlayerLocationAttributes, PlayerLocationCreationAttributes> implements PlayerLocationAttributes {
   public id!: number;
-  public playerId!: number;
+  public userId!: number;
   public latitude!: number;
   public longitude!: number;
-  public address!: string;
+  public address?: string;
   public city!: string;
   public state!: string;
   public zipCode?: string;
   public country!: string;
   public isCurrentLocation!: boolean;
+  public isTravelLocation!: boolean;
+  public travelStartDate?: Date;
+  public travelEndDate?: Date;
   public locationName?: string;
-  public radius!: number;
-  public isPublic!: boolean;
+  public searchRadius!: number;
+  public isActive!: boolean;
+  public privacyLevel!: 'exact' | 'city' | 'state';
   public accuracy?: number;
   public lastUpdated!: Date;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  // Calculated distance field (populated by queries)
+  public distance?: number;
 }
 
 PlayerLocation.init({
@@ -49,15 +60,15 @@ PlayerLocation.init({
     autoIncrement: true,
     primaryKey: true
   },
-  playerId: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'players',
+      model: 'users',
       key: 'id'
     },
     onDelete: 'CASCADE',
-    field: 'player_id'
+    field: 'user_id'
   },
   latitude: {
     type: DataTypes.DECIMAL(10, 8),
@@ -77,7 +88,7 @@ PlayerLocation.init({
   },
   address: {
     type: DataTypes.STRING(500),
-    allowNull: false
+    allowNull: true
   },
   city: {
     type: DataTypes.STRING(100),
@@ -100,28 +111,51 @@ PlayerLocation.init({
   isCurrentLocation: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: false,
+    defaultValue: true,
     field: 'is_current_location'
+  },
+  isTravelLocation: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    field: 'is_travel_location'
+  },
+  travelStartDate: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'travel_start_date'
+  },
+  travelEndDate: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'travel_end_date'
   },
   locationName: {
     type: DataTypes.STRING(100),
     allowNull: true,
     field: 'location_name'
   },
-  radius: {
+  searchRadius: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 10,
+    defaultValue: 25,
     validate: {
-      min: 1,
+      min: 5,
       max: 100
-    }
+    },
+    field: 'search_radius'
   },
-  isPublic: {
+  isActive: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: true,
-    field: 'is_public'
+    field: 'is_active'
+  },
+  privacyLevel: {
+    type: DataTypes.ENUM('exact', 'city', 'state'),
+    allowNull: false,
+    defaultValue: 'city',
+    field: 'privacy_level'
   },
   accuracy: {
     type: DataTypes.FLOAT,
@@ -153,7 +187,7 @@ PlayerLocation.init({
   timestamps: true,
   indexes: [
     {
-      fields: ['player_id']
+      fields: ['user_id']
     },
     {
       fields: ['latitude', 'longitude']
@@ -162,10 +196,10 @@ PlayerLocation.init({
       fields: ['city', 'state']
     },
     {
-      fields: ['is_current_location']
+      fields: ['is_active', 'is_current_location']
     },
     {
-      fields: ['is_public']
+      fields: ['is_travel_location', 'travel_start_date', 'travel_end_date']
     }
   ]
 });

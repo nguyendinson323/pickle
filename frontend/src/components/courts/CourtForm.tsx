@@ -213,7 +213,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -225,7 +224,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
               <select
                 value={formData.stateId}
                 onChange={(e) => handleInputChange('stateId', e.target.value)}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select state</option>
@@ -258,7 +256,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
               type="text"
               value={formData.address}
               onChange={(e) => handleInputChange('address', e.target.value)}
-              required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -271,7 +268,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
               <select
                 value={formData.surfaceType}
                 onChange={(e) => handleInputChange('surfaceType', e.target.value)}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {surfaceOptions.map((option) => (
@@ -321,11 +317,9 @@ export const CourtForm: React.FC<CourtFormProps> = ({
               </label>
               <input
                 type="number"
-                min="0"
                 step="0.01"
                 value={formData.hourlyRate}
                 onChange={(e) => handleInputChange('hourlyRate', e.target.value)}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -336,7 +330,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
               </label>
               <input
                 type="number"
-                min="0"
                 step="0.01"
                 value={formData.peakHourRate}
                 onChange={(e) => handleInputChange('peakHourRate', e.target.value)}
@@ -351,7 +344,6 @@ export const CourtForm: React.FC<CourtFormProps> = ({
               </label>
               <input
                 type="number"
-                min="0"
                 step="0.01"
                 value={formData.weekendRate}
                 onChange={(e) => handleInputChange('weekendRate', e.target.value)}

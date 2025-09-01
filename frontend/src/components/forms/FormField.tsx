@@ -22,8 +22,7 @@ const FormField: React.FC<FormFieldProps> = ({
       <input
         id={name}
         name={name}
-        type={type}
-        required={required}
+        type={type === 'email' ? 'text' : type === 'tel' ? 'text' : type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

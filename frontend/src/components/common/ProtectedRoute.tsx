@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { selectIsAuthenticated, selectAuthLoading, verifyToken } from '@/store/authSlice';
+import { selectIsAuthenticated, selectAuthLoading, selectCurrentUser, checkAuthStatus } from '@/store/authSlice';
 import { UserRole } from '@/types/auth';
 import { ROUTES } from '@/utils/constants';
 import LoadingSpinner from './LoadingSpinner';
@@ -21,14 +21,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const location = useLocation();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isLoading = useAppSelector(selectAuthLoading);
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector(selectCurrentUser);
 
   useEffect(() => {
-    // If we have a token but no user, verify the token
+    // If we have a token but no user, check auth status
     if (!isAuthenticated && !isLoading) {
       const token = localStorage.getItem('auth_token');
       if (token) {
-        dispatch(verifyToken());
+        dispatch(checkAuthStatus());
       }
     }
   }, [dispatch, isAuthenticated, isLoading]);

@@ -1,0 +1,288 @@
+import axios from 'axios';
+
+interface GeocodingResult {
+  display_name: string;
+  lat: string;
+  lon: string;
+  place_id: string;
+  importance: number;
+  type: string;
+  class: string;
+}
+
+interface LocationCoordinates {
+  latitude: number;
+  longitude: number;
+  accuracy?: number;
+}
+
+interface GeocodedLocation extends LocationCoordinates {
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode?: string;
+  placeId: string;
+}
+
+interface DistanceResult {
+  distance: number; // in kilometers
+  bearing: number; // in degrees from north
+}
+
+export class LocationService {
+  private readonly NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org';
+  private readonly REQUEST_DELAY = 1000; // 1 second delay between requests to respect rate limits
+  private lastRequestTime = 0;
+
+  private async respectRateLimit(): Promise<void> {
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.lastRequestTime;
+    
+    if (timeSinceLastRequest < this.REQUEST_DELAY) {
+      const delay = this.REQUEST_DELAY - timeSinceLastRequest;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    
+    this.lastRequestTime = Date.now();
+  }
+
+  async geocodeAddress(address: string): Promise<GeocodedLocation | null> {
+    await this.respectRateLimit();
+
+    try {
+      const response = await axios.get<GeocodingResult[]>(`${this.NOMINATIM_BASE_URL}/search`, {
+        params: {
+          q: address,
+          format: 'json',
+          addressdetails: 1,
+          limit: 1,
+          countrycodes: 'mx', // Focus on Mexico
+        },
+        headers: {
+          'User-Agent': 'Mexican-Pickleball-Federation/1.0 (contact@pickleballmexico.org)',
+        },
+        timeout: 10000,
+      });
+
+      if (!response.data || response.data.length === 0) {
+        return null;
+      }
+
+      const result = response.data[0];
+      const addressDetails = (result as any).address || {};
+
+      return {
+        latitude: parseFloat(result.lat),
+        longitude: parseFloat(result.lon),
+        address: result.display_name,
+        city: addressDetails.city || addressDetails.town || addressDetails.village || '',
+        state: addressDetails.state || '',
+        country: addressDetails.country || 'Mexico',
+        zipCode: addressDetails.postcode,
+        placeId: result.place_id,
+        accuracy: result.importance * 100, // Convert importance to accuracy score
+      };
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      return null;
+    }
+  }
+
+  async reverseGeocode(latitude: number, longitude: number): Promise<GeocodedLocation | null> {
+    await this.respectRateLimit();
+
+    try {
+      const response = await axios.get<GeocodingResult>(`${this.NOMINATIM_BASE_URL}/reverse`, {
+        params: {
+          lat: latitude,
+          lon: longitude,
+          format: 'json',
+          addressdetails: 1,
+        },
+        headers: {
+          'User-Agent': 'Mexican-Pickleball-Federation/1.0 (contact@pickleballmexico.org)',
+        },
+        timeout: 10000,
+      });
+
+      if (!response.data) {
+        return null;
+      }
+
+      const result = response.data;
+      const addressDetails = (result as any).address || {};
+
+      return {
+        latitude,
+        longitude,
+        address: result.display_name,
+        city: addressDetails.city || addressDetails.town || addressDetails.village || '',
+        state: addressDetails.state || '',
+        country: addressDetails.country || 'Mexico',
+        zipCode: addressDetails.postcode,
+        placeId: result.place_id,
+        accuracy: result.importance * 100,
+      };
+    } catch (error) {
+      console.error('Reverse geocoding error:', error);
+      return null;
+    }
+  }
+
+  calculateDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): DistanceResult {
+    const R = 6371; // Earth's radius in kilometers
+    
+    const dLat = this.degreesToRadians(lat2 - lat1);
+    const dLon = this.degreesToRadians(lon2 - lon1);
+    
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.degreesToRadians(lat1)) *
+      Math.cos(this.degreesToRadians(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+
+    // Calculate bearing
+    const y = Math.sin(dLon) * Math.cos(this.degreesToRadians(lat2));
+    const x =
+      Math.cos(this.degreesToRadians(lat1)) * Math.sin(this.degreesToRadians(lat2)) -
+      Math.sin(this.degreesToRadians(lat1)) * Math.cos(this.degreesToRadians(lat2)) * Math.cos(dLon);
+    
+    let bearing = Math.atan2(y, x);
+    bearing = this.radiansToDegrees(bearing);
+    bearing = (bearing + 360) % 360; // Normalize to 0-360
+
+    return {
+      distance: Math.round(distance * 100) / 100, // Round to 2 decimal places
+      bearing: Math.round(bearing),
+    };
+  }
+
+  isWithinRadius(
+    centerLat: number,
+    centerLon: number,
+    targetLat: number,
+    targetLon: number,
+    radiusKm: number
+  ): boolean {
+    const { distance } = this.calculateDistance(centerLat, centerLon, targetLat, targetLon);
+    return distance <= radiusKm;
+  }
+
+  findNearbyLocations(
+    centerLocation: LocationCoordinates,
+    locations: (LocationCoordinates & { id: number })[],
+    radiusKm: number
+  ): (LocationCoordinates & { id: number; distance: number })[] {
+    return locations
+      .map(location => ({
+        ...location,
+        distance: this.calculateDistance(
+          centerLocation.latitude,
+          centerLocation.longitude,
+          location.latitude,
+          location.longitude
+        ).distance,
+      }))
+      .filter(location => location.distance <= radiusKm)
+      .sort((a, b) => a.distance - b.distance);
+  }
+
+  async validateMexicanLocation(latitude: number, longitude: number): Promise<boolean> {
+    try {
+      const location = await this.reverseGeocode(latitude, longitude);
+      return location?.country?.toLowerCase().includes('mexico') || false;
+    } catch (error) {
+      console.error('Location validation error:', error);
+      return false;
+    }
+  }
+
+  getBoundsForRadius(
+    centerLat: number,
+    centerLon: number,
+    radiusKm: number
+  ): {
+    northEast: LocationCoordinates;
+    southWest: LocationCoordinates;
+  } {
+    const latDelta = radiusKm / 111.32; // 1 degree latitude ≈ 111.32 km
+    const lonDelta = radiusKm / (111.32 * Math.cos(this.degreesToRadians(centerLat)));
+
+    return {
+      northEast: {
+        latitude: centerLat + latDelta,
+        longitude: centerLon + lonDelta,
+      },
+      southWest: {
+        latitude: centerLat - latDelta,
+        longitude: centerLon - lonDelta,
+      },
+    };
+  }
+
+  generateLocationHash(latitude: number, longitude: number, precision: number = 6): string {
+    const lat = latitude.toFixed(precision);
+    const lon = longitude.toFixed(precision);
+    return `${lat},${lon}`;
+  }
+
+  parseLocationHash(hash: string): LocationCoordinates | null {
+    try {
+      const [lat, lon] = hash.split(',').map(Number);
+      if (isNaN(lat) || isNaN(lon)) {
+        return null;
+      }
+      return { latitude: lat, longitude: lon };
+    } catch {
+      return null;
+    }
+  }
+
+  obfuscateLocation(
+    latitude: number,
+    longitude: number,
+    privacyLevel: 'exact' | 'city' | 'state'
+  ): LocationCoordinates {
+    switch (privacyLevel) {
+      case 'exact':
+        return { latitude, longitude };
+      
+      case 'city':
+        // Round to ~1km accuracy (approximately 2 decimal places)
+        return {
+          latitude: Math.round(latitude * 100) / 100,
+          longitude: Math.round(longitude * 100) / 100,
+        };
+      
+      case 'state':
+        // Round to ~10km accuracy (approximately 1 decimal place)
+        return {
+          latitude: Math.round(latitude * 10) / 10,
+          longitude: Math.round(longitude * 10) / 10,
+        };
+      
+      default:
+        return this.obfuscateLocation(latitude, longitude, 'city');
+    }
+  }
+
+  private degreesToRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+  }
+
+  private radiansToDegrees(radians: number): number {
+    return radians * (180 / Math.PI);
+  }
+}
+
+export const locationService = new LocationService();
+export default locationService;

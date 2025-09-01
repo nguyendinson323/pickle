@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store, useAppSelector } from './store';
+import { store, useAppSelector, useAppDispatch } from './store';
+import { checkAuthStatus } from './store/authSlice';
 import { ROUTES } from './utils/constants';
+
+// Integration Services
+import integrationService from './services/integrationService';
+import NotificationSystem from './components/common/NotificationSystem';
 
 // Components
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -17,29 +22,105 @@ import DashboardPage from './pages/DashboardPage';
 import { MembershipPage } from './pages/MembershipPage';
 import MicrositesPage from './pages/microsites/MicrositesPage';
 import MicrositeEditorPage from './pages/microsites/MicrositeEditorPage';
+import PlayerConnectionPage from './pages/player/PlayerConnectionPage';
+import TournamentsPage from './pages/tournaments/TournamentsPage';
+import TournamentManagePage from './pages/tournaments/TournamentManagePage';
+import TournamentAnalyticsPage from './pages/tournaments/TournamentAnalyticsPage';
+import SearchPage from './pages/SearchPage';
+import ExportPage from './pages/ExportPage';
+import AdminPage from './pages/AdminPage';
+import PaymentPage from './pages/PaymentPage';
+import NotificationsPage from './pages/NotificationsPage';
+import MobileNavigation from './components/common/MobileNavigation';
+import CreateTournamentForm from './components/tournaments/CreateTournamentForm';
+import TournamentBracket from './components/tournaments/TournamentBracket';
+import LiveScoring from './components/tournaments/LiveScoring';
 
 // Styles
 import './styles/globals.css';
 
 const AppContent: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, isLoading, user } = useAppSelector((state) => state.auth);
+  const [systemInitialized, setSystemInitialized] = useState(false);
+  const [initializationError, setInitializationError] = useState<string | null>(null);
 
+  // Initialize integration services
   useEffect(() => {
-    // Mock authentication check
-    const token = localStorage.getItem('auth_token');
-    if (token && !isAuthenticated) {
-      // In a real app, this would dispatch verifyToken
-      console.log('Token found, user should be authenticated');
-    }
-  }, [isAuthenticated]);
+    const initializeServices = async () => {
+      try {
+        await integrationService.initialize({
+          enableWebSocket: true,
+          enableCache: true,
+          enableErrorHandling: true
+        });
+        setSystemInitialized(true);
+      } catch (error) {
+        console.error('Failed to initialize integration services:', error);
+        setInitializationError(error instanceof Error ? error.message : 'System initialization failed');
+      }
+    };
 
-  // Show loading spinner during initial auth check
-  if (isLoading) {
+    initializeServices();
+
+    // Cleanup on unmount
+    return () => {
+      integrationService.cleanup();
+    };
+  }, []);
+
+  // Handle authentication state changes
+  useEffect(() => {
+    // Check authentication status on app load
+    if (!isAuthenticated && !isLoading) {
+      dispatch(checkAuthStatus());
+    }
+  }, [dispatch, isAuthenticated, isLoading]);
+
+  // Handle user login integration
+  useEffect(() => {
+    if (isAuthenticated && user && systemInitialized) {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        integrationService.handleUserLogin(user.id, token);
+      }
+    }
+  }, [isAuthenticated, user, systemInitialized]);
+
+  // Handle user logout
+  const handleLogout = async () => {
+    await integrationService.handleUserLogout();
+    // Redux logout would be handled here
+  };
+
+  // Show initialization error
+  if (initializationError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="text-red-600 text-6xl mb-4">⚠️</div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">System Initialization Failed</h2>
+          <p className="text-gray-600 mb-4">{initializationError}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading spinner during initial auth check or system initialization
+  if (isLoading || !systemInitialized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-4 text-gray-600">Loading application...</p>
+          <p className="mt-4 text-gray-600">
+            {!systemInitialized ? 'Initializing system...' : 'Loading application...'}
+          </p>
         </div>
       </div>
     );
@@ -47,7 +128,8 @@ const AppContent: React.FC = () => {
 
   return (
     <Router>
-      <Routes>
+      <div className="app-container">
+        <Routes>
         {/* Public Routes */}
         <Route path={ROUTES.HOME} element={<HomePage />} />
         <Route 
@@ -132,13 +214,56 @@ const AppContent: React.FC = () => {
 
         <Route
           path={ROUTES.TOURNAMENTS}
+          element={<TournamentsPage />}
+        />
+
+        <Route
+          path="/tournaments/create"
           element={
-            <div className="min-h-screen flex items-center justify-center">
-              <div className="text-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Tournaments</h1>
-                <p className="text-gray-600">This page will be implemented in future steps.</p>
-              </div>
-            </div>
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+              <CreateTournamentForm />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/tournaments/manage"
+          element={
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+              <TournamentManagePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/tournaments/:id"
+          element={<TournamentsPage />}
+        />
+
+        <Route
+          path="/tournaments/:id/bracket"
+          element={
+            <ProtectedRoute>
+              <TournamentBracket />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/tournaments/:id/scoring"
+          element={
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner', 'referee']}>
+              <LiveScoring />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/tournaments/analytics"
+          element={
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+              <TournamentAnalyticsPage />
+            </ProtectedRoute>
           }
         />
 
@@ -170,12 +295,7 @@ const AppContent: React.FC = () => {
           path={ROUTES.PLAYER_FINDER}
           element={
             <ProtectedRoute requiredRoles={['player', 'coach']}>
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Player Finder</h1>
-                  <p className="text-gray-600">This premium functionality will be implemented in future steps.</p>
-                </div>
-              </div>
+              <PlayerConnectionPage />
             </ProtectedRoute>
           }
         />
@@ -190,6 +310,47 @@ const AppContent: React.FC = () => {
                   <p className="text-gray-600">This page will be implemented in future steps.</p>
                 </div>
               </div>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/search"
+          element={<SearchPage />}
+        />
+
+        <Route
+          path="/export"
+          element={
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+              <ExportPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRoles={['admin']}>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payments"
+          element={
+            <ProtectedRoute>
+              <PaymentPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
             </ProtectedRoute>
           }
         />
@@ -209,7 +370,13 @@ const AppContent: React.FC = () => {
             </div>
           }
         />
-      </Routes>
+        </Routes>
+        
+        <MobileNavigation />
+        
+        {/* Global Notification System */}
+        <NotificationSystem />
+      </div>
     </Router>
   );
 };

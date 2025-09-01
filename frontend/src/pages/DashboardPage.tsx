@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppSelector } from '@/store';
-import { selectUser } from '@/store/authSlice';
+import { selectCurrentUser } from '@/store/authSlice';
 import { USER_ROLES } from '@/utils/constants';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import PlayerDashboard from '@/components/dashboards/PlayerDashboard';
@@ -11,7 +11,7 @@ import StateDashboard from '@/components/dashboards/StateDashboard';
 import AdminDashboard from '@/components/dashboards/AdminDashboard';
 
 const DashboardPage: React.FC = () => {
-  const user = useAppSelector(selectUser);
+  const user = useAppSelector(selectCurrentUser);
 
   if (!user) {
     return (

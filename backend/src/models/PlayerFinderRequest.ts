@@ -1,54 +1,43 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
 interface PlayerFinderRequestAttributes {
   id: number;
   requesterId: number;
-  title: string;
-  description: string;
-  skillLevel: string; // beginner, intermediate, advanced, pro
-  preferredGender?: string; // any, male, female
-  ageRangeMin?: number;
-  ageRangeMax?: number;
-  playingStyle?: string; // casual, competitive, training
-  maxDistance: number; // in kilometers
-  locationId: number; // reference to PlayerLocation
-  availabilityDays: string[]; // array of days: monday, tuesday, etc.
-  availabilityTimeStart?: string; // HH:MM format
-  availabilityTimeEnd?: string; // HH:MM format
-  maxPlayers: number;
-  currentPlayers: number;
+  locationId: number;
+  nrtpLevelMin?: string;
+  nrtpLevelMax?: string;
+  preferredGender?: 'male' | 'female' | 'any';
+  preferredAgeMin?: number;
+  preferredAgeMax?: number;
+  searchRadius: number;
+  availableTimeSlots: object; // JSON with time preferences
+  message?: string;
   isActive: boolean;
-  expiresAt?: Date;
-  preferences: Record<string, any>; // JSON object for flexible preferences
-  status: string; // active, paused, completed, cancelled
-  createdAt: Date;
-  updatedAt: Date;
+  expiresAt: Date;
 }
 
-interface PlayerFinderRequestCreationAttributes extends Optional<PlayerFinderRequestAttributes, 'id' | 'currentPlayers' | 'createdAt' | 'updatedAt'> {}
+interface PlayerFinderRequestCreationAttributes 
+  extends Optional<PlayerFinderRequestAttributes, 'id'> {}
 
-class PlayerFinderRequest extends Model<PlayerFinderRequestAttributes, PlayerFinderRequestCreationAttributes> implements PlayerFinderRequestAttributes {
+class PlayerFinderRequest extends Model<
+  PlayerFinderRequestAttributes,
+  PlayerFinderRequestCreationAttributes
+> implements PlayerFinderRequestAttributes {
   public id!: number;
   public requesterId!: number;
-  public title!: string;
-  public description!: string;
-  public skillLevel!: string;
-  public preferredGender?: string;
-  public ageRangeMin?: number;
-  public ageRangeMax?: number;
-  public playingStyle?: string;
-  public maxDistance!: number;
   public locationId!: number;
-  public availabilityDays!: string[];
-  public availabilityTimeStart?: string;
-  public availabilityTimeEnd?: string;
-  public maxPlayers!: number;
-  public currentPlayers!: number;
+  public nrtpLevelMin?: string;
+  public nrtpLevelMax?: string;
+  public preferredGender?: 'male' | 'female' | 'any';
+  public preferredAgeMin?: number;
+  public preferredAgeMax?: number;
+  public searchRadius!: number;
+  public availableTimeSlots!: object;
+  public message?: string;
   public isActive!: boolean;
-  public expiresAt?: Date;
-  public preferences!: Record<string, any>;
-  public status!: string;
+  public expiresAt!: Date;
+
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -57,77 +46,16 @@ PlayerFinderRequest.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   requesterId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'players',
+      model: 'users',
       key: 'id'
     },
-    onDelete: 'CASCADE',
     field: 'requester_id'
-  },
-  title: {
-    type: DataTypes.STRING(200),
-    allowNull: false
-  },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  skillLevel: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    field: 'skill_level',
-    validate: {
-      isIn: [['beginner', 'intermediate', 'advanced', 'pro']]
-    }
-  },
-  preferredGender: {
-    type: DataTypes.STRING(10),
-    allowNull: true,
-    field: 'preferred_gender',
-    validate: {
-      isIn: [['any', 'male', 'female']]
-    }
-  },
-  ageRangeMin: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    field: 'age_range_min',
-    validate: {
-      min: 13,
-      max: 100
-    }
-  },
-  ageRangeMax: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    field: 'age_range_max',
-    validate: {
-      min: 13,
-      max: 100
-    }
-  },
-  playingStyle: {
-    type: DataTypes.STRING(20),
-    allowNull: true,
-    field: 'playing_style',
-    validate: {
-      isIn: [['casual', 'competitive', 'training']]
-    }
-  },
-  maxDistance: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 25,
-    field: 'max_distance',
-    validate: {
-      min: 1,
-      max: 100
-    }
   },
   locationId: {
     type: DataTypes.INTEGER,
@@ -136,42 +64,63 @@ PlayerFinderRequest.init({
       model: 'player_locations',
       key: 'id'
     },
-    onDelete: 'CASCADE',
     field: 'location_id'
   },
-  availabilityDays: {
-    type: DataTypes.JSON,
-    allowNull: false,
-    defaultValue: [],
-    field: 'availability_days'
-  },
-  availabilityTimeStart: {
-    type: DataTypes.TIME,
+  nrtpLevelMin: {
+    type: DataTypes.STRING(10),
     allowNull: true,
-    field: 'availability_time_start'
+    field: 'nrtp_level_min'
   },
-  availabilityTimeEnd: {
-    type: DataTypes.TIME,
+  nrtpLevelMax: {
+    type: DataTypes.STRING(10),
     allowNull: true,
-    field: 'availability_time_end'
+    field: 'nrtp_level_max'
   },
-  maxPlayers: {
+  preferredGender: {
+    type: DataTypes.ENUM('male', 'female', 'any'),
+    allowNull: true,
+    defaultValue: 'any',
+    field: 'preferred_gender'
+  },
+  preferredAgeMin: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    validate: {
+      min: 18,
+      max: 100
+    },
+    field: 'preferred_age_min'
+  },
+  preferredAgeMax: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    validate: {
+      min: 18,
+      max: 100
+    },
+    field: 'preferred_age_max'
+  },
+  searchRadius: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 4,
-    field: 'max_players',
+    defaultValue: 25,
     validate: {
-      min: 2,
-      max: 20
-    }
+      min: 5,
+      max: 100
+    },
+    field: 'search_radius'
   },
-  currentPlayers: {
-    type: DataTypes.INTEGER,
+  availableTimeSlots: {
+    type: DataTypes.JSONB,
     allowNull: false,
-    defaultValue: 1,
-    field: 'current_players',
+    defaultValue: {},
+    field: 'available_time_slots'
+  },
+  message: {
+    type: DataTypes.TEXT,
+    allowNull: true,
     validate: {
-      min: 1
+      len: [0, 500]
     }
   },
   isActive: {
@@ -182,55 +131,29 @@ PlayerFinderRequest.init({
   },
   expiresAt: {
     type: DataTypes.DATE,
-    allowNull: true,
+    allowNull: false,
     field: 'expires_at'
-  },
-  preferences: {
-    type: DataTypes.JSON,
-    allowNull: false,
-    defaultValue: {}
-  },
-  status: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    defaultValue: 'active',
-    validate: {
-      isIn: [['active', 'paused', 'completed', 'cancelled']]
-    }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
-  modelName: 'PlayerFinderRequest',
   tableName: 'player_finder_requests',
+  modelName: 'PlayerFinderRequest',
   timestamps: true,
   indexes: [
     {
       fields: ['requester_id']
     },
     {
-      fields: ['skill_level']
-    },
-    {
       fields: ['location_id']
     },
     {
-      fields: ['is_active']
+      fields: ['is_active', 'expires_at']
     },
     {
-      fields: ['status']
+      fields: ['preferred_gender']
     },
     {
-      fields: ['expires_at']
+      fields: ['nrtp_level_min', 'nrtp_level_max']
     }
   ]
 });

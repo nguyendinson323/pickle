@@ -155,7 +155,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
               value={billingDetails.name}
               onChange={(e) => setBillingDetails(prev => ({ ...prev, name: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
             />
           </div>
 
@@ -164,11 +163,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
               Email
             </label>
             <input
-              type="email"
+              type="text"
               value={billingDetails.email}
               onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
             />
           </div>
 
@@ -177,7 +175,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSuccess, onCancel }) => {
               Phone (optional)
             </label>
             <input
-              type="tel"
+              type="text"
               value={billingDetails.phone}
               onChange={(e) => setBillingDetails(prev => ({ ...prev, phone: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

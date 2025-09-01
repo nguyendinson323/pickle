@@ -6,6 +6,7 @@ import LocationSearch from '../../components/location/LocationSearch';
 import Button from '../../components/ui/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Badge from '../../components/ui/Badge';
+import apiService from '../../services/api';
 
 interface LocationResult {
   latitude: number;
@@ -67,18 +68,12 @@ const PlayerFinderPage: React.FC = () => {
         queryParams.append('longitude', activeFilters.location.longitude.toString());
       }
 
-      const response = await fetch(`/api/player-finder/requests?${queryParams.toString()}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      const result = await response.json();
+      const result = await apiService.get(`/api/player-finder/requests?${queryParams.toString()}`);
 
       if (result.success) {
-        setRequests(result.data);
+        setRequests(result.data || result.requests || []);
       } else {
-        setError('Error loading requests');
+        throw new Error(result.error || 'Failed to load requests');
       }
     } catch (err) {
       setError('Error loading requests');

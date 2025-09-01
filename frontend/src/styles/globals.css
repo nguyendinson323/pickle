@@ -66,6 +66,75 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Line clamping utility */
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Mobile-first responsive utilities */
+  .mobile-container {
+    @apply px-4 mx-auto;
+  }
+
+  .mobile-grid {
+    @apply grid grid-cols-1 gap-4;
+  }
+
+  .tablet-grid {
+    @apply md:grid-cols-2;
+  }
+
+  .desktop-grid {
+    @apply lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  /* Touch-friendly components */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Responsive text utilities */
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl;
+  }
+
+  .text-responsive-md {
+    @apply text-base sm:text-lg md:text-xl;
+  }
+
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+
+  /* Mobile navigation */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50;
+  }
+
+  /* Responsive padding/margin */
+  .spacing-responsive {
+    @apply p-4 md:p-6 lg:p-8;
+  }
+
+  .spacing-responsive-y {
+    @apply py-4 md:py-6 lg:py-8;
+  }
+
+  .spacing-responsive-x {
+    @apply px-4 md:px-6 lg:px-8;
+  }
 }
 
 /* Custom scrollbar */

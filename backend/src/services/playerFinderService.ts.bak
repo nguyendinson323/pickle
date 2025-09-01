@@ -1,0 +1,488 @@
+import { Op } from 'sequelize';
+import PlayerFinderRequest from '../models/PlayerFinderRequest';
+import PlayerFinderMatch from '../models/PlayerFinderMatch';
+import PlayerLocation from '../models/PlayerLocation';
+import User from '../models/User';
+import Player from '../models/Player';
+import locationService from './locationService';
+
+interface MatchCandidate {
+  userId: number;
+  user: User;
+  profile: Player;
+  location: PlayerLocation;
+  compatibilityScore: number;
+  distance: number;
+}
+
+interface TimeSlot {
+  day: string;
+  startTime: string;
+  endTime: string;
+  flexible: boolean;
+}
+
+interface MatchingCriteria {
+  requestId: number;
+  requesterId: number;
+  requesterLocation: PlayerLocation;
+  nrtpLevelMin?: string;
+  nrtpLevelMax?: string;
+  preferredGender?: 'male' | 'female' | 'any';
+  preferredAgeMin?: number;
+  preferredAgeMax?: number;
+  searchRadius: number;
+  availableTimeSlots: TimeSlot[];
+  message?: string;
+}
+
+export class PlayerFinderService {
+  async createPlayerFinderRequest(
+    requesterId: number,
+    criteria: {
+      locationId: number;
+      nrtpLevelMin?: string;
+      nrtpLevelMax?: string;
+      preferredGender?: 'male' | 'female' | 'any';
+      preferredAgeMin?: number;
+      preferredAgeMax?: number;
+      searchRadius?: number;
+      availableTimeSlots: TimeSlot[];
+      message?: string;
+      expiresInHours?: number;
+    }
+  ): Promise<PlayerFinderRequest> {
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + (criteria.expiresInHours || 168)); // Default 7 days
+
+    const request = await PlayerFinderRequest.create({
+      requesterId,
+      locationId: criteria.locationId,
+      nrtpLevelMin: criteria.nrtpLevelMin,
+      nrtpLevelMax: criteria.nrtpLevelMax,
+      preferredGender: criteria.preferredGender || 'any',
+      preferredAgeMin: criteria.preferredAgeMin,
+      preferredAgeMax: criteria.preferredAgeMax,
+      searchRadius: criteria.searchRadius || 25,
+      availableTimeSlots: criteria.availableTimeSlots,
+      message: criteria.message,
+      isActive: true,
+      expiresAt,
+    });
+
+    // Start matching process
+    await this.findMatchesForRequest(request.id);
+
+    return request;
+  }
+
+  async findMatchesForRequest(requestId: number): Promise<PlayerFinderMatch[]> {
+    const request = await PlayerFinderRequest.findByPk(requestId, {
+      include: [
+        {
+          model: PlayerLocation,
+          as: 'location',
+          required: true,
+        },
+      ],
+    });
+
+    if (!request || !request.isActive || request.expiresAt < new Date()) {
+      return [];
+    }
+
+    const criteria: MatchingCriteria = {
+      requestId: request.id,
+      requesterId: request.requesterId,
+      requesterLocation: (request as any).location,
+      nrtpLevelMin: request.nrtpLevelMin,
+      nrtpLevelMax: request.nrtpLevelMax,
+      preferredGender: request.preferredGender,
+      preferredAgeMin: request.preferredAgeMin,
+      preferredAgeMax: request.preferredAgeMax,
+      searchRadius: request.searchRadius,
+      availableTimeSlots: request.availableTimeSlots as TimeSlot[],
+      message: request.message,
+    };
+
+    const candidates = await this.findMatchingCandidates(criteria);
+    const matches: PlayerFinderMatch[] = [];
+
+    for (const candidate of candidates) {
+      // Check if match already exists
+      const existingMatch = await PlayerFinderMatch.findOne({
+        where: {
+          requestId: request.id,
+          matchedUserId: candidate.userId,
+        },
+      });
+
+      if (!existingMatch) {
+        const match = await PlayerFinderMatch.create({
+          requestId: request.id,
+          matchedUserId: candidate.userId,
+          distance: candidate.distance,
+          compatibilityScore: candidate.compatibilityScore,
+          status: 'pending',
+          matchedAt: new Date(),
+          contactShared: false,
+        });
+
+        matches.push(match);
+      }
+    }
+
+    return matches;
+  }
+
+  private async findMatchingCandidates(criteria: MatchingCriteria): Promise<MatchCandidate[]> {
+    // Get location bounds for efficient querying
+    const bounds = locationService.getBoundsForRadius(
+      criteria.requesterLocation.latitude,
+      criteria.requesterLocation.longitude,
+      criteria.searchRadius
+    );
+
+    // Build user profile filters
+    const profileWhere: any = {};
+
+    if (criteria.nrtpLevelMin || criteria.nrtpLevelMax) {
+      const nrtpLevels = ['1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0', '5.5', '6.0'];
+      const minIndex = criteria.nrtpLevelMin ? nrtpLevels.indexOf(criteria.nrtpLevelMin) : 0;
+      const maxIndex = criteria.nrtpLevelMax ? nrtpLevels.indexOf(criteria.nrtpLevelMax) : nrtpLevels.length - 1;
+      
+      if (minIndex >= 0 && maxIndex >= 0) {
+        profileWhere.nrtpLevel = {
+          [Op.in]: nrtpLevels.slice(minIndex, maxIndex + 1)
+        };
+      }
+    }
+
+    if (criteria.preferredGender && criteria.preferredGender !== 'any') {
+      profileWhere.gender = criteria.preferredGender;
+    }
+
+    if (criteria.preferredAgeMin || criteria.preferredAgeMax) {
+      const today = new Date();
+      const dateConstraints: any = {};
+      
+      if (criteria.preferredAgeMax) {
+        const minBirthDate = new Date(today.getFullYear() - criteria.preferredAgeMax - 1, today.getMonth(), today.getDate());
+        dateConstraints[Op.gte] = minBirthDate;
+      }
+      
+      if (criteria.preferredAgeMin) {
+        const maxBirthDate = new Date(today.getFullYear() - criteria.preferredAgeMin, today.getMonth(), today.getDate());
+        dateConstraints[Op.lte] = maxBirthDate;
+      }
+      
+      if (Object.keys(dateConstraints).length > 0) {
+        profileWhere.dateOfBirth = dateConstraints;
+      }
+    }
+
+    // Find potential matches within geographic bounds
+    const potentialMatches = await User.findAll({
+      where: {
+        id: { [Op.ne]: criteria.requesterId }, // Exclude requester
+        role: 'player',
+        isActive: true,
+      },
+      include: [
+        {
+          model: UserProfile,
+          as: 'profile',
+          where: {
+            ...profileWhere,
+            playerFinderVisible: true, // Only include players who opted into player finder
+          },
+          required: true,
+        },
+        {
+          model: PlayerLocation,
+          as: 'locations',
+          where: {
+            isActive: true,
+            latitude: {
+              [Op.between]: [bounds.southWest.latitude, bounds.northEast.latitude],
+            },
+            longitude: {
+              [Op.between]: [bounds.southWest.longitude, bounds.northEast.longitude],
+            },
+          },
+          required: true,
+        },
+      ],
+    });
+
+    const candidates: MatchCandidate[] = [];
+
+    for (const user of potentialMatches) {
+      const locations = (user as any).locations as PlayerLocation[];
+      const profile = (user as any).profile as UserProfile;
+
+      for (const location of locations) {
+        const distance = locationService.calculateDistance(
+          criteria.requesterLocation.latitude,
+          criteria.requesterLocation.longitude,
+          location.latitude,
+          location.longitude
+        ).distance;
+
+        if (distance <= criteria.searchRadius) {
+          const compatibilityScore = this.calculateCompatibilityScore(
+            criteria,
+            user,
+            profile,
+            location,
+            distance
+          );
+
+          if (compatibilityScore >= 50) { // Minimum compatibility threshold
+            candidates.push({
+              userId: user.id,
+              user,
+              profile,
+              location,
+              compatibilityScore,
+              distance,
+            });
+          }
+        }
+      }
+    }
+
+    // Sort by compatibility score (highest first) and then by distance (closest first)
+    return candidates.sort((a, b) => {
+      if (a.compatibilityScore !== b.compatibilityScore) {
+        return b.compatibilityScore - a.compatibilityScore;
+      }
+      return a.distance - b.distance;
+    }).slice(0, 20); // Limit to top 20 matches
+  }
+
+  private calculateCompatibilityScore(
+    criteria: MatchingCriteria,
+    user: User,
+    profile: UserProfile,
+    location: PlayerLocation,
+    distance: number
+  ): number {
+    let score = 100;
+
+    // Distance factor (closer = higher score)
+    const distanceScore = Math.max(0, 100 - (distance / criteria.searchRadius) * 40);
+    score = score * 0.3 + distanceScore * 0.3;
+
+    // NRTP level compatibility
+    if (criteria.nrtpLevelMin || criteria.nrtpLevelMax) {
+      const nrtpLevels = ['1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0', '5.5', '6.0'];
+      const userNrtpIndex = nrtpLevels.indexOf(profile.nrtpLevel || '3.0');
+      const minIndex = criteria.nrtpLevelMin ? nrtpLevels.indexOf(criteria.nrtpLevelMin) : 0;
+      const maxIndex = criteria.nrtpLevelMax ? nrtpLevels.indexOf(criteria.nrtpLevelMax) : nrtpLevels.length - 1;
+      
+      if (userNrtpIndex >= minIndex && userNrtpIndex <= maxIndex) {
+        // Perfect match
+        score = score * 0.7 + 100 * 0.2;
+      } else {
+        // Calculate how far off they are
+        const distance = Math.min(
+          Math.abs(userNrtpIndex - minIndex),
+          Math.abs(userNrtpIndex - maxIndex)
+        );
+        const nrtpScore = Math.max(0, 100 - distance * 20);
+        score = score * 0.7 + nrtpScore * 0.2;
+      }
+    } else {
+      score = score * 0.9 + 100 * 0.1;
+    }
+
+    // Age compatibility
+    if (criteria.preferredAgeMin || criteria.preferredAgeMax) {
+      const userAge = this.calculateAge(profile.dateOfBirth);
+      const minAge = criteria.preferredAgeMin || 18;
+      const maxAge = criteria.preferredAgeMax || 80;
+      
+      if (userAge >= minAge && userAge <= maxAge) {
+        score = score * 0.8 + 100 * 0.1;
+      } else {
+        const ageDistance = Math.min(
+          Math.abs(userAge - minAge),
+          Math.abs(userAge - maxAge)
+        );
+        const ageScore = Math.max(0, 100 - ageDistance * 5);
+        score = score * 0.8 + ageScore * 0.1;
+      }
+    } else {
+      score = score * 0.9 + 100 * 0.1;
+    }
+
+    // Location privacy consideration (exact locations get slightly higher scores)
+    if (location.privacyLevel === 'exact') {
+      score = score * 0.95 + 100 * 0.05;
+    } else if (location.privacyLevel === 'city') {
+      score = score * 0.97 + 85 * 0.03;
+    }
+
+    return Math.round(score);
+  }
+
+  private calculateAge(dateOfBirth: Date | null): number {
+    if (!dateOfBirth) return 30; // Default age if not provided
+    
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  }
+
+  async respondToMatch(
+    matchId: number,
+    userId: number,
+    response: 'accepted' | 'declined',
+    responseMessage?: string
+  ): Promise<PlayerFinderMatch | null> {
+    const match = await PlayerFinderMatch.findByPk(matchId, {
+      include: [
+        {
+          model: PlayerFinderRequest,
+          as: 'request',
+          required: true,
+        },
+      ],
+    });
+
+    if (!match || match.matchedUserId !== userId || match.status !== 'pending') {
+      return null;
+    }
+
+    match.status = response;
+    match.responseMessage = responseMessage;
+    match.respondedAt = new Date();
+    
+    if (response === 'accepted') {
+      match.contactShared = true;
+    }
+
+    await match.save();
+    return match;
+  }
+
+  async getMatchesForUser(userId: number, type: 'sent' | 'received' = 'received'): Promise<PlayerFinderMatch[]> {
+    const whereCondition = type === 'sent' 
+      ? { '$request.requesterId$': userId }
+      : { matchedUserId: userId };
+
+    return await PlayerFinderMatch.findAll({
+      where: whereCondition,
+      include: [
+        {
+          model: PlayerFinderRequest,
+          as: 'request',
+          required: true,
+          include: [
+            {
+              model: User,
+              as: 'requester',
+              attributes: ['id', 'username', 'email'],
+              include: [
+                {
+                  model: UserProfile,
+                  as: 'profile',
+                  attributes: ['firstName', 'lastName', 'profilePhotoUrl', 'nrtpLevel'],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: User,
+          as: 'matchedUser',
+          attributes: ['id', 'username', 'email'],
+          include: [
+            {
+              model: UserProfile,
+              as: 'profile',
+              attributes: ['firstName', 'lastName', 'profilePhotoUrl', 'nrtpLevel'],
+            },
+          ],
+        },
+      ],
+      order: [['matchedAt', 'DESC']],
+    });
+  }
+
+  async expireOldRequests(): Promise<number> {
+    const expiredRequests = await PlayerFinderRequest.update(
+      { isActive: false },
+      {
+        where: {
+          isActive: true,
+          expiresAt: { [Op.lt]: new Date() },
+        },
+      }
+    );
+
+    // Also expire pending matches for expired requests
+    await PlayerFinderMatch.update(
+      { status: 'expired' },
+      {
+        where: {
+          status: 'pending',
+          '$request.isActive$': false,
+        },
+        include: [
+          {
+            model: PlayerFinderRequest,
+            as: 'request',
+            required: true,
+          },
+        ],
+      }
+    );
+
+    return expiredRequests[0];
+  }
+
+  async deactivateUserRequest(requestId: number, userId: number): Promise<boolean> {
+    const updated = await PlayerFinderRequest.update(
+      { isActive: false },
+      {
+        where: {
+          id: requestId,
+          requesterId: userId,
+          isActive: true,
+        },
+      }
+    );
+
+    return updated[0] > 0;
+  }
+
+  async getUserActiveRequests(userId: number): Promise<PlayerFinderRequest[]> {
+    return await PlayerFinderRequest.findAll({
+      where: {
+        requesterId: userId,
+        isActive: true,
+        expiresAt: { [Op.gte]: new Date() },
+      },
+      include: [
+        {
+          model: PlayerLocation,
+          as: 'location',
+          required: true,
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+  }
+}
+
+export const playerFinderService = new PlayerFinderService();
+export default playerFinderService;

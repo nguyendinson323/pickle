@@ -21,7 +21,7 @@ const getDashboardData = asyncHandler(async (req: AuthRequest, res: Response) =>
 });
 
 const getPlayerDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.id) || req.user.userId;
   if (!['player','federation'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
@@ -30,7 +30,7 @@ const getPlayerDashboard = asyncHandler(async (req: AuthRequest, res: Response) 
 });
 
 const getCoachDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.id) || req.user.userId;
   if (!['coach','federation'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
@@ -39,7 +39,7 @@ const getCoachDashboard = asyncHandler(async (req: AuthRequest, res: Response) =
 });
 
 const getClubDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.id) || req.user.userId;
   if (!['club','federation'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
@@ -48,7 +48,7 @@ const getClubDashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
 });
 
 const getPartnerDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.id) || req.user.userId;
   if (!['partner','federation'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
@@ -57,7 +57,7 @@ const getPartnerDashboard = asyncHandler(async (req: AuthRequest, res: Response)
 });
 
 const getStateDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.id) || req.user.userId;
   if (!['state','federation'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 

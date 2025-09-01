@@ -5,10 +5,10 @@ import { STORAGE_KEYS } from '@/utils/constants';
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<{ user: UserProfile; token: string }> {
-    const response = await apiService.post<ApiResponse<{ user: UserProfile; token: string }>>('/auth/login', credentials);
+    const response = await apiService.post<any>('/auth/login', credentials);
     
-    if (response.success && response.data) {
-      const { user, token } = response.data;
+    if (response.success && response.user && response.token) {
+      const { user, token } = response;
       // Store token and user data
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
       localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(user));
@@ -33,12 +33,12 @@ class AuthService {
   }
 
   async getCurrentUser(): Promise<UserProfile> {
-    const response = await apiService.get<ApiResponse<UserProfile>>('/auth/me');
+    const response = await apiService.get<any>('/auth/me');
     
-    if (response.success && response.data) {
+    if (response.success && response.user) {
       // Update stored user data
-      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(response.data));
-      return response.data;
+      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(response.user));
+      return response.user;
     }
     
     throw new Error(response.error || 'Failed to get current user');
@@ -46,10 +46,10 @@ class AuthService {
 
   async verifyToken(): Promise<{ valid: boolean; user?: any }> {
     try {
-      const response = await apiService.get<ApiResponse>('/auth/verify');
+      const response = await apiService.get<any>('/auth/verify');
       return {
-        valid: response.success,
-        user: response.data,
+        valid: response.success && response.valid,
+        user: response.user,
       };
     } catch (error) {
       return { valid: false };
@@ -91,6 +91,48 @@ class AuthService {
     const token = this.getStoredToken();
     const user = this.getStoredUser();
     return !!(token && user);
+  }
+
+  // Store token
+  storeToken(token: string): void {
+    localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+  }
+
+  // Store user data
+  storeUser(user: UserProfile): void {
+    localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(user));
+  }
+
+  // Clear all stored authentication data
+  clearStorage(): void {
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+  }
+
+  // Check authentication status on app load
+  async checkAuthStatus(): Promise<{ isAuthenticated: boolean; user?: UserProfile }> {
+    const token = this.getStoredToken();
+    
+    if (!token) {
+      return { isAuthenticated: false };
+    }
+
+    try {
+      const verifyResult = await this.verifyToken();
+      if (verifyResult.valid && verifyResult.user) {
+        // Update stored user data with fresh data from server
+        this.storeUser(verifyResult.user);
+        return { isAuthenticated: true, user: verifyResult.user };
+      } else {
+        // Token is invalid, clear storage
+        this.clearStorage();
+        return { isAuthenticated: false };
+      }
+    } catch (error) {
+      console.error('Auth status check failed:', error);
+      this.clearStorage();
+      return { isAuthenticated: false };
+    }
   }
 }
 

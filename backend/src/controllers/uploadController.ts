@@ -76,6 +76,8 @@ class UploadController {
 
       res.json({
         success: true,
+        url: result.secureUrl,
+        publicId: result.publicId,
         data: {
           publicId: result.publicId,
           url: result.secureUrl,
@@ -116,6 +118,8 @@ class UploadController {
 
       res.json({
         success: true,
+        url: result.secureUrl,
+        publicId: result.publicId,
         data: {
           publicId: result.publicId,
           url: result.secureUrl,

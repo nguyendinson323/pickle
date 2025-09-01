@@ -44,4 +44,40 @@ router.post('/change-password',
   asyncHandler(profileController.changePassword)
 );
 
+// Privacy settings (for player search visibility)
+router.patch('/privacy', async (req, res) => {
+  try {
+    const userId = (req as any).user.userId;
+    const { canBeFound } = req.body;
+    
+    // Import models here to avoid circular dependency
+    const { Player } = require('../models');
+    
+    // Find player profile
+    const player = await Player.findOne({ where: { userId } });
+    
+    if (!player) {
+      return res.status(404).json({
+        success: false,
+        error: 'Player profile not found'
+      });
+    }
+    
+    // Update canBeFound setting
+    await player.update({ canBeFound: !!canBeFound });
+    
+    res.json({
+      success: true,
+      message: 'Privacy setting updated successfully',
+      data: { canBeFound: !!canBeFound }
+    });
+  } catch (error) {
+    console.error('Privacy update error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update privacy setting'
+    });
+  }
+});
+
 export default router;
