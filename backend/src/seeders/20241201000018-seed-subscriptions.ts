@@ -5,7 +5,7 @@ module.exports = {
     const subscriptions = [
       // Player subscriptions
       {
-        user_id: 3, // player001
+        user_id: 2, // player001
         plan_id: 1, // Básico
         stripe_subscription_id: 'sub_player001_basic',
         stripe_customer_id: 'cus_player001',
@@ -31,7 +31,7 @@ module.exports = {
         updated_at: now
       },
       {
-        user_id: 4, // player002
+        user_id: 3, // player002
         plan_id: 2, // Pro
         stripe_subscription_id: 'sub_player002_pro',
         stripe_customer_id: 'cus_player002',
@@ -49,7 +49,7 @@ module.exports = {
         metadata: JSON.stringify({
           signup_source: 'mobile_app',
           promotional_code: 'EARLY_ADOPTER',
-          referral_user: 3,
+          referral_user: 2,
           discount_applied: 5000
         }),
         next_billing_date: new Date(now.getTime() + 20 * 24 * 60 * 60 * 1000),
@@ -58,9 +58,9 @@ module.exports = {
         updated_at: now
       },
       {
-        user_id: 4, // player002 (previous canceled subscription)
+        user_id: 3, // player002 (previous canceled subscription)
         plan_id: 1, // Básico
-        stripe_subscription_id: 'sub_player003_basic_canceled',
+        stripe_subscription_id: 'sub_player002_basic_canceled',
         stripe_customer_id: 'cus_player002',
         status: 'canceled',
         current_period_start: new Date(now.getTime() - 45 * 24 * 60 * 60 * 1000),
@@ -86,7 +86,7 @@ module.exports = {
       },
       // Coach subscriptions
       {
-        user_id: 5, // coach001
+        user_id: 4, // coach001
         plan_id: 2, // Pro
         stripe_subscription_id: 'sub_coach001_pro',
         stripe_customer_id: 'cus_coach001',
@@ -113,7 +113,7 @@ module.exports = {
         updated_at: now
       },
       {
-        user_id: 6, // coach002
+        user_id: 5, // coach002
         plan_id: 2, // Pro
         stripe_subscription_id: 'sub_coach002_pro',
         stripe_customer_id: 'cus_coach002',
@@ -131,7 +131,7 @@ module.exports = {
         metadata: JSON.stringify({
           signup_source: 'tournament_registration',
           promotional_code: null,
-          referral_user: 5,
+          referral_user: 4,
           coach_certification: 'pending'
         }),
         next_billing_date: new Date(now.getTime() + 11 * 24 * 60 * 60 * 1000),
@@ -141,7 +141,7 @@ module.exports = {
       },
       // Partner subscription
       {
-        user_id: 7, // partner001
+        user_id: 6, // partner001
         plan_id: 2, // Pro
         stripe_subscription_id: 'sub_partner001_pro',
         stripe_customer_id: 'cus_partner001',
@@ -169,7 +169,7 @@ module.exports = {
       },
       // Club subscriptions
       {
-        user_id: 9, // club001
+        user_id: 7, // club001
         plan_id: 3, // Club
         stripe_subscription_id: 'sub_club001_club',
         stripe_customer_id: 'cus_club001',
@@ -197,7 +197,7 @@ module.exports = {
         updated_at: now
       },
       {
-        user_id: 10, // club002
+        user_id: 8, // club002
         plan_id: 3, // Club
         stripe_subscription_id: 'sub_club002_club',
         stripe_customer_id: 'cus_club002',
@@ -215,7 +215,7 @@ module.exports = {
         metadata: JSON.stringify({
           signup_source: 'referral',
           promotional_code: null,
-          referral_user: 9,
+          referral_user: 7,
           facility_count: 1,
           court_count: 6
         }),
@@ -226,7 +226,7 @@ module.exports = {
       },
       // State committee subscription
       {
-        user_id: 11, // state_committee001
+        user_id: 9, // state_committee001
         plan_id: 4, // Federación
         stripe_subscription_id: 'sub_committee001_federation',
         stripe_customer_id: 'cus_committee001',

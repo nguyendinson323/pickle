@@ -5,28 +5,24 @@ module.exports = {
     const courtFacilities = [
       // Club001 facility
       {
-        owner_id: 9, // club001
+        owner_id: 7, // club001
         owner_type: 'club',
         name: 'Complejo Deportivo Roma Norte',
         description: 'Moderno complejo deportivo especializado en pickleball ubicado en el corazón de Roma Norte',
-        address: JSON.stringify({
-          street: 'Av. Álvaro Obregón 123',
-          neighborhood: 'Roma Norte',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '06700',
-          country: 'México'
-        }),
+        address: 'Av. Álvaro Obregón 123, Roma Norte',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '06700',
+        country: 'Mexico',
         coordinates: JSON.stringify({
           latitude: 19.418851,
           longitude: -99.166425
         }),
-        contact_info: JSON.stringify({
-          phone: '+52 55 1234 5678',
-          email: 'contacto@complejoromanorte.mx',
-          website: 'https://complejoromanorte.mx',
-          manager: 'Roberto Sánchez'
-        }),
+        total_courts: 4,
+        facility_type: 'mixed',
+        contact_phone: '+52 55 1234 5678',
+        contact_email: 'contacto@complejoromanorte.mx',
+        website: 'https://complejoromanorte.mx',
         amenities: JSON.stringify([
           'Estacionamiento gratuito',
           'Vestidores con regaderas',
@@ -37,12 +33,11 @@ module.exports = {
           'Área de descanso',
           'Primeros auxilios'
         ]),
-        capacity: JSON.stringify({
-          total_courts: 4,
-          max_players_simultaneous: 32,
-          parking_spaces: 25,
-          seating_capacity: 80
-        }),
+        parking_spaces: 25,
+        has_restrooms: true,
+        has_showers: true,
+        has_pro_shop: true,
+        has_rental: true,
         operating_hours: JSON.stringify({
           monday: { open: '06:00', close: '22:00', is_closed: false },
           tuesday: { open: '06:00', close: '22:00', is_closed: false },
@@ -52,59 +47,72 @@ module.exports = {
           saturday: { open: '07:00', close: '23:00', is_closed: false },
           sunday: { open: '07:00', close: '21:00', is_closed: false }
         }),
+        social_media: JSON.stringify({
+          facebook: '@complejoromanorte',
+          instagram: '@complejoromanorte',
+          twitter: '@complejoroma'
+        }),
+        is_active: true,
+        is_verified: true,
+        verification_date: new Date('2024-01-15'),
+        photos: JSON.stringify([
+          'https://example.com/photo1.jpg',
+          'https://example.com/photo2.jpg'
+        ]),
+        rating: 4.5,
+        total_reviews: 28,
         policies: JSON.stringify({
           cancellation_hours: 24,
           max_advance_booking_days: 30,
           deposit_required: true,
-          deposit_percentage: 50,
-          dress_code: 'Ropa deportiva y tenis apropiados',
-          age_restrictions: 'Menores de 12 años requieren supervisión adulta'
+          deposit_percentage: 50
         }),
         pricing: JSON.stringify({
-          base_hourly_rate: 35000, // $350.00 MXN in cents
-          peak_hourly_rate: 50000, // $500.00 MXN in cents
-          member_discount: 20,
-          group_discount: 15,
-          tournament_rate: 25000 // $250.00 MXN in cents
+          base_hourly_rate: 35000,
+          peak_hourly_rate: 50000,
+          member_discount: 20
         }),
-        certifications: JSON.stringify([
-          {
-            name: 'Certificación CONADE',
-            number: 'CONADE-2024-001',
-            expiry: '2025-03-15'
-          }
-        ]),
-        is_active: true,
-        is_verified: true,
-        verified_at: new Date('2024-01-15'),
-        verification_notes: 'Instalaciones inspeccionadas y aprobadas',
+        booking_settings: JSON.stringify({
+          advance_booking_days: 30,
+          min_booking_duration: 60,
+          max_booking_duration: 180
+        }),
+        integrations: JSON.stringify({
+          payment_gateway: 'stripe',
+          calendar_sync: true
+        }),
+        business_hours: JSON.stringify({
+          monday: { open: '06:00', close: '22:00' },
+          tuesday: { open: '06:00', close: '22:00' },
+          wednesday: { open: '06:00', close: '22:00' },
+          thursday: { open: '06:00', close: '22:00' },
+          friday: { open: '06:00', close: '23:00' },
+          saturday: { open: '07:00', close: '23:00' },
+          sunday: { open: '07:00', close: '21:00' }
+        }),
         created_at: now,
         updated_at: now
       },
       // Club002 facility
       {
-        owner_id: 10, // club002
+        owner_id: 8, // club002
         owner_type: 'club',
         name: 'Centro Deportivo Polanco Elite',
         description: 'Exclusivo centro deportivo con instalaciones de lujo para pickleball profesional',
-        address: JSON.stringify({
-          street: 'Av. Presidente Masaryk 456',
-          neighborhood: 'Polanco',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '11560',
-          country: 'México'
-        }),
+        address: 'Av. Presidente Masaryk 456, Polanco',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '11560',
+        country: 'Mexico',
         coordinates: JSON.stringify({
           latitude: 19.433141,
           longitude: -99.192851
         }),
-        contact_info: JSON.stringify({
-          phone: '+52 55 9876 5432',
-          email: 'info@polancoelite.mx',
-          website: 'https://polancoelite.mx',
-          manager: 'Patricia Mendoza'
-        }),
+        total_courts: 6,
+        facility_type: 'indoor',
+        contact_phone: '+52 55 9876 5432',
+        contact_email: 'info@polancoelite.mx',
+        website: 'https://polancoelite.mx',
         amenities: JSON.stringify([
           'Valet parking',
           'Vestidores premium con lockers',
@@ -117,12 +125,11 @@ module.exports = {
           'Servicio médico',
           'Servicio de toallas'
         ]),
-        capacity: JSON.stringify({
-          total_courts: 6,
-          max_players_simultaneous: 48,
-          parking_spaces: 40,
-          seating_capacity: 120
-        }),
+        parking_spaces: 40,
+        has_restrooms: true,
+        has_showers: true,
+        has_pro_shop: true,
+        has_rental: true,
         operating_hours: JSON.stringify({
           monday: { open: '05:30', close: '23:30', is_closed: false },
           tuesday: { open: '05:30', close: '23:30', is_closed: false },
