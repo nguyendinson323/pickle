@@ -2,77 +2,111 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
     
-    await queryInterface.bulkInsert('court_schedules', [
-      {
-        court_id: 1, // Court A1 at Complejo Deportivo Roma Norte
-        day_of_week: 'Monday',
+    // Create schedules for the next 7 days
+    const today = new Date();
+    const schedules = [];
+    
+    for (let i = 0; i < 7; i++) {
+      const scheduleDate = new Date(today);
+      scheduleDate.setDate(today.getDate() + i);
+      const dateString = scheduleDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+      
+      // Court 1 - Full day availability
+      schedules.push({
+        court_id: 1,
+        date: dateString,
         start_time: '06:00:00',
         end_time: '22:00:00',
-        is_available: true,
-        special_pricing: JSON.stringify({
-          morning_rate: 30000, // $300.00 MXN in cents
-          afternoon_rate: 40000, // $400.00 MXN
-          evening_rate: 50000 // $500.00 MXN
-        }),
+        is_blocked: false,
+        block_type: null,
+        block_reason: null,
+        special_rate: null,
+        notes: 'Regular availability',
         created_at: now,
         updated_at: now
-      },
-      {
-        court_id: 1, // Court A1 at Complejo Deportivo Roma Norte
-        day_of_week: 'Tuesday',
-        start_time: '06:00:00',
-        end_time: '22:00:00',
-        is_available: true,
-        special_pricing: JSON.stringify({
-          morning_rate: 30000,
-          afternoon_rate: 40000,
-          evening_rate: 50000
-        }),
-        created_at: now,
-        updated_at: now
-      },
-      {
-        court_id: 2, // Court A2 at Complejo Deportivo Roma Norte
-        day_of_week: 'Wednesday',
-        start_time: '07:00:00',
-        end_time: '21:00:00',
-        is_available: true,
-        special_pricing: JSON.stringify({
-          morning_rate: 35000, // $350.00 MXN
-          afternoon_rate: 45000, // $450.00 MXN
-          evening_rate: 55000 // $550.00 MXN
-        }),
-        created_at: now,
-        updated_at: now
-      },
-      {
-        court_id: 3, // Court B1 at Club Pickleball Polanco
-        day_of_week: 'Saturday',
-        start_time: '08:00:00',
-        end_time: '20:00:00',
-        is_available: true,
-        special_pricing: JSON.stringify({
-          weekend_rate: 60000 // $600.00 MXN premium weekend rate
-        }),
-        created_at: now,
-        updated_at: now
-      },
-      {
-        court_id: 4, // Court C1 at Centro Deportivo Guadalajara
-        day_of_week: 'Sunday',
-        start_time: '09:00:00',
-        end_time: '19:00:00',
-        is_available: true,
-        special_pricing: JSON.stringify({
-          weekend_rate: 55000 // $550.00 MXN weekend rate
-        }),
-        created_at: now,
-        updated_at: now
+      });
+      
+      // Court 2 - Morning blocked for maintenance
+      if (i === 1) { // Tomorrow
+        schedules.push({
+          court_id: 2,
+          date: dateString,
+          start_time: '06:00:00',
+          end_time: '10:00:00',
+          is_blocked: true,
+          block_type: 'maintenance',
+          block_reason: 'Routine court maintenance and cleaning',
+          special_rate: null,
+          notes: 'Court maintenance scheduled',
+          created_at: now,
+          updated_at: now
+        });
+        
+        schedules.push({
+          court_id: 2,
+          date: dateString,
+          start_time: '10:00:00',
+          end_time: '21:00:00',
+          is_blocked: false,
+          block_type: null,
+          block_reason: null,
+          special_rate: 45.00, // Special rate
+          notes: 'Available after maintenance',
+          created_at: now,
+          updated_at: now
+        });
+      } else {
+        schedules.push({
+          court_id: 2,
+          date: dateString,
+          start_time: '07:00:00',
+          end_time: '21:00:00',
+          is_blocked: false,
+          block_type: null,
+          block_reason: null,
+          special_rate: null,
+          notes: 'Regular availability',
+          created_at: now,
+          updated_at: now
+        });
       }
-    ]);
+      
+      // Court 3 - Weekend has special rates
+      if (i === 5 || i === 6) { // Weekend
+        schedules.push({
+          court_id: 3,
+          date: dateString,
+          start_time: '08:00:00',
+          end_time: '20:00:00',
+          is_blocked: false,
+          block_type: null,
+          block_reason: null,
+          special_rate: 60.00, // Weekend premium rate
+          notes: 'Weekend premium pricing',
+          created_at: now,
+          updated_at: now
+        });
+      } else {
+        schedules.push({
+          court_id: 3,
+          date: dateString,
+          start_time: '08:00:00',
+          end_time: '20:00:00',
+          is_blocked: false,
+          block_type: null,
+          block_reason: null,
+          special_rate: null,
+          notes: 'Regular availability',
+          created_at: now,
+          updated_at: now
+        });
+      }
+    }
+    
+    await queryInterface.bulkInsert('court_schedules', schedules);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('court_schedules', null, {});
+    await queryInterface.bulkDelete('court_schedules', {});
   }
 };

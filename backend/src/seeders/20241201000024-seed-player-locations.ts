@@ -3,255 +3,143 @@ module.exports = {
     const now = new Date();
 
     const playerLocations = [
-      // Player locations in CDMX
+      // Player001 current location in Roma Norte
       {
-        user_id: 2, // player001
-        current_latitude: 19.418851,
-        current_longitude: -99.166425,
-        address: JSON.stringify({
-          street: 'Av. Insurgentes 123',
-          neighborhood: 'Roma Norte',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '06100',
-          country: 'México'
-        }),
-        location_accuracy: 10, // meters
-        is_sharing_location: true,
-        sharing_radius_km: 15,
-        preferred_travel_distance_km: 10,
-        transportation_modes: JSON.stringify(['car', 'public_transport', 'uber']),
-        availability_zones: JSON.stringify([
-          'Roma Norte',
-          'Condesa',
-          'Polanco',
-          'Centro Histórico',
-          'Doctores'
-        ]),
-        home_court_preferences: JSON.stringify([
-          { court_id: 1, preference_score: 5 },
-          { court_id: 2, preference_score: 4 }
-        ]),
-        last_location_update: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
-        location_sharing_expires: new Date(now.getTime() + 6 * 60 * 60 * 1000), // 6 hours from now
-        privacy_level: 'friends_and_matches',
-        created_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
+        player_id: 2, // player001
+        latitude: 19.418851,
+        longitude: -99.166425,
+        address: 'Av. Insurgentes 123',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '06100',
+        country: 'Mexico',
+        is_current_location: true,
+        is_travel_location: false,
+        travel_start_date: null,
+        travel_end_date: null,
+        location_name: 'Home - Roma Norte',
+        search_radius: 15, // km
+        is_active: true,
+        privacy_level: 'city',
+        accuracy: 10.5, // meters
+        last_updated: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
+        created_at: new Date(now.getTime() - 24 * 60 * 60 * 1000), // 1 day ago
         updated_at: new Date(now.getTime() - 2 * 60 * 60 * 1000)
       },
+      // Player002 current location in Condesa
       {
-        user_id: 3, // player002
-        current_latitude: 19.410389,
-        current_longitude: -99.165577,
-        address: JSON.stringify({
-          street: 'Calle Michoacán 456',
-          neighborhood: 'Condesa',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '06140',
-          country: 'México'
-        }),
-        location_accuracy: 5,
-        is_sharing_location: true,
-        sharing_radius_km: 20,
-        preferred_travel_distance_km: 12,
-        transportation_modes: JSON.stringify(['car', 'bike', 'walking']),
-        availability_zones: JSON.stringify([
-          'Condesa',
-          'Roma Norte',
-          'Roma Sur',
-          'Del Valle',
-          'Narvarte'
-        ]),
-        home_court_preferences: JSON.stringify([
-          { court_id: 4, preference_score: 5 }, // Academia Condesa
-          { court_id: 2, preference_score: 4 }
-        ]),
-        last_location_update: new Date(now.getTime() - 30 * 60 * 1000),
-        location_sharing_expires: new Date(now.getTime() + 4 * 60 * 60 * 1000),
-        privacy_level: 'public',
-        created_at: new Date(now.getTime() - 45 * 24 * 60 * 60 * 1000),
+        player_id: 3, // player002
+        latitude: 19.410389,
+        longitude: -99.165577,
+        address: 'Calle Amsterdam 456',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '06140',
+        country: 'Mexico',
+        is_current_location: true,
+        is_travel_location: false,
+        travel_start_date: null,
+        travel_end_date: null,
+        location_name: 'Condesa Neighborhood',
+        search_radius: 20, // km
+        is_active: true,
+        privacy_level: 'exact',
+        accuracy: 8.2, // meters
+        last_updated: new Date(now.getTime() - 30 * 60 * 1000), // 30 minutes ago
+        created_at: new Date(now.getTime() - 12 * 60 * 60 * 1000), // 12 hours ago
         updated_at: new Date(now.getTime() - 30 * 60 * 1000)
       },
+      // Player003 current location in Polanco
       {
-        user_id: 4, // player003
-        current_latitude: 19.432608,
-        current_longitude: -99.133209,
-        address: JSON.stringify({
-          street: 'Av. Reforma 789',
-          neighborhood: 'Juárez',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '06600',
-          country: 'México'
-        }),
-        location_accuracy: 15,
-        is_sharing_location: false,
-        sharing_radius_km: 5,
-        preferred_travel_distance_km: 8,
-        transportation_modes: JSON.stringify(['public_transport', 'uber']),
-        availability_zones: JSON.stringify([
-          'Centro Histórico',
-          'Juárez',
-          'Roma Norte',
-          'Doctores'
-        ]),
-        home_court_preferences: JSON.stringify([
-          { court_id: 1, preference_score: 3 }
-        ]),
-        last_location_update: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000),
-        location_sharing_expires: null, // Not sharing
-        privacy_level: 'private',
-        created_at: new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
+        player_id: 4, // player003
+        latitude: 19.432608,
+        longitude: -99.133209,
+        address: 'Av. Paseo de la Reforma 789',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '11560',
+        country: 'Mexico',
+        is_current_location: true,
+        is_travel_location: false,
+        travel_start_date: null,
+        travel_end_date: null,
+        location_name: 'Polanco Business District',
+        search_radius: 30, // km - wider search radius
+        is_active: true,
+        privacy_level: 'state', // More private
+        accuracy: 15.0, // meters
+        last_updated: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
+        created_at: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+        updated_at: new Date(now.getTime() - 4 * 60 * 60 * 1000)
       },
-      // Coach locations
+      // Player002 travel location (upcoming trip to Guadalajara)
       {
-        user_id: 5, // coach001
-        current_latitude: 19.425000,
-        current_longitude: -99.170000,
-        address: JSON.stringify({
-          street: 'Av. Universidad 234',
-          neighborhood: 'Del Valle Centro',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '03100',
-          country: 'México'
-        }),
-        location_accuracy: 8,
-        is_sharing_location: true,
-        sharing_radius_km: 25, // Coaches typically travel more
-        preferred_travel_distance_km: 20,
-        transportation_modes: JSON.stringify(['car', 'public_transport']),
-        availability_zones: JSON.stringify([
-          'Del Valle Centro',
-          'Del Valle Norte',
-          'Narvarte',
-          'Roma Norte',
-          'Roma Sur',
-          'Condesa',
-          'Doctores',
-          'Álamos'
-        ]),
-        home_court_preferences: JSON.stringify([
-          { court_id: 1, preference_score: 5 },
-          { court_id: 2, preference_score: 5 },
-          { court_id: 4, preference_score: 4 }
-        ]),
-        last_location_update: new Date(now.getTime() - 1 * 60 * 60 * 1000),
-        location_sharing_expires: new Date(now.getTime() + 8 * 60 * 60 * 1000),
-        privacy_level: 'public', // Coaches want to be found
-        created_at: new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000),
+        player_id: 3, // player002
+        latitude: 20.676109,
+        longitude: -103.347701,
+        address: 'Av. López Mateos Sur 2375',
+        city: 'Guadalajara',
+        state: 'Jalisco',
+        zip_code: '45050',
+        country: 'Mexico',
+        is_current_location: false,
+        is_travel_location: true,
+        travel_start_date: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), // 1 week from now
+        travel_end_date: new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
+        location_name: 'Guadalajara Tournament Location',
+        search_radius: 25, // km
+        is_active: true,
+        privacy_level: 'city',
+        accuracy: null, // Not measured yet
+        last_updated: new Date(now.getTime() - 24 * 60 * 60 * 1000), // 1 day ago
+        created_at: new Date(now.getTime() - 24 * 60 * 60 * 1000),
+        updated_at: new Date(now.getTime() - 24 * 60 * 60 * 1000)
+      },
+      // Coach001 location in Juárez
+      {
+        player_id: 5, // coach001
+        latitude: 19.425000,
+        longitude: -99.170000,
+        address: 'Calle Genova 321',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '06600',
+        country: 'Mexico',
+        is_current_location: true,
+        is_travel_location: false,
+        travel_start_date: null,
+        travel_end_date: null,
+        location_name: 'Coaching Studio - Juárez',
+        search_radius: 35, // km - coach covers wider area
+        is_active: true,
+        privacy_level: 'city',
+        accuracy: 12.8, // meters
+        last_updated: new Date(now.getTime() - 1 * 60 * 60 * 1000), // 1 hour ago
+        created_at: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
         updated_at: new Date(now.getTime() - 1 * 60 * 60 * 1000)
       },
+      // Player001 old location (historical record, not current)
       {
-        user_id: 6, // coach002
-        current_latitude: 19.433141,
-        current_longitude: -99.192851,
-        address: JSON.stringify({
-          street: 'Av. Polanco 567',
-          neighborhood: 'Polanco V Sección',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '11560',
-          country: 'México'
-        }),
-        location_accuracy: 5,
-        is_sharing_location: true,
-        sharing_radius_km: 30,
-        preferred_travel_distance_km: 15,
-        transportation_modes: JSON.stringify(['car', 'uber']),
-        availability_zones: JSON.stringify([
-          'Polanco',
-          'Lomas de Chapultepec',
-          'Las Lomas',
-          'Condesa',
-          'Roma Norte',
-          'Santa Fe',
-          'Anzures'
-        ]),
-        home_court_preferences: JSON.stringify([
-          { court_id: 3, preference_score: 5 }, // Championship court preference
-          { court_id: 1, preference_score: 4 }
-        ]),
-        last_location_update: new Date(now.getTime() - 45 * 60 * 1000),
-        location_sharing_expires: new Date(now.getTime() + 12 * 60 * 60 * 1000),
-        privacy_level: 'public',
-        created_at: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 45 * 60 * 1000)
-      },
-      // Partner location
-      {
-        user_id: 7, // partner001
-        current_latitude: 19.410389,
-        current_longitude: -99.165577,
-        address: JSON.stringify({
-          street: 'Calle Amsterdam 789',
-          neighborhood: 'Condesa',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '06100',
-          country: 'México'
-        }),
-        location_accuracy: 3, // Very precise for business
-        is_sharing_location: true,
-        sharing_radius_km: 35, // Business covers wider area
-        preferred_travel_distance_km: 25,
-        transportation_modes: JSON.stringify(['car', 'delivery_service']),
-        availability_zones: JSON.stringify([
-          'Condesa',
-          'Roma Norte',
-          'Roma Sur',
-          'Del Valle Centro',
-          'Del Valle Norte',
-          'Narvarte',
-          'Doctores',
-          'Juárez',
-          'Cuauhtémoc'
-        ]),
-        home_court_preferences: JSON.stringify([
-          { court_id: 4, preference_score: 5 }, // Own facility
-          { court_id: 1, preference_score: 3 },
-          { court_id: 2, preference_score: 3 }
-        ]),
-        last_location_update: new Date(now.getTime() - 15 * 60 * 1000),
-        location_sharing_expires: new Date(now.getTime() + 24 * 60 * 60 * 1000), // All day
-        privacy_level: 'public',
-        created_at: new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 15 * 60 * 1000)
-      },
-      // Player from different area
-      {
-        user_id: 8, // partner002 (as player location)
-        current_latitude: 19.370000,
-        current_longitude: -99.280000,
-        address: JSON.stringify({
-          street: 'Av. Santa Fe 1010',
-          neighborhood: 'Santa Fe',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '01219',
-          country: 'México'
-        }),
-        location_accuracy: 12,
-        is_sharing_location: true,
-        sharing_radius_km: 18,
-        preferred_travel_distance_km: 15,
-        transportation_modes: JSON.stringify(['car', 'uber']),
-        availability_zones: JSON.stringify([
-          'Santa Fe',
-          'Lomas de Chapultepec',
-          'Polanco',
-          'Las Lomas',
-          'Huixquilucan'
-        ]),
-        home_court_preferences: JSON.stringify([
-          { court_id: 3, preference_score: 4 } // Prefers premium courts
-        ]),
-        last_location_update: new Date(now.getTime() - 4 * 60 * 60 * 1000),
-        location_sharing_expires: new Date(now.getTime() + 2 * 60 * 60 * 1000),
-        privacy_level: 'friends_and_matches',
-        created_at: new Date(now.getTime() - 80 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 4 * 60 * 60 * 1000)
+        player_id: 2, // player001
+        latitude: 19.400000,
+        longitude: -99.150000,
+        address: 'Calle Londres 147',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '06600',
+        country: 'Mexico',
+        is_current_location: false, // Historical location
+        is_travel_location: false,
+        travel_start_date: null,
+        travel_end_date: null,
+        location_name: 'Previous Home - Juárez',
+        search_radius: 15, // km
+        is_active: false, // Inactive old location
+        privacy_level: 'city',
+        accuracy: 25.0, // meters
+        last_updated: new Date(now.getTime() - 8 * 60 * 60 * 1000), // 8 hours ago
+        created_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+        updated_at: new Date(now.getTime() - 8 * 60 * 60 * 1000)
       }
     ];
 

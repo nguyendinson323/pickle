@@ -154,49 +154,61 @@ module.exports = {
           group_discount: 10,
           tournament_rate: 50000 // $500.00 MXN in cents
         }),
-        certifications: JSON.stringify([
-          {
-            name: 'Certificación CONADE Premium',
-            number: 'CONADE-PREM-2024-002',
-            expiry: '2025-06-30'
-          },
-          {
-            name: 'Certificación Internacional ITF',
-            number: 'ITF-2024-MX-002',
-            expiry: '2025-12-31'
-          }
+        booking_settings: JSON.stringify({
+          advance_booking_days: 60,
+          min_booking_duration: 60,
+          max_booking_duration: 240
+        }),
+        integrations: JSON.stringify({
+          payment_gateway: 'stripe',
+          calendar_sync: true
+        }),
+        business_hours: JSON.stringify({
+          monday: { open: '05:30', close: '23:30' },
+          tuesday: { open: '05:30', close: '23:30' },
+          wednesday: { open: '05:30', close: '23:30' },
+          thursday: { open: '05:30', close: '23:30' },
+          friday: { open: '05:30', close: '24:00' },
+          saturday: { open: '06:00', close: '24:00' },
+          sunday: { open: '06:00', close: '22:00' }
+        }),
+        social_media: JSON.stringify({
+          facebook: '@polancoelite',
+          instagram: '@polancoelite',
+          twitter: '@polancoelite'
+        }),
+        verification_date: new Date('2024-02-01'),
+        photos: JSON.stringify([
+          'https://example.com/polanco1.jpg',
+          'https://example.com/polanco2.jpg'
         ]),
+        rating: 4.8,
+        total_reviews: 45,
         is_active: true,
         is_verified: true,
-        verified_at: new Date('2024-02-01'),
-        verification_notes: 'Instalaciones premium certificadas para competencias internacionales',
         created_at: now,
         updated_at: now
       },
       // Partner001 facility
       {
-        owner_id: 7, // partner001
-        owner_type: 'partner',
+        owner_id: 6, // partner001
+        owner_type: 'independent',
         name: 'Academia de Pickleball Condesa',
         description: 'Academia especializada en entrenamiento de pickleball con enfoque en desarrollo técnico',
-        address: JSON.stringify({
-          street: 'Calle Amsterdam 789',
-          neighborhood: 'Condesa',
-          city: 'Ciudad de México',
-          state: 'CDMX',
-          postal_code: '06100',
-          country: 'México'
-        }),
+        address: 'Calle Amsterdam 789, Condesa',
+        city: 'Ciudad de México',
+        state: 'CDMX',
+        zip_code: '06100',
+        country: 'Mexico',
         coordinates: JSON.stringify({
           latitude: 19.410389,
           longitude: -99.165577
         }),
-        contact_info: JSON.stringify({
-          phone: '+52 55 5555 1234',
-          email: 'academia@pickleballcondesa.mx',
-          website: 'https://pickleballcondesa.mx',
-          manager: 'Luis Fernando Ríos'
-        }),
+        contact_phone: '+52 55 5555 1234',
+        contact_email: 'academia@pickleballcondesa.mx',
+        website: 'https://pickleballcondesa.mx',
+        total_courts: 2,
+        facility_type: 'outdoor',
         amenities: JSON.stringify([
           'Estacionamiento limitado',
           'Vestidores básicos',
@@ -207,12 +219,11 @@ module.exports = {
           'Área de teoría',
           'Video análisis'
         ]),
-        capacity: JSON.stringify({
-          total_courts: 2,
-          max_players_simultaneous: 16,
-          parking_spaces: 8,
-          seating_capacity: 30
-        }),
+        parking_spaces: 8,
+        has_restrooms: true,
+        has_showers: false,
+        has_pro_shop: false,
+        has_rental: true,
         operating_hours: JSON.stringify({
           monday: { open: '07:00', close: '21:00', is_closed: false },
           tuesday: { open: '07:00', close: '21:00', is_closed: false },
@@ -237,17 +248,37 @@ module.exports = {
           group_discount: 20,
           tournament_rate: 20000 // $200.00 MXN in cents
         }),
-        certifications: JSON.stringify([
-          {
-            name: 'Licencia Deportiva Municipal',
-            number: 'LDM-CDMX-2024-003',
-            expiry: '2024-12-31'
-          }
+        booking_settings: JSON.stringify({
+          advance_booking_days: 14,
+          min_booking_duration: 60,
+          max_booking_duration: 120
+        }),
+        integrations: JSON.stringify({
+          payment_gateway: 'stripe',
+          calendar_sync: false
+        }),
+        business_hours: JSON.stringify({
+          monday: { open: '07:00', close: '21:00' },
+          tuesday: { open: '07:00', close: '21:00' },
+          wednesday: { open: '07:00', close: '21:00' },
+          thursday: { open: '07:00', close: '21:00' },
+          friday: { open: '07:00', close: '20:00' },
+          saturday: { open: '08:00', close: '18:00' },
+          sunday: { open: '08:00', close: '16:00' }
+        }),
+        social_media: JSON.stringify({
+          facebook: '@pickleballcondesa',
+          instagram: '@pickleballcondesa'
+        }),
+        verification_date: new Date('2024-03-10'),
+        photos: JSON.stringify([
+          'https://example.com/condesa1.jpg',
+          'https://example.com/condesa2.jpg'
         ]),
+        rating: 4.2,
+        total_reviews: 18,
         is_active: true,
         is_verified: true,
-        verified_at: new Date('2024-03-10'),
-        verification_notes: 'Academia certificada para programas de entrenamiento',
         created_at: now,
         updated_at: now
       }
