@@ -13,100 +13,99 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       references: {
         model: 'users',
         key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      }
     },
-    membership_plan_id: {
+    subscription_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'membership_plans',
+        model: 'subscriptions',
         key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      }
     },
-    payment_type: {
-      type: DataTypes.ENUM('membership', 'upgrade', 'renewal', 'tournament', 'court_rental', 'certification'),
-      allowNull: false
-    },
-    status: {
-      type: DataTypes.ENUM('pending', 'completed', 'succeeded', 'failed', 'cancelled', 'refunded', 'disputed'),
+    stripe_payment_intent_id: {
+      type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: 'pending'
+      unique: true
+    },
+    stripe_charge_id: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
     amount: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     currency: {
-      type: DataTypes.STRING(3),
+      type: DataTypes.ENUM('USD', 'MXN'),
       allowNull: false,
-      defaultValue: 'mxn'
+      defaultValue: 'USD'
     },
-    stripe_payment_intent_id: {
-      type: DataTypes.STRING,
+    type: {
+      type: DataTypes.ENUM('subscription', 'tournament_entry', 'court_booking', 'one_time', 'refund'),
       allowNull: false
     },
-    stripe_customer_id: {
-      type: DataTypes.STRING,
+    related_entity_type: {
+      type: DataTypes.ENUM('tournament', 'court_booking', 'subscription'),
       allowNull: true
     },
-    stripe_charge_id: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    payment_method: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'card'
-    },
-    subtotal: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      defaultValue: 0
-    },
-    tax_amount: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
-    },
-    total_amount: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: ''
-    },
-    reference_id: {
+    related_entity_id: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    reference_type: {
-      type: DataTypes.STRING,
+    status: {
+      type: DataTypes.ENUM('pending', 'processing', 'succeeded', 'failed', 'canceled', 'requires_action'),
+      allowNull: false,
+      defaultValue: 'pending'
+    },
+    failure_reason: {
+      type: DataTypes.TEXT,
       allowNull: true
     },
-    metadata: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      defaultValue: {}
+    payment_method: {
+      type: DataTypes.JSONB,
+      allowNull: false
     },
-    paid_at: {
-      type: DataTypes.DATE,
+    platform_fee: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    stripe_fee: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    net_amount: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    refunded_amount: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     refunded_at: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    refund_amount: {
-      type: DataTypes.DECIMAL(10, 2),
+    refund_reason: {
+      type: DataTypes.TEXT,
       allowNull: true
     },
-    failure_reason: {
+    description: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    metadata: {
+      type: DataTypes.JSONB,
+      allowNull: true,
+      defaultValue: {}
+    },
+    webhook_processed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    webhook_data: {
+      type: DataTypes.JSONB,
       allowNull: true
     },
     created_at: {
@@ -121,13 +120,17 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }
   });
 
-  // Add indexes
+  // Add indexes exactly as defined in the model
   await queryInterface.addIndex('payments', ['user_id']);
+  await queryInterface.addIndex('payments', ['subscription_id']);
+  await queryInterface.addIndex('payments', ['stripe_payment_intent_id'], { unique: true });
+  await queryInterface.addIndex('payments', ['stripe_charge_id']);
+  await queryInterface.addIndex('payments', ['type']);
   await queryInterface.addIndex('payments', ['status']);
-  await queryInterface.addIndex('payments', ['payment_type']);
-  await queryInterface.addIndex('payments', ['stripe_payment_intent_id']);
+  await queryInterface.addIndex('payments', ['related_entity_type', 'related_entity_id']);
+  await queryInterface.addIndex('payments', ['webhook_processed']);
   await queryInterface.addIndex('payments', ['created_at']);
-  await queryInterface.addIndex('payments', ['membership_plan_id']);
+  await queryInterface.addIndex('payments', ['refunded_at']);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {

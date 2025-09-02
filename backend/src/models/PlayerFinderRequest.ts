@@ -133,6 +133,16 @@ PlayerFinderRequest.init({
     type: DataTypes.DATE,
     allowNull: false,
     field: 'expires_at'
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'created_at'
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'updated_at'
   }
 }, {
   sequelize,
@@ -157,5 +167,6 @@ PlayerFinderRequest.init({
     }
   ]
 });
+
 
 export default PlayerFinderRequest;

@@ -1,43 +1,161 @@
 import { Op } from 'sequelize';
 import Microsite from '../models/Microsite';
-import MicrositePage from '../models/MicrositePage';
-import ContentBlock from '../models/ContentBlock';
-import Theme from '../models/Theme';
-import MediaFile from '../models/MediaFile';
-import ModerationLog from '../models/ModerationLog';
+import MicrositeTemplate from '../models/MicrositeTemplate';
+import MicrositeAnalytics from '../models/MicrositeAnalytics';
+import MediaLibrary from '../models/MediaLibrary';
 import User from '../models/User';
-import Club from '../models/Club';
-import Partner from '../models/Partner';
-import StateCommittee from '../models/StateCommittee';
+import Subscription from '../models/Subscription';
+import NotificationService from './notificationService';
 
-export class MicrositeService {
-  async createMicrosite(userId: number, data: any) {
-    try {
-      // Check if subdomain is available
-      const existingMicrosite = await Microsite.findOne({
-        where: { subdomain: data.subdomain }
-      });
+interface CreateMicrositeRequest {
+  templateId: number;
+  name: string;
+  slug: string;
+  subdomain: string;
+  description?: string;
+}
 
-      if (existingMicrosite) {
-        throw new Error('Subdomain is already taken');
-      }
+interface UpdateMicrositeRequest {
+  name?: string;
+  slug?: string;
+  subdomain?: string;
+  description?: string;
+  logo?: string;
+  favicon?: string;
+  colorScheme?: any;
+  customDomain?: string;
+  seo?: any;
+  features?: any;
+  contactInfo?: any;
+}
 
-      // Validate owner exists
-      await this.validateOwner(data.ownerType, data.ownerId);
+interface AddPageRequest {
+  name: string;
+  slug: string;
+  title?: string;
+  metaDescription?: string;
+  components?: any[];
+}
 
-      const microsite = await Microsite.create({
-        ...data,
-        userId,
-        status: 'draft'
-      });
+interface UpdatePageRequest {
+  name?: string;
+  slug?: string;
+  title?: string;
+  metaDescription?: string;
+  components?: any[];
+  isPublished?: boolean;
+}
 
-      // Create default home page
-      await this.createDefaultHomePage(microsite.id);
-
-      return await this.getMicrositeById(microsite.id);
-    } catch (error) {
-      throw error;
+class MicrositeService {
+  async createMicrosite(ownerId: number, micrositeData: CreateMicrositeRequest) {
+    const { templateId, name, slug, subdomain } = micrositeData;
+    
+    // Verify owner permissions
+    const owner = await User.findByPk(ownerId);
+    if (!owner) {
+      throw new Error('User not found');
     }
+
+    if (!['club', 'state_committee', 'federation'].includes(owner.role)) {
+      throw new Error('Insufficient permissions to create microsite');
+    }
+
+    // Check if slug is available
+    const existingSlug = await Microsite.findOne({ where: { slug } });
+    if (existingSlug) {
+      throw new Error('Slug already exists');
+    }
+
+    // Check if subdomain is available
+    const existingSubdomain = await Microsite.findOne({ where: { subdomain } });
+    if (existingSubdomain) {
+      throw new Error('Subdomain already exists');
+    }
+
+    // Get template
+    const template = await MicrositeTemplate.findByPk(templateId);
+    if (!template) {
+      throw new Error('Template not found');
+    }
+
+    // Check if user has access to premium template
+    if (template.isPremium) {
+      const subscription = await this.checkUserSubscription(ownerId);
+      if (!subscription || !subscription.customBranding) {
+        throw new Error('Premium subscription required for this template');
+      }
+    }
+
+    // Create microsite with template defaults
+    const microsite = await Microsite.create({
+      ownerId,
+      ownerType: owner.role === 'club' ? 'club' : 'state_committee',
+      name,
+      slug,
+      subdomain,
+      description: micrositeData.description || '',
+      templateId,
+      templateVersion: template.version,
+      colorScheme: template.structure.colorScheme,
+      pages: template.structure.pages.map((page, index) => ({
+        id: this.generateId(),
+        ...page,
+        isPublished: index === 0, // Publish home page by default
+        sortOrder: index
+      })),
+      navigation: [
+        {
+          type: 'header',
+          items: [
+            { label: 'Inicio', url: '/', pageId: null, isExternal: false, openInNewTab: false },
+            { label: 'Nosotros', url: '/about', pageId: null, isExternal: false, openInNewTab: false },
+            { label: 'Contacto', url: '/contact', pageId: null, isExternal: false, openInNewTab: false }
+          ]
+        }
+      ],
+      seo: {
+        title: name,
+        description: micrositeData.description || `Sitio oficial de ${name}`,
+        keywords: ['pickleball', 'club', 'deportes', 'comunidad'],
+        ogImage: template.thumbnailUrl
+      },
+      status: 'draft',
+      isPublic: false,
+      features: {
+        contactForm: true,
+        eventCalendar: true,
+        memberDirectory: false,
+        photoGallery: true,
+        newsUpdates: true,
+        socialMedia: true
+      },
+      contactInfo: {
+        email: owner.email
+      },
+      sslEnabled: true
+    });
+
+    // Create default analytics record
+    await MicrositeAnalytics.create({
+      micrositeId: microsite.id,
+      date: new Date(),
+      pageViews: 0,
+      uniqueVisitors: 0,
+      sessions: 0,
+      bounceRate: 0,
+      avgSessionDuration: 0,
+      pageMetrics: [],
+      trafficSources: [],
+      deviceStats: { desktop: 0, mobile: 0, tablet: 0 },
+      browserStats: [],
+      countryStats: [],
+      formSubmissions: 0,
+      downloadClicks: 0,
+      socialClicks: 0,
+      externalLinkClicks: 0
+    });
+
+    return microsite;
   }
 
   async getMicrositeById(id: number) {
@@ -422,3 +540,6 @@ export class MicrositeService {
     }
   }
 }
+
+export { MicrositeService };
+export default new MicrositeService();

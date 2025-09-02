@@ -35,7 +35,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "**/*.test.ts",
     "src/services/reservationService.ts",
     "src/services/analyticsService.ts",
     "src/controllers/categoryController.ts",

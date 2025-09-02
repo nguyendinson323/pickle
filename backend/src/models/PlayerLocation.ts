@@ -3,7 +3,7 @@ import sequelize from '../config/database';
 
 interface PlayerLocationAttributes {
   id: number;
-  userId: number;
+  playerId: number;
   latitude: number;
   longitude: number;
   address?: string;
@@ -29,7 +29,7 @@ interface PlayerLocationCreationAttributes extends Optional<PlayerLocationAttrib
 
 class PlayerLocation extends Model<PlayerLocationAttributes, PlayerLocationCreationAttributes> implements PlayerLocationAttributes {
   public id!: number;
-  public userId!: number;
+  public playerId!: number;
   public latitude!: number;
   public longitude!: number;
   public address?: string;
@@ -60,7 +60,7 @@ PlayerLocation.init({
     autoIncrement: true,
     primaryKey: true
   },
-  userId: {
+  playerId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -68,7 +68,7 @@ PlayerLocation.init({
       key: 'id'
     },
     onDelete: 'CASCADE',
-    field: 'user_id'
+    field: 'player_id'
   },
   latitude: {
     type: DataTypes.DECIMAL(10, 8),
@@ -187,7 +187,7 @@ PlayerLocation.init({
   timestamps: true,
   indexes: [
     {
-      fields: ['user_id']
+      fields: ['player_id']
     },
     {
       fields: ['latitude', 'longitude']
@@ -203,5 +203,6 @@ PlayerLocation.init({
     }
   ]
 });
+
 
 export default PlayerLocation;

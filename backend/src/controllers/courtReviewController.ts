@@ -12,7 +12,7 @@ const createReview = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const existingReview = await CourtReview.findOne({ where: { reservationId } });
+    const existingReview = await CourtReview.findOne({ where: { bookingId: reservationId } });
     if (existingReview) {
       res.status(400).json({ success: false, message: 'Ya existe una reseña para esta reserva' });
       return;

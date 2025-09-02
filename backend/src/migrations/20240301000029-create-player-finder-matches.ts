@@ -13,55 +13,45 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       references: {
         model: 'player_finder_requests',
         key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      }
     },
-    player_id: {
+    matched_user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'players',
+        model: 'users',
         key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      }
     },
-    match_score: {
+    distance: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false
+    },
+    compatibility_score: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    distance: {
-      type: DataTypes.DECIMAL(8, 2),
-      allowNull: false
-    },
     status: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.ENUM('pending', 'accepted', 'declined', 'expired'),
       allowNull: false,
       defaultValue: 'pending'
     },
-    requested_at: {
+    response_message: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    matched_at: {
       type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW
+      allowNull: false
     },
     responded_at: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    message: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    is_viewed: {
+    contact_shared: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
-    },
-    match_reasons: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      defaultValue: []
     },
     created_at: {
       type: DataTypes.DATE,
@@ -75,15 +65,14 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }
   });
 
-  // Add indexes
+  // Add indexes exactly as defined in the model
   await queryInterface.addIndex('player_finder_matches', ['request_id']);
-  await queryInterface.addIndex('player_finder_matches', ['player_id']);
+  await queryInterface.addIndex('player_finder_matches', ['matched_user_id']);
   await queryInterface.addIndex('player_finder_matches', ['status']);
-  await queryInterface.addIndex('player_finder_matches', ['match_score']);
-  await queryInterface.addIndex('player_finder_matches', ['is_viewed']);
-  await queryInterface.addIndex('player_finder_matches', ['request_id', 'player_id'], { 
-    unique: true,
-    name: 'player_finder_matches_unique_constraint'
+  await queryInterface.addIndex('player_finder_matches', ['matched_at']);
+  await queryInterface.addIndex('player_finder_matches', ['compatibility_score']);
+  await queryInterface.addIndex('player_finder_matches', ['request_id', 'matched_user_id'], { 
+    unique: true
   });
 }
 

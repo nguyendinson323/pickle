@@ -1,11 +1,18 @@
 import { Request, Response } from 'express';
 import { MembershipPlan, Payment, User, Membership } from '../models';
+import subscriptionService from '../services/subscriptionService';
 import stripeService from '../services/stripeService';
+import PaymentMethod from '../models/PaymentMethod';
+import Subscription from '../models/Subscription';
+import SubscriptionPlan from '../models/SubscriptionPlan';
 import { UserRole } from '../types/auth';
+import { v4 as uuidv4 } from 'uuid';
+import logger from '../utils/logger';
 
 interface AuthRequest extends Request {
   user?: {
     userId: number;
+    id: number;
     email: string;
     role: UserRole;
   };
@@ -294,9 +301,78 @@ const refundPayment = async (req: AuthRequest, res: Response): Promise<void> => 
 
 const createSubscription = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { planId } = req.body;
-    const userId = req.user?.userId;
+    const { planId, paymentMethodId } = req.body;
+    const userId = req.user?.userId || req.user?.id;
 
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    if (!planId) {
+      res.status(400).json({ error: 'Plan ID is required' });
+      return;
+    }
+
+    const result = await subscriptionService.createSubscription(
+      userId,
+      planId,
+      paymentMethodId
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Subscription created successfully',
+      data: {
+        subscription: result.subscription,
+        clientSecret: result.clientSecret
+      }
+    });
+  } catch (error: any) {
+    logger.error('Error creating subscription:', error);
+    res.status(500).json({ 
+      error: 'Failed to create subscription',
+      details: error.message 
+    });
+  }
+};
+
+const cancelSubscription = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId || req.user?.id;
+    const { immediately } = req.body;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const subscription = await subscriptionService.cancelSubscription(
+      userId,
+      immediately || false
+    );
+
+    res.json({
+      success: true,
+      message: immediately ? 
+        'Subscription cancelled immediately' : 
+        'Subscription will cancel at end of billing period',
+      data: subscription
+    });
+  } catch (error: any) {
+    logger.error('Error cancelling subscription:', error);
+    res.status(500).json({ 
+      error: 'Failed to cancel subscription',
+      details: error.message 
+    });
+  }
+};
+
+// New payment method management functions
+const createSetupIntent = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId || req.user?.id;
+    
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
@@ -308,13 +384,7 @@ const createSubscription = async (req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    const plan = await MembershipPlan.findByPk(planId);
-    if (!plan) {
-      res.status(404).json({ error: 'Plan not found' });
-      return;
-    }
-
-    // Create or get Stripe customer
+    // Ensure user has Stripe customer
     let stripeCustomerId = user.stripeCustomerId;
     if (!stripeCustomerId) {
       const customer = await stripeService.createCustomer({
@@ -326,100 +396,252 @@ const createSubscription = async (req: AuthRequest, res: Response): Promise<void
       await user.update({ stripeCustomerId });
     }
 
-    // Create subscription
-    const subscription = await stripeService.createSubscription(
-      stripeCustomerId,
-      plan.stripePriceId || '',
-      {
-        metadata: {
-          userId: userId.toString(),
-          planId: planId.toString()
-        }
-      }
-    ) as any;
-
-    // Create membership record
-    const membership = await Membership.create({
-      userId,
-      membershipPlanId: planId,
-      status: 'active',
-      stripeSubscriptionId: subscription.id,
-      startDate: new Date((subscription.current_period_start || Date.now() / 1000) * 1000),
-      endDate: new Date((subscription.current_period_end || Date.now() / 1000 + 86400 * 365) * 1000)
-    } as any);
-
-    await User.update(
-      { 
-        membershipPlanId: planId,
-        stripeCustomerId 
-      } as any,
-      { where: { id: userId } }
-    );
+    const setupIntent = await stripeService.createSetupIntent(stripeCustomerId);
 
     res.json({
       success: true,
-      subscription,
-      membership
+      clientSecret: setupIntent.client_secret
     });
   } catch (error: any) {
-    console.error('Error creating subscription:', error);
-    res.status(500).json({ 
-      error: 'Failed to create subscription',
-      details: error.message 
+    logger.error('Error creating setup intent:', error);
+    res.status(500).json({
+      error: 'Failed to create setup intent',
+      details: error.message
     });
   }
 };
 
-const cancelSubscription = async (req: AuthRequest, res: Response): Promise<void> => {
+const savePaymentMethod = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.userId;
+    const userId = req.user?.userId || req.user?.id;
+    const { paymentMethodId, isDefault = false } = req.body;
 
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
-    const membership = await Membership.findOne({
-      where: { userId, status: 'active' }
-    });
-
-    if (!membership) {
-      res.status(404).json({ error: 'No active membership found' });
+    if (!paymentMethodId) {
+      res.status(400).json({ error: 'Payment method ID is required' });
       return;
     }
 
-    if (!membership.stripeSubscriptionId) {
-      res.status(400).json({ error: 'No subscription to cancel' });
+    const user = await User.findByPk(userId);
+    if (!user || !user.stripeCustomerId) {
+      res.status(404).json({ error: 'User or Stripe customer not found' });
       return;
     }
 
-    // Cancel subscription with Stripe
-    const cancelledSubscription = await stripeService.cancelSubscription(
-      membership.stripeSubscriptionId
-    ) as any;
+    // Get payment method details from Stripe
+    const stripePaymentMethod = await stripeService.retrievePaymentMethod(paymentMethodId);
 
-    // Update membership
-    await membership.update({
-      status: 'cancelled',
-      cancelledAt: new Date(),
-      endDate: new Date((cancelledSubscription.current_period_end || Date.now() / 1000) * 1000)
+    // If this should be default, set all others to non-default
+    if (isDefault) {
+      await PaymentMethod.update(
+        { isDefault: false },
+        { where: { userId } }
+      );
+    }
+
+    // Create local payment method record
+    const paymentMethod = await PaymentMethod.create({
+      id: uuidv4(),
+      userId,
+      stripePaymentMethodId: paymentMethodId,
+      type: stripePaymentMethod.type as any,
+      card: stripePaymentMethod.card ? {
+        brand: stripePaymentMethod.card.brand,
+        last4: stripePaymentMethod.card.last4,
+        expMonth: stripePaymentMethod.card.exp_month,
+        expYear: stripePaymentMethod.card.exp_year,
+        funding: stripePaymentMethod.card.funding as any,
+        country: stripePaymentMethod.card.country || 'Unknown'
+      } : undefined,
+      isDefault,
+      isActive: true,
+      billingDetails: {
+        name: stripePaymentMethod.billing_details?.name,
+        email: stripePaymentMethod.billing_details?.email,
+        phone: stripePaymentMethod.billing_details?.phone,
+        address: stripePaymentMethod.billing_details?.address
+      }
     });
 
-    await User.update(
-      { } as any,
-      { where: { id: userId } }
-    );
+    res.status(201).json({
+      success: true,
+      message: 'Payment method saved successfully',
+      paymentMethod
+    });
+  } catch (error: any) {
+    logger.error('Error saving payment method:', error);
+    res.status(500).json({
+      error: 'Failed to save payment method',
+      details: error.message
+    });
+  }
+};
+
+const getUserPaymentMethods = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId || req.user?.id;
+    
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const paymentMethods = await PaymentMethod.findAll({
+      where: { userId, isActive: true },
+      order: [['isDefault', 'DESC'], ['createdAt', 'DESC']]
+    });
 
     res.json({
       success: true,
-      message: 'Subscription cancelled successfully',
-      endsAt: membership.endDate
+      paymentMethods
     });
   } catch (error: any) {
-    console.error('Error cancelling subscription:', error);
-    res.status(500).json({ 
-      error: 'Failed to cancel subscription',
-      details: error.message 
+    logger.error('Error fetching payment methods:', error);
+    res.status(500).json({
+      error: 'Failed to fetch payment methods',
+      details: error.message
+    });
+  }
+};
+
+const removePaymentMethod = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId || req.user?.id;
+    const { paymentMethodId } = req.params;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const paymentMethod = await PaymentMethod.findOne({
+      where: { id: paymentMethodId, userId }
+    });
+
+    if (!paymentMethod) {
+      res.status(404).json({ error: 'Payment method not found' });
+      return;
+    }
+
+    // Detach from Stripe
+    await stripeService.detachPaymentMethod(paymentMethod.stripePaymentMethodId);
+
+    // Mark as inactive locally
+    await paymentMethod.update({ isActive: false });
+
+    res.json({
+      success: true,
+      message: 'Payment method removed successfully'
+    });
+  } catch (error: any) {
+    logger.error('Error removing payment method:', error);
+    res.status(500).json({
+      error: 'Failed to remove payment method',
+      details: error.message
+    });
+  }
+};
+
+const createTournamentPayment = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId || req.user?.id;
+    const { tournamentId, amount, currency = 'USD' } = req.body;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    if (!tournamentId || !amount) {
+      res.status(400).json({ error: 'Tournament ID and amount are required' });
+      return;
+    }
+
+    const result = await subscriptionService.createPaymentForTournament(
+      userId,
+      tournamentId,
+      amount,
+      currency
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Tournament payment created successfully',
+      payment: result.payment,
+      clientSecret: result.clientSecret
+    });
+  } catch (error: any) {
+    logger.error('Error creating tournament payment:', error);
+    res.status(500).json({
+      error: 'Failed to create tournament payment',
+      details: error.message
+    });
+  }
+};
+
+const createBookingPayment = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId || req.user?.id;
+    const { bookingId, amount, currency = 'USD' } = req.body;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    if (!bookingId || !amount) {
+      res.status(400).json({ error: 'Booking ID and amount are required' });
+      return;
+    }
+
+    const result = await subscriptionService.createPaymentForBooking(
+      userId,
+      bookingId,
+      amount,
+      currency
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Booking payment created successfully',
+      payment: result.payment,
+      clientSecret: result.clientSecret
+    });
+  } catch (error: any) {
+    logger.error('Error creating booking payment:', error);
+    res.status(500).json({
+      error: 'Failed to create booking payment',
+      details: error.message
+    });
+  }
+};
+
+const processWebhook = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const signature = req.headers['stripe-signature'] as string;
+    const body = req.body;
+
+    if (!signature) {
+      res.status(400).json({ error: 'Missing Stripe signature' });
+      return;
+    }
+
+    const event = stripeService.constructWebhookEvent(body, signature);
+    await subscriptionService.processWebhook(event);
+
+    res.json({
+      success: true,
+      message: 'Webhook processed successfully'
+    });
+  } catch (error: any) {
+    logger.error('Error processing webhook:', error);
+    res.status(400).json({
+      error: 'Webhook processing failed',
+      details: error.message
     });
   }
 };
@@ -432,5 +654,12 @@ export default {
   getPaymentDetails,
   refundPayment,
   createSubscription,
-  cancelSubscription
+  cancelSubscription,
+  createSetupIntent,
+  savePaymentMethod,
+  getUserPaymentMethods,
+  removePaymentMethod,
+  createTournamentPayment,
+  createBookingPayment,
+  processWebhook
 };

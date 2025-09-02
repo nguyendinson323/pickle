@@ -7,106 +7,172 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       autoIncrement: true,
       primaryKey: true
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    surface_type: {
-      type: DataTypes.ENUM('indoor', 'outdoor', 'concrete', 'clay', 'artificial_grass'),
-      allowNull: false
-    },
-    owner_type: {
-      type: DataTypes.ENUM('club', 'partner'),
-      allowNull: false
-    },
-    owner_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    state_id: {
+    facility_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'states',
+        model: 'court_facilities',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'RESTRICT'
+      onDelete: 'CASCADE'
     },
-    address: {
-      type: DataTypes.TEXT,
+    court_number: {
+      type: DataTypes.STRING(10),
       allowNull: false
     },
-    latitude: {
-      type: DataTypes.DECIMAL(10, 8),
-      allowNull: false
-    },
-    longitude: {
-      type: DataTypes.DECIMAL(11, 8),
-      allowNull: false
-    },
-    amenities: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      defaultValue: []
-    },
-    hourly_rate: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
-    },
-    peak_hour_rate: {
-      type: DataTypes.DECIMAL(10, 2),
+    name: {
+      type: DataTypes.STRING(100),
       allowNull: true
     },
-    weekend_rate: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true
+    court_type: {
+      type: DataTypes.ENUM('indoor', 'outdoor'),
+      allowNull: false
     },
-    images: {
-      type: DataTypes.JSON,
+    surface: {
+      type: DataTypes.ENUM('concrete', 'asphalt', 'sport_court', 'acrylic', 'clay', 'grass', 'synthetic'),
+      allowNull: false
+    },
+    dimensions: {
+      type: DataTypes.JSONB,
+      allowNull: false
+    },
+    net_height: {
+      type: DataTypes.DECIMAL(4, 2),
+      allowNull: false
+    },
+    lighting: {
+      type: DataTypes.ENUM('none', 'basic', 'professional', 'led'),
       allowNull: false,
-      defaultValue: []
+      defaultValue: 'none'
+    },
+    has_lights: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    windscreen: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    covered: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    accessibility: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: {
+        wheelchairAccessible: false,
+        handicapParking: false,
+        accessibleRestrooms: false
+      }
+    },
+    condition: {
+      type: DataTypes.ENUM('excellent', 'good', 'fair', 'needs_repair'),
+      allowNull: false,
+      defaultValue: 'good'
+    },
+    last_inspection: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    next_maintenance_date: {
+      type: DataTypes.DATE,
+      allowNull: true
     },
     is_active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      allowNull: false,
+      defaultValue: true
+    },
+    is_available_for_booking: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    booking_notes: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    hourly_rate: {
+      type: DataTypes.DECIMAL(8, 2),
       allowNull: false
     },
-    operating_hours: {
-      type: DataTypes.JSON,
+    peak_hour_rate: {
+      type: DataTypes.DECIMAL(8, 2),
+      allowNull: false
+    },
+    currency: {
+      type: DataTypes.ENUM('MXN'),
+      allowNull: false,
+      defaultValue: 'MXN'
+    },
+    minimum_booking_duration: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 60
+    },
+    maximum_booking_duration: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 180
+    },
+    advance_booking_days: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 14
+    },
+    cancellation_deadline_hours: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 24
+    },
+    equipment_included: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: []
+    },
+    additional_equipment: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: []
+    },
+    special_features: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: []
+    },
+    photos: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: []
+    },
+    maintenance_history: {
+      type: DataTypes.JSONB,
+      allowNull: false
+    },
+    utilization_stats: {
+      type: DataTypes.JSONB,
       allowNull: false,
       defaultValue: {
-        0: { isOpen: true, startTime: '06:00', endTime: '22:00' },
-        1: { isOpen: true, startTime: '06:00', endTime: '22:00' },
-        2: { isOpen: true, startTime: '06:00', endTime: '22:00' },
-        3: { isOpen: true, startTime: '06:00', endTime: '22:00' },
-        4: { isOpen: true, startTime: '06:00', endTime: '22:00' },
-        5: { isOpen: true, startTime: '06:00', endTime: '22:00' },
-        6: { isOpen: true, startTime: '06:00', endTime: '22:00' }
+        totalBookings: 0,
+        totalHours: 0,
+        averageRating: 0
       }
     },
-    max_advance_booking_days: {
-      type: DataTypes.INTEGER,
-      defaultValue: 30,
-      allowNull: false
+    restrictions: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: {
+        memberOnly: false,
+        coachRequired: false,
+        tournamentUse: false
+      }
     },
-    min_booking_duration: {
-      type: DataTypes.INTEGER,
-      defaultValue: 60,
-      allowNull: false
-    },
-    max_booking_duration: {
-      type: DataTypes.INTEGER,
-      defaultValue: 240,
-      allowNull: false
-    },
-    cancellation_policy: {
-      type: DataTypes.TEXT,
-      defaultValue: 'Cancellations must be made at least 24 hours in advance for a full refund.',
+    operating_hours: {
+      type: DataTypes.JSONB,
       allowNull: false
     },
     created_at: {
@@ -121,12 +187,16 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }
   });
 
-  // Add indexes
-  await queryInterface.addIndex('courts', ['owner_type', 'owner_id']);
-  await queryInterface.addIndex('courts', ['state_id']);
-  await queryInterface.addIndex('courts', ['surface_type']);
-  await queryInterface.addIndex('courts', ['is_active']);
-  await queryInterface.addIndex('courts', ['latitude', 'longitude']);
+  // Add indexes exactly as defined in the model
+  await queryInterface.addIndex('courts', ['facility_id']);
+  await queryInterface.addIndex('courts', ['court_number', 'facility_id'], { unique: true });
+  await queryInterface.addIndex('courts', ['is_active', 'is_available_for_booking']);
+  await queryInterface.addIndex('courts', ['court_type']);
+  await queryInterface.addIndex('courts', ['surface']);
+  await queryInterface.addIndex('courts', ['condition']);
+  await queryInterface.addIndex('courts', ['hourly_rate']);
+  await queryInterface.addIndex('courts', ['last_inspection']);
+  await queryInterface.addIndex('courts', ['next_maintenance_date']);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {

@@ -12,6 +12,39 @@ export interface UserProfile {
   role: UserRole;
   isActive: boolean;
   profile: PlayerProfile | CoachProfile | ClubProfile | PartnerProfile | StateCommitteeProfile | null;
+  stripeCustomerId?: string;
+  subscription?: UserSubscription;
+  subscriptionStatus?: 'active' | 'past_due' | 'canceled' | 'unpaid' | 'incomplete' | 'trialing' | null;
+  subscriptionFeatures?: SubscriptionFeatures;
+}
+
+export interface UserSubscription {
+  id: string;
+  planId: string;
+  planName: string;
+  status: 'active' | 'past_due' | 'canceled' | 'unpaid' | 'incomplete' | 'trialing';
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  amount: number;
+  currency: 'USD' | 'MXN';
+  interval: 'month' | 'year';
+  nextBillingDate: string;
+}
+
+export interface SubscriptionFeatures {
+  maxTournamentRegistrations?: number;
+  maxCourtBookings?: number;
+  maxPlayerMatches?: number;
+  advancedFilters: boolean;
+  prioritySupport: boolean;
+  analyticsAccess: boolean;
+  customBranding: boolean;
+  currentUsage?: {
+    tournamentRegistrations: number;
+    courtBookings: number;
+    playerMatches: number;
+  };
 }
 
 export interface PlayerProfile {
@@ -109,4 +142,5 @@ export interface AuthState {
   error: string | null;
   loginAttempts: number;
   lastLoginTime: string | null;
+  subscriptionLoaded: boolean;
 }

@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { logoutUser, selectUser, selectIsAuthenticated } from '@/store/authSlice';
-import { Bars3Icon, XMarkIcon, UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon, UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { APP_NAME, ROUTES, USER_ROLES } from '@/utils/constants';
 import { cn } from '@/utils/helpers';
+import NotificationBell from './NotificationBell';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -65,6 +66,10 @@ const Header: React.FC = () => {
     { name: 'Rankings', href: ROUTES.RANKINGS },
   ];
 
+  const authenticatedNavigation = [
+    { name: 'Messages', href: ROUTES.MESSAGING, icon: ChatBubbleLeftRightIcon },
+  ];
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,10 +100,24 @@ const Header: React.FC = () => {
                 {item.name}
               </Link>
             ))}
+            {/* Authenticated Navigation */}
+            {isAuthenticated && authenticatedNavigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 flex items-center space-x-1"
+              >
+                <item.icon className="w-4 h-4" />
+                <span>{item.name}</span>
+              </Link>
+            ))}
           </nav>
 
           {/* User Menu / Login Button */}
           <div className="flex items-center space-x-4">
+            {/* Notification Bell */}
+            <NotificationBell size="md" />
+            
             {isAuthenticated && user ? (
               <div className="relative">
                 <button
@@ -154,6 +173,15 @@ const Header: React.FC = () => {
                         Profile
                       </Link>
                       
+                      <Link
+                        to={ROUTES.MESSAGING}
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        <ChatBubbleLeftRightIcon className="w-4 h-4 mr-3" />
+                        Messages
+                      </Link>
+                      
                       <button
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
@@ -200,6 +228,19 @@ const Header: React.FC = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
+                </Link>
+              ))}
+              
+              {/* Authenticated Mobile Navigation */}
+              {isAuthenticated && authenticatedNavigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span>{item.name}</span>
                 </Link>
               ))}
             </nav>

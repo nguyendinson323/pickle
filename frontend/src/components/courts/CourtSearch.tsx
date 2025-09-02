@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { updateSearchFilters, fetchCourts, resetSearchFilters } from '../../store/courtSlice';
+import { updateSearchFilters, fetchFacilities, resetSearchFilters } from '../../store/courtSlice';
 import Button from '../ui/Button';
 
 export const CourtSearch: React.FC = () => {
@@ -9,50 +9,96 @@ export const CourtSearch: React.FC = () => {
   const { states } = useAppSelector(state => state.data);
 
   const [localFilters, setLocalFilters] = useState({
-    search: searchFilters.search || '',
-    surfaceType: searchFilters.surfaceType || '',
-    stateId: searchFilters.stateId || '',
+    city: searchFilters.city || '',
+    state: searchFilters.state || '',
+    facilityType: searchFilters.facilityType || '',
+    courtSurface: searchFilters.courtSurface || [],
+    amenities: searchFilters.amenities || [],
     minPrice: searchFilters.minPrice?.toString() || '',
     maxPrice: searchFilters.maxPrice?.toString() || '',
-    amenities: searchFilters.amenities || [],
-    sortBy: searchFilters.sortBy || 'created_at',
-    sortOrder: searchFilters.sortOrder || 'DESC'
+    rating: searchFilters.rating?.toString() || '',
+    hasLights: searchFilters.hasLights || false,
+    accessibility: searchFilters.accessibility || false,
+    latitude: searchFilters.latitude?.toString() || '',
+    longitude: searchFilters.longitude?.toString() || '',
+    radius: searchFilters.radius?.toString() || '25'
   });
 
   const [showAdvanced, setShowAdvanced] = useState(false);
 
-  const surfaceTypeOptions = [
-    { value: '', label: 'Any surface' },
+  const facilityTypeOptions = [
+    { value: '', label: 'Any type' },
+    { value: 'indoor', label: 'Indoor' },
+    { value: 'outdoor', label: 'Outdoor' },
+    { value: 'mixed', label: 'Mixed' }
+  ];
+
+  const courtSurfaceOptions = [
     { value: 'concrete', label: 'Concrete' },
     { value: 'asphalt', label: 'Asphalt' },
     { value: 'acrylic', label: 'Acrylic' },
-    { value: 'composite', label: 'Composite' }
+    { value: 'composite', label: 'Composite' },
+    { value: 'outdoor_court', label: 'Outdoor Court' },
+    { value: 'indoor_court', label: 'Indoor Court' }
   ];
 
-  const sortOptions = [
-    { value: 'created_at:DESC', label: 'Most recent' },
-    { value: 'created_at:ASC', label: 'Oldest' },
-    { value: 'hourlyRate:ASC', label: 'Price: low to high' },
-    { value: 'hourlyRate:DESC', label: 'Price: high to low' },
-    { value: 'name:ASC', label: 'Name: A-Z' },
-    { value: 'name:DESC', label: 'Name: Z-A' }
+  const ratingOptions = [
+    { value: '', label: 'Any rating' },
+    { value: '4', label: '4+ stars' },
+    { value: '3', label: '3+ stars' },
+    { value: '2', label: '2+ stars' },
+    { value: '1', label: '1+ stars' }
   ];
 
   const amenityOptions = [
-    { value: 'lighting', label: 'Lighting' },
-    { value: 'seating', label: 'Seating' },
     { value: 'parking', label: 'Parking' },
     { value: 'restrooms', label: 'Restrooms' },
-    { value: 'water_fountain', label: 'Water Fountain' },
+    { value: 'pro_shop', label: 'Pro Shop' },
     { value: 'equipment_rental', label: 'Equipment Rental' },
     { value: 'cafeteria', label: 'Cafeteria' },
-    { value: 'pro_shop', label: 'Pro Shop' },
-    { value: 'coaching_area', label: 'Coaching Area' }
+    { value: 'showers', label: 'Showers' },
+    { value: 'lockers', label: 'Lockers' },
+    { value: 'wifi', label: 'WiFi' },
+    { value: 'air_conditioning', label: 'Air Conditioning' },
+    { value: 'spectator_seating', label: 'Spectator Seating' },
+    { value: 'coaching_services', label: 'Coaching Services' },
+    { value: 'tournaments', label: 'Tournament Hosting' }
   ];
 
   const stateOptions = [
     { value: '', label: 'Any state' },
-    ...states.map(state => ({ value: state.id.toString(), label: state.name }))
+    { value: 'Aguascalientes', label: 'Aguascalientes' },
+    { value: 'Baja California', label: 'Baja California' },
+    { value: 'Baja California Sur', label: 'Baja California Sur' },
+    { value: 'Campeche', label: 'Campeche' },
+    { value: 'Chiapas', label: 'Chiapas' },
+    { value: 'Chihuahua', label: 'Chihuahua' },
+    { value: 'Ciudad de México', label: 'Ciudad de México' },
+    { value: 'Coahuila', label: 'Coahuila' },
+    { value: 'Colima', label: 'Colima' },
+    { value: 'Durango', label: 'Durango' },
+    { value: 'Guanajuato', label: 'Guanajuato' },
+    { value: 'Guerrero', label: 'Guerrero' },
+    { value: 'Hidalgo', label: 'Hidalgo' },
+    { value: 'Jalisco', label: 'Jalisco' },
+    { value: 'México', label: 'México' },
+    { value: 'Michoacán', label: 'Michoacán' },
+    { value: 'Morelos', label: 'Morelos' },
+    { value: 'Nayarit', label: 'Nayarit' },
+    { value: 'Nuevo León', label: 'Nuevo León' },
+    { value: 'Oaxaca', label: 'Oaxaca' },
+    { value: 'Puebla', label: 'Puebla' },
+    { value: 'Querétaro', label: 'Querétaro' },
+    { value: 'Quintana Roo', label: 'Quintana Roo' },
+    { value: 'San Luis Potosí', label: 'San Luis Potosí' },
+    { value: 'Sinaloa', label: 'Sinaloa' },
+    { value: 'Sonora', label: 'Sonora' },
+    { value: 'Tabasco', label: 'Tabasco' },
+    { value: 'Tamaulipas', label: 'Tamaulipas' },
+    { value: 'Tlaxcala', label: 'Tlaxcala' },
+    { value: 'Veracruz', label: 'Veracruz' },
+    { value: 'Yucatán', label: 'Yucatán' },
+    { value: 'Zacatecas', label: 'Zacatecas' }
   ];
 
   const handleInputChange = (field: string, value: string) => {
@@ -68,21 +114,39 @@ export const CourtSearch: React.FC = () => {
     }));
   };
 
-  const handleSortChange = (value: string) => {
-    const [sortBy, sortOrder] = value.split(':');
-    setLocalFilters(prev => ({ ...prev, sortBy, sortOrder: sortOrder as 'ASC' | 'DESC' }));
+  const handleCourtSurfaceChange = (surface: string, checked: boolean) => {
+    setLocalFilters(prev => ({
+      ...prev,
+      courtSurface: checked
+        ? [...prev.courtSurface, surface]
+        : prev.courtSurface.filter(s => s !== surface)
+    }));
+  };
+
+  const handleLocationSearch = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocalFilters(prev => ({
+            ...prev,
+            latitude: position.coords.latitude.toString(),
+            longitude: position.coords.longitude.toString()
+          }));
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          alert('Unable to get your location. Please enter manually.');
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
   };
 
   const handleSearch = () => {
-    const filters: any = { ...localFilters, page: 1 };
+    const filters: any = { ...localFilters, page: 1, limit: 10 };
     
     // Convert string values to appropriate types
-    if (filters.stateId) {
-      filters.stateId = parseInt(filters.stateId);
-    } else {
-      delete filters.stateId;
-    }
-    
     if (filters.minPrice) {
       filters.minPrice = parseFloat(filters.minPrice);
     } else {
@@ -95,42 +159,65 @@ export const CourtSearch: React.FC = () => {
       delete filters.maxPrice;
     }
 
-    // Clean up empty values
+    if (filters.rating) {
+      filters.rating = parseFloat(filters.rating);
+    } else {
+      delete filters.rating;
+    }
+
+    if (filters.latitude && filters.longitude) {
+      filters.latitude = parseFloat(filters.latitude);
+      filters.longitude = parseFloat(filters.longitude);
+      if (filters.radius) {
+        filters.radius = parseFloat(filters.radius);
+      }
+    } else {
+      delete filters.latitude;
+      delete filters.longitude;
+      delete filters.radius;
+    }
+
+    // Clean up empty values and arrays
     Object.keys(filters).forEach(key => {
-      if (filters[key] === '' || filters[key] === null || filters[key] === undefined) {
+      if (filters[key] === '' || filters[key] === null || filters[key] === undefined ||
+          (Array.isArray(filters[key]) && filters[key].length === 0)) {
         delete filters[key];
       }
     });
 
     dispatch(updateSearchFilters(filters));
-    dispatch(fetchCourts(filters));
+    dispatch(fetchFacilities(filters));
   };
 
   const handleReset = () => {
     setLocalFilters({
-      search: '',
-      surfaceType: '',
-      stateId: '',
+      city: '',
+      state: '',
+      facilityType: '',
+      courtSurface: [],
+      amenities: [],
       minPrice: '',
       maxPrice: '',
-      amenities: [],
-      sortBy: 'created_at',
-      sortOrder: 'DESC'
+      rating: '',
+      hasLights: false,
+      accessibility: false,
+      latitude: '',
+      longitude: '',
+      radius: '25'
     });
     dispatch(resetSearchFilters());
-    dispatch(fetchCourts({ page: 1, limit: 10, sortBy: 'created_at', sortOrder: 'DESC' }));
+    dispatch(fetchFacilities({ page: 1, limit: 10 }));
   };
 
-  // Auto-search when sort order changes
+  // Auto-search on location changes
   useEffect(() => {
-    if (localFilters.sortBy !== searchFilters.sortBy || 
-        localFilters.sortOrder !== searchFilters.sortOrder) {
+    if (localFilters.latitude && localFilters.longitude) {
       const timer = setTimeout(() => {
         handleSearch();
-      }, 300);
+      }, 500);
       return () => clearTimeout(timer);
     }
-  }, [localFilters.sortBy, localFilters.sortOrder, searchFilters.sortBy, searchFilters.sortOrder, handleSearch]);
+  }, [localFilters.latitude, localFilters.longitude]);
 
   return (
     <div className="bg-white shadow rounded-lg p-6 mb-6">
@@ -148,15 +235,15 @@ export const CourtSearch: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="lg:col-span-2">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Search by name or location
+            City
           </label>
           <input
             type="text"
-            value={localFilters.search}
-            onChange={(e) => handleInputChange('search', e.target.value)}
-            placeholder="Court name, address..."
+            value={localFilters.city}
+            onChange={(e) => handleInputChange('city', e.target.value)}
+            placeholder="Enter city name..."
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -166,8 +253,8 @@ export const CourtSearch: React.FC = () => {
             State
           </label>
           <select
-            value={localFilters.stateId}
-            onChange={(e) => handleInputChange('stateId', e.target.value)}
+            value={localFilters.state}
+            onChange={(e) => handleInputChange('state', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {stateOptions.map((option) => (
@@ -180,14 +267,31 @@ export const CourtSearch: React.FC = () => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Sort by
+            Facility Type
           </label>
           <select
-            value={`${localFilters.sortBy}:${localFilters.sortOrder}`}
-            onChange={(e) => handleSortChange(e.target.value)}
+            value={localFilters.facilityType}
+            onChange={(e) => handleInputChange('facilityType', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            {sortOptions.map((option) => (
+            {facilityTypeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Minimum Rating
+          </label>
+          <select
+            value={localFilters.rating}
+            onChange={(e) => handleInputChange('rating', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {ratingOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -198,27 +302,10 @@ export const CourtSearch: React.FC = () => {
 
       {showAdvanced && (
         <div className="mt-6 pt-6 border-t border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Surface
-              </label>
-              <select
-                value={localFilters.surfaceType}
-                onChange={(e) => handleInputChange('surfaceType', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {surfaceTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Minimum price (MXN/h)
+                Minimum Price (MXN/h)
               </label>
               <input
                 type="number"
@@ -232,7 +319,7 @@ export const CourtSearch: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Maximum price (MXN/h)
+                Maximum Price (MXN/h)
               </label>
               <input
                 type="number"
@@ -243,11 +330,54 @@ export const CourtSearch: React.FC = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
+            <div className="flex items-center">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={localFilters.hasLights}
+                  onChange={(e) => setLocalFilters(prev => ({ ...prev, hasLights: e.target.checked }))}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">Has Lighting</span>
+              </label>
+            </div>
+
+            <div className="flex items-center">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={localFilters.accessibility}
+                  onChange={(e) => setLocalFilters(prev => ({ ...prev, accessibility: e.target.checked }))}
+                  className="mr-2"
+                />
+                <span className="text-sm font-medium text-gray-700">Accessibility</span>
+              </label>
+            </div>
           </div>
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-3">
-              Available services
+              Court Surfaces
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              {courtSurfaceOptions.map((surface) => (
+                <label key={surface.value} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={localFilters.courtSurface.includes(surface.value)}
+                    onChange={(e) => handleCourtSurfaceChange(surface.value, e.target.checked)}
+                    className="mr-2"
+                  />
+                  <span className="text-sm">{surface.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Amenities & Services
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {amenityOptions.map((amenity) => (
@@ -261,6 +391,68 @@ export const CourtSearch: React.FC = () => {
                   <span className="text-sm">{amenity.label}</span>
                 </label>
               ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h4 className="text-sm font-medium text-gray-700 mb-3">Location-Based Search</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Latitude
+                </label>
+                <input
+                  type="number"
+                  value={localFilters.latitude}
+                  onChange={(e) => handleInputChange('latitude', e.target.value)}
+                  placeholder="19.4326"
+                  step="any"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Longitude
+                </label>
+                <input
+                  type="number"
+                  value={localFilters.longitude}
+                  onChange={(e) => handleInputChange('longitude', e.target.value)}
+                  placeholder="-99.1332"
+                  step="any"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Radius (km)
+                </label>
+                <input
+                  type="number"
+                  value={localFilters.radius}
+                  onChange={(e) => handleInputChange('radius', e.target.value)}
+                  placeholder="25"
+                  min="1"
+                  max="200"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="flex items-end">
+                <Button
+                  variant="secondary"
+                  onClick={handleLocationSearch}
+                  className="w-full"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Use My Location
+                </Button>
+              </div>
             </div>
           </div>
         </div>

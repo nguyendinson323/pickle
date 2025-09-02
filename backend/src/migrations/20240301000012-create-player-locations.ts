@@ -11,10 +11,9 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'players',
+        model: 'users',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     },
     latitude: {
@@ -27,7 +26,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
     address: {
       type: DataTypes.STRING(500),
-      allowNull: false
+      allowNull: true
     },
     city: {
       type: DataTypes.STRING(100),
@@ -49,21 +48,39 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     is_current_location: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true
+    },
+    is_travel_location: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: false
+    },
+    travel_start_date: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    travel_end_date: {
+      type: DataTypes.DATE,
+      allowNull: true
     },
     location_name: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    radius: {
+    search_radius: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 10
+      defaultValue: 25
     },
-    is_public: {
+    is_active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true
+    },
+    privacy_level: {
+      type: DataTypes.ENUM('exact', 'city', 'state'),
+      allowNull: false,
+      defaultValue: 'city'
     },
     accuracy: {
       type: DataTypes.FLOAT,
@@ -86,12 +103,12 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }
   });
 
-  // Add indexes
+  // Add indexes exactly as defined in the model
   await queryInterface.addIndex('player_locations', ['player_id']);
   await queryInterface.addIndex('player_locations', ['latitude', 'longitude']);
   await queryInterface.addIndex('player_locations', ['city', 'state']);
-  await queryInterface.addIndex('player_locations', ['is_current_location']);
-  await queryInterface.addIndex('player_locations', ['is_public']);
+  await queryInterface.addIndex('player_locations', ['is_active', 'is_current_location']);
+  await queryInterface.addIndex('player_locations', ['is_travel_location', 'travel_start_date', 'travel_end_date']);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {

@@ -16,6 +16,9 @@ import Court from './Court';
 import Reservation from './Reservation';
 import CourtSchedule from './CourtSchedule';
 import CourtReview from './CourtReview';
+import CourtFacility from './CourtFacility';
+import CourtBooking from './CourtBooking';
+import MaintenanceRecord from './MaintenanceRecord';
 import Tournament from './Tournament';
 import TournamentCategory from './TournamentCategory';
 import TournamentRegistration from './TournamentRegistration';
@@ -60,6 +63,9 @@ const models = {
   Reservation,
   CourtSchedule,
   CourtReview,
+  CourtFacility,
+  CourtBooking,
+  MaintenanceRecord,
   Tournament,
   TournamentCategory,
   TournamentRegistration,
@@ -180,8 +186,33 @@ CourtReview.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 Court.hasMany(CourtReview, { foreignKey: 'court_id', as: 'reviews' });
 CourtReview.belongsTo(Court, { foreignKey: 'court_id', as: 'court' });
 
-Reservation.hasOne(CourtReview, { foreignKey: 'reservation_id', as: 'courtReview' });
-CourtReview.belongsTo(Reservation, { foreignKey: 'reservation_id', as: 'reservation' });
+CourtFacility.hasMany(CourtReview, { foreignKey: 'facility_id', as: 'reviews' });
+CourtReview.belongsTo(CourtFacility, { foreignKey: 'facility_id', as: 'facility' });
+
+CourtBooking.hasOne(CourtReview, { foreignKey: 'booking_id', as: 'review' });
+CourtReview.belongsTo(CourtBooking, { foreignKey: 'booking_id', as: 'booking' });
+
+// Court Management System associations
+// CourtFacility associations
+User.hasMany(CourtFacility, { foreignKey: 'owner_id', as: 'ownedFacilities' });
+CourtFacility.belongsTo(User, { foreignKey: 'owner_id', as: 'owner' });
+
+CourtFacility.hasMany(Court, { foreignKey: 'facility_id', as: 'courts' });
+Court.belongsTo(CourtFacility, { foreignKey: 'facility_id', as: 'facility' });
+
+// CourtBooking associations
+Court.hasMany(CourtBooking, { foreignKey: 'court_id', as: 'bookings' });
+CourtBooking.belongsTo(Court, { foreignKey: 'court_id', as: 'court' });
+
+User.hasMany(CourtBooking, { foreignKey: 'user_id', as: 'courtBookings' });
+CourtBooking.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// MaintenanceRecord associations
+Court.hasMany(MaintenanceRecord, { foreignKey: 'court_id', as: 'maintenanceRecords' });
+MaintenanceRecord.belongsTo(Court, { foreignKey: 'court_id', as: 'court' });
+
+CourtFacility.hasMany(MaintenanceRecord, { foreignKey: 'facility_id', as: 'maintenanceRecords' });
+MaintenanceRecord.belongsTo(CourtFacility, { foreignKey: 'facility_id', as: 'facility' });
 
 // Tournament associations
 // Tournament to User (organizer)
@@ -286,7 +317,7 @@ PlayerFinderRequest.hasMany(PlayerFinderMatch, { foreignKey: 'request_id', as: '
 PlayerFinderMatch.belongsTo(PlayerFinderRequest, { foreignKey: 'request_id', as: 'request' });
 
 Player.hasMany(PlayerFinderMatch, { foreignKey: 'player_id', as: 'finderMatches' });
-PlayerFinderMatch.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
+PlayerFinderMatch.belongsTo(Player, { foreignKey: 'player_id', as: 'matchedPlayer' });
 
 // Conversation associations
 User.hasMany(Conversation, { foreignKey: 'creator_id', as: 'createdConversations' });
@@ -413,6 +444,9 @@ export {
   Reservation,
   CourtSchedule,
   CourtReview,
+  CourtFacility,
+  CourtBooking,
+  MaintenanceRecord,
   Tournament,
   TournamentCategory,
   TournamentRegistration,

@@ -1,189 +1,606 @@
 import { Request, Response } from 'express';
 import { CourtService } from '../services/courtService';
+import CourtFacility from '../models/CourtFacility';
 import Court from '../models/Court';
+import CourtBooking from '../models/CourtBooking';
+import MaintenanceRecord from '../models/MaintenanceRecord';
 import CourtReview from '../models/CourtReview';
 import User from '../models/User';
-import State from '../models/State';
-import Club from '../models/Club';
-import Partner from '../models/Partner';
 
-const createCourt = async (req: Request, res: Response): Promise<void> => {
+// FACILITY MANAGEMENT ENDPOINTS
+
+// Search facilities with advanced filters
+const searchFacilities = async (req: Request, res: Response): Promise<void> => {
   try {
-    const court = await CourtService.createCourt(req.body);
-    res.status(201).json({ success: true, message: 'Cancha creada exitosamente', data: court });
-  } catch (error: any) {
-    console.error('Error creating court:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
-  }
-};
+    const {
+      page = 1,
+      limit = 10,
+      city,
+      state,
+      facilityType,
+      courtSurface,
+      amenities,
+      minPrice,
+      maxPrice,
+      rating,
+      hasLights,
+      accessibility,
+      latitude,
+      longitude,
+      radius
+    } = req.query;
 
-const getCourts = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { page = 1, limit = 10, search, surfaceType, stateId, minPrice, maxPrice, amenities, sortBy = 'created_at', sortOrder = 'DESC' } = req.query;
+    const filters: any = {};
 
-    const filters = {
-      search: search as string,
-      surfaceType: surfaceType as string,
-      stateId: stateId ? parseInt(stateId as string) : undefined,
-      minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
-      maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
-      amenities: amenities ? (amenities as string).split(',') : undefined,
-      sortBy: sortBy as 'distance' | 'price' | 'rating' | 'name' | undefined,
-      sortOrder: ((sortOrder as string)?.toLowerCase() === 'desc' ? 'desc' : 'asc') as 'asc' | 'desc',
-      page: parseInt(page as string),
-      limit: parseInt(limit as string)
-    };
+    if (city) filters.city = city as string;
+    if (state) filters.state = state as string;
+    if (facilityType) filters.facilityType = facilityType as 'indoor' | 'outdoor' | 'mixed';
+    if (courtSurface) filters.courtSurface = (courtSurface as string).split(',');
+    if (amenities) filters.amenities = (amenities as string).split(',');
+    if (rating) filters.rating = parseFloat(rating as string);
+    if (hasLights) filters.hasLights = (hasLights as string) === 'true';
+    if (accessibility) filters.accessibility = (accessibility as string) === 'true';
 
-    const courts = await CourtService.searchCourts(filters);
+    if (minPrice || maxPrice) {
+      filters.priceRange = {
+        min: minPrice ? parseFloat(minPrice as string) : 0,
+        max: maxPrice ? parseFloat(maxPrice as string) : 10000
+      };
+    }
+
+    if (latitude && longitude) {
+      filters.location = {
+        latitude: parseFloat(latitude as string),
+        longitude: parseFloat(longitude as string),
+        radius: radius ? parseFloat(radius as string) : 25
+      };
+    }
+
+    const result = await CourtService.searchFacilities(
+      filters,
+      parseInt(page as string),
+      parseInt(limit as string)
+    );
+
     res.json({
       success: true,
-      data: courts,
-      pagination: { current: filters.page, pages: Math.ceil(courts.length / filters.limit), total: courts.length, limit: filters.limit }
+      data: result.facilities,
+      pagination: {
+        current: result.page,
+        pages: result.totalPages,
+        total: result.total,
+        limit: parseInt(limit as string)
+      }
     });
   } catch (error: any) {
-    console.error('Error fetching courts:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
+    console.error('Error searching facilities:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
   }
 };
 
-const getCourtById = async (req: Request, res: Response): Promise<void> => {
+// Get facility by ID with complete details
+const getFacilityById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const court = await Court.findByPk(id, {
+    
+    const facility = await CourtFacility.findByPk(id, {
       include: [
-        { model: State, as: 'state', attributes: ['id', 'name', 'code'] },
-        { model: Club, as: 'clubOwner', attributes: ['id', 'clubName', 'contactEmail'] },
-        { model: Partner, as: 'partnerOwner', attributes: ['id', 'businessName', 'contactEmail'] },
-        { model: CourtReview, as: 'reviews', include: [{ model: User, as: 'user', attributes: ['id', 'username'] }], order: [['createdAt', 'DESC']], limit: 10 }
+        {
+          model: Court,
+          as: 'courts',
+          where: { isActive: true },
+          required: false,
+          include: [
+            {
+              model: CourtReview,
+              as: 'reviews',
+              where: { status: 'active' },
+              required: false,
+              limit: 5,
+              order: [['createdAt', 'DESC']],
+              include: [
+                {
+                  model: User,
+                  as: 'user',
+                  attributes: ['id', 'username']
+                }
+              ]
+            }
+          ]
+        },
+        {
+          model: CourtReview,
+          as: 'reviews',
+          where: { status: 'active' },
+          required: false,
+          limit: 10,
+          order: [['createdAt', 'DESC']],
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'username']
+            }
+          ]
+        }
       ]
     });
 
-    if (!court) { res.status(404).json({ success: false, message: 'Cancha no encontrada' }); return; }
+    if (!facility) {
+      res.status(404).json({
+        success: false,
+        message: 'Instalación no encontrada'
+      });
+      return;
+    }
 
-    const reviews = await CourtReview.findAll({ where: { courtId: id }, attributes: ['rating'] });
-    const averageRating = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
-
-    const courtData = court.toJSON();
-    (courtData as any).averageRating = Math.round(averageRating * 10) / 10;
-    (courtData as any).totalReviews = reviews.length;
-
-    res.json({ success: true, data: courtData });
+    res.json({
+      success: true,
+      data: facility
+    });
   } catch (error: any) {
-    console.error('Error fetching court:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
+    console.error('Error fetching facility:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
   }
 };
 
-const updateCourt = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const court = await Court.findByPk(id);
-    if (!court) { res.status(404).json({ success: false, message: 'Cancha no encontrada' }); return; }
+// AVAILABILITY AND BOOKING ENDPOINTS
 
-    await court.update(req.body);
-    res.json({ success: true, message: 'Cancha actualizada exitosamente', data: court });
+// Check court availability for specific date and time
+const checkCourtAvailability = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { courtId, date, startTime, endTime } = req.query;
+
+    if (!courtId || !date || !startTime || !endTime) {
+      res.status(400).json({
+        success: false,
+        message: 'Parámetros requeridos: courtId, date, startTime, endTime'
+      });
+      return;
+    }
+
+    const availability = await CourtService.checkCourtAvailability(
+      courtId as string,
+      date as string,
+      startTime as string,
+      endTime as string
+    );
+
+    res.json({
+      success: true,
+      data: availability
+    });
   } catch (error: any) {
-    console.error('Error updating court:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
+    console.error('Error checking availability:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
   }
 };
 
-const deleteCourt = async (req: Request, res: Response): Promise<void> => {
+// Get available time slots for a court on specific date
+const getAvailableSlots = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const court = await Court.findByPk(id);
-    if (!court) { res.status(404).json({ success: false, message: 'Cancha no encontrada' }); return; }
+    const { courtId, date } = req.query;
 
-    await court.update({ isActive: false });
-    res.json({ success: true, message: 'Cancha desactivada exitosamente' });
+    if (!courtId || !date) {
+      res.status(400).json({
+        success: false,
+        message: 'Parámetros requeridos: courtId, date'
+      });
+      return;
+    }
+
+    const slots = await CourtService.getAvailableSlots(
+      courtId as string,
+      date as string
+    );
+
+    res.json({
+      success: true,
+      data: slots
+    });
   } catch (error: any) {
-    console.error('Error deleting court:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
+    console.error('Error fetching available slots:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
   }
 };
 
-const getCourtsNearLocation = async (req: Request, res: Response): Promise<void> => {
+// Calculate booking price
+const calculateBookingPrice = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { latitude, longitude, radius = 25 } = req.query;
-    if (!latitude || !longitude) { res.status(400).json({ success: false, message: 'Latitud y longitud son requeridas' }); return; }
+    const { courtId, date, startTime, endTime } = req.query;
 
-    const courts = await CourtService.getCourtsNearLocation(parseFloat(latitude as string), parseFloat(longitude as string), parseFloat(radius as string));
-    res.json({ success: true, data: courts });
+    if (!courtId || !date || !startTime || !endTime) {
+      res.status(400).json({
+        success: false,
+        message: 'Parámetros requeridos: courtId, date, startTime, endTime'
+      });
+      return;
+    }
+
+    const pricing = await CourtService.calculateBookingPrice(
+      courtId as string,
+      date as string,
+      startTime as string,
+      endTime as string
+    );
+
+    res.json({
+      success: true,
+      data: pricing
+    });
   } catch (error: any) {
-    console.error('Error fetching nearby courts:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
+    console.error('Error calculating price:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
   }
 };
 
-const getCourtsByOwner = async (req: Request, res: Response): Promise<void> => {
+// Create a new booking
+const createBooking = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { ownerType, ownerId } = req.params;
-    if (!['club', 'partner'].includes(ownerType)) { res.status(400).json({ success: false, message: 'Tipo de propietario inválido' }); return; }
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'Usuario no autenticado'
+      });
+      return;
+    }
 
-    const courts = await Court.findAll({ where: { ownerType, ownerId: parseInt(ownerId), isActive: true }, include: [{ model: State, as: 'state', attributes: ['id', 'name', 'code'] }], order: [['createdAt', 'DESC']] });
-
-    const courtsWithRatings = await Promise.all(courts.map(async court => {
-      const reviews = await CourtReview.findAll({ where: { courtId: court.id }, attributes: ['rating'] });
-      const averageRating = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
-      const courtData = court.toJSON();
-      (courtData as any).averageRating = Math.round(averageRating * 10) / 10;
-      (courtData as any).totalReviews = reviews.length;
-      return courtData;
-    }));
-
-    res.json({ success: true, data: courtsWithRatings });
-  } catch (error: any) {
-    console.error('Error fetching owner courts:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
-  }
-};
-
-const updateCourtImages = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const { images } = req.body;
-    if (!Array.isArray(images)) { res.status(400).json({ success: false, message: 'Las imágenes deben ser un array de URLs' }); return; }
-
-    const court = await Court.findByPk(id);
-    if (!court) { res.status(404).json({ success: false, message: 'Cancha no encontrada' }); return; }
-
-    await court.update({ images });
-    res.json({ success: true, message: 'Imágenes actualizadas exitosamente', data: { images: court.images } });
-  } catch (error: any) {
-    console.error('Error updating court images:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
-  }
-};
-
-const getCourtStats = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const court = await Court.findByPk(id);
-    if (!court) { res.status(404).json({ success: false, message: 'Cancha no encontrada' }); return; }
-
-    const reviews = await CourtReview.findAll({ where: { courtId: id } });
-    const stats = {
-      totalReviews: reviews.length,
-      averageRating: reviews.length > 0 ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10) / 10 : 0,
-      ratingDistribution: [5,4,3,2,1].reduce((acc, val) => ({ ...acc, [val]: reviews.filter(r => r.rating === val).length }), {} as Record<number, number>),
-      amenityRatings: ['cleanliness','equipment','facilities','location'].reduce((acc, key) => ({ ...acc, [key]: reviews.length > 0 ? Math.round((reviews.reduce((sum, r) => sum + ((r.amenityRatings?.[key] || 0)),0)/reviews.length)*10)/10 : 0 }), {} as Record<string, number>)
+    const bookingData = {
+      ...req.body,
+      userId
     };
 
-    res.json({ success: true, data: stats });
+    // Validate required fields
+    const requiredFields = ['courtId', 'bookingDate', 'startTime', 'endTime', 'participants', 'contactInfo'];
+    for (const field of requiredFields) {
+      if (!bookingData[field]) {
+        res.status(400).json({
+          success: false,
+          message: `Campo requerido: ${field}`
+        });
+        return;
+      }
+    }
+
+    const booking = await CourtService.createBooking(bookingData);
+
+    res.status(201).json({
+      success: true,
+      message: 'Reserva creada exitosamente',
+      data: booking
+    });
   } catch (error: any) {
-    console.error('Error fetching court stats:', error);
-    res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
+    console.error('Error creating booking:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
+  }
+};
+
+// Cancel a booking
+const cancelBooking = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'Usuario no autenticado'
+      });
+      return;
+    }
+
+    if (!reason) {
+      res.status(400).json({
+        success: false,
+        message: 'Motivo de cancelación requerido'
+      });
+      return;
+    }
+
+    const booking = await CourtService.cancelBooking(id, userId, reason);
+
+    res.json({
+      success: true,
+      message: 'Reserva cancelada exitosamente',
+      data: booking
+    });
+  } catch (error: any) {
+    console.error('Error cancelling booking:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
+  }
+};
+
+// Check-in for a booking
+const checkInBooking = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'Usuario no autenticado'
+      });
+      return;
+    }
+
+    const booking = await CourtService.checkInBooking(id, userId);
+
+    res.json({
+      success: true,
+      message: 'Check-in realizado exitosamente',
+      data: booking
+    });
+  } catch (error: any) {
+    console.error('Error checking in:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
+  }
+};
+
+// Get user's booking history
+const getUserBookingHistory = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'Usuario no autenticado'
+      });
+      return;
+    }
+
+    const { page = 1, limit = 10 } = req.query;
+
+    const result = await CourtService.getUserBookingHistory(
+      userId,
+      parseInt(page as string),
+      parseInt(limit as string)
+    );
+
+    res.json({
+      success: true,
+      data: result.bookings,
+      pagination: {
+        current: result.page,
+        pages: result.totalPages,
+        total: result.total,
+        limit: parseInt(limit as string)
+      }
+    });
+  } catch (error: any) {
+    console.error('Error fetching booking history:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
+  }
+};
+
+// Get booking by ID
+const getBookingById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user?.id;
+
+    const booking = await CourtBooking.findByPk(id, {
+      include: [
+        {
+          model: Court,
+          as: 'court',
+          include: [
+            {
+              model: CourtFacility,
+              as: 'facility',
+              attributes: ['name', 'address', 'city', 'contactPhone', 'contactEmail']
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!booking) {
+      res.status(404).json({
+        success: false,
+        message: 'Reserva no encontrada'
+      });
+      return;
+    }
+
+    // Check if user owns the booking or is admin
+    if (booking.userId !== userId && !(req as any).user?.role?.includes('admin')) {
+      res.status(403).json({
+        success: false,
+        message: 'No autorizado para ver esta reserva'
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: booking
+    });
+  } catch (error: any) {
+    console.error('Error fetching booking:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
+  }
+};
+
+// ANALYTICS ENDPOINTS
+
+// Get facility analytics
+const getFacilityAnalytics = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { facilityId } = req.params;
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      res.status(400).json({
+        success: false,
+        message: 'Fechas de inicio y fin requeridas'
+      });
+      return;
+    }
+
+    const analytics = await CourtService.getFacilityAnalytics(
+      facilityId,
+      startDate as string,
+      endDate as string
+    );
+
+    res.json({
+      success: true,
+      data: analytics
+    });
+  } catch (error: any) {
+    console.error('Error fetching analytics:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
+  }
+};
+
+// COURT SPECIFIC ENDPOINTS
+
+// Get court details by ID
+const getCourtById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const court = await Court.findByPk(id, {
+      include: [
+        {
+          model: CourtFacility,
+          as: 'facility',
+          attributes: [
+            'name', 'description', 'address', 'city', 'state',
+            'contactPhone', 'contactEmail', 'amenities', 'photos',
+            'rating', 'totalReviews', 'policies', 'operatingHours'
+          ]
+        },
+        {
+          model: CourtReview,
+          as: 'reviews',
+          where: { status: 'active' },
+          required: false,
+          limit: 10,
+          order: [['createdAt', 'DESC']],
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'username']
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!court) {
+      res.status(404).json({
+        success: false,
+        message: 'Cancha no encontrada'
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: court
+    });
+  } catch (error: any) {
+    console.error('Error fetching court:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
+  }
+};
+
+// Get courts by facility
+const getCourtsByFacility = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { facilityId } = req.params;
+
+    const courts = await Court.findAll({
+      where: {
+        facilityId,
+        isActive: true,
+        isAvailableForBooking: true
+      },
+      include: [
+        {
+          model: CourtReview,
+          as: 'reviews',
+          where: { status: 'active' },
+          required: false,
+          attributes: ['ratings']
+        }
+      ],
+      order: [['courtNumber', 'ASC']]
+    });
+
+    res.json({
+      success: true,
+      data: courts
+    });
+  } catch (error: any) {
+    console.error('Error fetching courts:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error interno del servidor'
+    });
   }
 };
 
 export {
-  createCourt,
-  getCourts,
+  // Facility endpoints
+  searchFacilities,
+  getFacilityById,
+  getFacilityAnalytics,
+  
+  // Court endpoints
   getCourtById,
-  updateCourt,
-  deleteCourt,
-  getCourtsNearLocation,
-  getCourtsByOwner,
-  updateCourtImages,
-  getCourtStats
+  getCourtsByFacility,
+  
+  // Availability endpoints
+  checkCourtAvailability,
+  getAvailableSlots,
+  calculateBookingPrice,
+  
+  // Booking endpoints
+  createBooking,
+  cancelBooking,
+  checkInBooking,
+  getBookingById,
+  getUserBookingHistory
 };

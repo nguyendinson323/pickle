@@ -1,54 +1,73 @@
 import express from 'express';
 import {
-  createCourt,
-  getCourts,
+  // Facility endpoints
+  searchFacilities,
+  getFacilityById,
+  getFacilityAnalytics,
+  
+  // Court endpoints
   getCourtById,
-  updateCourt,
-  deleteCourt,
-  getCourtsNearLocation,
-  getCourtsByOwner,
-  updateCourtImages,
-  getCourtStats
+  getCourtsByFacility,
+  
+  // Availability endpoints
+  checkCourtAvailability,
+  getAvailableSlots,
+  calculateBookingPrice,
+  
+  // Booking endpoints
+  createBooking,
+  cancelBooking,
+  checkInBooking,
+  getBookingById,
+  getUserBookingHistory
 } from '../controllers/courtController';
 import { authenticate } from '../middleware/auth';
 import { authorizeRoles } from '../middleware/roles';
 
 const router = express.Router();
 
-// Court management routes
-router.post('/courts', 
-  authenticate, 
-  authorizeRoles(['club', 'partner', 'federation']), 
-  createCourt
+// FACILITY MANAGEMENT ROUTES
+router.get('/facilities/search', searchFacilities);
+router.get('/facilities/:id', getFacilityById);
+router.get('/facilities/:facilityId/analytics', 
+  authenticate,
+  authorizeRoles(['club', 'partner', 'federation', 'admin']),
+  getFacilityAnalytics
 );
 
-router.get('/courts', getCourts);
+// COURT SPECIFIC ROUTES
 router.get('/courts/:id', getCourtById);
+router.get('/facilities/:facilityId/courts', getCourtsByFacility);
 
-router.put('/courts/:id', 
-  authenticate, 
-  authorizeRoles(['club', 'partner', 'federation']), 
-  updateCourt
+// AVAILABILITY AND PRICING ROUTES
+router.get('/availability/check', checkCourtAvailability);
+router.get('/availability/slots', getAvailableSlots);
+router.get('/pricing/calculate', calculateBookingPrice);
+
+// BOOKING MANAGEMENT ROUTES
+router.post('/bookings', 
+  authenticate,
+  createBooking
 );
 
-router.delete('/courts/:id', 
-  authenticate, 
-  authorizeRoles(['club', 'partner', 'federation']), 
-  deleteCourt
+router.put('/bookings/:id/cancel', 
+  authenticate,
+  cancelBooking
 );
 
-// Location-based and owner-specific routes
-router.get('/courts/near/location', getCourtsNearLocation);
-router.get('/courts/owner/:ownerType/:ownerId', getCourtsByOwner);
-
-// Court images
-router.put('/courts/:id/images', 
-  authenticate, 
-  authorizeRoles(['club', 'partner', 'federation']), 
-  updateCourtImages
+router.put('/bookings/:id/checkin', 
+  authenticate,
+  checkInBooking
 );
 
-// Court statistics
-router.get('/courts/:id/stats', getCourtStats);
+router.get('/bookings/:id', 
+  authenticate,
+  getBookingById
+);
+
+router.get('/bookings/history/user', 
+  authenticate,
+  getUserBookingHistory
+);
 
 export default router;

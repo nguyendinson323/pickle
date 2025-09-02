@@ -42,4 +42,42 @@ router.post('/refund/:id',
   asyncHandler(paymentController.refundPayment)
 );
 
+// New payment method management endpoints
+router.post('/setup-intent', 
+  authenticate,
+  asyncHandler(paymentController.createSetupIntent)
+);
+
+router.post('/payment-methods', 
+  authenticate,
+  asyncHandler(paymentController.savePaymentMethod)
+);
+
+router.get('/payment-methods', 
+  authenticate,
+  asyncHandler(paymentController.getUserPaymentMethods)
+);
+
+router.delete('/payment-methods/:paymentMethodId', 
+  authenticate,
+  asyncHandler(paymentController.removePaymentMethod)
+);
+
+// Tournament and booking payment endpoints
+router.post('/tournament-payment', 
+  authenticate,
+  asyncHandler(paymentController.createTournamentPayment)
+);
+
+router.post('/booking-payment', 
+  authenticate,
+  asyncHandler(paymentController.createBookingPayment)
+);
+
+// Webhook endpoint (no authentication for Stripe webhooks)
+router.post('/webhook', 
+  express.raw({ type: 'application/json' }),
+  asyncHandler(paymentController.processWebhook)
+);
+
 export default router;

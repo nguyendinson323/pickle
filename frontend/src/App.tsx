@@ -8,6 +8,7 @@ import { ROUTES } from './utils/constants';
 // Integration Services
 import integrationService from './services/integrationService';
 import NotificationSystem from './components/common/NotificationSystem';
+import { MessagingProvider } from './contexts/MessagingContext';
 
 // Components
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -22,6 +23,9 @@ import DashboardPage from './pages/DashboardPage';
 import { MembershipPage } from './pages/MembershipPage';
 import MicrositesPage from './pages/microsites/MicrositesPage';
 import MicrositeEditorPage from './pages/microsites/MicrositeEditorPage';
+import MicrositeBuilderPage from './pages/MicrositeBuilderPage';
+import MicrositeCreatePage from './pages/MicrositeCreatePage';
+import MicrositeEditPage from './pages/MicrositeEditPage';
 import PlayerConnectionPage from './pages/player/PlayerConnectionPage';
 import TournamentsPage from './pages/tournaments/TournamentsPage';
 import TournamentManagePage from './pages/tournaments/TournamentManagePage';
@@ -29,8 +33,10 @@ import TournamentAnalyticsPage from './pages/tournaments/TournamentAnalyticsPage
 import SearchPage from './pages/SearchPage';
 import ExportPage from './pages/ExportPage';
 import AdminPage from './pages/AdminPage';
+import AdminDashboard from './pages/AdminDashboard';
 import PaymentPage from './pages/PaymentPage';
 import NotificationsPage from './pages/NotificationsPage';
+import MessagingPage from './pages/MessagingPage';
 import MobileNavigation from './components/common/MobileNavigation';
 import CreateTournamentForm from './components/tournaments/CreateTournamentForm';
 import TournamentBracket from './components/tournaments/TournamentBracket';
@@ -128,8 +134,9 @@ const AppContent: React.FC = () => {
 
   return (
     <Router>
-      <div className="app-container">
-        <Routes>
+      <MessagingProvider>
+        <div className="app-container">
+          <Routes>
         {/* Public Routes */}
         <Route path={ROUTES.HOME} element={<HomePage />} />
         <Route 
@@ -193,6 +200,43 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <MicrositeEditorPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* New Microsite Builder Routes */}
+        <Route
+          path="/microsite-builder"
+          element={
+            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+              <MicrositeBuilderPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/microsite-builder/create"
+          element={
+            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+              <MicrositeCreatePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/microsite-builder/:id/edit"
+          element={
+            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+              <MicrositeEditPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/microsite-builder/:id/analytics"
+          element={
+            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+              <MicrositeEditPage />
             </ProtectedRoute>
           }
         />
@@ -304,12 +348,7 @@ const AppContent: React.FC = () => {
           path={ROUTES.MESSAGING}
           element={
             <ProtectedRoute>
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Messaging</h1>
-                  <p className="text-gray-600">This page will be implemented in future steps.</p>
-                </div>
-              </div>
+              <MessagingPage />
             </ProtectedRoute>
           }
         />
@@ -333,6 +372,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute requiredRoles={['admin']}>
               <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute requiredRoles={['federation']}>
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
@@ -376,7 +424,8 @@ const AppContent: React.FC = () => {
         
         {/* Global Notification System */}
         <NotificationSystem />
-      </div>
+        </div>
+      </MessagingProvider>
     </Router>
   );
 };

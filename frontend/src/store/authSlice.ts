@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import authService from '@/services/authService';
-import { AuthState, LoginCredentials, UserProfile } from '@/types/auth';
+import { AuthState, LoginCredentials, UserProfile, UserSubscription, SubscriptionFeatures } from '@/types/auth';
 
 // Initial state
 const initialState: AuthState = {
@@ -11,6 +11,7 @@ const initialState: AuthState = {
   error: null,
   loginAttempts: 0,
   lastLoginTime: null,
+  subscriptionLoaded: false,
 };
 
 // Async thunks
@@ -89,6 +90,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.loginAttempts = 0;
       state.lastLoginTime = null;
+      state.subscriptionLoaded = false;
       authService.clearStorage();
     },
     updateUser: (state, action: PayloadAction<UserProfile>) => {
@@ -115,6 +117,29 @@ const authSlice = createSlice({
     },
     resetLoginAttempts: (state) => {
       state.loginAttempts = 0;
+    },
+    updateUserSubscription: (state, action: PayloadAction<UserSubscription | null>) => {
+      if (state.user) {
+        state.user.subscription = action.payload;
+        state.user.subscriptionStatus = action.payload?.status || null;
+        state.subscriptionLoaded = true;
+        authService.storeUser(state.user);
+      }
+    },
+    updateSubscriptionFeatures: (state, action: PayloadAction<SubscriptionFeatures>) => {
+      if (state.user) {
+        state.user.subscriptionFeatures = action.payload;
+        authService.storeUser(state.user);
+      }
+    },
+    updateSubscriptionUsage: (state, action: PayloadAction<{ tournamentRegistrations?: number; courtBookings?: number; playerMatches?: number }>) => {
+      if (state.user?.subscriptionFeatures) {
+        state.user.subscriptionFeatures.currentUsage = {
+          ...state.user.subscriptionFeatures.currentUsage,
+          ...action.payload
+        };
+        authService.storeUser(state.user);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -246,7 +271,10 @@ export const {
   setCredentials, 
   refreshToken, 
   incrementLoginAttempts, 
-  resetLoginAttempts 
+  resetLoginAttempts,
+  updateUserSubscription,
+  updateSubscriptionFeatures,
+  updateSubscriptionUsage
 } = authSlice.actions;
 export { logoutUser as logout };
 

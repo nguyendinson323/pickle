@@ -7,52 +7,71 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       autoIncrement: true,
       primaryKey: true
     },
+    conversation_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'conversations',
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
+    },
     sender_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'users',
         key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    },
-    receiver_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    },
-    subject: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      }
     },
     content: {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    is_read: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false
-    },
-    is_urgent: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false
-    },
     message_type: {
-      type: DataTypes.ENUM('personal', 'announcement', 'system'),
-      defaultValue: 'personal',
-      allowNull: false
+      type: DataTypes.ENUM('text', 'image', 'file', 'system', 'location', 'match_invite'),
+      allowNull: false,
+      defaultValue: 'text'
     },
     attachments: {
-      type: DataTypes.JSON,
+      type: DataTypes.JSONB,
       allowNull: true
+    },
+    location: {
+      type: DataTypes.JSONB,
+      allowNull: true
+    },
+    match_invite: {
+      type: DataTypes.JSONB,
+      allowNull: true
+    },
+    is_edited: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    edited_at: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    deleted_at: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    read_by: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: []
+    },
+    reactions: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: []
     },
     created_at: {
       type: DataTypes.DATE,
@@ -66,12 +85,22 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }
   });
 
-  // Add indexes
-  await queryInterface.addIndex('messages', ['receiver_id']);
+  // Add indexes exactly as defined in the model
+  await queryInterface.addIndex('messages', ['conversation_id']);
   await queryInterface.addIndex('messages', ['sender_id']);
-  await queryInterface.addIndex('messages', ['is_read']);
-  await queryInterface.addIndex('messages', ['created_at']);
   await queryInterface.addIndex('messages', ['message_type']);
+  await queryInterface.addIndex('messages', ['created_at']);
+  await queryInterface.addIndex('messages', ['is_deleted']);
+  
+  // Create GIN indexes for JSONB fields
+  await queryInterface.addIndex('messages', ['read_by'], {
+    name: 'messages_read_by_gin',
+    using: 'gin'
+  });
+  await queryInterface.addIndex('messages', ['reactions'], {
+    name: 'messages_reactions_gin',
+    using: 'gin'
+  });
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {

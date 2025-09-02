@@ -11,44 +11,9 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'players',
+        model: 'users',
         key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    },
-    title: {
-      type: DataTypes.STRING(200),
-      allowNull: false
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    skill_level: {
-      type: DataTypes.STRING(20),
-      allowNull: false
-    },
-    preferred_gender: {
-      type: DataTypes.STRING(10),
-      allowNull: true
-    },
-    age_range_min: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    age_range_max: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    playing_style: {
-      type: DataTypes.STRING(20),
-      allowNull: true
-    },
-    max_distance: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 25
+      }
     },
     location_id: {
       type: DataTypes.INTEGER,
@@ -56,32 +21,42 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       references: {
         model: 'player_locations',
         key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      }
     },
-    availability_days: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      defaultValue: []
-    },
-    availability_time_start: {
-      type: DataTypes.TIME,
+    nrtp_level_min: {
+      type: DataTypes.STRING(10),
       allowNull: true
     },
-    availability_time_end: {
-      type: DataTypes.TIME,
+    nrtp_level_max: {
+      type: DataTypes.STRING(10),
       allowNull: true
     },
-    max_players: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 4
+    preferred_gender: {
+      type: DataTypes.ENUM('male', 'female', 'any'),
+      allowNull: true,
+      defaultValue: 'any'
     },
-    current_players: {
+    preferred_age_min: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    preferred_age_max: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    search_radius: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 1
+      defaultValue: 25
+    },
+    available_time_slots: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: {}
+    },
+    message: {
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     is_active: {
       type: DataTypes.BOOLEAN,
@@ -90,17 +65,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
     expires_at: {
       type: DataTypes.DATE,
-      allowNull: true
-    },
-    preferences: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      defaultValue: {}
-    },
-    status: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-      defaultValue: 'active'
+      allowNull: false
     },
     created_at: {
       type: DataTypes.DATE,
@@ -114,13 +79,12 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }
   });
 
-  // Add indexes
+  // Add indexes exactly as defined in the model
   await queryInterface.addIndex('player_finder_requests', ['requester_id']);
-  await queryInterface.addIndex('player_finder_requests', ['skill_level']);
   await queryInterface.addIndex('player_finder_requests', ['location_id']);
-  await queryInterface.addIndex('player_finder_requests', ['is_active']);
-  await queryInterface.addIndex('player_finder_requests', ['status']);
-  await queryInterface.addIndex('player_finder_requests', ['expires_at']);
+  await queryInterface.addIndex('player_finder_requests', ['is_active', 'expires_at']);
+  await queryInterface.addIndex('player_finder_requests', ['preferred_gender']);
+  await queryInterface.addIndex('player_finder_requests', ['nrtp_level_min', 'nrtp_level_max']);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {

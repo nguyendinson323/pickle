@@ -9,7 +9,12 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:components": "vitest --testPathPattern=components",
+    "test:hooks": "vitest --testPathPattern=hooks",
+    "test:services": "vitest --testPathPattern=services"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
@@ -37,6 +42,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/user-event": "^14.5.1",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
@@ -47,6 +56,8 @@
     "eslint": "^8.53.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
+    "jsdom": "^22.1.0",
+    "msw": "^2.0.8",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
     "typescript": "^5.2.2",

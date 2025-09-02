@@ -62,7 +62,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
     nationality: {
       type: DataTypes.STRING(50),
-      allowNull: false,
       defaultValue: 'Mexican'
     },
     license_type: {

@@ -7,6 +7,7 @@ import dataSlice from './dataSlice';
 import dashboardSlice from './dashboardSlice';
 import messageSlice from './messageSlice';
 import paymentSlice from './paymentSlice';
+import subscriptionSlice from './subscriptionSlice';
 import courtSlice from './courtSlice';
 import reservationSlice from './reservationSlice';
 import tournamentSlice from './tournamentSlice';
@@ -24,6 +25,7 @@ export const store = configureStore({
     dashboard: dashboardSlice,
     messages: messageSlice,
     payment: paymentSlice,
+    subscription: subscriptionSlice,
     courts: courtSlice,
     reservations: reservationSlice,
     tournaments: tournamentSlice,

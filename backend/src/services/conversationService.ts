@@ -1,80 +1,117 @@
+import Conversation from '../models/Conversation';
+import Message from '../models/Message';
 import { Op } from 'sequelize';
-import { 
-  Conversation, 
-  ConversationMessage, 
-  MessageReadStatus, 
-  MessageReaction,
-  User
-} from '../models';
-import privacyService from './privacyService';
+import { v4 as uuidv4 } from 'uuid';
 
 interface CreateConversationData {
+  type: 'direct' | 'group' | 'tournament' | 'court_booking';
   name?: string;
-  type: 'direct' | 'group' | 'tournament' | 'finder_request';
-  participantIds: number[];
-  metadata?: Record<string, any>;
+  description?: string;
+  participants: {
+    userId: string;
+    role: 'admin' | 'member';
+  }[];
+  relatedEntityType?: 'tournament' | 'court_booking' | 'player_match';
+  relatedEntityId?: string;
+  settings?: {
+    allowFileSharing?: boolean;
+    allowLocationSharing?: boolean;
+    muteNotifications?: boolean;
+    archiveAfterDays?: number;
+  };
 }
 
-interface SendMessageData {
-  content: string;
-  messageType?: 'text' | 'image' | 'file' | 'system' | 'location' | 'finder_invitation';
-  replyToId?: number;
-  attachments?: string[];
-  metadata?: Record<string, any>;
+interface UpdateConversationData {
+  name?: string;
+  description?: string;
+  groupIcon?: string;
+  settings?: {
+    allowFileSharing?: boolean;
+    allowLocationSharing?: boolean;
+    muteNotifications?: boolean;
+    archiveAfterDays?: number;
+  };
 }
 
 interface ConversationFilters {
-  type?: string[];
+  userId?: string;
+  type?: string;
+  isActive?: boolean;
   isArchived?: boolean;
-  search?: string;
+  relatedEntityType?: string;
+  relatedEntityId?: string;
+}
+
+interface PaginationOptions {
+  page?: number;
   limit?: number;
-  offset?: number;
+  orderBy?: string;
+  orderDirection?: 'ASC' | 'DESC';
 }
 
 class ConversationService {
-  async createConversation(
-    creatorId: number,
-    data: CreateConversationData
-  ): Promise<Conversation> {
-    const { participantIds, type, name, metadata = {} } = data;
-
-    // Validate participants
-    if (!participantIds.includes(creatorId)) {
-      participantIds.push(creatorId);
-    }
-
-    // For direct conversations, ensure exactly 2 participants
-    if (type === 'direct' && participantIds.length !== 2) {
-      throw new Error('Direct conversations must have exactly 2 participants');
-    }
-
-    // Check if direct conversation already exists
-    if (type === 'direct') {
-      const existingConversation = await this.findDirectConversation(participantIds[0], participantIds[1]);
-      if (existingConversation) {
-        return existingConversation;
+  
+  async createConversation(data: CreateConversationData): Promise<Conversation> {
+    try {
+      // Validate participants
+      if (!data.participants || data.participants.length === 0) {
+        throw new Error('Conversation must have at least one participant');
       }
-    }
 
-    // Check privacy settings for all participants
-    for (const participantId of participantIds) {
-      if (participantId !== creatorId) {
-        const canContact = await privacyService.canPlayerContactUser(creatorId, participantId);
-        if (!canContact.canContact) {
-          throw new Error(`Cannot create conversation: ${canContact.reason}`);
+      // For direct conversations, ensure exactly 2 participants
+      if (data.type === 'direct' && data.participants.length !== 2) {
+        throw new Error('Direct conversation must have exactly 2 participants');
+      }
+
+      // For group conversations, ensure at least one admin
+      if (data.type === 'group') {
+        const hasAdmin = data.participants.some(p => p.role === 'admin');
+        if (!hasAdmin) {
+          throw new Error('Group conversation must have at least one admin');
         }
       }
+
+      // Check if direct conversation already exists
+      if (data.type === 'direct') {
+        const userIds = data.participants.map(p => p.userId).sort();
+        const existing = await this.findDirectConversation(userIds[0], userIds[1]);
+        if (existing) {
+          return existing;
+        }
+      }
+
+      // Prepare participants data
+      const participants = data.participants.map(p => ({
+        userId: p.userId,
+        role: p.role,
+        joinedAt: new Date(),
+        isActive: true
+      }));
+
+      // Create conversation
+      const conversation = await Conversation.create({
+        id: uuidv4(),
+        type: data.type,
+        name: data.name,
+        description: data.description,
+        participants,
+        isGroup: data.type === 'group',
+        relatedEntityType: data.relatedEntityType,
+        relatedEntityId: data.relatedEntityId,
+        settings: {
+          allowFileSharing: true,
+          allowLocationSharing: true,
+          muteNotifications: false,
+          ...data.settings
+        },
+        isActive: true,
+        isArchived: false
+      });
+
+      return conversation;
+    } catch (error: any) {
+      throw new Error(`Failed to create conversation: ${error.message}`);
     }
-
-    const conversation = await Conversation.create({
-      creatorId,
-      name,
-      type,
-      participantIds,
-      metadata
-    });
-
-    return conversation;
   }
 
   async findDirectConversation(userId1: number, userId2: number): Promise<Conversation | null> {

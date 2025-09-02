@@ -116,11 +116,13 @@ Club.init({
   },
   hasCourts: {
     type: DataTypes.BOOLEAN,
+    allowNull: false,
     defaultValue: false,
     field: 'has_courts'
   },
   planType: {
     type: DataTypes.ENUM('basic', 'premium'),
+    allowNull: false,
     defaultValue: 'basic',
     field: 'plan_type'
   },

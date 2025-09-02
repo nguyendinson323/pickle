@@ -105,6 +105,16 @@ PlayerFinderMatch.init({
     allowNull: false,
     defaultValue: false,
     field: 'contact_shared'
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'created_at'
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'updated_at'
   }
 }, {
   sequelize,
@@ -133,5 +143,6 @@ PlayerFinderMatch.init({
     }
   ]
 });
+
 
 export default PlayerFinderMatch;

@@ -1,532 +1,464 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { api } from '../../services/api';
+import { UserManagementResponse, UserManagementFilters } from '../../types/admin';
 import { 
-  Users, 
-  Search, 
-  Filter, 
-  MoreVertical, 
-  UserCheck, 
-  UserX, 
-  Mail, 
-  Shield,
-  Edit,
-  Trash2
-} from 'lucide-react';
-import Card from '../ui/Card';
-import FormField from '../forms/FormField';
-import SelectField from '../forms/SelectField';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'state' | 'club' | 'partner' | 'player' | 'coach' | 'referee';
-  status: 'active' | 'inactive' | 'pending' | 'suspended';
-  location: string;
-  registrationDate: string;
-  lastActive: string;
-  tournamentsPlayed?: number;
-  skillLevel?: string;
-}
+  FiUsers, 
+  FiSearch, 
+  FiFilter, 
+  FiMoreVertical,
+  FiCheckCircle,
+  FiXCircle,
+  FiClock,
+  FiAlertCircle,
+  FiEdit,
+  FiTrash2,
+  FiMail,
+  FiShield
+} from 'react-icons/fi';
 
 const UserManagement: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [data, setData] = useState<UserManagementResponse | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        // Fetch from admin dashboard API to get user data
-        const response = await fetch('/dashboard/admin', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-          }
-        });
-        
-        const data = await response.json();
-        
-        if (data.success && data.data?.recentRegistrations) {
-          // Transform the registration data into user format
-          const transformedUsers = data.data.recentRegistrations.map((registration: any) => ({
-            id: registration.id?.toString() || Math.random().toString(),
-            name: registration.name || `${registration.firstName || ''} ${registration.lastName || ''}`.trim(),
-            email: registration.email || '',
-            role: registration.role || 'player',
-            status: registration.status || 'active',
-            location: registration.location || `${registration.city || ''}, ${registration.state || ''}`.replace(/^,\s*|\s*,$/, '') || '',
-            registrationDate: registration.registrationDate || registration.createdAt || new Date().toISOString(),
-            lastActive: registration.lastActive || registration.updatedAt || new Date().toISOString(),
-            tournamentsPlayed: registration.tournamentsPlayed || 0,
-            skillLevel: registration.skillLevel || ''
-          }));
-          
-          setUsers(transformedUsers);
-        }
-        
-        // Also try to fetch users from search API if available
-        try {
-          const searchResponse = await fetch('/api/location/search-players', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-            },
-            body: JSON.stringify({
-              searchTerm: '',
-              state: '',
-              city: '',
-              skillLevel: '',
-              radius: 1000
-            })
-          });
-          
-          const searchData = await searchResponse.json();
-          if (searchData.success && searchData.players) {
-            const playerUsers = searchData.players.map((player: any) => ({
-              id: player.id?.toString() || Math.random().toString(),
-              name: player.name || `${player.firstName || ''} ${player.lastName || ''}`.trim(),
-              email: player.email || '',
-              role: 'player',
-              status: player.status || 'active',
-              location: `${player.city || ''}, ${player.state || ''}`.replace(/^,\s*|\s*,$/, ''),
-              registrationDate: player.createdAt || new Date().toISOString(),
-              lastActive: player.updatedAt || new Date().toISOString(),
-              tournamentsPlayed: player.tournamentsPlayed || 0,
-              skillLevel: player.skillLevel || ''
-            }));
-            
-            // Merge with existing users, avoiding duplicates
-            setUsers(prev => {
-              const existingIds = prev.map(u => u.id);
-              const newUsers = playerUsers.filter((u: User) => !existingIds.includes(u.id));
-              return [...prev, ...newUsers];
-            });
-          }
-        } catch (searchError) {
-          console.warn('Could not fetch additional user data from search API:', searchError);
-        }
-        
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<UserManagementFilters>({
+    page: 1,
+    limit: 20
+  });
   const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = !roleFilter || user.role === roleFilter;
-    const matchesStatus = !statusFilter || user.status === statusFilter;
-    
-    return matchesSearch && matchesRole && matchesStatus;
-  });
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== '') {
+          queryParams.append(key, value.toString());
+        }
+      });
+
+      const response = await api.get(`/admin/users?${queryParams.toString()}`);
+      setData(response.data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Error al cargar usuarios');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const delayedSearch = setTimeout(() => {
+      setFilters(prev => ({ ...prev, search: searchTerm, page: 1 }));
+    }, 500);
+
+    return () => clearTimeout(delayedSearch);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [filters]);
+
+  const updateUserStatus = async (userId: number, status: string, reason: string) => {
+    try {
+      await api.patch(`/admin/users/${userId}/status`, { status, reason });
+      fetchUsers(); // Refresh the data
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Error al actualizar usuario');
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'active': return <FiCheckCircle className="h-4 w-4 text-green-500" />;
+      case 'suspended': return <FiClock className="h-4 w-4 text-yellow-500" />;
+      case 'banned': return <FiXCircle className="h-4 w-4 text-red-500" />;
+      default: return <FiAlertCircle className="h-4 w-4 text-gray-500" />;
+    }
+  };
 
   const getRoleColor = (role: string) => {
-    switch (role) {
-      case 'admin':
-        return 'bg-red-100 text-red-800';
-      case 'state':
-        return 'bg-purple-100 text-purple-800';
-      case 'club':
-        return 'bg-blue-100 text-blue-800';
-      case 'partner':
-        return 'bg-indigo-100 text-indigo-800';
-      case 'coach':
-        return 'bg-green-100 text-green-800';
-      case 'referee':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'player':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+    const colors: Record<string, string> = {
+      federation: 'bg-purple-100 text-purple-800',
+      state_committee: 'bg-blue-100 text-blue-800',
+      club: 'bg-green-100 text-green-800',
+      partner: 'bg-orange-100 text-orange-800',
+      coach: 'bg-indigo-100 text-indigo-800',
+      player: 'bg-gray-100 text-gray-800'
+    };
+    return colors[role] || 'bg-gray-100 text-gray-800';
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800';
-      case 'inactive':
-        return 'bg-gray-100 text-gray-800';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'suspended':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const UserRow: React.FC<{ user: any; index: number }> = ({ user, index }) => {
+    const [showActions, setShowActions] = useState(false);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-MX', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const formatLastActive = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffHours / 24);
-    
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return formatDate(dateString);
-  };
-
-  const handleUserAction = async (userId: string, action: string) => {
-    try {
-      // For now, we'll update locally and log the action
-      // In a full implementation, this would call backend APIs
-      console.log(`Performing ${action} on user ${userId}`);
-      
-      switch (action) {
-        case 'approve':
-          setUsers(prev => prev.map(user => 
-            user.id === userId ? { ...user, status: 'active' as const } : user
-          ));
-          break;
-        case 'suspend':
-          setUsers(prev => prev.map(user => 
-            user.id === userId ? { ...user, status: 'suspended' as const } : user
-          ));
-          break;
-        case 'reactivate':
-          setUsers(prev => prev.map(user => 
-            user.id === userId ? { ...user, status: 'active' as const } : user
-          ));
-          break;
-      }
-      
-      // Here you would make an API call to update the user status
-      // await fetch(`/api/users/${userId}/status`, {
-      //   method: 'PATCH',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-      //   },
-      //   body: JSON.stringify({ status: newStatus })
-      // });
-    } catch (error) {
-      console.error(`Failed to ${action} user:`, error);
-    }
-  };
-
-  const handleBulkAction = async (action: string) => {
-    try {
-      console.log(`Performing bulk ${action} on users:`, selectedUsers);
-      
-      // Update users locally for immediate feedback
-      if (action === 'approve') {
-        setUsers(prev => prev.map(user => 
-          selectedUsers.includes(user.id) ? { ...user, status: 'active' as const } : user
-        ));
-      } else if (action === 'suspend') {
-        setUsers(prev => prev.map(user => 
-          selectedUsers.includes(user.id) ? { ...user, status: 'suspended' as const } : user
-        ));
-      }
-      
-      // Here you would make API calls for bulk actions
-      // await fetch('/api/users/bulk-action', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-      //   },
-      //   body: JSON.stringify({ userIds: selectedUsers, action })
-      // });
-      
-      setSelectedUsers([]);
-    } catch (error) {
-      console.error(`Failed to perform bulk ${action}:`, error);
-    }
-  };
-
-  const toggleUserSelection = (userId: string) => {
-    setSelectedUsers(prev => 
-      prev.includes(userId) 
-        ? prev.filter(id => id !== userId)
-        : [...prev, userId]
-    );
-  };
-
-  const roleOptions = [
-    { value: '', label: 'All Roles' },
-    { value: 'admin', label: 'Administrator' },
-    { value: 'state', label: 'State Manager' },
-    { value: 'club', label: 'Club' },
-    { value: 'partner', label: 'Partner' },
-    { value: 'coach', label: 'Coach' },
-    { value: 'referee', label: 'Referee' },
-    { value: 'player', label: 'Player' }
-  ];
-
-  const statusOptions = [
-    { value: '', label: 'All Statuses' },
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'suspended', label: 'Suspended' }
-  ];
-
-  if (loading) {
     return (
-      <div className="space-y-6 animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-        <div className="h-64 bg-gray-200 rounded"></div>
-      </div>
+      <motion.tr
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.05 }}
+        className="bg-white border-b border-gray-200 hover:bg-gray-50"
+      >
+        <td className="px-6 py-4 whitespace-nowrap">
+          <input
+            type="checkbox"
+            checked={selectedUsers.includes(user.id)}
+            onChange={(e) => {
+              if (e.target.checked) {
+                setSelectedUsers([...selectedUsers, user.id]);
+              } else {
+                setSelectedUsers(selectedUsers.filter(id => id !== user.id));
+              }
+            }}
+            className="rounded border-gray-300 text-pickleball-600 focus:ring-pickleball-500"
+          />
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 h-10 w-10">
+              <div className="h-10 w-10 rounded-full bg-pickleball-500 flex items-center justify-center">
+                <span className="text-white font-medium">
+                  {user.username.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            </div>
+            <div className="ml-4">
+              <div className="text-sm font-medium text-gray-900">{user.username}</div>
+              <div className="text-sm text-gray-500">{user.email}</div>
+            </div>
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(user.role)}`}>
+            {user.role}
+          </span>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className="flex items-center">
+            {getStatusIcon(user.status)}
+            <span className="ml-2 text-sm text-gray-900 capitalize">{user.status}</span>
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {user.profile_completion}%
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+            <div 
+              className="bg-pickleball-600 h-2 rounded-full" 
+              style={{ width: `${user.profile_completion}%` }}
+            ></div>
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {new Date(user.created_at).toLocaleDateString()}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Nunca'}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+          <div className="relative">
+            <button
+              onClick={() => setShowActions(!showActions)}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <FiMoreVertical className="h-4 w-4" />
+            </button>
+            {showActions && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      // Handle edit user
+                      setShowActions(false);
+                    }}
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    <FiEdit className="h-4 w-4 mr-2" />
+                    Editar Usuario
+                  </button>
+                  <button
+                    onClick={() => {
+                      // Handle send message
+                      setShowActions(false);
+                    }}
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    <FiMail className="h-4 w-4 mr-2" />
+                    Enviar Mensaje
+                  </button>
+                  {user.status === 'active' && (
+                    <>
+                      <button
+                        onClick={() => {
+                          updateUserStatus(user.id, 'suspended', 'Suspendido por administrador');
+                          setShowActions(false);
+                        }}
+                        className="flex items-center px-4 py-2 text-sm text-yellow-700 hover:bg-yellow-50 w-full text-left"
+                      >
+                        <FiClock className="h-4 w-4 mr-2" />
+                        Suspender
+                      </button>
+                      <button
+                        onClick={() => {
+                          updateUserStatus(user.id, 'banned', 'Baneado por administrador');
+                          setShowActions(false);
+                        }}
+                        className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-red-50 w-full text-left"
+                      >
+                        <FiShield className="h-4 w-4 mr-2" />
+                        Banear
+                      </button>
+                    </>
+                  )}
+                  {user.status !== 'active' && (
+                    <button
+                      onClick={() => {
+                        updateUserStatus(user.id, 'active', 'Reactivado por administrador');
+                        setShowActions(false);
+                      }}
+                      className="flex items-center px-4 py-2 text-sm text-green-700 hover:bg-green-50 w-full text-left"
+                    >
+                      <FiCheckCircle className="h-4 w-4 mr-2" />
+                      Reactivar
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </td>
+      </motion.tr>
     );
-  }
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-1">Manage users, roles, and permissions</p>
+          <h1 className="text-2xl font-bold text-gray-900">Gestión de Usuarios</h1>
+          <p className="text-gray-600 mt-1">Administra todos los usuarios de la plataforma</p>
         </div>
-        <div className="flex gap-3">
-          <button className="btn-primary">
-            Add User
+        <div className="flex space-x-3">
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+          >
+            <FiFilter className="h-4 w-4 mr-2" />
+            Filtros
           </button>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <Card className="p-6">
-        <div className="flex flex-col sm:flex-row gap-4 mb-4">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="text"
-                placeholder="Search users by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-            </div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center space-x-4 mb-4">
+          <div className="flex-1 relative">
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="text"
+              placeholder="Buscar por nombre de usuario o email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pickleball-500 focus:border-transparent"
+            />
           </div>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="px-4 py-2 border border-gray-300 rounded-lg flex items-center gap-2 hover:bg-gray-50"
-          >
-            <Filter className="h-5 w-5" />
-            Filters
-          </button>
         </div>
 
         {showFilters && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
-            <SelectField
-              name="role"
-              label="Role"
-              value={roleFilter}
-              onChange={setRoleFilter}
-              options={roleOptions}
-            />
-            <SelectField
-              name="status"
-              label="Status"
-              value={statusFilter}
-              onChange={setStatusFilter}
-              options={statusOptions}
-            />
-          </div>
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200"
+          >
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Rol</label>
+              <select
+                value={filters.role || ''}
+                onChange={(e) => setFilters({ ...filters, role: e.target.value, page: 1 })}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-pickleball-500 focus:border-transparent"
+              >
+                <option value="">Todos los roles</option>
+                <option value="player">Jugador</option>
+                <option value="coach">Entrenador</option>
+                <option value="club">Club</option>
+                <option value="partner">Partner</option>
+                <option value="state_committee">Comité Estatal</option>
+                <option value="federation">Federación</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+              <select
+                value={filters.status || ''}
+                onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-pickleball-500 focus:border-transparent"
+              >
+                <option value="">Todos los estados</option>
+                <option value="active">Activo</option>
+                <option value="suspended">Suspendido</option>
+                <option value="banned">Baneado</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Resultados por página</label>
+              <select
+                value={filters.limit}
+                onChange={(e) => setFilters({ ...filters, limit: Number(e.target.value), page: 1 })}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-pickleball-500 focus:border-transparent"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+          </motion.div>
         )}
+      </div>
 
-        {/* Bulk Actions */}
-        {selectedUsers.length > 0 && (
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
-            <span className="text-sm text-blue-800">
-              {selectedUsers.length} user{selectedUsers.length !== 1 ? 's' : ''} selected
+      {/* Bulk Actions */}
+      {selectedUsers.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-pickleball-50 border border-pickleball-200 rounded-lg p-4"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-pickleball-700">
+              {selectedUsers.length} usuario(s) seleccionado(s)
             </span>
-            <div className="flex gap-2">
+            <div className="flex space-x-2">
               <button
-                onClick={() => handleBulkAction('approve')}
-                className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                onClick={() => {
+                  // Handle bulk message
+                  setSelectedUsers([]);
+                }}
+                className="px-3 py-1 text-sm bg-pickleball-600 text-white rounded hover:bg-pickleball-700 transition-colors"
               >
-                Approve
-              </button>
-              <button
-                onClick={() => handleBulkAction('suspend')}
-                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-              >
-                Suspend
+                Enviar Mensaje
               </button>
               <button
                 onClick={() => setSelectedUsers([])}
-                className="px-3 py-1 bg-gray-500 text-white text-sm rounded hover:bg-gray-600"
+                className="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Clear
+                Limpiar
               </button>
             </div>
           </div>
-        )}
-      </Card>
+        </motion.div>
+      )}
 
       {/* Users Table */}
-      <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left">
-                  <input
-                    type="checkbox"
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedUsers(filteredUsers.map(u => u.id));
-                      } else {
-                        setSelectedUsers([]);
-                      }
-                    }}
-                    checked={selectedUsers.length === filteredUsers.length && filteredUsers.length > 0}
-                  />
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Location
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Last Active
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pickleball-500"></div>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <FiXCircle className="h-8 w-8 text-red-500 mx-auto mb-2" />
+              <p className="text-gray-600">{error}</p>
+              <button
+                onClick={fetchUsers}
+                className="mt-2 px-4 py-2 bg-pickleball-600 text-white rounded-lg hover:bg-pickleball-700 transition-colors"
+              >
+                Reintentar
+              </button>
+            </div>
+          </div>
+        ) : data && data.users.length > 0 ? (
+          <>
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <input
                       type="checkbox"
-                      checked={selectedUsers.includes(user.id)}
-                      onChange={() => toggleUserSelection(user.id)}
+                      checked={selectedUsers.length === data.users.length}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedUsers(data.users.map(u => u.id));
+                        } else {
+                          setSelectedUsers([]);
+                        }
+                      }}
+                      className="rounded border-gray-300 text-pickleball-600 focus:ring-pickleball-500"
                     />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                      <div className="text-sm text-gray-500">{user.email}</div>
-                      {user.skillLevel && (
-                        <div className="text-xs text-gray-400">Skill: {user.skillLevel}</div>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(user.role)}`}>
-                      {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(user.status)}`}>
-                      {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {user.location}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    {formatLastActive(user.lastActive)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      {user.status === 'pending' && (
-                        <button
-                          onClick={() => handleUserAction(user.id, 'approve')}
-                          className="p-1 text-green-600 hover:bg-green-100 rounded"
-                          title="Approve"
-                        >
-                          <UserCheck className="h-4 w-4" />
-                        </button>
-                      )}
-                      {user.status === 'active' && (
-                        <button
-                          onClick={() => handleUserAction(user.id, 'suspend')}
-                          className="p-1 text-red-600 hover:bg-red-100 rounded"
-                          title="Suspend"
-                        >
-                          <UserX className="h-4 w-4" />
-                        </button>
-                      )}
-                      {user.status === 'suspended' && (
-                        <button
-                          onClick={() => handleUserAction(user.id, 'reactivate')}
-                          className="p-1 text-green-600 hover:bg-green-100 rounded"
-                          title="Reactivate"
-                        >
-                          <UserCheck className="h-4 w-4" />
-                        </button>
-                      )}
-                      <button className="p-1 text-blue-600 hover:bg-blue-100 rounded" title="Edit">
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button className="p-1 text-purple-600 hover:bg-purple-100 rounded" title="Send Message">
-                        <Mail className="h-4 w-4" />
-                      </button>
-                      <button className="p-1 text-gray-600 hover:bg-gray-100 rounded" title="More">
-                        <MoreVertical className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Usuario
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Rol
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Estado
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Perfil
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Registro
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Último acceso
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {data.users.map((user, index) => (
+                  <UserRow key={user.id} user={user} index={index} />
+                ))}
+              </tbody>
+            </table>
 
-        {filteredUsers.length === 0 && (
-          <div className="text-center py-12">
-            <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
-            <p className="text-gray-500">Try adjusting your search or filter criteria.</p>
+            {/* Pagination */}
+            {data.pagination.pages > 1 && (
+              <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+                <div className="flex items-center justify-between">
+                  <div className="text-sm text-gray-700">
+                    Mostrando {((data.pagination.page - 1) * data.pagination.limit) + 1} a{' '}
+                    {Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)} de{' '}
+                    {data.pagination.total} usuarios
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
+                      disabled={filters.page === 1}
+                      className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Anterior
+                    </button>
+                    <span className="px-3 py-1 text-sm text-gray-700">
+                      Página {filters.page} de {data.pagination.pages}
+                    </span>
+                    <button
+                      onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
+                      disabled={filters.page === data.pagination.pages}
+                      className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Siguiente
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <FiUsers className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-600">No se encontraron usuarios</p>
+            </div>
           </div>
         )}
-      </Card>
-
-      {/* Summary Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Card className="p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{users.length}</p>
-          <p className="text-sm text-gray-500">Total Users</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <p className="text-2xl font-bold text-green-600">{users.filter(u => u.status === 'active').length}</p>
-          <p className="text-sm text-gray-500">Active</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <p className="text-2xl font-bold text-yellow-600">{users.filter(u => u.status === 'pending').length}</p>
-          <p className="text-sm text-gray-500">Pending</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <p className="text-2xl font-bold text-red-600">{users.filter(u => u.status === 'suspended').length}</p>
-          <p className="text-sm text-gray-500">Suspended</p>
-        </Card>
       </div>
     </div>
   );
