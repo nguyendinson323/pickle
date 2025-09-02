@@ -1,113 +1,113 @@
 import { QueryInterface, DataTypes } from 'sequelize';
 
-export const up = async (queryInterface: QueryInterface): Promise<void> => {
+export async function up(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.createTable('content_moderation', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true,
+      primaryKey: true
     },
     content_type: {
       type: DataTypes.ENUM('user_profile', 'tournament', 'microsite', 'message', 'review', 'media'),
-      allowNull: false,
+      allowNull: false
     },
     content_id: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     reported_by: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'users',
-        key: 'id',
+        key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onDelete: 'SET NULL'
     },
     content_data: {
       type: DataTypes.JSONB,
-      allowNull: false,
+      allowNull: false
     },
     content_url: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     content_preview: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: false
     },
     status: {
       type: DataTypes.ENUM('pending', 'approved', 'rejected', 'flagged', 'escalated'),
       allowNull: false,
-      defaultValue: 'pending',
+      defaultValue: 'pending'
     },
     moderator_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'users',
-        key: 'id',
+        key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onDelete: 'SET NULL'
     },
     moderated_at: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: true
     },
     report_reason: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     moderation_reason: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     action_taken: {
       type: DataTypes.ENUM('none', 'warning', 'content_removed', 'account_suspended', 'account_banned'),
-      allowNull: true,
+      allowNull: true
     },
     severity: {
       type: DataTypes.ENUM('low', 'medium', 'high', 'critical'),
       allowNull: false,
-      defaultValue: 'medium',
+      defaultValue: 'medium'
     },
     category: {
       type: DataTypes.JSONB,
       allowNull: false,
-      defaultValue: [],
+      defaultValue: []
     },
     ai_flags: {
       type: DataTypes.JSONB,
-      allowNull: true,
+      allowNull: true
     },
     requires_follow_up: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: false
     },
     follow_up_date: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: true
     },
     notes: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     created_at: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.NOW,
+      allowNull: false
     },
     updated_at: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.NOW,
-    },
+      allowNull: false
+    }
   });
 
-  // Create indexes
+  // Add indexes exactly as defined in the model
   await queryInterface.addIndex('content_moderation', ['content_type']);
   await queryInterface.addIndex('content_moderation', ['content_id']);
   await queryInterface.addIndex('content_moderation', ['status']);
@@ -117,8 +117,19 @@ export const up = async (queryInterface: QueryInterface): Promise<void> => {
   await queryInterface.addIndex('content_moderation', ['created_at']);
   await queryInterface.addIndex('content_moderation', ['requires_follow_up', 'follow_up_date']);
   await queryInterface.addIndex('content_moderation', ['content_type', 'content_id']);
-};
 
-export const down = async (queryInterface: QueryInterface): Promise<void> => {
+  // Add GIN indexes for JSONB fields
+  await queryInterface.addIndex('content_moderation', ['content_data'], {
+    using: 'gin'
+  });
+  await queryInterface.addIndex('content_moderation', ['category'], {
+    using: 'gin'
+  });
+  await queryInterface.addIndex('content_moderation', ['ai_flags'], {
+    using: 'gin'
+  });
+}
+
+export async function down(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.dropTable('content_moderation');
-};
+}

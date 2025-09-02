@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Microsite from './Microsite';
 
 interface MicrositeAnalyticsAttributes {
   id: number;
@@ -56,12 +55,9 @@ interface MicrositeAnalyticsAttributes {
   downloadClicks: number;
   socialClicks: number;
   externalLinkClicks: number;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MicrositeAnalyticsCreationAttributes extends Optional<MicrositeAnalyticsAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MicrositeAnalyticsCreationAttributes extends Optional<MicrositeAnalyticsAttributes, 'id'> {}
 
 class MicrositeAnalytics extends Model<MicrositeAnalyticsAttributes, MicrositeAnalyticsCreationAttributes> implements MicrositeAnalyticsAttributes {
   public id!: number;
@@ -152,119 +148,120 @@ MicrositeAnalytics.init(
       allowNull: false,
       references: {
         model: 'microsites',
-        key: 'id',
+        key: 'id'
       },
-      field: 'microsite_id',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      field: 'microsite_id'
     },
     date: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
+      allowNull: false
     },
     pageViews: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'page_views',
+      field: 'page_views'
     },
     uniqueVisitors: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'unique_visitors',
+      field: 'unique_visitors'
     },
     sessions: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 0
     },
     bounceRate: {
       type: DataTypes.DECIMAL(5, 2),
       allowNull: false,
       defaultValue: 0,
-      field: 'bounce_rate',
+      field: 'bounce_rate'
     },
     avgSessionDuration: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'avg_session_duration',
+      field: 'avg_session_duration'
     },
     pageMetrics: {
       type: DataTypes.JSONB,
       allowNull: false,
       defaultValue: [],
-      field: 'page_metrics',
+      field: 'page_metrics'
     },
     trafficSources: {
       type: DataTypes.JSONB,
       allowNull: false,
       defaultValue: [],
-      field: 'traffic_sources',
+      field: 'traffic_sources'
     },
     deviceStats: {
       type: DataTypes.JSONB,
       allowNull: false,
       defaultValue: { desktop: 0, mobile: 0, tablet: 0 },
-      field: 'device_stats',
+      field: 'device_stats'
     },
     browserStats: {
       type: DataTypes.JSONB,
       allowNull: false,
       defaultValue: [],
-      field: 'browser_stats',
+      field: 'browser_stats'
     },
     countryStats: {
       type: DataTypes.JSONB,
       allowNull: false,
       defaultValue: [],
-      field: 'country_stats',
+      field: 'country_stats'
     },
     formSubmissions: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'form_submissions',
+      field: 'form_submissions'
     },
     downloadClicks: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'download_clicks',
+      field: 'download_clicks'
     },
     socialClicks: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'social_clicks',
+      field: 'social_clicks'
     },
     externalLinkClicks: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'external_link_clicks',
-    },
+      field: 'external_link_clicks'
+    }
   },
   {
     sequelize,
+    modelName: 'MicrositeAnalytics',
     tableName: 'microsite_analytics',
     timestamps: true,
+  underscored: true,
     indexes: [
       {
-        fields: ['microsite_id'],
+        fields: ['microsite_id']
       },
       {
-        fields: ['date'],
+        fields: ['date']
       },
       {
         fields: ['microsite_id', 'date'],
-        unique: true,
-      },
-    ],
+        unique: true
+      }
+    ]
   }
 );
 
-// Associations
-MicrositeAnalytics.belongsTo(Microsite, { foreignKey: 'micrositeId', as: 'microsite' });
-Microsite.hasMany(MicrositeAnalytics, { foreignKey: 'micrositeId', as: 'analytics' });
 
 export default MicrositeAnalytics;

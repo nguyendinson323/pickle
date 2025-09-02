@@ -42,13 +42,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
     last_message_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'messages',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      allowNull: true
     },
     last_message_at: {
       type: DataTypes.DATE,

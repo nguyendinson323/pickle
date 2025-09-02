@@ -44,11 +44,9 @@ interface TournamentAttributes {
   weatherContingency?: string;
   transportationInfo?: string;
   accommodationInfo?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface TournamentCreationAttributes extends Optional<TournamentAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface TournamentCreationAttributes extends Optional<TournamentAttributes, 'id'> {}
 
 class Tournament extends Model<TournamentAttributes, TournamentCreationAttributes> implements TournamentAttributes {
   public id!: number;
@@ -284,21 +282,12 @@ Tournament.init({
     allowNull: true,
     field: 'accommodation_info'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'Tournament',
   tableName: 'tournaments',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['organizer_type', 'organizer_id']

@@ -11,7 +11,7 @@ interface PlayerFinderRequestAttributes {
   preferredAgeMin?: number;
   preferredAgeMax?: number;
   searchRadius: number;
-  availableTimeSlots: object; // JSON with time preferences
+  availableTimeSlots: any;
   message?: string;
   isActive: boolean;
   expiresAt: Date;
@@ -33,7 +33,7 @@ class PlayerFinderRequest extends Model<
   public preferredAgeMin?: number;
   public preferredAgeMax?: number;
   public searchRadius!: number;
-  public availableTimeSlots!: object;
+  public availableTimeSlots!: any;
   public message?: string;
   public isActive!: boolean;
   public expiresAt!: Date;
@@ -55,6 +55,8 @@ PlayerFinderRequest.init({
       model: 'users',
       key: 'id'
     },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
     field: 'requester_id'
   },
   locationId: {
@@ -64,6 +66,8 @@ PlayerFinderRequest.init({
       model: 'player_locations',
       key: 'id'
     },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
     field: 'location_id'
   },
   nrtpLevelMin: {
@@ -133,22 +137,13 @@ PlayerFinderRequest.init({
     type: DataTypes.DATE,
     allowNull: false,
     field: 'expires_at'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   tableName: 'player_finder_requests',
   modelName: 'PlayerFinderRequest',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['requester_id']

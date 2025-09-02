@@ -16,11 +16,9 @@ interface MicrositePageAttributes {
   template: string;
   settings: any;
   publishedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MicrositePageCreationAttributes extends Optional<MicrositePageAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MicrositePageCreationAttributes extends Optional<MicrositePageAttributes, 'id'> {}
 
 class MicrositePage extends Model<MicrositePageAttributes, MicrositePageCreationAttributes> implements MicrositePageAttributes {
   public id!: number;
@@ -117,22 +115,13 @@ MicrositePage.init({
     type: DataTypes.DATE,
     allowNull: true,
     field: 'published_at'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'MicrositePage',
   tableName: 'microsite_pages',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['microsite_id']

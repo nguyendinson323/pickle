@@ -40,12 +40,9 @@ interface NotificationTemplateAttributes {
   // Status
   isActive: boolean;
   version: number;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface NotificationTemplateCreationAttributes extends Optional<NotificationTemplateAttributes, 'id' | 'isActive' | 'version' | 'createdAt' | 'updatedAt'> {}
+interface NotificationTemplateCreationAttributes extends Optional<NotificationTemplateAttributes, 'id' | 'isActive' | 'version'> {}
 
 class NotificationTemplate extends Model<NotificationTemplateAttributes, NotificationTemplateCreationAttributes> implements NotificationTemplateAttributes {
   public id!: number;
@@ -83,9 +80,6 @@ class NotificationTemplate extends Model<NotificationTemplateAttributes, Notific
   
   public isActive!: boolean;
   public version!: number;
-  
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
 }
 
 NotificationTemplate.init({
@@ -195,22 +189,13 @@ NotificationTemplate.init({
     validate: {
       min: 1
     }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'NotificationTemplate',
   tableName: 'notification_templates',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['name']

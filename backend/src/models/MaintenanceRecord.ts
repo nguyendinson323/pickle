@@ -134,11 +134,9 @@ interface MaintenanceRecordAttributes {
     feedbackDate: Date;
   };
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MaintenanceRecordCreationAttributes extends Optional<MaintenanceRecordAttributes, 'id' | 'createdAt' | 'updatedAt' | 'actualStartTime' | 'actualEndTime' | 'actualDuration' | 'workPerformed' | 'affectedBookings' | 'preventiveSchedule' | 'warranty' | 'weatherConditions' | 'feedback'> {}
+interface MaintenanceRecordCreationAttributes extends Optional<MaintenanceRecordAttributes, 'id' | 'actualStartTime' | 'actualEndTime' | 'actualDuration' | 'workPerformed' | 'affectedBookings' | 'preventiveSchedule' | 'warranty' | 'weatherConditions' | 'feedback'> {}
 
 class MaintenanceRecord extends Model<MaintenanceRecordAttributes, MaintenanceRecordCreationAttributes> implements MaintenanceRecordAttributes {
   public id!: number;
@@ -551,22 +549,13 @@ MaintenanceRecord.init({
     allowNull: false,
     defaultValue: true,
     field: 'is_active'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'MaintenanceRecord',
   tableName: 'maintenance_records',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['court_id']

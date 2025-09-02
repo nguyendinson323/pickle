@@ -18,11 +18,9 @@ interface NotificationQueueAttributes {
   retryCount: number;
   maxRetries: number;
   errorMessage?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface NotificationQueueCreationAttributes extends Optional<NotificationQueueAttributes, 'id' | 'retryCount' | 'maxRetries' | 'createdAt' | 'updatedAt'> {}
+interface NotificationQueueCreationAttributes extends Optional<NotificationQueueAttributes, 'id' | 'retryCount' | 'maxRetries'> {}
 
 class NotificationQueue extends Model<NotificationQueueAttributes, NotificationQueueCreationAttributes> implements NotificationQueueAttributes {
   public id!: number;
@@ -136,22 +134,13 @@ NotificationQueue.init({
     type: DataTypes.TEXT,
     allowNull: true,
     field: 'error_message'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'NotificationQueue',
   tableName: 'notification_queue',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

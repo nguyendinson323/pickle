@@ -24,11 +24,9 @@ interface TournamentCategoryAttributes {
   specialRules?: string;
   isActive: boolean;
   registrationDeadline?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface TournamentCategoryCreationAttributes extends Optional<TournamentCategoryAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface TournamentCategoryCreationAttributes extends Optional<TournamentCategoryAttributes, 'id'> {}
 
 class TournamentCategory extends Model<TournamentCategoryAttributes, TournamentCategoryCreationAttributes> implements TournamentCategoryAttributes {
   public id!: number;
@@ -144,21 +142,12 @@ TournamentCategory.init({
     allowNull: true,
     field: 'registration_deadline'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'TournamentCategory',
   tableName: 'tournament_categories',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['tournament_id']

@@ -15,11 +15,9 @@ interface StateCommitteeAttributes {
   website?: string;
   socialMedia?: any;
   logoUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface StateCommitteeCreationAttributes extends Optional<StateCommitteeAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface StateCommitteeCreationAttributes extends Optional<StateCommitteeAttributes, 'id'> {}
 
 class StateCommittee extends Model<StateCommitteeAttributes, StateCommitteeCreationAttributes> implements StateCommitteeAttributes {
   public id!: number;
@@ -110,21 +108,12 @@ StateCommittee.init({
     allowNull: true,
     field: 'logo_url'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'StateCommittee',
   tableName: 'state_committees',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

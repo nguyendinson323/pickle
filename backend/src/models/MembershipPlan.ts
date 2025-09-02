@@ -13,11 +13,9 @@ interface MembershipPlanAttributes {
   stripePriceId: string;
   description: string;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MembershipPlanCreationAttributes extends Optional<MembershipPlanAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MembershipPlanCreationAttributes extends Optional<MembershipPlanAttributes, 'id'> {}
 
 class MembershipPlan extends Model<MembershipPlanAttributes, MembershipPlanCreationAttributes> implements MembershipPlanAttributes {
   public id!: number;
@@ -82,21 +80,12 @@ MembershipPlan.init({
     defaultValue: true,
     field: 'is_active'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'MembershipPlan',
   tableName: 'membership_plans',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['role']

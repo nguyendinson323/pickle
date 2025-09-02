@@ -49,12 +49,9 @@ interface MessageAttributes {
     emoji: string;
     createdAt: Date;
   }[];
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MessageCreationAttributes extends Optional<MessageAttributes, 'id' | 'createdAt' | 'updatedAt' | 'attachments' | 'location' | 'matchInvite' | 'editedAt' | 'deletedAt'> {}
+interface MessageCreationAttributes extends Optional<MessageAttributes, 'id' | 'attachments' | 'location' | 'matchInvite' | 'editedAt' | 'deletedAt'> {}
 
 class Message extends Model<MessageAttributes, MessageCreationAttributes> implements MessageAttributes {
   public id!: number;
@@ -256,22 +253,13 @@ Message.init({
         }
       }
     }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Message',
   tableName: 'messages',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['conversation_id']

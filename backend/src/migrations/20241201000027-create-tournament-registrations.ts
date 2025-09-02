@@ -58,13 +58,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
     payment_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'payments',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      allowNull: true
     },
     amount_paid: {
       type: DataTypes.DECIMAL(10, 2),

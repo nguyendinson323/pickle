@@ -42,12 +42,9 @@ interface PaymentMethodAttributes {
       country?: string;
     };
   };
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface PaymentMethodCreationAttributes extends Optional<PaymentMethodAttributes, 'id' | 'card' | 'bankAccount' | 'createdAt' | 'updatedAt'> {}
+interface PaymentMethodCreationAttributes extends Optional<PaymentMethodAttributes, 'id' | 'card' | 'bankAccount'> {}
 
 class PaymentMethod extends Model<PaymentMethodAttributes, PaymentMethodCreationAttributes> implements PaymentMethodAttributes {
   public id!: number;
@@ -88,9 +85,6 @@ class PaymentMethod extends Model<PaymentMethodAttributes, PaymentMethodCreation
     };
   };
   
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-
   // Association properties
   public user?: any;
 }
@@ -191,16 +185,6 @@ PaymentMethod.init({
         }
       }
     }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,

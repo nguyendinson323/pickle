@@ -29,11 +29,9 @@ interface ReservationAttributes {
   cancelledAt?: Date;
   refundAmount?: number;
   refundProcessedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface ReservationCreationAttributes extends Optional<ReservationAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ReservationCreationAttributes extends Optional<ReservationAttributes, 'id'> {}
 
 class Reservation extends Model<ReservationAttributes, ReservationCreationAttributes> implements ReservationAttributes {
   public id!: number;
@@ -196,21 +194,12 @@ Reservation.init({
     allowNull: true,
     field: 'refund_processed_at'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'Reservation',
   tableName: 'reservations',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['court_id']

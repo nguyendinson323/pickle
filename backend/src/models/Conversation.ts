@@ -41,12 +41,9 @@ interface ConversationAttributes {
   isActive: boolean;
   isArchived: boolean;
   archivedAt?: Date;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface ConversationCreationAttributes extends Optional<ConversationAttributes, 'id' | 'name' | 'description' | 'groupIcon' | 'relatedEntityType' | 'relatedEntityId' | 'lastMessageId' | 'lastMessageAt' | 'lastMessagePreview' | 'archivedAt' | 'createdAt' | 'updatedAt'> {}
+interface ConversationCreationAttributes extends Optional<ConversationAttributes, 'id' | 'name' | 'description' | 'groupIcon' | 'relatedEntityType' | 'relatedEntityId' | 'lastMessageId' | 'lastMessageAt' | 'lastMessagePreview' | 'archivedAt'> {}
 
 class Conversation extends Model<ConversationAttributes, ConversationCreationAttributes> implements ConversationAttributes {
   public id!: number;
@@ -231,22 +228,13 @@ Conversation.init({
     type: DataTypes.DATE,
     allowNull: true,
     field: 'archived_at'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Conversation',
   tableName: 'conversations',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['type']

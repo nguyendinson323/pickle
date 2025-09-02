@@ -71,13 +71,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
     payment_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'payments',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      allowNull: true
     },
     status: {
       type: DataTypes.ENUM('pending', 'confirmed', 'completed', 'cancelled', 'no_show'),

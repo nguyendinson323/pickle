@@ -44,12 +44,9 @@ interface NotificationAttributes {
   
   // Expiry
   expiresAt?: Date;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface NotificationCreationAttributes extends Optional<NotificationAttributes, 'id' | 'actionText' | 'actionUrl' | 'relatedEntityType' | 'relatedEntityId' | 'metadata' | 'readAt' | 'scheduledFor' | 'expiresAt' | 'createdAt' | 'updatedAt'> {}
+interface NotificationCreationAttributes extends Optional<NotificationAttributes, 'id' | 'actionText' | 'actionUrl' | 'relatedEntityType' | 'relatedEntityId' | 'metadata' | 'readAt' | 'scheduledFor' | 'expiresAt'> {}
 
 class Notification extends Model<NotificationAttributes, NotificationCreationAttributes> implements NotificationAttributes {
   public id!: number;
@@ -236,22 +233,13 @@ Notification.init({
     type: DataTypes.DATE,
     allowNull: true,
     field: 'expires_at'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Notification',
   tableName: 'notifications',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

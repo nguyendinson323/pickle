@@ -100,11 +100,9 @@ interface CourtBookingAttributes {
     hourBefore: boolean;
   };
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface CourtBookingCreationAttributes extends Optional<CourtBookingAttributes, 'id' | 'createdAt' | 'updatedAt' | 'bookingNotes' | 'facilityNotes' | 'paymentMethod' | 'paymentReference' | 'recurringBooking' | 'cancellation' | 'checkIn' | 'checkOut' | 'rating' | 'weatherConditions' | 'specialRequests' | 'accessCode' | 'qrCode'> {}
+interface CourtBookingCreationAttributes extends Optional<CourtBookingAttributes, 'id' | 'bookingNotes' | 'facilityNotes' | 'paymentMethod' | 'paymentReference' | 'recurringBooking' | 'cancellation' | 'checkIn' | 'checkOut' | 'rating' | 'weatherConditions' | 'specialRequests' | 'accessCode' | 'qrCode'> {}
 
 class CourtBooking extends Model<CourtBookingAttributes, CourtBookingCreationAttributes> implements CourtBookingAttributes {
   public id!: number;
@@ -488,22 +486,13 @@ CourtBooking.init({
     allowNull: false,
     defaultValue: true,
     field: 'is_active'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'CourtBooking',
   tableName: 'court_bookings',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['court_id']

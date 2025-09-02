@@ -13,11 +13,9 @@ interface ThemeAttributes {
   layout: any;
   customCss?: string;
   settings: any;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface ThemeCreationAttributes extends Optional<ThemeAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ThemeCreationAttributes extends Optional<ThemeAttributes, 'id'> {}
 
 class Theme extends Model<ThemeAttributes, ThemeCreationAttributes> implements ThemeAttributes {
   public id!: number;
@@ -90,22 +88,13 @@ Theme.init({
     type: DataTypes.JSONB,
     allowNull: false,
     defaultValue: {}
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Theme',
   tableName: 'themes',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['name'],

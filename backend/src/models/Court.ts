@@ -69,11 +69,9 @@ interface CourtAttributes {
     saturday: { open: string; close: string; closed: boolean };
     sunday: { open: string; close: string; closed: boolean };
   };
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface CourtCreationAttributes extends Optional<CourtAttributes, 'id' | 'createdAt' | 'updatedAt' | 'name' | 'bookingNotes' | 'nextMaintenanceDate'> {}
+interface CourtCreationAttributes extends Optional<CourtAttributes, 'id' | 'name' | 'bookingNotes' | 'nextMaintenanceDate'> {}
 
 class Court extends Model<CourtAttributes, CourtCreationAttributes> implements CourtAttributes {
   public id!: number;
@@ -456,22 +454,13 @@ Court.init({
         }
       }
     }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Court',
   tableName: 'courts',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['facility_id']

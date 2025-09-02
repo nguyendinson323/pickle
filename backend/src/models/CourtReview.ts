@@ -65,11 +65,9 @@ interface CourtReviewAttributes {
     submissionMethod: 'web' | 'mobile_app' | 'email_link';
   };
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface CourtReviewCreationAttributes extends Optional<CourtReviewAttributes, 'id' | 'createdAt' | 'updatedAt' | 'bookingId' | 'weatherConditions' | 'verificationMethod' | 'moderationNotes' | 'translatedVersions'> {}
+interface CourtReviewCreationAttributes extends Optional<CourtReviewAttributes, 'id' | 'bookingId' | 'weatherConditions' | 'verificationMethod' | 'moderationNotes' | 'translatedVersions'> {}
 
 class CourtReview extends Model<CourtReviewAttributes, CourtReviewCreationAttributes> implements CourtReviewAttributes {
   public id!: number;
@@ -468,22 +466,13 @@ CourtReview.init({
     allowNull: false,
     defaultValue: true,
     field: 'is_active'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'CourtReview',
   tableName: 'court_reviews',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['court_id']

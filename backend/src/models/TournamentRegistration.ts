@@ -29,11 +29,9 @@ interface TournamentRegistrationAttributes {
   withdrawalDate?: Date;
   refundAmount?: number;
   refundProcessedDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface TournamentRegistrationCreationAttributes extends Optional<TournamentRegistrationAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface TournamentRegistrationCreationAttributes extends Optional<TournamentRegistrationAttributes, 'id'> {}
 
 class TournamentRegistration extends Model<TournamentRegistrationAttributes, TournamentRegistrationCreationAttributes> implements TournamentRegistrationAttributes {
   public id!: number;
@@ -198,21 +196,12 @@ TournamentRegistration.init({
     allowNull: true,
     field: 'refund_processed_date'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'TournamentRegistration',
   tableName: 'tournament_registrations',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['tournament_id']

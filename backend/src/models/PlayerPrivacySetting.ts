@@ -23,11 +23,9 @@ interface PlayerPrivacySettingAttributes {
   blockList: number[]; // array of player IDs to block
   preferredContactMethod: string; // app, email, sms
   notificationPreferences: Record<string, boolean>;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface PlayerPrivacySettingCreationAttributes extends Optional<PlayerPrivacySettingAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface PlayerPrivacySettingCreationAttributes extends Optional<PlayerPrivacySettingAttributes, 'id'> {}
 
 class PlayerPrivacySetting extends Model<PlayerPrivacySettingAttributes, PlayerPrivacySettingCreationAttributes> implements PlayerPrivacySettingAttributes {
   public id!: number;
@@ -208,22 +206,13 @@ PlayerPrivacySetting.init({
       clubUpdate: true
     },
     field: 'notification_preferences'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'PlayerPrivacySetting',
   tableName: 'player_privacy_settings',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['player_id']

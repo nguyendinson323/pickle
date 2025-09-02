@@ -17,11 +17,9 @@ interface ClubAttributes {
   logoUrl?: string;
   hasCourts: boolean;
   planType: 'basic' | 'premium';
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface ClubCreationAttributes extends Optional<ClubAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ClubCreationAttributes extends Optional<ClubAttributes, 'id'> {}
 
 class Club extends Model<ClubAttributes, ClubCreationAttributes> implements ClubAttributes {
   public id!: number;
@@ -125,22 +123,13 @@ Club.init({
     allowNull: false,
     defaultValue: 'basic',
     field: 'plan_type'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Club',
   tableName: 'clubs',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

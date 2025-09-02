@@ -38,12 +38,9 @@ interface SubscriptionPlanAttributes {
   isActive: boolean;
   isPopular: boolean;
   sortOrder: number;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface SubscriptionPlanCreationAttributes extends Optional<SubscriptionPlanAttributes, 'id' | 'trialPeriodDays' | 'maxTournamentRegistrations' | 'maxCourtBookings' | 'maxPlayerMatches' | 'createdAt' | 'updatedAt'> {}
+interface SubscriptionPlanCreationAttributes extends Optional<SubscriptionPlanAttributes, 'id' | 'trialPeriodDays' | 'maxTournamentRegistrations' | 'maxCourtBookings' | 'maxPlayerMatches'> {}
 
 class SubscriptionPlan extends Model<SubscriptionPlanAttributes, SubscriptionPlanCreationAttributes> implements SubscriptionPlanAttributes {
   public id!: number;
@@ -238,16 +235,6 @@ SubscriptionPlan.init({
       min: 0
     },
     field: 'sort_order'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,

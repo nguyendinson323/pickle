@@ -17,11 +17,9 @@ interface CoachAttributes {
   licenseType?: string;
   rankingPosition?: number;
   federationIdNumber?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface CoachCreationAttributes extends Optional<CoachAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface CoachCreationAttributes extends Optional<CoachAttributes, 'id'> {}
 
 class Coach extends Model<CoachAttributes, CoachCreationAttributes> implements CoachAttributes {
   public id!: number;
@@ -126,22 +124,13 @@ Coach.init({
     allowNull: true,
     unique: true,
     field: 'federation_id_number'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Coach',
   tableName: 'coaches',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

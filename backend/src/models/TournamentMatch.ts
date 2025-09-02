@@ -53,11 +53,9 @@ interface TournamentMatchAttributes {
   estimatedDuration?: number;
   spectatorCount?: number;
   weatherConditions?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface TournamentMatchCreationAttributes extends Optional<TournamentMatchAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface TournamentMatchCreationAttributes extends Optional<TournamentMatchAttributes, 'id'> {}
 
 class TournamentMatch extends Model<TournamentMatchAttributes, TournamentMatchCreationAttributes> implements TournamentMatchAttributes {
   public id!: number;
@@ -269,21 +267,12 @@ TournamentMatch.init({
     allowNull: true,
     field: 'weather_conditions'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'TournamentMatch',
   tableName: 'tournament_matches',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['tournament_id']

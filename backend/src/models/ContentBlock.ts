@@ -9,11 +9,9 @@ interface ContentBlockAttributes {
   sortOrder: number;
   isVisible: boolean;
   settings: any;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface ContentBlockCreationAttributes extends Optional<ContentBlockAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ContentBlockCreationAttributes extends Optional<ContentBlockAttributes, 'id'> {}
 
 class ContentBlock extends Model<ContentBlockAttributes, ContentBlockCreationAttributes> implements ContentBlockAttributes {
   public id!: number;
@@ -69,22 +67,13 @@ ContentBlock.init({
     type: DataTypes.JSONB,
     allowNull: false,
     defaultValue: {}
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'ContentBlock',
   tableName: 'content_blocks',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['page_id']

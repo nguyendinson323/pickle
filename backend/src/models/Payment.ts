@@ -49,12 +49,9 @@ interface PaymentAttributes {
   // Webhooks
   webhookProcessed: boolean;
   webhookData?: any;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface PaymentCreationAttributes extends Optional<PaymentAttributes, 'id' | 'subscriptionId' | 'stripeChargeId' | 'relatedEntityType' | 'relatedEntityId' | 'failureReason' | 'platformFee' | 'stripeFee' | 'netAmount' | 'refundedAmount' | 'refundedAt' | 'refundReason' | 'description' | 'metadata' | 'webhookData' | 'createdAt' | 'updatedAt'> {}
+interface PaymentCreationAttributes extends Optional<PaymentAttributes, 'id' | 'subscriptionId' | 'stripeChargeId' | 'relatedEntityType' | 'relatedEntityId' | 'failureReason' | 'platformFee' | 'stripeFee' | 'netAmount' | 'refundedAmount' | 'refundedAt' | 'refundReason' | 'description' | 'metadata' | 'webhookData'> {}
 
 class Payment extends Model<PaymentAttributes, PaymentCreationAttributes> implements PaymentAttributes {
   public id!: number;
@@ -97,9 +94,6 @@ class Payment extends Model<PaymentAttributes, PaymentCreationAttributes> implem
   public webhookProcessed!: boolean;
   public webhookData?: any;
   
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-
   // Association properties
   public user?: any;
   public subscription?: any;
@@ -264,16 +258,6 @@ Payment.init({
     type: DataTypes.JSONB,
     allowNull: true,
     field: 'webhook_data'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,

@@ -1,449 +1,230 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import User from './User';
-
-export interface MicrositeComponent {
-  id: string;
-  type: 'hero' | 'text' | 'image' | 'gallery' | 'contact_form' | 'event_list' | 'member_showcase' | 'stats' | 'testimonials' | 'map';
-  position: number;
-  settings: Record<string, any>;
-  content: Record<string, any>;
-  styling: {
-    margin?: string;
-    padding?: string;
-    backgroundColor?: string;
-    textColor?: string;
-    borderRadius?: string;
-    shadow?: boolean;
-  };
-}
 
 interface MicrositeAttributes {
   id: number;
-  ownerId: number;
-  ownerType: 'club' | 'state_committee';
-  
-  // Basic Info
+  userId: number;
   name: string;
-  slug: string; // URL slug (e.g., 'jalisco-pickleball')
-  description: string;
-  
-  // Branding
-  logo?: string;
-  favicon?: string;
-  colorScheme: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    text: string;
-  };
-  
-  // Domain Settings
-  customDomain?: string;
-  subdomain: string; // e.g., 'jalisco' for jalisco.pickleballmx.com
-  sslEnabled: boolean;
-  
-  // Template
-  templateId: number;
-  templateVersion: string;
-  
-  // Content Structure
-  pages: {
-    id: string;
-    name: string;
-    slug: string;
-    title: string;
-    metaDescription: string;
-    components: MicrositeComponent[];
-    isPublished: boolean;
-    sortOrder: number;
-  }[];
-  
-  // Navigation
-  navigation: {
-    type: 'header' | 'footer';
-    items: {
-      label: string;
-      url: string;
-      pageId?: string;
-      isExternal: boolean;
-      openInNewTab: boolean;
-    }[];
-  }[];
-  
-  // SEO Settings
-  seo: {
-    title: string;
-    description: string;
-    keywords: string[];
-    ogImage?: string;
-    twitterCard?: string;
-    customMeta?: { name: string; content: string }[];
-  };
-  
-  // Analytics
-  googleAnalyticsId?: string;
-  facebookPixelId?: string;
-  
-  // Status
-  status: 'draft' | 'published' | 'archived';
-  isPublic: boolean;
+  subdomain: string;
+  title: string;
+  description?: string;
+  ownerType: 'club' | 'partner' | 'state';
+  ownerId: number;
+  status: 'draft' | 'published' | 'suspended';
+  themeId?: number;
+  customCss?: string;
+  customJs?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+  ogImage?: string;
+  faviconUrl?: string;
+  logoUrl?: string;
+  headerImageUrl?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+  socialMedia?: any;
+  analytics?: any;
+  settings: any;
   publishedAt?: Date;
-  
-  // Features
-  features: {
-    contactForm: boolean;
-    eventCalendar: boolean;
-    memberDirectory: boolean;
-    photoGallery: boolean;
-    newsUpdates: boolean;
-    socialMedia: boolean;
-  };
-  
-  // Contact Info
-  contactInfo: {
-    email?: string;
-    phone?: string;
-    address?: {
-      street: string;
-      city: string;
-      state: string;
-      postalCode: string;
-      coordinates?: { lat: number; lng: number };
-    };
-    socialMedia?: {
-      facebook?: string;
-      instagram?: string;
-      twitter?: string;
-      youtube?: string;
-    };
-  };
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MicrositeCreationAttributes extends Optional<MicrositeAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MicrositeCreationAttributes extends Optional<MicrositeAttributes, 'id'> {}
 
 class Microsite extends Model<MicrositeAttributes, MicrositeCreationAttributes> implements MicrositeAttributes {
   public id!: number;
-  public ownerId!: number;
-  public ownerType!: 'club' | 'state_committee';
-  
-  // Basic Info
+  public userId!: number;
   public name!: string;
-  public slug!: string;
-  public description!: string;
-  
-  // Branding
-  public logo?: string;
-  public favicon?: string;
-  public colorScheme!: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    text: string;
-  };
-  
-  // Domain Settings
-  public customDomain?: string;
   public subdomain!: string;
-  public sslEnabled!: boolean;
-  
-  // Template
-  public templateId!: number;
-  public templateVersion!: string;
-  
-  // Content Structure
-  public pages!: {
-    id: string;
-    name: string;
-    slug: string;
-    title: string;
-    metaDescription: string;
-    components: MicrositeComponent[];
-    isPublished: boolean;
-    sortOrder: number;
-  }[];
-  
-  // Navigation
-  public navigation!: {
-    type: 'header' | 'footer';
-    items: {
-      label: string;
-      url: string;
-      pageId?: string;
-      isExternal: boolean;
-      openInNewTab: boolean;
-    }[];
-  }[];
-  
-  // SEO Settings
-  public seo!: {
-    title: string;
-    description: string;
-    keywords: string[];
-    ogImage?: string;
-    twitterCard?: string;
-    customMeta?: { name: string; content: string }[];
-  };
-  
-  // Analytics
-  public googleAnalyticsId?: string;
-  public facebookPixelId?: string;
-  
-  // Status
-  public status!: 'draft' | 'published' | 'archived';
-  public isPublic!: boolean;
+  public title!: string;
+  public description?: string;
+  public ownerType!: 'club' | 'partner' | 'state';
+  public ownerId!: number;
+  public status!: 'draft' | 'published' | 'suspended';
+  public themeId?: number;
+  public customCss?: string;
+  public customJs?: string;
+  public seoTitle?: string;
+  public seoDescription?: string;
+  public seoKeywords?: string;
+  public ogImage?: string;
+  public faviconUrl?: string;
+  public logoUrl?: string;
+  public headerImageUrl?: string;
+  public contactEmail?: string;
+  public contactPhone?: string;
+  public address?: string;
+  public socialMedia?: any;
+  public analytics?: any;
+  public settings!: any;
   public publishedAt?: Date;
-  
-  // Features
-  public features!: {
-    contactForm: boolean;
-    eventCalendar: boolean;
-    memberDirectory: boolean;
-    photoGallery: boolean;
-    newsUpdates: boolean;
-    socialMedia: boolean;
-  };
-  
-  // Contact Info
-  public contactInfo!: {
-    email?: string;
-    phone?: string;
-    address?: {
-      street: string;
-      city: string;
-      state: string;
-      postalCode: string;
-      coordinates?: { lat: number; lng: number };
-    };
-    socialMedia?: {
-      facebook?: string;
-      instagram?: string;
-      twitter?: string;
-      youtube?: string;
-    };
-  };
-  
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-
-  // Helper methods
-  public getPublicUrl(): string {
-    return this.customDomain 
-      ? `https://${this.customDomain}`
-      : `https://${this.subdomain}.pickleballmx.com`;
-  }
-
-  public getPublishedPages() {
-    return this.pages.filter(page => page.isPublished).sort((a, b) => a.sortOrder - b.sortOrder);
-  }
-
-  public getPageBySlug(slug: string) {
-    return this.pages.find(page => page.slug === slug);
-  }
-
-  public hasFeature(feature: keyof MicrositeAttributes['features']): boolean {
-    return this.features[feature] === true;
-  }
 }
 
-Microsite.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    ownerId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id',
-      },
-      field: 'owner_id',
-    },
-    ownerType: {
-      type: DataTypes.ENUM('club', 'state_committee'),
-      allowNull: false,
-      field: 'owner_type',
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    slug: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        is: /^[a-z0-9-]+$/i, // Only alphanumeric and hyphens
-      },
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      defaultValue: '',
-    },
-    logo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    favicon: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    colorScheme: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: {
-        primary: '#2563eb',
-        secondary: '#64748b',
-        accent: '#06b6d4',
-        background: '#ffffff',
-        text: '#1e293b',
-      },
-      field: 'color_scheme',
-    },
-    customDomain: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
-      field: 'custom_domain',
-    },
-    subdomain: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        is: /^[a-z0-9-]+$/i, // Only alphanumeric and hyphens
-      },
-    },
-    sslEnabled: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
-      field: 'ssl_enabled',
-    },
-    templateId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      field: 'template_id',
-      references: {
-        model: 'microsite_templates',
-        key: 'id',
-      },
-    },
-    templateVersion: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: '1.0.0',
-      field: 'template_version',
-    },
-    pages: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: [],
-    },
-    navigation: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: [],
-    },
-    seo: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: {
-        title: '',
-        description: '',
-        keywords: [],
-      },
-    },
-    googleAnalyticsId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      field: 'google_analytics_id',
-    },
-    facebookPixelId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      field: 'facebook_pixel_id',
-    },
-    status: {
-      type: DataTypes.ENUM('draft', 'published', 'archived'),
-      allowNull: false,
-      defaultValue: 'draft',
-    },
-    isPublic: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-      field: 'is_public',
-    },
-    publishedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'published_at',
-    },
-    features: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: {
-        contactForm: true,
-        eventCalendar: true,
-        memberDirectory: false,
-        photoGallery: true,
-        newsUpdates: true,
-        socialMedia: true,
-      },
-    },
-    contactInfo: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: {},
-      field: 'contact_info',
-    },
+Microsite.init({
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
   },
-  {
-    sequelize,
-    tableName: 'microsites',
-    timestamps: true,
-    indexes: [
-      {
-        fields: ['slug'],
-        unique: true,
-      },
-      {
-        fields: ['subdomain'],
-        unique: true,
-      },
-      {
-        fields: ['owner_id'],
-      },
-      {
-        fields: ['status'],
-      },
-      {
-        fields: ['is_public'],
-      },
-      {
-        fields: ['custom_domain'],
-        unique: true,
-        where: {
-          custom_domain: {
-            [sequelize.Op.ne]: null,
-          },
-        },
-      },
-    ],
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+    field: 'user_id'
+  },
+  name: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  subdomain: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    unique: true
+  },
+  title: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  ownerType: {
+    type: DataTypes.ENUM('club', 'partner', 'state'),
+    allowNull: false,
+    field: 'owner_type'
+  },
+  ownerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'owner_id'
+  },
+  status: {
+    type: DataTypes.ENUM('draft', 'published', 'suspended'),
+    defaultValue: 'draft',
+    allowNull: false
+  },
+  themeId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'microsite_themes',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+    field: 'theme_id'
+  },
+  customCss: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'custom_css'
+  },
+  customJs: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'custom_js'
+  },
+  seoTitle: {
+    type: DataTypes.STRING(60),
+    allowNull: true,
+    field: 'seo_title'
+  },
+  seoDescription: {
+    type: DataTypes.STRING(160),
+    allowNull: true,
+    field: 'seo_description'
+  },
+  seoKeywords: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'seo_keywords'
+  },
+  ogImage: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    field: 'og_image'
+  },
+  faviconUrl: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    field: 'favicon_url'
+  },
+  logoUrl: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    field: 'logo_url'
+  },
+  headerImageUrl: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    field: 'header_image_url'
+  },
+  contactEmail: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'contact_email'
+  },
+  contactPhone: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    field: 'contact_phone'
+  },
+  address: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  socialMedia: {
+    type: DataTypes.JSONB,
+    allowNull: true,
+    field: 'social_media'
+  },
+  analytics: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
+  settings: {
+    type: DataTypes.JSONB,
+    allowNull: false,
+    defaultValue: {}
+  },
+  publishedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'published_at'
   }
-);
-
-// Associations will be defined after all models are loaded
+}, {
+  sequelize,
+  modelName: 'Microsite',
+  tableName: 'microsites',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    {
+      fields: ['user_id']
+    },
+    {
+      fields: ['subdomain'],
+      unique: true
+    },
+    {
+      fields: ['owner_type', 'owner_id']
+    },
+    {
+      fields: ['status']
+    },
+    {
+      fields: ['theme_id']
+    }
+  ]
+});
 
 export default Microsite;

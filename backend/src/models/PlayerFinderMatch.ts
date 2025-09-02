@@ -49,6 +49,8 @@ PlayerFinderMatch.init({
       model: 'player_finder_requests',
       key: 'id'
     },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
     field: 'request_id'
   },
   matchedUserId: {
@@ -58,6 +60,8 @@ PlayerFinderMatch.init({
       model: 'users',
       key: 'id'
     },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
     field: 'matched_user_id'
   },
   distance: {
@@ -105,22 +109,13 @@ PlayerFinderMatch.init({
     allowNull: false,
     defaultValue: false,
     field: 'contact_shared'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   tableName: 'player_finder_matches',
   modelName: 'PlayerFinderMatch',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['request_id']

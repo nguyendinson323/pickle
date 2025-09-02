@@ -29,12 +29,9 @@ interface SubscriptionAttributes {
   // Billing
   nextBillingDate?: Date;
   lastPaymentDate?: Date;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface SubscriptionCreationAttributes extends Optional<SubscriptionAttributes, 'id' | 'canceledAt' | 'trialStart' | 'trialEnd' | 'metadata' | 'nextBillingDate' | 'lastPaymentDate' | 'createdAt' | 'updatedAt'> {}
+interface SubscriptionCreationAttributes extends Optional<SubscriptionAttributes, 'id' | 'canceledAt' | 'trialStart' | 'trialEnd' | 'metadata' | 'nextBillingDate' | 'lastPaymentDate'> {}
 
 class Subscription extends Model<SubscriptionAttributes, SubscriptionCreationAttributes> implements SubscriptionAttributes {
   public id!: number;
@@ -61,9 +58,6 @@ class Subscription extends Model<SubscriptionAttributes, SubscriptionCreationAtt
   public nextBillingDate?: Date;
   public lastPaymentDate?: Date;
   
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-
   // Association properties
   public user?: any;
   public plan?: any;
@@ -182,16 +176,6 @@ Subscription.init({
     type: DataTypes.DATE,
     allowNull: true,
     field: 'last_payment_date'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,

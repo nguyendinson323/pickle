@@ -81,11 +81,9 @@ interface CourtFacilityAttributes {
     holidaySchedule?: object;
     seasonalHours?: object;
   };
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface CourtFacilityCreationAttributes extends Optional<CourtFacilityAttributes, 'id' | 'createdAt' | 'updatedAt' | 'rating' | 'totalReviews' | 'verificationDate' | 'website' | 'socialMedia'> {}
+interface CourtFacilityCreationAttributes extends Optional<CourtFacilityAttributes, 'id' | 'rating' | 'totalReviews' | 'verificationDate' | 'website' | 'socialMedia'> {}
 
 class CourtFacility extends Model<CourtFacilityAttributes, CourtFacilityCreationAttributes> implements CourtFacilityAttributes {
   public id!: number;
@@ -482,22 +480,13 @@ CourtFacility.init({
         }
       }
     }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'CourtFacility',
   tableName: 'court_facilities',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['owner_id']

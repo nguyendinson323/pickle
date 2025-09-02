@@ -17,11 +17,9 @@ interface MembershipAttributes {
   expirationReminderSent: boolean;
   cancelledAt?: Date;
   cancelReason?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MembershipCreationAttributes extends Optional<MembershipAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MembershipCreationAttributes extends Optional<MembershipAttributes, 'id'> {}
 
 class Membership extends Model<MembershipAttributes, MembershipCreationAttributes> implements MembershipAttributes {
   public id!: number;
@@ -110,21 +108,12 @@ Membership.init({
     allowNull: true,
     field: 'cancel_reason'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'Membership',
   tableName: 'memberships',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

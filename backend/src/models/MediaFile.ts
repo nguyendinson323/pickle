@@ -16,11 +16,9 @@ interface MediaFileAttributes {
   description?: string;
   tags?: string[];
   isPublic: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MediaFileCreationAttributes extends Optional<MediaFileAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MediaFileCreationAttributes extends Optional<MediaFileAttributes, 'id'> {}
 
 class MediaFile extends Model<MediaFileAttributes, MediaFileCreationAttributes> implements MediaFileAttributes {
   public id!: number;
@@ -116,22 +114,13 @@ MediaFile.init({
     type: DataTypes.BOOLEAN,
     defaultValue: true,
     field: 'is_public'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'MediaFile',
   tableName: 'media_files',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['microsite_id']

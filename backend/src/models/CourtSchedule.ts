@@ -14,11 +14,9 @@ interface CourtScheduleAttributes {
   blockReason?: string;
   specialRate?: number;
   notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface CourtScheduleCreationAttributes extends Optional<CourtScheduleAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface CourtScheduleCreationAttributes extends Optional<CourtScheduleAttributes, 'id'> {}
 
 class CourtSchedule extends Model<CourtScheduleAttributes, CourtScheduleCreationAttributes> implements CourtScheduleAttributes {
   public id!: number;
@@ -85,21 +83,12 @@ CourtSchedule.init({
     type: DataTypes.TEXT,
     allowNull: true
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'CourtSchedule',
   tableName: 'court_schedules',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['court_id']

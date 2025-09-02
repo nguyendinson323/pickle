@@ -21,11 +21,9 @@ interface InvoiceAttributes {
   pdfUrl?: string;
   emailedAt?: Date;
   metadata: any;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface InvoiceCreationAttributes extends Optional<InvoiceAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface InvoiceCreationAttributes extends Optional<InvoiceAttributes, 'id'> {}
 
 class Invoice extends Model<InvoiceAttributes, InvoiceCreationAttributes> implements InvoiceAttributes {
   public id!: number;
@@ -136,22 +134,13 @@ Invoice.init({
     type: DataTypes.JSON,
     allowNull: false,
     defaultValue: {}
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Invoice',
   tableName: 'invoices',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

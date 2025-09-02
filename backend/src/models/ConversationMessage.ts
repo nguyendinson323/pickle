@@ -14,11 +14,9 @@ interface ConversationMessageAttributes {
   editedAt?: Date;
   isDeleted: boolean;
   deletedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface ConversationMessageCreationAttributes extends Optional<ConversationMessageAttributes, 'id' | 'replyToId' | 'attachments' | 'metadata' | 'isEdited' | 'editedAt' | 'isDeleted' | 'deletedAt' | 'createdAt' | 'updatedAt'> {}
+interface ConversationMessageCreationAttributes extends Optional<ConversationMessageAttributes, 'id' | 'replyToId' | 'attachments' | 'metadata' | 'isEdited' | 'editedAt' | 'isDeleted' | 'deletedAt'> {}
 
 class ConversationMessage extends Model<ConversationMessageAttributes, ConversationMessageCreationAttributes> implements ConversationMessageAttributes {
   public id!: number;
@@ -114,22 +112,13 @@ ConversationMessage.init({
     type: DataTypes.DATE,
     allowNull: true,
     field: 'deleted_at'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'ConversationMessage',
   tableName: 'conversation_messages',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['conversation_id']

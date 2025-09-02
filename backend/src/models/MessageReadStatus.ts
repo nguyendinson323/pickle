@@ -6,11 +6,9 @@ interface MessageReadStatusAttributes {
   messageId: number;
   userId: number;
   readAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MessageReadStatusCreationAttributes extends Optional<MessageReadStatusAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MessageReadStatusCreationAttributes extends Optional<MessageReadStatusAttributes, 'id'> {}
 
 class MessageReadStatus extends Model<MessageReadStatusAttributes, MessageReadStatusCreationAttributes> implements MessageReadStatusAttributes {
   public id!: number;
@@ -52,22 +50,13 @@ MessageReadStatus.init({
     allowNull: false,
     defaultValue: DataTypes.NOW,
     field: 'read_at'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'MessageReadStatus',
   tableName: 'message_read_status',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['message_id']

@@ -13,11 +13,9 @@ interface ModerationLogAttributes {
   newContent?: any;
   status: string;
   notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface ModerationLogCreationAttributes extends Optional<ModerationLogAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ModerationLogCreationAttributes extends Optional<ModerationLogAttributes, 'id'> {}
 
 class ModerationLog extends Model<ModerationLogAttributes, ModerationLogCreationAttributes> implements ModerationLogAttributes {
   public id!: number;
@@ -105,22 +103,13 @@ ModerationLog.init({
   notes: {
     type: DataTypes.TEXT,
     allowNull: true
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'ModerationLog',
   tableName: 'moderation_logs',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['microsite_id']

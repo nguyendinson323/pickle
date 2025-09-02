@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import User from './User';
 
 interface SystemAlertAttributes {
   id: number;
@@ -10,19 +9,12 @@ interface SystemAlertAttributes {
   // Alert details
   title: string;
   message: string;
-  details?: Record<string, any>;
+  details?: any;
   
   // Source
   source: 'system' | 'monitoring' | 'user_report' | 'automated_check';
-  sourceData?: Record<string, any>;
-  
-  // Thresholds (for automated alerts)
-  threshold?: {
-    metric: string;
-    operator: 'greater_than' | 'less_than' | 'equals' | 'not_equals';
-    value: number;
-    actualValue?: number;
-  };
+  sourceData?: any;
+  threshold?: any;
   
   // Status tracking
   status: 'open' | 'acknowledged' | 'investigating' | 'resolved' | 'false_positive';
@@ -33,7 +25,7 @@ interface SystemAlertAttributes {
   
   // Resolution
   resolutionNotes?: string;
-  actionsTaken?: string[];
+  actionsTaken?: any;
   
   // Escalation
   isEscalated: boolean;
@@ -42,13 +34,10 @@ interface SystemAlertAttributes {
   
   // Recurrence tracking
   isRecurring: boolean;
-  relatedAlerts?: number[]; // IDs of related alerts
-  
-  createdAt: Date;
-  updatedAt: Date;
+  relatedAlerts?: any;
 }
 
-interface SystemAlertCreationAttributes extends Optional<SystemAlertAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface SystemAlertCreationAttributes extends Optional<SystemAlertAttributes, 'id'> {}
 
 class SystemAlert extends Model<SystemAlertAttributes, SystemAlertCreationAttributes> implements SystemAlertAttributes {
   public id!: number;
@@ -58,19 +47,10 @@ class SystemAlert extends Model<SystemAlertAttributes, SystemAlertCreationAttrib
   // Alert details
   public title!: string;
   public message!: string;
-  public details?: Record<string, any>;
-  
-  // Source
+  public details?: any;
   public source!: 'system' | 'monitoring' | 'user_report' | 'automated_check';
-  public sourceData?: Record<string, any>;
-  
-  // Thresholds
-  public threshold?: {
-    metric: string;
-    operator: 'greater_than' | 'less_than' | 'equals' | 'not_equals';
-    value: number;
-    actualValue?: number;
-  };
+  public sourceData?: any;
+  public threshold?: any;
   
   // Status tracking
   public status!: 'open' | 'acknowledged' | 'investigating' | 'resolved' | 'false_positive';
@@ -81,7 +61,7 @@ class SystemAlert extends Model<SystemAlertAttributes, SystemAlertCreationAttrib
   
   // Resolution
   public resolutionNotes?: string;
-  public actionsTaken?: string[];
+  public actionsTaken?: any;
   
   // Escalation
   public isEscalated!: boolean;
@@ -90,153 +70,10 @@ class SystemAlert extends Model<SystemAlertAttributes, SystemAlertCreationAttrib
   
   // Recurrence tracking
   public isRecurring!: boolean;
-  public relatedAlerts?: number[];
+  public relatedAlerts?: any;
   
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-
-  // Helper methods
-  public isOpen(): boolean {
-    return this.status === 'open';
-  }
-
-  public isCritical(): boolean {
-    return this.severity === 'critical';
-  }
-
-  public isResolved(): boolean {
-    return this.status === 'resolved';
-  }
-
-  public getAgeInMinutes(): number {
-    const now = new Date();
-    const diffMs = now.getTime() - this.createdAt.getTime();
-    return Math.floor(diffMs / (1000 * 60));
-  }
-
-  public getResolutionTimeInMinutes(): number | null {
-    if (!this.resolvedAt) return null;
-    
-    const diffMs = this.resolvedAt.getTime() - this.createdAt.getTime();
-    return Math.floor(diffMs / (1000 * 60));
-  }
-
-  public getAcknowledgmentTimeInMinutes(): number | null {
-    if (!this.acknowledgedAt) return null;
-    
-    const diffMs = this.acknowledgedAt.getTime() - this.createdAt.getTime();
-    return Math.floor(diffMs / (1000 * 60));
-  }
-
-  public isOverdue(): boolean {
-    const ageMinutes = this.getAgeInMinutes();
-    
-    // Define SLA based on severity (in minutes)
-    const slaMinutes = {
-      critical: 30,    // 30 minutes
-      error: 120,      // 2 hours
-      warning: 480,    // 8 hours
-      info: 1440       // 24 hours
-    };
-    
-    return this.status === 'open' && ageMinutes > slaMinutes[this.severity];
-  }
-
-  public getPriorityScore(): number {
-    let score = 0;
-    
-    // Severity weight
-    const severityWeight = {
-      critical: 100,
-      error: 70,
-      warning: 40,
-      info: 10
-    };
-    score += severityWeight[this.severity];
-    
-    // Age weight (more points for older alerts)
-    const ageMinutes = this.getAgeInMinutes();
-    score += Math.min(ageMinutes / 10, 50); // Max 50 points for age
-    
-    // Escalation weight
-    if (this.isEscalated) score += 20;
-    
-    // Recurrence weight
-    if (this.isRecurring) score += 15;
-    
-    return Math.round(score);
-  }
-
-  public getTypeDisplayName(): string {
-    const displayNames = {
-      performance: 'Rendimiento',
-      security: 'Seguridad',
-      error: 'Error',
-      maintenance: 'Mantenimiento',
-      business: 'Negocio',
-      user_behavior: 'Comportamiento de Usuario'
-    };
-    
-    return displayNames[this.type] || this.type;
-  }
-
-  public getSeverityColor(): string {
-    const colors = {
-      info: 'blue',
-      warning: 'yellow',
-      error: 'orange',
-      critical: 'red'
-    };
-    
-    return colors[this.severity] || 'gray';
-  }
-
-  public getStatusColor(): string {
-    const colors = {
-      open: 'red',
-      acknowledged: 'yellow',
-      investigating: 'blue',
-      resolved: 'green',
-      false_positive: 'gray'
-    };
-    
-    return colors[this.status] || 'gray';
-  }
-
-  public getStatusDisplayName(): string {
-    const displayNames = {
-      open: 'Abierto',
-      acknowledged: 'Reconocido',
-      investigating: 'Investigando',
-      resolved: 'Resuelto',
-      false_positive: 'Falso Positivo'
-    };
-    
-    return displayNames[this.status] || this.status;
-  }
-
-  public getThresholdDescription(): string | null {
-    if (!this.threshold) return null;
-    
-    const operators = {
-      greater_than: 'mayor que',
-      less_than: 'menor que',
-      equals: 'igual a',
-      not_equals: 'diferente de'
-    };
-    
-    const operator = operators[this.threshold.operator] || this.threshold.operator;
-    const actualText = this.threshold.actualValue !== undefined 
-      ? ` (actual: ${this.threshold.actualValue})`
-      : '';
-    
-    return `${this.threshold.metric} ${operator} ${this.threshold.value}${actualText}`;
-  }
-
-  public canBeEscalated(): boolean {
-    return !this.isEscalated && (this.severity === 'critical' || this.severity === 'error');
-  }
 }
 
 SystemAlert.init(
@@ -289,9 +126,11 @@ SystemAlert.init(
       allowNull: true,
       references: {
         model: 'users',
-        key: 'id',
+        key: 'id'
       },
-      field: 'acknowledged_by',
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+      field: 'acknowledged_by'
     },
     acknowledgedAt: {
       type: DataTypes.DATE,
@@ -303,9 +142,11 @@ SystemAlert.init(
       allowNull: true,
       references: {
         model: 'users',
-        key: 'id',
+        key: 'id'
       },
-      field: 'resolved_by',
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+      field: 'resolved_by'
     },
     resolvedAt: {
       type: DataTypes.DATE,
@@ -333,9 +174,11 @@ SystemAlert.init(
       allowNull: true,
       references: {
         model: 'users',
-        key: 'id',
+        key: 'id'
       },
-      field: 'escalated_to',
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+      field: 'escalated_to'
     },
     escalatedAt: {
       type: DataTypes.DATE,
@@ -356,57 +199,50 @@ SystemAlert.init(
   },
   {
     sequelize,
+    modelName: 'SystemAlert',
     tableName: 'system_alerts',
     timestamps: true,
+    underscored: true,
     indexes: [
       {
-        fields: ['type'],
+        fields: ['type']
       },
       {
-        fields: ['severity'],
+        fields: ['severity']
       },
       {
-        fields: ['status'],
+        fields: ['status']
       },
       {
-        fields: ['source'],
+        fields: ['source']
       },
       {
-        fields: ['is_escalated'],
+        fields: ['is_escalated']
       },
       {
-        fields: ['is_recurring'],
+        fields: ['is_recurring']
       },
       {
-        fields: ['created_at'],
+        fields: ['created_at']
       },
       {
-        fields: ['acknowledged_by'],
+        fields: ['acknowledged_by']
       },
       {
-        fields: ['resolved_by'],
+        fields: ['resolved_by']
       },
       {
-        fields: ['escalated_to'],
-      },
-      // Composite indexes for common queries
-      {
-        fields: ['status', 'severity'],
+        fields: ['escalated_to']
       },
       {
-        fields: ['type', 'severity'],
+        fields: ['status', 'severity']
       },
-    ],
+      {
+        fields: ['type', 'severity']
+      }
+    ]
   }
 );
 
-// Associations
-SystemAlert.belongsTo(User, { foreignKey: 'acknowledgedBy', as: 'acknowledgedByUser' });
-SystemAlert.belongsTo(User, { foreignKey: 'resolvedBy', as: 'resolvedByUser' });
-SystemAlert.belongsTo(User, { foreignKey: 'escalatedTo', as: 'escalatedToUser' });
-
-User.hasMany(SystemAlert, { foreignKey: 'acknowledgedBy', as: 'acknowledgedAlerts' });
-User.hasMany(SystemAlert, { foreignKey: 'resolvedBy', as: 'resolvedAlerts' });
-User.hasMany(SystemAlert, { foreignKey: 'escalatedTo', as: 'escalatedAlerts' });
 
 export default SystemAlert;

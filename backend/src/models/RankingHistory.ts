@@ -19,11 +19,9 @@ interface RankingHistoryAttributes {
   stateId?: number;
   ageGroup?: string;
   gender?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface RankingHistoryCreationAttributes extends Optional<RankingHistoryAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface RankingHistoryCreationAttributes extends Optional<RankingHistoryAttributes, 'id'> {}
 
 class RankingHistory extends Model<RankingHistoryAttributes, RankingHistoryCreationAttributes> implements RankingHistoryAttributes {
   public id!: number;
@@ -138,22 +136,13 @@ RankingHistory.init({
   gender: {
     type: DataTypes.STRING(10),
     allowNull: true
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'RankingHistory',
   tableName: 'ranking_history',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['player_id']

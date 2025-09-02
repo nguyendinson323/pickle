@@ -18,11 +18,9 @@ interface PlayerAttributes {
   isPremium: boolean;
   rankingPosition?: number;
   federationIdNumber?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface PlayerCreationAttributes extends Optional<PlayerAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface PlayerCreationAttributes extends Optional<PlayerAttributes, 'id'> {}
 
 class Player extends Model<PlayerAttributes, PlayerCreationAttributes> implements PlayerAttributes {
   public id!: number;
@@ -134,21 +132,12 @@ Player.init({
     unique: true,
     field: 'federation_id_number'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'Player',
   tableName: 'players',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

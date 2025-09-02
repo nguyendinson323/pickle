@@ -53,12 +53,9 @@ interface NotificationPreferencesAttributes {
       maintenance_alerts: { inApp: boolean; email: boolean; sms: boolean; push: boolean };
     };
   };
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface NotificationPreferencesCreationAttributes extends Optional<NotificationPreferencesAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface NotificationPreferencesCreationAttributes extends Optional<NotificationPreferencesAttributes, 'id'> {}
 
 class NotificationPreferences extends Model<NotificationPreferencesAttributes, NotificationPreferencesCreationAttributes> implements NotificationPreferencesAttributes {
   public id!: number;
@@ -266,22 +263,13 @@ NotificationPreferences.init({
         }
       }
     }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'NotificationPreferences',
   tableName: 'notification_preferences',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

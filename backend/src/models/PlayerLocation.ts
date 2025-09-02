@@ -21,11 +21,9 @@ interface PlayerLocationAttributes {
   privacyLevel: 'exact' | 'city' | 'state';
   accuracy?: number;
   lastUpdated: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface PlayerLocationCreationAttributes extends Optional<PlayerLocationAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface PlayerLocationCreationAttributes extends Optional<PlayerLocationAttributes, 'id'> {}
 
 class PlayerLocation extends Model<PlayerLocationAttributes, PlayerLocationCreationAttributes> implements PlayerLocationAttributes {
   public id!: number;
@@ -169,22 +167,13 @@ PlayerLocation.init({
     allowNull: false,
     defaultValue: DataTypes.NOW,
     field: 'last_updated'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'PlayerLocation',
   tableName: 'player_locations',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['player_id']

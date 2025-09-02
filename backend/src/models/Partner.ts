@@ -15,11 +15,9 @@ interface PartnerAttributes {
   socialMedia?: any;
   logoUrl?: string;
   planType: 'premium';
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface PartnerCreationAttributes extends Optional<PartnerAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface PartnerCreationAttributes extends Optional<PartnerAttributes, 'id'> {}
 
 class Partner extends Model<PartnerAttributes, PartnerCreationAttributes> implements PartnerAttributes {
   public id!: number;
@@ -106,21 +104,12 @@ Partner.init({
     defaultValue: 'premium',
     field: 'plan_type'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'Partner',
   tableName: 'partners',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

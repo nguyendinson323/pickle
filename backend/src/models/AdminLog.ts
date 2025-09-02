@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import User from './User';
 
 interface AdminLogAttributes {
   id: number;
@@ -29,12 +28,9 @@ interface AdminLogAttributes {
   // Status
   status: 'success' | 'failed' | 'partial';
   errorMessage?: string;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface AdminLogCreationAttributes extends Optional<AdminLogAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface AdminLogCreationAttributes extends Optional<AdminLogAttributes, 'id'> {}
 
 class AdminLog extends Model<AdminLogAttributes, AdminLogCreationAttributes> implements AdminLogAttributes {
   public id!: number;
@@ -187,22 +183,13 @@ AdminLog.init(
       type: DataTypes.TEXT,
       allowNull: true,
       field: 'error_message',
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      field: 'created_at'
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      field: 'updated_at'
     }
   },
   {
     sequelize,
     tableName: 'admin_logs',
     timestamps: true,
+    underscored: true,
     indexes: [
       {
         fields: ['admin_id'],
@@ -229,8 +216,5 @@ AdminLog.init(
   }
 );
 
-// Associations
-AdminLog.belongsTo(User, { foreignKey: 'adminId', as: 'admin' });
-User.hasMany(AdminLog, { foreignKey: 'adminId', as: 'adminLogs' });
 
 export default AdminLog;

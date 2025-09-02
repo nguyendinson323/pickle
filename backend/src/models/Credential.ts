@@ -49,11 +49,9 @@ interface CredentialAttributes {
   lastVerified?: Date;
   verificationCount: number;
   metadata: Record<string, any>;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface CredentialCreationAttributes extends Optional<CredentialAttributes, 'verificationCount' | 'metadata' | 'createdAt' | 'updatedAt'> {}
+interface CredentialCreationAttributes extends Optional<CredentialAttributes, 'verificationCount' | 'metadata'> {}
 
 class Credential extends Model<CredentialAttributes, CredentialCreationAttributes> implements CredentialAttributes {
   public id!: string;
@@ -222,22 +220,13 @@ Credential.init({
     type: DataTypes.JSON,
     allowNull: false,
     defaultValue: {}
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Credential',
   tableName: 'credentials',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['user_id']

@@ -6,11 +6,9 @@ interface MessageReactionAttributes {
   messageId: number;
   userId: number;
   reaction: string; // emoji or reaction type
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MessageReactionCreationAttributes extends Optional<MessageReactionAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MessageReactionCreationAttributes extends Optional<MessageReactionAttributes, 'id'> {}
 
 class MessageReaction extends Model<MessageReactionAttributes, MessageReactionCreationAttributes> implements MessageReactionAttributes {
   public id!: number;
@@ -53,22 +51,13 @@ MessageReaction.init({
     validate: {
       len: [1, 10]
     }
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'MessageReaction',
   tableName: 'message_reactions',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['message_id']

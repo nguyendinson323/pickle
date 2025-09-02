@@ -23,11 +23,9 @@ interface TournamentBracketAttributes {
   settings: any;
   generatedDate: Date;
   finalizedDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface TournamentBracketCreationAttributes extends Optional<TournamentBracketAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface TournamentBracketCreationAttributes extends Optional<TournamentBracketAttributes, 'id'> {}
 
 class TournamentBracket extends Model<TournamentBracketAttributes, TournamentBracketCreationAttributes> implements TournamentBracketAttributes {
   public id!: number;
@@ -149,21 +147,12 @@ TournamentBracket.init({
     allowNull: true,
     field: 'finalized_date'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
-  }
 }, {
   sequelize,
   modelName: 'TournamentBracket',
   tableName: 'tournament_brackets',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['tournament_id']

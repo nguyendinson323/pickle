@@ -34,11 +34,9 @@ interface RankingAttributes {
   decayFactor: number;
   lastCalculated: Date;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface RankingCreationAttributes extends Optional<RankingAttributes, 'id' | 'previousPosition' | 'previousPoints' | 'activityBonus' | 'decayFactor' | 'isActive' | 'createdAt' | 'updatedAt'> {}
+interface RankingCreationAttributes extends Optional<RankingAttributes, 'id' | 'previousPosition' | 'previousPoints' | 'activityBonus' | 'decayFactor' | 'isActive'> {}
 
 class Ranking extends Model<RankingAttributes, RankingCreationAttributes> implements RankingAttributes {
   public id!: number;
@@ -170,22 +168,13 @@ Ranking.init({
     allowNull: false,
     defaultValue: true,
     field: 'is_active'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'Ranking',
   tableName: 'rankings',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['player_id']

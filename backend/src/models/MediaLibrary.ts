@@ -1,7 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Microsite from './Microsite';
-import User from './User';
 
 interface MediaLibraryAttributes {
   id: number;
@@ -36,12 +34,9 @@ interface MediaLibraryAttributes {
   // Usage tracking
   usageCount: number;
   lastUsedAt?: Date;
-  
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface MediaLibraryCreationAttributes extends Optional<MediaLibraryAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface MediaLibraryCreationAttributes extends Optional<MediaLibraryAttributes, 'id'> {}
 
 class MediaLibrary extends Model<MediaLibraryAttributes, MediaLibraryCreationAttributes> implements MediaLibraryAttributes {
   public id!: number;
@@ -234,6 +229,7 @@ MediaLibrary.init(
     sequelize,
     tableName: 'media_library',
     timestamps: true,
+  underscored: true,
     indexes: [
       {
         fields: ['microsite_id'],
@@ -255,10 +251,5 @@ MediaLibrary.init(
   }
 );
 
-// Associations
-MediaLibrary.belongsTo(Microsite, { foreignKey: 'micrositeId', as: 'microsite' });
-MediaLibrary.belongsTo(User, { foreignKey: 'userId', as: 'uploader' });
-Microsite.hasMany(MediaLibrary, { foreignKey: 'micrositeId', as: 'media' });
-User.hasMany(MediaLibrary, { foreignKey: 'userId', as: 'uploadedMedia' });
 
 export default MediaLibrary;

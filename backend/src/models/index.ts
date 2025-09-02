@@ -43,6 +43,18 @@ import ContentBlock from './ContentBlock';
 import Theme from './Theme';
 import MediaFile from './MediaFile';
 import ModerationLog from './ModerationLog';
+import AdminLog from './AdminLog';
+import MicrositeAnalytics from './MicrositeAnalytics';
+import MicrositeTemplate from './MicrositeTemplate';
+import PlatformStatistics from './PlatformStatistics';
+import ContentModeration from './ContentModeration';
+import SystemAlert from './SystemAlert';
+import NotificationPreferences from './NotificationPreferences';
+import NotificationTemplate from './NotificationTemplate';
+import PaymentMethod from './PaymentMethod';
+import Subscription from './Subscription';
+import SubscriptionPlan from './SubscriptionPlan';
+import MediaLibrary from './MediaLibrary';
 
 // Initialize models
 const models = {
@@ -89,7 +101,19 @@ const models = {
   ContentBlock,
   Theme,
   MediaFile,
-  ModerationLog
+  ModerationLog,
+  AdminLog,
+  MicrositeAnalytics,
+  MicrositeTemplate,
+  PlatformStatistics,
+  ContentModeration,
+  SystemAlert,
+  NotificationPreferences,
+  NotificationTemplate,
+  PaymentMethod,
+  Subscription,
+  SubscriptionPlan,
+  MediaLibrary
 };
 
 // Define associations
@@ -319,9 +343,7 @@ PlayerFinderMatch.belongsTo(PlayerFinderRequest, { foreignKey: 'request_id', as:
 Player.hasMany(PlayerFinderMatch, { foreignKey: 'player_id', as: 'finderMatches' });
 PlayerFinderMatch.belongsTo(Player, { foreignKey: 'player_id', as: 'matchedPlayer' });
 
-// Conversation associations
-User.hasMany(Conversation, { foreignKey: 'creator_id', as: 'createdConversations' });
-Conversation.belongsTo(User, { foreignKey: 'creator_id', as: 'creator' });
+// Conversation associations (note: participants are stored as JSONB array)
 
 // Conversation Message associations
 Conversation.hasMany(ConversationMessage, { foreignKey: 'conversation_id', as: 'messages' });
@@ -425,6 +447,34 @@ ModerationLog.belongsTo(Microsite, { foreignKey: 'microsite_id', as: 'microsite'
 User.hasMany(ModerationLog, { foreignKey: 'moderator_id', as: 'moderationActions' });
 ModerationLog.belongsTo(User, { foreignKey: 'moderator_id', as: 'moderator' });
 
+// AdminLog associations
+AdminLog.belongsTo(User, { foreignKey: 'adminId', as: 'admin' });
+User.hasMany(AdminLog, { foreignKey: 'adminId', as: 'adminLogs' });
+
+// MicrositeAnalytics associations
+MicrositeAnalytics.belongsTo(Microsite, { foreignKey: 'micrositeId', as: 'microsite' });
+Microsite.hasMany(MicrositeAnalytics, { foreignKey: 'micrositeId', as: 'analytics' });
+
+// ContentModeration associations
+ContentModeration.belongsTo(User, { foreignKey: 'reportedBy', as: 'reporter' });
+ContentModeration.belongsTo(User, { foreignKey: 'moderatorId', as: 'moderator' });
+User.hasMany(ContentModeration, { foreignKey: 'reportedBy', as: 'reportedContent' });
+User.hasMany(ContentModeration, { foreignKey: 'moderatorId', as: 'moderatedContent' });
+
+// SystemAlert associations
+SystemAlert.belongsTo(User, { foreignKey: 'acknowledgedBy', as: 'acknowledgedByUser' });
+SystemAlert.belongsTo(User, { foreignKey: 'resolvedBy', as: 'resolvedByUser' });
+SystemAlert.belongsTo(User, { foreignKey: 'escalatedTo', as: 'escalatedToUser' });
+User.hasMany(SystemAlert, { foreignKey: 'acknowledgedBy', as: 'acknowledgedAlerts' });
+User.hasMany(SystemAlert, { foreignKey: 'resolvedBy', as: 'resolvedAlerts' });
+User.hasMany(SystemAlert, { foreignKey: 'escalatedTo', as: 'escalatedAlerts' });
+
+// MediaLibrary associations
+MediaLibrary.belongsTo(Microsite, { foreignKey: 'micrositeId', as: 'microsite' });
+MediaLibrary.belongsTo(User, { foreignKey: 'userId', as: 'uploader' });
+Microsite.hasMany(MediaLibrary, { foreignKey: 'micrositeId', as: 'media' });
+User.hasMany(MediaLibrary, { foreignKey: 'userId', as: 'uploadedMedia' });
+
 export { sequelize };
 export { 
   User, 
@@ -470,6 +520,18 @@ export {
   ContentBlock,
   Theme,
   MediaFile,
-  ModerationLog
+  ModerationLog,
+  AdminLog,
+  MicrositeAnalytics,
+  MicrositeTemplate,
+  PlatformStatistics,
+  ContentModeration,
+  SystemAlert,
+  NotificationPreferences,
+  NotificationTemplate,
+  PaymentMethod,
+  Subscription,
+  SubscriptionPlan,
+  MediaLibrary
 };
 export default models;

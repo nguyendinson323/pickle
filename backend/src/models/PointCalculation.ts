@@ -20,11 +20,9 @@ interface PointCalculationAttributes {
   averageOpponentRating: number;
   calculationDetails: Record<string, any>;
   calculatedAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-interface PointCalculationCreationAttributes extends Optional<PointCalculationAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface PointCalculationCreationAttributes extends Optional<PointCalculationAttributes, 'id'> {}
 
 class PointCalculation extends Model<PointCalculationAttributes, PointCalculationCreationAttributes> implements PointCalculationAttributes {
   public id!: number;
@@ -161,22 +159,13 @@ PointCalculation.init({
     allowNull: false,
     defaultValue: DataTypes.NOW,
     field: 'calculated_at'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    field: 'updated_at'
   }
 }, {
   sequelize,
   modelName: 'PointCalculation',
   tableName: 'point_calculations',
   timestamps: true,
+  underscored: true,
   indexes: [
     {
       fields: ['tournament_id']
