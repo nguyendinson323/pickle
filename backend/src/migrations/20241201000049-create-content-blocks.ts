@@ -32,7 +32,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
     is_visible: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true
     },
     settings: {
@@ -56,14 +55,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.addIndex('content_blocks', ['page_id']);
   await queryInterface.addIndex('content_blocks', ['page_id', 'sort_order']);
   await queryInterface.addIndex('content_blocks', ['type']);
-
-  // Add GIN indexes for JSONB fields for better query performance
-  await queryInterface.addIndex('content_blocks', ['content'], {
-    using: 'gin'
-  });
-  await queryInterface.addIndex('content_blocks', ['settings'], {
-    using: 'gin'
-  });
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {
