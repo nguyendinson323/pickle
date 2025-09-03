@@ -453,7 +453,7 @@ User.hasMany(AdminLog, { foreignKey: 'adminId', as: 'adminLogs' });
 
 // MicrositeAnalytics associations
 MicrositeAnalytics.belongsTo(Microsite, { foreignKey: 'micrositeId', as: 'microsite' });
-Microsite.hasMany(MicrositeAnalytics, { foreignKey: 'micrositeId', as: 'analytics' });
+Microsite.hasMany(MicrositeAnalytics, { foreignKey: 'micrositeId', as: 'analyticsRecords' });
 
 // ContentModeration associations
 ContentModeration.belongsTo(User, { foreignKey: 'reportedBy', as: 'reporter' });

@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { MicrositeService } from '../services/micrositeService';
-
-const micrositeService = new MicrositeService();
+import MicrositeService from '../services/micrositeService';
 
 export interface SubdomainRequest extends Request {
   subdomain?: string;
@@ -40,7 +38,7 @@ export const loadMicrosite = async (req: SubdomainRequest, res: Response, next: 
   }
 
   try {
-    const microsite = await micrositeService.getMicrositeBySubdomain(req.subdomain);
+    const microsite = await MicrositeService.getMicrositeBySubdomain(req.subdomain);
     
     if (microsite) {
       req.microsite = microsite;

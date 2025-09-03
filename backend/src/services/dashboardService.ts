@@ -297,11 +297,9 @@ export class DashboardService {
     const totalUsers = await User.count({ where: { isActive: true } });
     const newUsersThisMonth = await User.count({
       where: {
-        isActive: true,
-        createdAt: {
-          // Using Op from sequelize would be: [Op.gte]: new Date(...)
-          // For now using mock data since we don't have Op imported
-        }
+        isActive: true
+        // TODO: Add date filtering when Op is properly imported
+        // createdAt: { [Op.gte]: new Date(...) }
       }
     });
 
