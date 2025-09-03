@@ -26,7 +26,7 @@ module.exports = {
           federation: Math.floor(baseUsers * 0.01)
         },
         total_sessions: Math.floor(Math.random() * 800) + 400,
-        avg_session_duration: Math.floor(Math.random() * 1800) + 900, // 15-45 minutes
+        avg_session_duration: parseFloat(((Math.random() * 1800) + 900).toFixed(2)), // 15-45 minutes
         page_views: Math.floor(Math.random() * 5000) + 2000,
         total_tournaments: 180 + Math.floor(i / 2),
         new_tournaments: Math.floor(Math.random() * 8) + 2,

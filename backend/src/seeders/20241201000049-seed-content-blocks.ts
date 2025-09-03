@@ -5,9 +5,8 @@ module.exports = {
     await queryInterface.bulkInsert('content_blocks', [
     {
       page_id: 1, // Club CDMX home page
-      block_type: 'hero',
-      block_name: 'Main Hero Section',
-      content_data: JSON.stringify({
+      type: 'hero',
+      content: {
         background_image: {
           url: '/images/club-hero-bg.jpg',
           alt: 'Canchas de pickleball profesionales'
@@ -36,17 +35,19 @@ module.exports = {
             color: '#ffffff'
           }
         ]
-      }),
-      display_order: 1,
-      is_active: true,
+      },
+      sort_order: 1,
+      is_visible: true,
+      settings: {
+        block_name: 'Main Hero Section'
+      },
       created_at: now,
       updated_at: now
     },
     {
       page_id: 1, // Club CDMX home page
-      block_type: 'features_grid',
-      block_name: 'Facilities Showcase',
-      content_data: JSON.stringify({
+      type: 'features_grid',
+      content: {
         section_title: 'Nuestras Instalaciones de Clase Mundial',
         grid_layout: '3-columns',
         features: [
@@ -69,17 +70,19 @@ module.exports = {
             image: '/images/tournaments.jpg'
           }
         ]
-      }),
-      display_order: 2,
-      is_active: true,
+      },
+      sort_order: 2,
+      is_visible: true,
+      settings: {
+        block_name: 'Facilities Showcase'
+      },
       created_at: now,
       updated_at: now
     },
     {
       page_id: 2, // Club services page
-      block_type: 'pricing_table',
-      block_name: 'Membership Plans',
-      content_data: JSON.stringify({
+      type: 'pricing_table',
+      content: {
         section_title: 'Planes de Membresía',
         pricing_columns: [
           {
@@ -127,17 +130,19 @@ module.exports = {
             cta_link: '/signup/elite'
           }
         ]
-      }),
-      display_order: 1,
-      is_active: true,
+      },
+      sort_order: 1,
+      is_visible: true,
+      settings: {
+        block_name: 'Membership Plans'
+      },
       created_at: now,
       updated_at: now
     },
     {
       page_id: 3, // Coach Ana about page
-      block_type: 'profile_showcase',
-      block_name: 'Coach Profile',
-      content_data: JSON.stringify({
+      type: 'profile_showcase',
+      content: {
         profile_image: {
           url: '/images/ana-patricia-profile.jpg',
           alt: 'Ana Patricia Ruiz Vega - Entrenadora Master'
@@ -163,17 +168,19 @@ module.exports = {
           years_experience: 15,
           tournaments_won: 45
         }
-      }),
-      display_order: 1,
-      is_active: true,
+      },
+      sort_order: 1,
+      is_visible: true,
+      settings: {
+        block_name: 'Coach Profile'
+      },
       created_at: now,
       updated_at: now
     },
     {
       page_id: 4, // Coach programs page
-      block_type: 'program_cards',
-      block_name: 'Training Programs',
-      content_data: JSON.stringify({
+      type: 'program_cards',
+      content: {
         section_title: 'Programas de Entrenamiento Profesional',
         programs: [
           {
@@ -239,17 +246,19 @@ module.exports = {
             ]
           }
         ]
-      }),
-      display_order: 1,
-      is_active: true,
+      },
+      sort_order: 1,
+      is_visible: true,
+      settings: {
+        block_name: 'Training Programs'
+      },
       created_at: now,
       updated_at: now
     },
     {
       page_id: 5, // Wilson products page
-      block_type: 'product_catalog',
-      block_name: 'Featured Products',
-      content_data: JSON.stringify({
+      type: 'product_catalog',
+      content: {
         section_title: 'Catálogo Wilson Pickleball México',
         featured_product: {
           name: 'Wilson Pro Staff RF97 Pickleball Edition',
@@ -297,9 +306,12 @@ module.exports = {
             ]
           }
         ]
-      }),
-      display_order: 1,
-      is_active: true,
+      },
+      sort_order: 1,
+      is_visible: true,
+      settings: {
+        block_name: 'Featured Products'
+      },
       created_at: now,
       updated_at: now
     }

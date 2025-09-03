@@ -1,11 +1,9 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
-
-    const notifications = [
-      // Tournament registration confirmations
+    await queryInterface.bulkInsert('notifications', [
       {
-        user_id: 3, // player001
+        user_id: 2, // player001
         type: 'tournament',
         category: 'success',
         title: 'Registro confirmado en torneo',
@@ -32,16 +30,16 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000).toISOString()
           },
           email: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000).toISOString()
           },
           sms: { delivered: false },
           push: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000).toISOString()
           }
         }),
         scheduled_for: null,
@@ -79,19 +77,19 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000).toISOString()
           },
           email: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000).toISOString()
           },
           sms: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000).toISOString()
           },
           push: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000).toISOString()
           }
         }),
         scheduled_for: null,
@@ -100,9 +98,8 @@ module.exports = {
         created_at: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000)
       },
-      // Payment notifications
       {
-        user_id: 4, // player002
+        user_id: 3, // player002
         type: 'payment',
         category: 'success',
         title: 'Pago procesado exitosamente',
@@ -129,11 +126,11 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString()
           },
           email: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString()
           },
           sms: { delivered: false },
           push: { delivered: false }
@@ -145,7 +142,7 @@ module.exports = {
         updated_at: new Date(now.getTime() - 9 * 24 * 60 * 60 * 1000)
       },
       {
-        user_id: 4, // player002
+        user_id: 3, // player002
         type: 'payment',
         category: 'error',
         title: 'Problema con tu pago',
@@ -172,11 +169,11 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000).toISOString()
           },
           email: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000).toISOString()
           },
           sms: { 
             delivered: false,
@@ -184,7 +181,7 @@ module.exports = {
           },
           push: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000).toISOString()
           }
         }),
         scheduled_for: null,
@@ -193,9 +190,8 @@ module.exports = {
         created_at: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000)
       },
-      // Court booking confirmations
       {
-        user_id: 4, // player002
+        user_id: 3, // player002
         type: 'booking',
         category: 'success',
         title: 'Reserva de cancha confirmada',
@@ -224,16 +220,16 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString()
           },
           email: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString()
           },
           sms: { delivered: false },
           push: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString()
           }
         }),
         scheduled_for: null,
@@ -242,15 +238,16 @@ module.exports = {
         created_at: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
       },
-      // System notifications
       {
-        user_id: 3, // player001
+        user_id: 2, // player001
         type: 'system',
         category: 'warning',
         title: 'Tu suscripción vence pronto',
         message: 'Tu suscripción Plan Básico vence el 17 de noviembre. Renuévala para continuar disfrutando todos los beneficios.',
         action_text: 'Renovar ahora',
         action_url: '/subscriptions/renew',
+        related_entity_type: null,
+        related_entity_id: null,
         metadata: JSON.stringify({
           subscription_id: 1,
           plan_name: 'Básico',
@@ -268,16 +265,16 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString()
           },
           email: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString()
           },
           sms: { delivered: false },
           push: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString()
           }
         }),
         scheduled_for: null,
@@ -286,9 +283,8 @@ module.exports = {
         created_at: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
       },
-      // Tournament reminders (scheduled notification)
       {
-        user_id: 3, // player001
+        user_id: 2, // player001
         type: 'tournament',
         category: 'info',
         title: 'Recordatorio: Torneo mañana',
@@ -326,17 +322,18 @@ module.exports = {
         created_at: new Date(now.getTime() - 20 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 20 * 24 * 60 * 60 * 1000)
       },
-      // Match found notification
       {
-        user_id: 4, // player002
+        user_id: 3, // player002
         type: 'match',
         category: 'info',
         title: '¡Oponente encontrado!',
         message: 'Hemos encontrado un oponente para ti: Juan García (Nivel: Intermedio). ¿Estás disponible el sábado?',
         action_text: 'Aceptar partida',
         action_url: '/matches/accept/123',
+        related_entity_type: null,
+        related_entity_id: null,
         metadata: JSON.stringify({
-          opponent_id: 3,
+          opponent_id: 2,
           opponent_name: 'Juan Pérez',
           opponent_level: 'intermediate',
           suggested_date: '2024-11-16',
@@ -355,13 +352,13 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 6 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString()
           },
           email: { delivered: false },
           sms: { delivered: false },
           push: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 6 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString()
           }
         }),
         scheduled_for: null,
@@ -370,13 +367,16 @@ module.exports = {
         created_at: new Date(now.getTime() - 6 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 6 * 60 * 60 * 1000)
       },
-      // Maintenance notification
       {
         user_id: 9, // club001
         type: 'maintenance',
         category: 'warning',
         title: 'Mantenimiento programado del sistema',
         message: 'El sistema estará en mantenimiento el domingo 17 de noviembre de 2:00 AM a 6:00 AM. Disculpe las molestias.',
+        action_text: null,
+        action_url: null,
+        related_entity_type: null,
+        related_entity_id: null,
         metadata: JSON.stringify({
           maintenance_start: '2024-11-17 02:00:00',
           maintenance_end: '2024-11-17 06:00:00',
@@ -394,11 +394,11 @@ module.exports = {
         delivery_status: JSON.stringify({
           inApp: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString()
           },
           email: { 
             delivered: true, 
-            deliveredAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
+            deliveredAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString()
           },
           sms: { delivered: false },
           push: { delivered: false }
@@ -409,12 +409,10 @@ module.exports = {
         created_at: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
       }
-    ];
-
-    await queryInterface.bulkInsert('notifications', notifications);
+    ]);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('notifications', {});
+    await queryInterface.bulkDelete('notifications', {}, {});
   }
 };

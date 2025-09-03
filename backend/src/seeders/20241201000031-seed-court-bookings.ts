@@ -3,193 +3,177 @@ module.exports = {
     const now = new Date();
 
     const courtBookings = [
-      // Upcoming bookings
       {
-        user_id: 2, // player001
-        court_id: 1, // Cancha Principal
-        booking_date: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+        court_id: 1,
+        user_id: 2,
+        booking_date: '2024-12-15',
         start_time: '18:00:00',
         end_time: '20:00:00',
-        duration_minutes: 120,
-        total_cost: 8000, // $80.00 MXN (2 hours * $40/hour)
+        duration: 120,
+        total_amount: 800.00,
         currency: 'MXN',
-        payment_id: null, // Will pay on arrival
-        status: 'confirmed',
-        booking_type: 'recreational',
+        payment_status: 'paid',
+        payment_method: 'stripe',
+        payment_reference: 'ch_1ABC123DEF456GHI789',
+        booking_status: 'confirmed',
+        participant_count: 2,
         participants: JSON.stringify([
-          { name: 'Juan García López', role: 'player' },
-          { name: 'María González', role: 'partner' }
+          { name: 'Carlos Méndez', role: 'player', phone: '+52 55 1234 5678' },
+          { name: 'María González', role: 'partner', phone: '+52 55 8765 4321' }
         ]),
+        booking_notes: 'Primera reserva del usuario',
+        facility_notes: null,
+        equipment_requests: JSON.stringify(['premium_paddles', 'new_balls']),
+        additional_services: JSON.stringify([]),
+        recurring_booking: null,
+        cancellation: null,
+        check_in: null,
+        check_out: null,
+        rating: null,
+        weather_conditions: null,
+        pricing: JSON.stringify({
+          base_rate: 400.00,
+          peak_multiplier: 1.0,
+          weekend_multiplier: 1.0,
+          subtotal: 800.00,
+          taxes: 0.00,
+          total: 800.00
+        }),
+        contact_info: JSON.stringify({
+          primary_phone: '+52 55 1234 5678',
+          emergency_contact: 'Juan Méndez - +52 55 9876 5432'
+        }),
         special_requests: 'Favor de tener pelotas nuevas disponibles',
-        equipment_rental: JSON.stringify(['paletas_premium']),
-        cancellation_reason: null,
-        cancelled_at: null,
-        checked_in_at: null,
-        checked_out_at: null,
-        notes: 'Primera reserva del usuario - cliente VIP',
+        access_code: 'BOOKING001',
+        qr_code: null,
+        reminders_sent: JSON.stringify({
+          confirmation: true,
+          dayBefore: false,
+          hourBefore: false
+        }),
+        is_active: true,
         created_at: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000)
       },
       {
-        user_id: 5, // coach001
-        court_id: 2, // Cancha Norte
-        booking_date: new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000), // Tomorrow
+        court_id: 2,
+        user_id: 5,
+        booking_date: '2024-12-10',
         start_time: '09:00:00',
         end_time: '11:00:00',
-        duration_minutes: 120,
-        total_cost: 6000, // $60.00 MXN (2 hours * $30/hour)
+        duration: 120,
+        total_amount: 600.00,
         currency: 'MXN',
-        payment_id: 5, // Existing payment
-        status: 'confirmed',
-        booking_type: 'training',
+        payment_status: 'paid',
+        payment_method: 'stripe',
+        payment_reference: 'ch_2ABC123DEF456GHI789',
+        booking_status: 'confirmed',
+        participant_count: 3,
         participants: JSON.stringify([
-          { name: 'Carlos Méndez', role: 'coach' },
-          { name: 'Ana Rodríguez', role: 'student' },
-          { name: 'Pedro Martínez', role: 'student' }
+          { name: 'Luis Hernández', role: 'coach', phone: '+52 55 2345 6789' },
+          { name: 'Ana Rodríguez', role: 'student', phone: '+52 55 3456 7890' },
+          { name: 'Pedro Martínez', role: 'student', phone: '+52 55 4567 8901' }
         ]),
+        booking_notes: 'Sesión de entrenamiento grupal',
+        facility_notes: 'Acceso a equipo de video disponible',
+        equipment_requests: JSON.stringify(['video_equipment', 'training_cones']),
+        additional_services: JSON.stringify(['coaching_session']),
+        recurring_booking: JSON.stringify({
+          frequency: 'weekly',
+          end_date: '2025-01-10'
+        }),
+        cancellation: null,
+        check_in: null,
+        check_out: null,
+        rating: null,
+        weather_conditions: null,
+        pricing: JSON.stringify({
+          base_rate: 300.00,
+          coaching_fee: 300.00,
+          subtotal: 600.00,
+          taxes: 0.00,
+          total: 600.00
+        }),
+        contact_info: JSON.stringify({
+          primary_phone: '+52 55 2345 6789',
+          emergency_contact: 'Carmen Hernández - +52 55 8765 4321'
+        }),
         special_requests: 'Necesito acceso al equipo de video para análisis',
-        equipment_rental: JSON.stringify(['video_equipment', 'training_cones']),
-        cancellation_reason: null,
-        cancelled_at: null,
-        checked_in_at: null,
-        checked_out_at: null,
-        notes: 'Sesión de entrenamiento grupal - nivel intermedio',
+        access_code: 'TRAINING001',
+        qr_code: null,
+        reminders_sent: JSON.stringify({
+          confirmation: true,
+          dayBefore: true,
+          hourBefore: false
+        }),
+        is_active: true,
         created_at: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
         updated_at: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
       },
-      // Completed bookings
       {
-        user_id: 3, // player002
-        court_id: 2, // Cancha Norte
-        booking_date: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000), // Yesterday
+        court_id: 2,
+        user_id: 3,
+        booking_date: '2024-12-08',
         start_time: '14:00:00',
         end_time: '16:00:00',
-        duration_minutes: 120,
-        total_cost: 6000, // $60.00 MXN
+        duration: 120,
+        total_amount: 600.00,
         currency: 'MXN',
-        payment_id: 5, // Existing payment reference
-        status: 'completed',
-        booking_type: 'recreational',
+        payment_status: 'paid',
+        payment_method: 'cash',
+        payment_reference: 'CASH_001',
+        booking_status: 'completed',
+        participant_count: 2,
         participants: JSON.stringify([
-          { name: 'María González Ruiz', role: 'player' },
-          { name: 'Luis Hernández', role: 'partner' }
+          { name: 'María González', role: 'player', phone: '+52 55 8765 4321' },
+          { name: 'Luis Hernández', role: 'partner', phone: '+52 55 2345 6789' }
         ]),
+        booking_notes: 'Juego completado satisfactoriamente',
+        facility_notes: null,
+        equipment_requests: JSON.stringify([]),
+        additional_services: JSON.stringify([]),
+        recurring_booking: null,
+        cancellation: null,
+        check_in: JSON.stringify({
+          time: '2024-12-08T13:50:00Z',
+          staff_member: 'Recepcionista María'
+        }),
+        check_out: JSON.stringify({
+          time: '2024-12-08T16:05:00Z',
+          staff_member: 'Recepcionista María'
+        }),
+        rating: JSON.stringify({
+          overall: 5,
+          court_condition: 5,
+          facilities: 4,
+          service: 5,
+          comment: 'Excelentes instalaciones y servicio'
+        }),
+        weather_conditions: JSON.stringify({
+          temperature: 22,
+          humidity: 65,
+          conditions: 'sunny'
+        }),
+        pricing: JSON.stringify({
+          base_rate: 300.00,
+          subtotal: 600.00,
+          taxes: 0.00,
+          total: 600.00
+        }),
+        contact_info: JSON.stringify({
+          primary_phone: '+52 55 8765 4321'
+        }),
         special_requests: null,
-        equipment_rental: JSON.stringify([]),
-        cancellation_reason: null,
-        cancelled_at: null,
-        checked_in_at: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000 - 10 * 60 * 1000),
-        checked_out_at: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000),
-        notes: 'Juego excelente, clientes satisfechos',
+        access_code: 'COMPLETED001',
+        qr_code: null,
+        reminders_sent: JSON.stringify({
+          confirmation: true,
+          dayBefore: true,
+          hourBefore: true
+        }),
+        is_active: true,
         created_at: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000)
-      },
-      // Cancelled booking
-      {
-        user_id: 4, // player003
-        court_id: 1, // Cancha Principal
-        booking_date: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000),
-        start_time: '16:00:00',
-        end_time: '18:00:00',
-        duration_minutes: 120,
-        total_cost: 8000, // $80.00 MXN
-        currency: 'MXN',
-        payment_id: 7, // Refunded payment
-        status: 'cancelled',
-        booking_type: 'recreational',
-        participants: JSON.stringify([
-          { name: 'Roberto Silva', role: 'player' }
-        ]),
-        special_requests: null,
-        equipment_rental: JSON.stringify([]),
-        cancellation_reason: 'Lesión en el tobillo - certificado médico presentado',
-        cancelled_at: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000),
-        checked_in_at: null,
-        checked_out_at: null,
-        notes: 'Cancelación justificada - reembolso procesado',
-        created_at: new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
-      },
-      // Premium court booking
-      {
-        user_id: 10, // club002
-        court_id: 3, // Cancha Championship (Polanco Elite)
-        booking_date: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-        start_time: '19:00:00',
-        end_time: '22:00:00',
-        duration_minutes: 180,
-        total_cost: 27000, // $270.00 MXN (3 hours * $90/hour)
-        currency: 'MXN',
-        payment_id: null,
-        status: 'confirmed',
-        booking_type: 'corporate_event',
-        participants: JSON.stringify([
-          { name: 'Evento Corporativo Polanco', role: 'organizer' },
-          { name: 'Ejecutivos VIP', role: 'participants', count: 12 }
-        ]),
-        special_requests: 'Servicio de catering, setup para evento corporativo, fotografía profesional',
-        equipment_rental: JSON.stringify(['sound_system', 'professional_lighting', 'catering_setup']),
-        cancellation_reason: null,
-        cancelled_at: null,
-        checked_in_at: null,
-        checked_out_at: null,
-        notes: 'Evento corporativo premium - servicio completo incluido',
-        created_at: new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
-      },
-      // Training session booking
-      {
-        user_id: 7, // partner001
-        court_id: 4, // Cancha de Entrenamiento (Academia Condesa)
-        booking_date: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000),
-        start_time: '08:00:00',
-        end_time: '10:00:00',
-        duration_minutes: 120,
-        total_cost: 4000, // $40.00 MXN (2 hours * $20/hour)
-        currency: 'MXN',
-        payment_id: null,
-        status: 'confirmed',
-        booking_type: 'group_lesson',
-        participants: JSON.stringify([
-          { name: 'Luis Fernando Ríos', role: 'coach' },
-          { name: 'Grupo Principiantes A', role: 'students', count: 6 }
-        ]),
-        special_requests: 'Grupo de principiantes - necesito conos y pelotas de baja presión',
-        equipment_rental: JSON.stringify(['training_balls_low_pressure', 'training_cones', 'instruction_board']),
-        cancellation_reason: null,
-        cancelled_at: null,
-        checked_in_at: null,
-        checked_out_at: null,
-        notes: 'Clase grupal semanal - estudiantes regulares',
-        created_at: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000)
-      },
-      // Past regular booking
-      {
-        user_id: 6, // coach002
-        court_id: 1, // Cancha Principal
-        booking_date: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000),
-        start_time: '15:00:00',
-        end_time: '17:00:00',
-        duration_minutes: 120,
-        total_cost: 8000, // $80.00 MXN
-        currency: 'MXN',
-        payment_id: null,
-        status: 'completed',
-        booking_type: 'private_lesson',
-        participants: JSON.stringify([
-          { name: 'Andrea Silva', role: 'coach' },
-          { name: 'Roberto Domínguez', role: 'student' }
-        ]),
-        special_requests: 'Lección privada enfocada en técnica de saque',
-        equipment_rental: JSON.stringify(['video_analysis_tablet', 'premium_balls']),
-        cancellation_reason: null,
-        cancelled_at: null,
-        checked_in_at: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000 - 5 * 60 * 1000),
-        checked_out_at: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000),
-        notes: 'Excelente progreso del estudiante - siguiente sesión programada',
-        created_at: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000),
-        updated_at: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000)
+        updated_at: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
       }
     ];
 

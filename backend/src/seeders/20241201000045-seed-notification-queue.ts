@@ -5,61 +5,62 @@ module.exports = {
     await queryInterface.bulkInsert('notification_queue', [
     {
       user_id: 2, // Carlos Méndez Rivera
-      notification_type: 'tournament_reminder',
-      priority: 'high',
-      scheduled_time: new Date('2024-12-15T08:00:00Z'),
-      max_retry_attempts: 3,
-      current_retry_count: 0,
-      status: 'pending',
-      delivery_method: 'push_notification',
-      notification_data: JSON.stringify({
+      type: 'push',
+      template: 'tournament_reminder',
+      recipient: 'carlos@example.com',
+      subject: 'Recordatorio de Torneo',
+      content: 'Tu torneo comienza mañana a las 9:00 AM. ¡Prepárate!',
+      data: JSON.stringify({
         tournament_id: 1,
         tournament_name: 'Torneo Nacional de Primavera CDMX 2024',
         reminder_type: 'pre_tournament',
-        hours_before: 24,
-        message: 'Tu torneo comienza mañana a las 9:00 AM. ¡Prepárate!'
+        hours_before: 24
       }),
-      template_id: 1, // Tournament reminder template
-      last_attempt: null,
-      next_retry: new Date('2024-12-15T08:00:00Z'),
+      status: 'pending',
+      priority: 1, // High priority (integer)
+      scheduled_at: new Date('2024-12-15T08:00:00Z'),
+      sent_at: null,
+      failed_at: null,
+      retry_count: 0,
+      max_retries: 3,
       error_message: null,
       created_at: now,
       updated_at: now
     },
     {
       user_id: 3, // María González López
-      notification_type: 'payment_due',
-      priority: 'urgent',
-      scheduled_time: new Date('2024-12-05T10:00:00Z'),
-      max_retry_attempts: 5,
-      current_retry_count: 2,
-      status: 'retrying',
-      delivery_method: 'email',
-      notification_data: JSON.stringify({
+      type: 'email',
+      template: 'payment_reminder',
+      recipient: 'maria@example.com',
+      subject: 'Recordatorio de Pago',
+      content: 'Tu suscripción vence pronto. Por favor realiza tu pago para continuar disfrutando del servicio.',
+      data: JSON.stringify({
         subscription_id: 2,
-        amount_due: 75000, // $750.00 MXN
+        amount_due: 75000,
         currency: 'MXN',
         due_date: '2024-12-07',
         payment_method: 'credit_card',
         late_fee_warning: true
       }),
-      template_id: 2, // Payment reminder template
-      last_attempt: new Date('2024-12-05T12:00:00Z'),
-      next_retry: new Date('2024-12-05T18:00:00Z'),
+      status: 'failed',
+      priority: 0, // Urgent priority (integer)
+      scheduled_at: new Date('2024-12-05T10:00:00Z'),
+      sent_at: null,
+      failed_at: new Date('2024-12-05T12:00:00Z'),
+      retry_count: 2,
+      max_retries: 5,
       error_message: 'SMTP timeout error',
       created_at: now,
       updated_at: now
     },
     {
       user_id: 4, // Roberto Sánchez Torres
-      notification_type: 'match_result',
-      priority: 'medium',
-      scheduled_time: new Date('2024-12-02T16:30:00Z'),
-      max_retry_attempts: 3,
-      current_retry_count: 0,
-      status: 'delivered',
-      delivery_method: 'push_notification',
-      notification_data: JSON.stringify({
+      type: 'push',
+      template: 'match_result',
+      recipient: 'roberto@example.com',
+      subject: null,
+      content: '¡Felicidades! Has ganado tu partido en el Campeonato Nuevo León Open 2024.',
+      data: JSON.stringify({
         match_id: 4,
         tournament_name: 'Campeonato Nuevo León Open 2024',
         result: 'victory',
@@ -67,47 +68,51 @@ module.exports = {
         opponent: 'Luis/Ana',
         congratulations: true
       }),
-      template_id: 3, // Match result template
-      last_attempt: new Date('2024-12-02T16:31:00Z'),
-      next_retry: null,
+      status: 'sent',
+      priority: 2, // Medium priority (integer)
+      scheduled_at: new Date('2024-12-02T16:30:00Z'),
+      sent_at: new Date('2024-12-02T16:31:00Z'),
+      failed_at: null,
+      retry_count: 0,
+      max_retries: 3,
       error_message: null,
       created_at: now,
       updated_at: now
     },
     {
       user_id: 5, // Luis Hernández Morales (coach)
-      notification_type: 'coaching_request',
-      priority: 'medium',
-      scheduled_time: new Date('2024-12-08T14:00:00Z'),
-      max_retry_attempts: 3,
-      current_retry_count: 0,
-      status: 'pending',
-      delivery_method: 'email',
-      notification_data: JSON.stringify({
-        requester_id: 3, // María González López
+      type: 'email',
+      template: 'coaching_request',
+      recipient: 'luis@example.com',
+      subject: 'Nueva solicitud de entrenamiento',
+      content: 'María González López ha solicitado clases privadas contigo.',
+      data: JSON.stringify({
+        requester_id: 3,
         requester_name: 'María González López',
         session_type: 'private_lesson',
         preferred_dates: ['2024-12-15', '2024-12-16'],
         skill_focus: 'serving_technique',
         location_preference: 'CDMX'
       }),
-      template_id: 4, // Coaching request template
-      last_attempt: null,
-      next_retry: new Date('2024-12-08T14:00:00Z'),
+      status: 'pending',
+      priority: 2, // Medium priority (integer)
+      scheduled_at: new Date('2024-12-08T14:00:00Z'),
+      sent_at: null,
+      failed_at: null,
+      retry_count: 0,
+      max_retries: 3,
       error_message: null,
       created_at: now,
       updated_at: now
     },
     {
       user_id: 6, // Ana Patricia Ruiz Vega (coach)
-      notification_type: 'ranking_update',
-      priority: 'low',
-      scheduled_time: new Date('2024-12-01T09:00:00Z'),
-      max_retry_attempts: 2,
-      current_retry_count: 0,
-      status: 'delivered',
-      delivery_method: 'push_notification',
-      notification_data: JSON.stringify({
+      type: 'push',
+      template: 'ranking_update',
+      recipient: 'ana@example.com',
+      subject: null,
+      content: 'Tu ranking nacional se ha actualizado. Mantuviste el puesto #1.',
+      data: JSON.stringify({
         ranking_type: 'national',
         current_position: 1,
         previous_position: 1,
@@ -115,23 +120,25 @@ module.exports = {
         total_points: 3100,
         period: '2024-Q4'
       }),
-      template_id: 5, // Ranking update template
-      last_attempt: new Date('2024-12-01T09:01:00Z'),
-      next_retry: null,
+      status: 'sent',
+      priority: 3, // Low priority (integer)
+      scheduled_at: new Date('2024-12-01T09:00:00Z'),
+      sent_at: new Date('2024-12-01T09:01:00Z'),
+      failed_at: null,
+      retry_count: 0,
+      max_retries: 2,
       error_message: null,
       created_at: now,
       updated_at: now
     },
     {
       user_id: 9, // club001
-      notification_type: 'facility_maintenance',
-      priority: 'high',
-      scheduled_time: new Date('2024-12-10T07:00:00Z'),
-      max_retry_attempts: 4,
-      current_retry_count: 1,
-      status: 'retrying',
-      delivery_method: 'sms',
-      notification_data: JSON.stringify({
+      type: 'sms',
+      template: 'maintenance_alert',
+      recipient: '+52 55 1234-5678',
+      subject: null,
+      content: 'Mantenimiento programado en Complejo Deportivo Roma Norte para el 15/12/2024.',
+      data: JSON.stringify({
         facility_id: 1,
         facility_name: 'Complejo Deportivo Roma Norte',
         maintenance_type: 'lighting_repair',
@@ -139,23 +146,25 @@ module.exports = {
         affected_courts: ['A1', 'A2'],
         estimated_duration: '4 hours'
       }),
-      template_id: 6, // Maintenance alert template
-      last_attempt: new Date('2024-12-10T07:00:00Z'),
-      next_retry: new Date('2024-12-10T09:00:00Z'),
+      status: 'failed',
+      priority: 1, // High priority (integer)
+      scheduled_at: new Date('2024-12-10T07:00:00Z'),
+      sent_at: null,
+      failed_at: new Date('2024-12-10T07:00:00Z'),
+      retry_count: 1,
+      max_retries: 4,
       error_message: 'SMS delivery failed - invalid number format',
       created_at: now,
       updated_at: now
     },
     {
       user_id: 1, // admin001
-      notification_type: 'system_alert',
-      priority: 'urgent',
-      scheduled_time: new Date('2024-12-03T23:45:00Z'),
-      max_retry_attempts: 10,
-      current_retry_count: 0,
-      status: 'delivered',
-      delivery_method: 'email',
-      notification_data: JSON.stringify({
+      type: 'email',
+      template: 'system_alert',
+      recipient: 'admin@example.com',
+      subject: 'ALERTA: Alto uso de CPU en servidor',
+      content: 'El servidor api-server-01 presenta un uso de CPU del 92%. Se requiere acción inmediata.',
+      data: JSON.stringify({
         alert_type: 'high_cpu_usage',
         server: 'api-server-01',
         cpu_usage: '92%',
@@ -163,32 +172,38 @@ module.exports = {
         action_required: true,
         severity: 'critical'
       }),
-      template_id: 7, // System alert template
-      last_attempt: new Date('2024-12-03T23:45:30Z'),
-      next_retry: null,
+      status: 'sent',
+      priority: 0, // Urgent priority (integer)
+      scheduled_at: new Date('2024-12-03T23:45:00Z'),
+      sent_at: new Date('2024-12-03T23:45:30Z'),
+      failed_at: null,
+      retry_count: 0,
+      max_retries: 10,
       error_message: null,
       created_at: now,
       updated_at: now
     },
     {
       user_id: 2, // Carlos Méndez Rivera
-      notification_type: 'player_finder_match',
-      priority: 'medium',
-      scheduled_time: new Date('2024-12-12T15:30:00Z'),
-      max_retry_attempts: 3,
-      current_retry_count: 0,
-      status: 'failed',
-      delivery_method: 'push_notification',
-      notification_data: JSON.stringify({
+      type: 'push',
+      template: 'player_match',
+      recipient: 'carlos@example.com',
+      subject: null,
+      content: '¡Hemos encontrado un oponente compatible para ti! Roberto Sánchez Torres está disponible.',
+      data: JSON.stringify({
         match_id: 1,
         matched_player: 'Roberto Sánchez Torres',
         skill_compatibility: 95,
         location_distance: '2.3 km',
         preferred_time: '2024-12-15T18:00:00Z'
       }),
-      template_id: 8, // Player finder match template
-      last_attempt: new Date('2024-12-12T15:30:00Z'),
-      next_retry: null,
+      status: 'failed',
+      priority: 2, // Medium priority (integer)
+      scheduled_at: new Date('2024-12-12T15:30:00Z'),
+      sent_at: null,
+      failed_at: new Date('2024-12-12T15:30:00Z'),
+      retry_count: 0,
+      max_retries: 3,
       error_message: 'User device not registered for push notifications',
       created_at: now,
       updated_at: now

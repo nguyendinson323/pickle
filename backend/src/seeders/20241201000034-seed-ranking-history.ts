@@ -3,188 +3,99 @@ module.exports = {
     const now = new Date();
     await queryInterface.bulkInsert('ranking_history', [
     {
-      player_id: 4, // Roberto Sánchez Torres (player003)
-      ranking_type: 'national',
-      position: 2,
-      points: 2650,
-      ranking_period: '2024-Q3',
-      recorded_date: new Date('2024-09-30'),
-      category: 'Open Masculino',
-      age_group: 'Open',
-      state_id: 19, // Nuevo León
-      tournaments_in_period: 3,
-      wins_in_period: 18,
-      losses_in_period: 6,
-      points_change: 150, // From previous period
-      position_change: 1, // Moved up from position 3
-      period_notes: JSON.stringify({
-        key_results: ['Semifinalista Nacional Q3'],
-        performance: 'strong',
-        trend: 'improving'
-      }),
-      created_at: now,
-      updated_at: now
+      player_id: 3, // Roberto Sánchez Torres (player003)
+      ranking_type: 'overall',
+      category: 'national',
+      old_position: 3,
+      new_position: 2,
+      old_points: 2500.00,
+      new_points: 2650.00,
+      points_change: 150.00,
+      position_change: -1,
+      change_reason: 'quarterly_calculation',
+      tournament_id: null,
+      change_date: new Date('2024-09-30'),
+      state_id: 21, // Nuevo León
+      age_group: null,
+      gender: 'male',
+      created_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
+      updated_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     },
     {
-      player_id: 4, // Roberto Sánchez Torres (player003)
-      ranking_type: 'national',
-      position: 3,
-      points: 2500,
-      ranking_period: '2024-Q2',
-      recorded_date: new Date('2024-06-30'),
-      category: 'Open Masculino',
-      age_group: 'Open',
-      state_id: 19, // Nuevo León
-      tournaments_in_period: 2,
-      wins_in_period: 14,
-      losses_in_period: 4,
-      points_change: 200, // From previous period
-      position_change: -1, // Moved down from position 2
-      period_notes: JSON.stringify({
-        key_results: ['Campeón Regional Q2'],
-        performance: 'excellent',
-        trend: 'recovering'
-      }),
-      created_at: now,
-      updated_at: now
+      player_id: 1, // Carlos Méndez Rivera (player001)
+      ranking_type: 'overall',
+      category: 'national',
+      old_position: 13,
+      new_position: 15,
+      old_points: 1850.00,
+      new_points: 1800.00,
+      points_change: -50.00,
+      position_change: 2,
+      change_reason: 'quarterly_calculation',
+      tournament_id: null,
+      change_date: new Date('2024-09-30'),
+      state_id: 9, // Ciudad de México
+      age_group: null,
+      gender: 'male',
+      created_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
+      updated_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     },
     {
-      player_id: 2, // Carlos Méndez Rivera (player001)
-      ranking_type: 'national',
-      position: 15,
-      points: 1800,
-      ranking_period: '2024-Q3',
-      recorded_date: new Date('2024-09-30'),
-      category: 'Open Masculino',
-      age_group: 'Open',
-      state_id: 7, // Ciudad de México
-      tournaments_in_period: 2,
-      wins_in_period: 8,
-      losses_in_period: 6,
-      points_change: -50, // Lost points
-      position_change: -2, // Moved down from position 13
-      period_notes: JSON.stringify({
-        key_results: ['Primera ronda en 2 torneos'],
-        performance: 'below_average',
-        trend: 'declining'
-      }),
-      created_at: now,
-      updated_at: now
+      player_id: 2, // María González López (player002)
+      ranking_type: 'overall',
+      category: 'national',
+      old_position: 9,
+      new_position: 9,
+      old_points: 2050.00,
+      new_points: 2100.00,
+      points_change: 50.00,
+      position_change: 0,
+      change_reason: 'quarterly_calculation',
+      tournament_id: null,
+      change_date: new Date('2024-09-30'),
+      state_id: 17, // Jalisco
+      age_group: null,
+      gender: 'female',
+      created_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
+      updated_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     },
     {
-      player_id: 2, // Carlos Méndez Rivera (player001)
-      ranking_type: 'national',
-      position: 13,
-      points: 1850,
-      ranking_period: '2024-Q2',
-      recorded_date: new Date('2024-06-30'),
-      category: 'Open Masculino',
-      age_group: 'Open',
-      state_id: 7, // Ciudad de México
-      tournaments_in_period: 3,
-      wins_in_period: 12,
-      losses_in_period: 9,
-      points_change: 100, // Gained points
-      position_change: 2, // Moved up from position 15
-      period_notes: JSON.stringify({
-        key_results: ['Cuartos de final Torneo CDMX'],
-        performance: 'improving',
-        trend: 'ascending'
-      }),
-      created_at: now,
-      updated_at: now
+      player_id: 3, // Roberto Sánchez Torres (player003) - Historical record
+      ranking_type: 'overall',
+      category: 'national',
+      old_position: 4,
+      new_position: 3,
+      old_points: 2300.00,
+      new_points: 2500.00,
+      points_change: 200.00,
+      position_change: -1,
+      change_reason: 'tournament_win',
+      tournament_id: 1,
+      change_date: new Date('2024-06-30'),
+      state_id: 21, // Nuevo León
+      age_group: null,
+      gender: 'male',
+      created_at: new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000),
+      updated_at: new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000)
     },
     {
-      player_id: 3, // María González López (player002)
-      ranking_type: 'national',
-      position: 9,
-      points: 2100,
-      ranking_period: '2024-Q3',
-      recorded_date: new Date('2024-09-30'),
-      category: 'Open Femenino',
-      age_group: 'Open',
-      state_id: 15, // Jalisco
-      tournaments_in_period: 2,
-      wins_in_period: 10,
-      losses_in_period: 4,
-      points_change: 50, // Gained points
-      position_change: 0, // Maintained position
-      period_notes: JSON.stringify({
-        key_results: ['Semifinalista Copa Regional'],
-        performance: 'consistent',
-        trend: 'stable'
-      }),
-      created_at: now,
-      updated_at: now
-    },
-    {
-      player_id: 6, // Ana Patricia Ruiz Vega (coach002)
-      ranking_type: 'national',
-      position: 1,
-      points: 3050,
-      ranking_period: '2024-Q3',
-      recorded_date: new Date('2024-09-30'),
-      category: 'Open Femenino',
-      age_group: 'Open',
-      state_id: 7, // Ciudad de México
-      tournaments_in_period: 2,
-      wins_in_period: 16,
-      losses_in_period: 1,
-      points_change: 100, // Gained points
-      position_change: 0, // Maintained #1
-      period_notes: JSON.stringify({
-        key_results: ['Campeona Nacional Q3', 'Invicta en 15 sets'],
-        performance: 'dominant',
-        trend: 'stable_at_top'
-      }),
-      created_at: now,
-      updated_at: now
-    },
-    {
-      player_id: 6, // Ana Patricia Ruiz Vega (coach002)
-      ranking_type: 'national',
-      position: 1,
-      points: 2950,
-      ranking_period: '2024-Q2',
-      recorded_date: new Date('2024-06-30'),
-      category: 'Open Femenino',
-      age_group: 'Open',
-      state_id: 7, // Ciudad de México
-      tournaments_in_period: 2,
-      wins_in_period: 18,
-      losses_in_period: 2,
-      points_change: 75, // Gained points
-      position_change: 0, // Maintained #1
-      period_notes: JSON.stringify({
-        key_results: ['Campeona Master Series Q2'],
-        performance: 'excellent',
-        trend: 'dominant'
-      }),
-      created_at: now,
-      updated_at: now
-    },
-    {
-      player_id: 5, // Luis Hernández Morales (coach001)
-      ranking_type: 'national',
-      position: 3,
-      points: 2600,
-      ranking_period: '2024-Q3',
-      recorded_date: new Date('2024-09-30'),
-      category: 'Senior 45+',
-      age_group: '45+',
-      state_id: 19, // Nuevo León
-      tournaments_in_period: 2,
-      wins_in_period: 14,
-      losses_in_period: 3,
-      points_change: 25, // Small gain
-      position_change: 0, // Maintained position
-      period_notes: JSON.stringify({
-        key_results: ['Finalista Senior Nacional Q3'],
-        performance: 'consistent',
-        trend: 'stable'
-      }),
-      created_at: now,
-      updated_at: now
+      player_id: 1, // Carlos Méndez Rivera (player001) - Historical record
+      ranking_type: 'overall',
+      category: 'national',
+      old_position: 15,
+      new_position: 13,
+      old_points: 1750.00,
+      new_points: 1850.00,
+      points_change: 100.00,
+      position_change: -2,
+      change_reason: 'tournament_performance',
+      tournament_id: 1,
+      change_date: new Date('2024-06-30'),
+      state_id: 9, // Ciudad de México
+      age_group: null,
+      gender: 'male',
+      created_at: new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000),
+      updated_at: new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000)
     }
     ]);
   },

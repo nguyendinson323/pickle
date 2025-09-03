@@ -3,177 +3,147 @@ module.exports = {
     const now = new Date();
     await queryInterface.bulkInsert('point_calculations', [
     {
-      player_id: 4, // Roberto Sánchez Torres (player003)
-      tournament_id: 3, // Campeonato Nuevo León Open 2024
-      match_id: 4, // Final match from tournament_matches
-      calculation_type: 'tournament_win',
-      base_points: 500,
-      multiplier: 1.5, // Professional tournament multiplier
-      bonus_points: 100, // Winner bonus
-      penalty_points: 0,
-      final_points: 850, // (500 * 1.5) + 100
-      calculation_formula: JSON.stringify({
-        formula: '(base_points * tournament_multiplier) + winner_bonus',
+      tournament_id: 1,
+      player_id: 3, // Roberto Sánchez Torres (player003)
+      match_id: 4,
+      base_points: 500.00,
+      placement_multiplier: 1.5000,
+      level_multiplier: 2.00,
+      opponent_bonus: 100.00,
+      activity_bonus: 50.00,
+      participation_bonus: 1.2000,
+      total_points: 850.00,
+      final_placement: 1,
+      total_players: 32,
+      matches_won: 6,
+      matches_lost: 0,
+      average_opponent_rating: 4.25,
+      calculation_details: JSON.stringify({
+        formula: '(base_points * placement_multiplier * level_multiplier) + opponent_bonus + activity_bonus',
         factors: {
           tournament_level: 'professional',
-          opponent_rating: '5.0+',
-          match_importance: 'final'
-        }
-      }),
-      calculation_date: new Date('2024-06-02'),
-      verified: true,
-      verified_by: 1, // admin001
-      calculation_notes: 'Victoria en final profesional contra oponente 5.0+',
-      created_at: now,
-      updated_at: now
-    },
-    {
-      player_id: 2, // Carlos Méndez Rivera (player001)
-      tournament_id: 1, // Torneo Nacional de Primavera CDMX 2024
-      match_id: 1, // Win against Roberto in round 1
-      calculation_type: 'match_win',
-      base_points: 150,
-      multiplier: 1.2, // Regional tournament multiplier
-      bonus_points: 25, // Upset bonus (beat higher ranked player)
-      penalty_points: 0,
-      final_points: 205, // (150 * 1.2) + 25
-      calculation_formula: JSON.stringify({
-        formula: '(base_points * tournament_multiplier) + upset_bonus',
-        factors: {
-          tournament_level: 'regional',
-          opponent_rating: '4.5',
-          skill_differential: '0.5'
-        }
-      }),
-      calculation_date: new Date('2024-03-22'),
-      verified: true,
-      verified_by: 5, // Luis Hernández (referee)
-      calculation_notes: 'Victoria contra oponente de ranking superior',
-      created_at: now,
-      updated_at: now
-    },
-    {
-      player_id: 4, // Roberto Sánchez Torres (player003)
-      tournament_id: 1, // Torneo Nacional de Primavera CDMX 2024
-      match_id: 2, // Win against Carlos in intermediate category
-      calculation_type: 'match_win',
-      base_points: 200,
-      multiplier: 1.3, // Category advancement multiplier
-      bonus_points: 0,
-      penalty_points: 0,
-      final_points: 260, // (200 * 1.3)
-      calculation_formula: JSON.stringify({
-        formula: 'base_points * category_multiplier',
-        factors: {
-          tournament_level: 'regional',
-          category: 'intermediate_male',
+          placement: 'winner',
+          opponent_avg_rating: 4.25,
           dominance_factor: 'high'
         }
       }),
-      calculation_date: new Date('2024-03-22'),
-      verified: true,
-      verified_by: 6, // Ana Patricia Ruiz (referee)
-      calculation_notes: 'Victoria dominante en categoría intermedia',
+      calculated_at: new Date('2024-06-02'),
       created_at: now,
       updated_at: now
     },
     {
-      player_id: 3, // María González López (player002)
-      tournament_id: 2, // Copa Regional Jalisco 2024
-      match_id: null, // Participation points (no specific match)
-      calculation_type: 'participation',
-      base_points: 50,
-      multiplier: 1.0,
-      bonus_points: 25, // First tournament participation bonus
-      penalty_points: 0,
-      final_points: 75, // 50 + 25
-      calculation_formula: JSON.stringify({
-        formula: 'base_points + first_tournament_bonus',
+      tournament_id: 1,
+      player_id: 1, // Carlos Méndez Rivera (player001)
+      match_id: 1,
+      base_points: 150.00,
+      placement_multiplier: 1.2000,
+      level_multiplier: 1.50,
+      opponent_bonus: 25.00,
+      activity_bonus: 15.00,
+      participation_bonus: 1.0000,
+      total_points: 205.00,
+      final_placement: 8,
+      total_players: 24,
+      matches_won: 3,
+      matches_lost: 2,
+      average_opponent_rating: 3.85,
+      calculation_details: JSON.stringify({
+        formula: '(base_points * placement_multiplier * level_multiplier) + opponent_bonus + activity_bonus',
         factors: {
           tournament_level: 'regional',
-          participation_type: 'debut',
-          completion_status: 'full'
+          placement: 'quarterfinals',
+          upset_bonus: true,
+          consistency_factor: 'good'
         }
       }),
-      calculation_date: new Date('2024-04-15'),
-      verified: true,
-      verified_by: 1, // admin001
-      calculation_notes: 'Puntos por primera participación en torneo regional',
+      calculated_at: new Date('2024-03-22'),
       created_at: now,
       updated_at: now
     },
     {
-      player_id: 6, // Ana Patricia Ruiz Vega (coach002)
-      tournament_id: 1, // Torneo Nacional de Primavera CDMX 2024
-      match_id: null, // Coaching/officiating points
-      calculation_type: 'officiating',
-      base_points: 100,
-      multiplier: 1.0,
-      bonus_points: 50, // Head referee bonus
-      penalty_points: 0,
-      final_points: 150, // 100 + 50
-      calculation_formula: JSON.stringify({
-        formula: 'base_points + head_official_bonus',
-        factors: {
-          official_role: 'head_referee',
-          tournament_level: 'regional',
-          matches_officiated: 8
-        }
-      }),
-      calculation_date: new Date('2024-03-25'),
-      verified: true,
-      verified_by: 1, // admin001
-      calculation_notes: 'Puntos por arbitraje como juez principal del torneo',
-      created_at: now,
-      updated_at: now
-    },
-    {
-      player_id: 5, // Luis Hernández Morales (coach001)
-      tournament_id: 2, // Copa Regional Jalisco 2024
-      match_id: 3, // In progress match
-      calculation_type: 'partial_match',
-      base_points: 75,
-      multiplier: 0.5, // Partial completion multiplier
-      bonus_points: 0,
-      penalty_points: 10, // Incomplete match penalty
-      final_points: 28, // (75 * 0.5) - 10 = 37.5 - 10 = 27.5 rounded up
-      calculation_formula: JSON.stringify({
-        formula: '(base_points * partial_multiplier) - incomplete_penalty',
-        factors: {
-          completion_percentage: 50,
-          match_status: 'in_progress',
-          reason: 'weather_delay'
-        }
-      }),
-      calculation_date: new Date('2024-04-15'),
-      verified: false,
-      verified_by: null, // Pending verification until match completion
-      calculation_notes: 'Puntos parciales por partido suspendido, pendiente de finalización',
-      created_at: now,
-      updated_at: now
-    },
-    {
-      player_id: 2, // Carlos Méndez Rivera (player001)
-      tournament_id: null, // Practice session points
+      tournament_id: 2,
+      player_id: 2, // María González López (player002)
       match_id: null,
-      calculation_type: 'practice_session',
-      base_points: 10,
-      multiplier: 1.0,
-      bonus_points: 5, // Consistency bonus (5+ sessions this month)
-      penalty_points: 0,
-      final_points: 15, // 10 + 5
-      calculation_formula: JSON.stringify({
-        formula: 'base_points + consistency_bonus',
+      base_points: 100.00,
+      placement_multiplier: 0.8000,
+      level_multiplier: 1.25,
+      opponent_bonus: 10.00,
+      activity_bonus: 20.00,
+      participation_bonus: 1.1000,
+      total_points: 140.00,
+      final_placement: 16,
+      total_players: 20,
+      matches_won: 2,
+      matches_lost: 3,
+      average_opponent_rating: 3.60,
+      calculation_details: JSON.stringify({
+        formula: '(base_points * placement_multiplier * level_multiplier) + opponent_bonus + activity_bonus',
         factors: {
-          session_type: 'structured_practice',
-          duration_hours: 2,
-          monthly_sessions: 6
+          tournament_level: 'regional',
+          placement: 'first_round_exit',
+          participation: 'full',
+          improvement_potential: 'high'
         }
       }),
-      calculation_date: new Date('2024-11-30'),
-      verified: true,
-      verified_by: 5, // Luis Hernández (supervising coach)
-      calculation_notes: 'Puntos por práctica estructurada con coach certificado',
+      calculated_at: new Date('2024-04-15'),
+      created_at: now,
+      updated_at: now
+    },
+    {
+      tournament_id: 2,
+      player_id: 3, // Roberto Sánchez Torres (player003) - Different tournament
+      match_id: 2,
+      base_points: 200.00,
+      placement_multiplier: 1.3000,
+      level_multiplier: 1.80,
+      opponent_bonus: 40.00,
+      activity_bonus: 25.00,
+      participation_bonus: 1.0000,
+      total_points: 533.00,
+      final_placement: 2,
+      total_players: 16,
+      matches_won: 4,
+      matches_lost: 1,
+      average_opponent_rating: 4.10,
+      calculation_details: JSON.stringify({
+        formula: '(base_points * placement_multiplier * level_multiplier) + opponent_bonus + activity_bonus',
+        factors: {
+          tournament_level: 'regional',
+          placement: 'finalist',
+          category: 'intermediate_male',
+          performance: 'excellent'
+        }
+      }),
+      calculated_at: new Date('2024-03-22'),
+      created_at: now,
+      updated_at: now
+    },
+    {
+      tournament_id: 2,
+      player_id: 1, // Carlos Méndez Rivera (player001) - Practice tournament
+      match_id: null,
+      base_points: 50.00,
+      placement_multiplier: 1.0000,
+      level_multiplier: 1.00,
+      opponent_bonus: 0.00,
+      activity_bonus: 15.00,
+      participation_bonus: 1.5000,
+      total_points: 90.00,
+      final_placement: 24,
+      total_players: 24,
+      matches_won: 1,
+      matches_lost: 2,
+      average_opponent_rating: 3.20,
+      calculation_details: JSON.stringify({
+        formula: '(base_points * placement_multiplier * level_multiplier) + activity_bonus',
+        factors: {
+          tournament_level: 'local',
+          placement: 'participation',
+          first_tournament: true,
+          learning_experience: 'valuable'
+        }
+      }),
+      calculated_at: new Date('2024-11-30'),
       created_at: now,
       updated_at: now
     }
