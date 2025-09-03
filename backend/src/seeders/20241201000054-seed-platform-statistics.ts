@@ -17,14 +17,14 @@ module.exports = {
         total_users: baseUsers + newUsers,
         new_users: newUsers,
         active_users: activeUsers,
-        users_by_role: {
+        users_by_role: JSON.stringify({
           player: Math.floor(baseUsers * 0.65),
           coach: Math.floor(baseUsers * 0.18),
           club: Math.floor(baseUsers * 0.08),
           partner: Math.floor(baseUsers * 0.05),
           state_committee: Math.floor(baseUsers * 0.03),
           federation: Math.floor(baseUsers * 0.01)
-        },
+        }),
         total_sessions: Math.floor(Math.random() * 800) + 400,
         avg_session_duration: parseFloat(((Math.random() * 1800) + 900).toFixed(2)), // 15-45 minutes
         page_views: Math.floor(Math.random() * 5000) + 2000,

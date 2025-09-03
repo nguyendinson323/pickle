@@ -7,7 +7,7 @@ module.exports = {
       name: 'Club Deportivo Premium',
       category: 'club',
       description: 'Template premium para clubes deportivos con funcionalidades avanzadas de reservas y membresías',
-      structure: {
+      structure: JSON.stringify({
         layout: {
           header: {
             logo_position: 'left',
@@ -59,17 +59,17 @@ module.exports = {
           'payment_integration',
           'mobile_responsive'
         ]
-      },
+      }),
       thumbnail_url: '/templates/club-premium-thumb.jpg',
       preview_url: '/templates/club-premium-preview.jpg',
-      features: [
+      features: JSON.stringify([
         'online_reservations',
         'membership_management',
         'tournament_calendar',
         'coach_profiles',
         'payment_integration',
         'mobile_responsive'
-      ],
+      ]),
       is_premium: true,
       required_plan: 'premium',
       is_active: true,
@@ -81,7 +81,7 @@ module.exports = {
       name: 'Entrenador Personal',
       category: 'general',
       description: 'Template especializado para entrenadores personales con portfolio y sistema de citas',
-      structure: {
+      structure: JSON.stringify({
         layout: {
           header: {
             logo_position: 'center',
@@ -135,17 +135,17 @@ module.exports = {
           'achievement_display',
           'contact_form'
         ]
-      },
+      }),
       thumbnail_url: '/templates/coach-personal-thumb.jpg',
       preview_url: '/templates/coach-personal-preview.jpg',
-      features: [
+      features: JSON.stringify([
         'coach_profile',
         'program_showcase',
         'booking_calendar',
         'testimonials_carousel',
         'achievement_display',
         'contact_form'
-      ],
+      ]),
       is_premium: true,
       required_plan: 'pro',
       is_active: true,
@@ -157,7 +157,7 @@ module.exports = {
       name: 'Tienda Deportiva',
       category: 'general',
       description: 'Template completo para tiendas deportivas con catálogo de productos y e-commerce',
-      structure: {
+      structure: JSON.stringify({
         layout: {
           header: {
             logo_position: 'left',
@@ -216,10 +216,10 @@ module.exports = {
           'search_filters',
           'multi_currency'
         ]
-      },
+      }),
       thumbnail_url: '/templates/sports-store-thumb.jpg',
       preview_url: '/templates/sports-store-preview.jpg',
-      features: [
+      features: JSON.stringify([
         'product_catalog',
         'shopping_cart',
         'payment_integration',
@@ -228,7 +228,7 @@ module.exports = {
         'wishlist',
         'search_filters',
         'multi_currency'
-      ],
+      ]),
       is_premium: true,
       required_plan: 'enterprise',
       is_active: true,
@@ -240,7 +240,7 @@ module.exports = {
       name: 'Básico Club',
       category: 'club',
       description: 'Template básico y económico para clubes deportivos pequeños',
-      structure: {
+      structure: JSON.stringify({
         layout: {
           header: {
             logo_position: 'left',
@@ -289,15 +289,15 @@ module.exports = {
           'image_gallery',
           'mobile_responsive'
         ]
-      },
+      }),
       thumbnail_url: '/templates/basic-club-thumb.jpg',
       preview_url: '/templates/basic-club-preview.jpg',
-      features: [
+      features: JSON.stringify([
         'basic_info_display',
         'contact_form',
         'image_gallery',
         'mobile_responsive'
-      ],
+      ]),
       is_premium: false,
       required_plan: null,
       is_active: true,
@@ -309,7 +309,7 @@ module.exports = {
       name: 'Federación Deportiva',
       category: 'state_committee',
       description: 'Template institucional para federaciones deportivas con funcionalidades oficiales',
-      structure: {
+      structure: JSON.stringify({
         layout: {
           header: {
             logo_position: 'left',
@@ -367,10 +367,10 @@ module.exports = {
           'member_portal',
           'multilingual_support'
         ]
-      },
+      }),
       thumbnail_url: '/templates/federation-thumb.jpg',
       preview_url: '/templates/federation-preview.jpg',
-      features: [
+      features: JSON.stringify([
         'official_news',
         'tournament_management',
         'rankings_display',
@@ -379,7 +379,7 @@ module.exports = {
         'event_calendar',
         'member_portal',
         'multilingual_support'
-      ],
+      ]),
       is_premium: true,
       required_plan: 'enterprise',
       is_active: true,
