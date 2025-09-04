@@ -16,6 +16,7 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 
 // Pages
 import HomePage from './pages/HomePage';
+import LearnMorePage from './pages/LearnMorePage';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
 import RegistrationSuccessPage from './pages/RegistrationSuccessPage';
@@ -139,6 +140,8 @@ const AppContent: React.FC = () => {
           <Routes>
         {/* Public Routes */}
         <Route path={ROUTES.HOME} element={<HomePage />} />
+        <Route path="/about" element={<LearnMorePage />} />
+        <Route path="/learn-more" element={<LearnMorePage />} />
         <Route 
           path={ROUTES.LOGIN} 
           element={
@@ -208,7 +211,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/microsite-builder"
           element={
-            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+            <ProtectedRoute requiredRoles={['club', 'state']}>
               <MicrositeBuilderPage />
             </ProtectedRoute>
           }
@@ -217,7 +220,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/microsite-builder/create"
           element={
-            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+            <ProtectedRoute requiredRoles={['club', 'state']}>
               <MicrositeCreatePage />
             </ProtectedRoute>
           }
@@ -226,7 +229,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/microsite-builder/:id/edit"
           element={
-            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+            <ProtectedRoute requiredRoles={['club', 'state']}>
               <MicrositeEditPage />
             </ProtectedRoute>
           }
@@ -235,7 +238,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/microsite-builder/:id/analytics"
           element={
-            <ProtectedRoute requiredRoles={['club', 'state_committee']}>
+            <ProtectedRoute requiredRoles={['club', 'state']}>
               <MicrositeEditPage />
             </ProtectedRoute>
           }
@@ -264,7 +267,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/create"
           element={
-            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
               <CreateTournamentForm />
             </ProtectedRoute>
           }
@@ -273,7 +276,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/manage"
           element={
-            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
               <TournamentManagePage />
             </ProtectedRoute>
           }
@@ -287,7 +290,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/:id/bracket"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRoles={['player', 'coach', 'federation', 'state', 'club', 'partner']}>
               <TournamentBracket />
             </ProtectedRoute>
           }
@@ -296,7 +299,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/:id/scoring"
           element={
-            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner', 'referee']}>
+            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
               <LiveScoring />
             </ProtectedRoute>
           }
@@ -305,7 +308,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/analytics"
           element={
-            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
               <TournamentAnalyticsPage />
             </ProtectedRoute>
           }
@@ -361,7 +364,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/export"
           element={
-            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
               <ExportPage />
             </ProtectedRoute>
           }
@@ -370,7 +373,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requiredRoles={['admin']}>
+            <ProtectedRoute requiredRoles={['federation']}>
               <AdminPage />
             </ProtectedRoute>
           }

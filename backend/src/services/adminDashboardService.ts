@@ -501,6 +501,77 @@ class AdminDashboardService {
     });
   }
 
+  async updateUserStatus(adminId: number, userId: number, status: string, reason: string): Promise<any> {
+    // Implementation would update user status
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    await user.update({ isActive: status === 'active' });
+    return { success: true, message: 'User status updated' };
+  }
+
+  async updateSystemAlert(adminId: number, alertId: number, status: string, notes: string): Promise<any> {
+    const alert = await SystemAlert.findByPk(alertId);
+    if (!alert) {
+      throw new Error('Alert not found');
+    }
+    
+    await alert.update({ 
+      status, 
+      notes,
+      acknowledgedBy: adminId,
+      acknowledgedAt: new Date()
+    });
+    
+    return { success: true, message: 'Alert updated' };
+  }
+
+  async getAdminLogs(filters: any): Promise<any> {
+    const { page = 1, limit = 25 } = filters;
+    
+    const logs = await AdminLog.findAndCountAll({
+      include: [{ model: User, as: 'admin', attributes: ['username'] }],
+      limit,
+      offset: (page - 1) * limit,
+      order: [['createdAt', 'DESC']]
+    });
+    
+    return {
+      logs: logs.rows,
+      pagination: {
+        page,
+        limit,
+        total: logs.count,
+        totalPages: Math.ceil(logs.count / limit)
+      }
+    };
+  }
+
+  async generateReport(reportType: string, filters: any): Promise<any> {
+    // Placeholder implementation
+    return {
+      reportType,
+      generatedAt: new Date(),
+      data: [],
+      message: 'Report generation not yet implemented'
+    };
+  }
+
+  async getPlatformStatistics(dateRange: any): Promise<any> {
+    const stats = await PlatformStatistics.findOne({
+      order: [['date', 'DESC']]
+    });
+    
+    return stats || {
+      totalUsers: 0,
+      activeUsers: 0,
+      totalRevenue: 0,
+      systemUptime: 100
+    };
+  }
+
   private async calculateGrowthMetrics(): Promise<GrowthMetrics> {
     const today = new Date();
     const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);

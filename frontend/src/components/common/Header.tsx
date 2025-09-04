@@ -81,7 +81,7 @@ const Header: React.FC = () => {
                 <span className="text-white font-bold text-sm">🏓</span>
               </div>
               <span className="font-bold text-gray-900 text-lg hidden sm:block">
-                {APP_NAME}
+                Federation
               </span>
               <span className="font-bold text-gray-900 text-lg sm:hidden">
                 FMP

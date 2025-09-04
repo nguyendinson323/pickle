@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import { AdminDashboardService } from '../services/adminDashboardService';
-import { AdminLog } from '../models/AdminLog';
-
-const adminDashboardService = new AdminDashboardService();
+import adminDashboardService from '../services/adminDashboardService';
+import AdminLog from '../models/AdminLog';
 
 const logAdminAction = async (
   adminId: number,
@@ -26,9 +24,9 @@ const logAdminAction = async (
       targetType,
       previousData,
       newData,
-      ipAddress: req.ip || req.connection.remoteAddress || '0.0.0.0',
+      ipAddress: req.ip || req.socket.remoteAddress || '0.0.0.0',
       userAgent: req.get('User-Agent') || 'Unknown',
-      sessionId: req.session?.id,
+      sessionId: undefined,
       severity,
       status: 'success'
     });
@@ -39,7 +37,7 @@ const logAdminAction = async (
 
 export const getDashboardOverview = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -57,7 +55,7 @@ export const getDashboardOverview = async (req: Request, res: Response): Promise
 
 export const getUserManagement = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -86,7 +84,7 @@ export const getUserManagement = async (req: Request, res: Response): Promise<vo
 
 export const updateUserStatus = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -126,23 +124,20 @@ export const updateUserStatus = async (req: Request, res: Response): Promise<voi
 
 export const getContentModeration = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
     }
 
     const { page = 1, limit = 20, status, severity, contentType } = req.query;
-    const moderation = await adminDashboardService.getContentModeration(
-      adminId,
-      {
-        page: Number(page),
-        limit: Number(limit),
-        status: status as string,
-        severity: severity as string,
-        contentType: contentType as string
-      }
-    );
+    const moderation = await adminDashboardService.getContentModerationQueue({
+      page: Number(page),
+      limit: Number(limit),
+      status: status as string,
+      severity: severity as string,
+      contentType: contentType as string
+    });
 
     res.json(moderation);
   } catch (error: any) {
@@ -155,7 +150,7 @@ export const getContentModeration = async (req: Request, res: Response): Promise
 
 export const moderateContent = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -165,10 +160,9 @@ export const moderateContent = async (req: Request, res: Response): Promise<void
     const { action, reason } = req.body;
 
     const result = await adminDashboardService.moderateContent(
-      adminId,
       Number(contentId),
       action,
-      reason
+      adminId
     );
 
     await logAdminAction(
@@ -179,7 +173,7 @@ export const moderateContent = async (req: Request, res: Response): Promise<void
       req,
       Number(contentId),
       'content',
-      { status: result.previousStatus },
+      { status: 'previous' },
       { status: action, reason },
       action === 'rejected' ? 'high' : 'medium'
     );
@@ -195,7 +189,7 @@ export const moderateContent = async (req: Request, res: Response): Promise<void
 
 export const getSystemAlerts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -224,7 +218,7 @@ export const getSystemAlerts = async (req: Request, res: Response): Promise<void
 
 export const updateSystemAlert = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -264,7 +258,7 @@ export const updateSystemAlert = async (req: Request, res: Response): Promise<vo
 
 export const getFinancialOverview = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -288,7 +282,7 @@ export const getFinancialOverview = async (req: Request, res: Response): Promise
 
 export const broadcastAnnouncement = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -296,15 +290,15 @@ export const broadcastAnnouncement = async (req: Request, res: Response): Promis
 
     const { title, message, targetAudience, priority, scheduledFor } = req.body;
 
-    const result = await adminDashboardService.broadcastAnnouncement(
-      adminId,
+    await adminDashboardService.broadcastAnnouncement(
       {
         title,
         message,
         targetAudience,
-        priority: priority || 'medium',
+        channels: { inApp: true, email: true, sms: false, push: true },
         scheduledFor: scheduledFor ? new Date(scheduledFor) : undefined
-      }
+      },
+      adminId
     );
 
     await logAdminAction(
@@ -331,7 +325,7 @@ export const broadcastAnnouncement = async (req: Request, res: Response): Promis
 
 export const getAdminLogs = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -371,7 +365,7 @@ export const getAdminLogs = async (req: Request, res: Response): Promise<void> =
 
 export const generateReport = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;
@@ -421,7 +415,7 @@ export const generateReport = async (req: Request, res: Response): Promise<void>
 
 export const getPlatformStatistics = async (req: Request, res: Response): Promise<void> => {
   try {
-    const adminId = req.user?.id;
+    const adminId = req.user?.userId;
     if (!adminId) {
       res.status(401).json({ error: 'No autorizado' });
       return;

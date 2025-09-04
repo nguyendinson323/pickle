@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { MicrositeService } from '../services/micrositeService';
+import micrositeService from '../services/micrositeService';
 import { UserRole } from '../types/auth';
 
 interface AuthRequest extends Request {
@@ -9,8 +9,6 @@ interface AuthRequest extends Request {
     role: UserRole;
   };
 }
-
-const micrositeService = new MicrositeService();
 
 // Microsite CRUD
 const createMicrosite = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -48,7 +46,7 @@ const getMicrosite = async (req: AuthRequest, res: Response): Promise<void> => {
 const getMicrositeBySubdomain = async (req: Request, res: Response): Promise<void> => {
   try {
     const { subdomain } = req.params;
-    const microsite = await micrositeService.getMicrositeBySubdomain(subdomain);
+    const microsite = await micrositeService.getMicrositeWithPages(subdomain);
 
     if (!microsite) {
       res.status(404).json({ error: 'Microsite not found' });
@@ -56,6 +54,46 @@ const getMicrositeBySubdomain = async (req: Request, res: Response): Promise<voi
     }
 
     res.json({ success: true, data: microsite });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Page handling functions
+const getMicrositePage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { subdomain, slug } = req.params;
+    
+    // First get the microsite
+    const microsite = await micrositeService.getMicrositeBySubdomain(subdomain);
+    if (!microsite || microsite.status !== 'published') {
+      res.status(404).json({ error: 'Microsite not found' });
+      return;
+    }
+
+    // Then get the specific page
+    const page = await micrositeService.getPageBySlug(microsite.id, slug);
+    if (!page) {
+      res.status(404).json({ error: 'Page not found' });
+      return;
+    }
+
+    res.json({ 
+      success: true, 
+      data: { 
+        microsite: {
+          id: microsite.id,
+          name: microsite.name,
+          subdomain: microsite.subdomain,
+          title: microsite.title,
+          description: microsite.description,
+          logoUrl: microsite.logoUrl,
+          faviconUrl: microsite.faviconUrl,
+          settings: microsite.settings
+        },
+        page 
+      } 
+    });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -162,6 +200,7 @@ export default {
   createMicrosite,
   getMicrosite,
   getMicrositeBySubdomain,
+  getMicrositePage,
   getUserMicrosites,
   updateMicrosite,
   publishMicrosite,

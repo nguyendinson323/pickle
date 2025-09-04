@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Public routes (no authentication required)
 router.get('/subdomain/:subdomain', micrositeController.getMicrositeBySubdomain);
+router.get('/subdomain/:subdomain/page/:slug', micrositeController.getMicrositePage);
 
 // Protected routes (authentication required)
 router.use(authenticate);

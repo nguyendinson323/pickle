@@ -187,7 +187,7 @@ const HomePage: React.FC = () => {
                 Start Now
               </Link>
               <Link
-                to="/about"
+                to="/learn-more"
                 className="btn-ghost border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg"
               >
                 Learn More

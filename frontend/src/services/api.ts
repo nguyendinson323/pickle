@@ -240,7 +240,10 @@ class ApiService {
   }
 }
 
-export default new ApiService();
+const apiService = new ApiService();
+
+export default apiService;
+export { apiService as api };
 
 // Type augmentation for Axios config to include _isRetry flag
 declare module 'axios' {
