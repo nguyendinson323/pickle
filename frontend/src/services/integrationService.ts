@@ -62,9 +62,19 @@ class IntegrationService {
         console.log('✅ Cache service initialized');
       }
 
-      // Check backend connectivity
-      await this.checkBackendHealth();
-      console.log('✅ Backend connection verified');
+      // Check backend connectivity (non-blocking with short timeout)
+      try {
+        const healthPromise = this.checkBackendHealth();
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Backend health check timeout')), 3000); // 3 second timeout
+        });
+        
+        await Promise.race([healthPromise, timeoutPromise]);
+        console.log('✅ Backend connection verified');
+      } catch (error) {
+        console.warn('⚠️ Backend health check failed, continuing with offline mode:', error);
+        // Continue initialization even if backend is not available
+      }
 
       // Initialize WebSocket if user is authenticated
       const token = localStorage.getItem('auth_token');
@@ -92,8 +102,11 @@ class IntegrationService {
 
     } catch (error) {
       console.error('❌ Integration service initialization failed:', error);
+      // Still mark as initialized to prevent infinite loops
+      this.initialized = true;
+      console.warn('⚠️ Marked as initialized despite errors to prevent loops');
       errorService.handleError(error, { userAction: 'System initialization' });
-      throw error;
+      // Don't throw - allow app to continue with degraded functionality
     }
   }
 
@@ -105,7 +118,7 @@ class IntegrationService {
     });
 
     // Enhanced API error handling
-    apiService.setupInterceptors?.();
+    // apiService.setupInterceptors?.();
   }
 
   // Initialize cache system

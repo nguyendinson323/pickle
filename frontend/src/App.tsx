@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store, useAppSelector, useAppDispatch } from './store';
 import { checkAuthStatus } from './store/authSlice';
 import { ROUTES } from './utils/constants';
 
-// Integration Services
-import integrationService from './services/integrationService';
+// Components
 import NotificationSystem from './components/common/NotificationSystem';
 import { MessagingProvider } from './contexts/MessagingContext';
 
@@ -48,33 +47,7 @@ import './styles/globals.css';
 
 const AppContent: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, isLoading, user } = useAppSelector((state) => state.auth);
-  const [systemInitialized, setSystemInitialized] = useState(false);
-  const [initializationError, setInitializationError] = useState<string | null>(null);
-
-  // Initialize integration services
-  useEffect(() => {
-    const initializeServices = async () => {
-      try {
-        await integrationService.initialize({
-          enableWebSocket: true,
-          enableCache: true,
-          enableErrorHandling: true
-        });
-        setSystemInitialized(true);
-      } catch (error) {
-        console.error('Failed to initialize integration services:', error);
-        setInitializationError(error instanceof Error ? error.message : 'System initialization failed');
-      }
-    };
-
-    initializeServices();
-
-    // Cleanup on unmount
-    return () => {
-      integrationService.cleanup();
-    };
-  }, []);
+  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
 
   // Handle authentication state changes
   useEffect(() => {
@@ -84,50 +57,13 @@ const AppContent: React.FC = () => {
     }
   }, [dispatch, isAuthenticated, isLoading]);
 
-  // Handle user login integration
-  useEffect(() => {
-    if (isAuthenticated && user && systemInitialized) {
-      const token = localStorage.getItem('auth_token');
-      if (token) {
-        integrationService.handleUserLogin(user.id, token);
-      }
-    }
-  }, [isAuthenticated, user, systemInitialized]);
-
-  // Handle user logout
-  const handleLogout = async () => {
-    await integrationService.handleUserLogout();
-    // Redux logout would be handled here
-  };
-
-  // Show initialization error
-  if (initializationError) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">System Initialization Failed</h2>
-          <p className="text-gray-600 mb-4">{initializationError}</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Show loading spinner during initial auth check or system initialization
-  if (isLoading || !systemInitialized) {
+  // Show loading spinner during initial auth check
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-4 text-gray-600">
-            {!systemInitialized ? 'Initializing system...' : 'Loading application...'}
-          </p>
+          <p className="mt-4 text-gray-600">Loading application...</p>
         </div>
       </div>
     );
@@ -287,7 +223,7 @@ const AppContent: React.FC = () => {
           element={<TournamentsPage />}
         />
 
-        <Route
+        {/* <Route
           path="/tournaments/:id/bracket"
           element={
             <ProtectedRoute requiredRoles={['player', 'coach', 'admin', 'state', 'club', 'partner']}>
@@ -303,7 +239,7 @@ const AppContent: React.FC = () => {
               <LiveScoring />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
         <Route
           path="/tournaments/analytics"
