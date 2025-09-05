@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Provider } from 'react-redux';
 import { store, useAppSelector, useAppDispatch } from './store';
 import { checkAuthStatus } from './store/authSlice';
+import { fetchStates, fetchNrtpLevels, fetchGenderOptions } from './store/dataSlice';
 
 // Components
 import NotificationSystem from './components/common/NotificationSystem';
@@ -20,8 +21,13 @@ const AppContent: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
 
-  // Handle authentication state changes
+  // Handle authentication state changes and load global data
   useEffect(() => {
+    // Load global data that's needed throughout the app
+    dispatch(fetchStates());
+    dispatch(fetchNrtpLevels());
+    dispatch(fetchGenderOptions());
+    
     // Only check auth status if there's a stored token
     const token = localStorage.getItem('auth_token');
     if (token && !isAuthenticated && !isLoading) {

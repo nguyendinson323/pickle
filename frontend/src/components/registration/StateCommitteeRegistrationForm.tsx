@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { fetchStates, selectStates, selectDataLoading } from '@/store/dataSlice';
+import { selectStates, selectDataLoading } from '@/store/dataSlice';
 import { registerStateCommittee, selectIsSubmitting, selectRegistrationError } from '@/store/registrationSlice';
 import { StateCommitteeRegistrationData } from '@/types/registration';
 import FormField from '@/components/forms/FormField';
@@ -50,10 +50,7 @@ const StateCommitteeRegistrationForm: React.FC<StateCommitteeRegistrationFormPro
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [, setShowPrivacyModal] = useState(false);
 
-  // Load data on component mount
-  useEffect(() => {
-    dispatch(fetchStates());
-  }, [dispatch]);
+  // Data is now loaded globally in App.tsx, no need to fetch here
 
   // const validateForm = (): boolean => {
   //   const newErrors: Record<string, string> = {};
