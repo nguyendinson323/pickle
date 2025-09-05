@@ -134,21 +134,6 @@ const RoleSelector: React.FC<RoleSelectorProps> = ({
         ))}
       </div>
 
-      {selectedRole && (
-        <div className="mt-8 text-center">
-          <button
-            type="button"
-            className="btn-primary px-8 py-3 text-lg"
-            onClick={() => {
-              // This will be handled by parent component
-              const event = new CustomEvent('continueRegistration', { detail: selectedRole });
-              window.dispatchEvent(event);
-            }}
-          >
-            Continue with {roles.find(r => r.type === selectedRole)?.title}
-          </button>
-        </div>
-      )}
     </div>
   );
 };
