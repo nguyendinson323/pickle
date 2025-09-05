@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import LoadingSpinner from '../common/LoadingSpinner';
 import {
   TrophyIcon,
   UserIcon,

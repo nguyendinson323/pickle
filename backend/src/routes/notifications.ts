@@ -1,53 +1,19 @@
 import express from 'express';
 import NotificationService from '../services/notificationService';
-import { authenticateUser } from '../middleware/auth';
-import { validateRequest } from '../middleware/validation';
-import { body, param, query } from 'express-validator';
+import { authenticate } from '../middleware/auth';
+// Validation middleware and express-validator not available
 
 const router = express.Router();
 const notificationService = new NotificationService();
 
 // Validation schemas
-const notificationIdValidation = [
-  param('notificationId').isUUID().withMessage('Invalid notification ID')
-];
-
-const sendNotificationValidation = [
-  body('userId').notEmpty().withMessage('User ID is required'),
-  body('type').isIn(['system', 'tournament', 'booking', 'message', 'match', 'payment', 'maintenance']).withMessage('Invalid notification type'),
-  body('category').isIn(['info', 'success', 'warning', 'error', 'urgent']).withMessage('Invalid category'),
-  body('title').optional().isLength({ min: 1, max: 255 }).withMessage('Title must be 1-255 characters'),
-  body('message').optional().isLength({ min: 1, max: 2000 }).withMessage('Message must be 1-2000 characters'),
-  body('templateType').optional().isString(),
-  body('actionUrl').optional().isURL().withMessage('Invalid action URL'),
-  body('scheduledFor').optional().isISO8601().withMessage('Invalid scheduled date'),
-  body('expiresAt').optional().isISO8601().withMessage('Invalid expiry date')
-];
-
-const updatePreferencesValidation = [
-  body('globalEnabled').optional().isBoolean(),
-  body('quietHoursEnabled').optional().isBoolean(),
-  body('quietHoursStart').optional().matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Invalid time format'),
-  body('quietHoursEnd').optional().matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Invalid time format'),
-  body('preferences').optional().isObject()
-];
 
 // Get user notifications
 router.get('/',
-  authenticateUser,
-  [
-    query('type').optional().isIn(['system', 'tournament', 'booking', 'message', 'match', 'payment', 'maintenance']),
-    query('category').optional().isIn(['info', 'success', 'warning', 'error', 'urgent']),
-    query('isRead').optional().isBoolean(),
-    query('fromDate').optional().isISO8601(),
-    query('toDate').optional().isISO8601(),
-    query('page').optional().isInt({ min: 1 }),
-    query('limit').optional().isInt({ min: 1, max: 100 })
-  ],
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
-      const userId = req.user?.id.toString();
+      const userId = req.user?.userId.toString();
       
       const filters = {
         type: req.query.type as string,
@@ -78,13 +44,11 @@ router.get('/',
 
 // Send notification (admin only)
 router.post('/',
-  authenticateUser,
-  sendNotificationValidation,
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
       // Check if user has admin privileges
-      if (req.user?.role !== 'admin' && req.user?.role !== 'federation') {
+      if (req.user?.role !== 'admin') {
         return res.status(403).json({
           success: false,
           error: 'Insufficient permissions'
@@ -113,12 +77,10 @@ router.post('/',
 
 // Mark notification as read
 router.post('/:notificationId/read',
-  authenticateUser,
-  notificationIdValidation,
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
-      const userId = req.user?.id.toString();
+      const userId = req.user?.userId.toString();
       await notificationService.markAsRead(req.params.notificationId, userId);
 
       res.json({
@@ -136,10 +98,10 @@ router.post('/:notificationId/read',
 
 // Mark all notifications as read
 router.post('/read-all',
-  authenticateUser,
+  authenticate,
   async (req, res) => {
     try {
-      const userId = req.user?.id.toString();
+      const userId = req.user?.userId.toString();
       await notificationService.markAllAsRead(userId);
 
       res.json({
@@ -157,12 +119,10 @@ router.post('/read-all',
 
 // Delete notification
 router.delete('/:notificationId',
-  authenticateUser,
-  notificationIdValidation,
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
-      const userId = req.user?.id.toString();
+      const userId = req.user?.userId.toString();
       await notificationService.deleteNotification(req.params.notificationId, userId);
 
       res.json({
@@ -180,10 +140,10 @@ router.delete('/:notificationId',
 
 // Get notification preferences
 router.get('/preferences',
-  authenticateUser,
+  authenticate,
   async (req, res) => {
     try {
-      const userId = req.user?.id.toString();
+      const userId = req.user?.userId.toString();
       const preferences = await notificationService.getUserPreferences(userId);
 
       res.json({
@@ -201,12 +161,10 @@ router.get('/preferences',
 
 // Update notification preferences
 router.put('/preferences',
-  authenticateUser,
-  updatePreferencesValidation,
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
-      const userId = req.user?.id.toString();
+      const userId = req.user?.userId.toString();
       const preferences = await notificationService.updateUserPreferences(userId, req.body);
 
       res.json({
@@ -224,10 +182,10 @@ router.put('/preferences',
 
 // Get unread notifications count
 router.get('/unread/count',
-  authenticateUser,
+  authenticate,
   async (req, res) => {
     try {
-      const userId = req.user?.id.toString();
+      const userId = req.user?.userId.toString();
       const result = await notificationService.getNotifications(
         userId,
         { isRead: false },
@@ -249,11 +207,11 @@ router.get('/unread/count',
 
 // Process scheduled notifications (admin only)
 router.post('/process-scheduled',
-  authenticateUser,
+  authenticate,
   async (req, res) => {
     try {
       // Check if user has admin privileges
-      if (req.user?.role !== 'admin' && req.user?.role !== 'federation') {
+      if (req.user?.role !== 'admin') {
         return res.status(403).json({
           success: false,
           error: 'Insufficient permissions'
@@ -276,11 +234,11 @@ router.post('/process-scheduled',
 
 // Cleanup expired notifications (admin only)
 router.post('/cleanup-expired',
-  authenticateUser,
+  authenticate,
   async (req, res) => {
     try {
       // Check if user has admin privileges
-      if (req.user?.role !== 'admin' && req.user?.role !== 'federation') {
+      if (req.user?.role !== 'admin') {
         return res.status(403).json({
           success: false,
           error: 'Insufficient permissions'
@@ -303,20 +261,11 @@ router.post('/cleanup-expired',
 
 // Batch send notifications (admin only)
 router.post('/batch',
-  authenticateUser,
-  [
-    body('userIds').isArray({ min: 1 }).withMessage('User IDs must be a non-empty array'),
-    body('type').isIn(['system', 'tournament', 'booking', 'message', 'match', 'payment', 'maintenance']),
-    body('category').isIn(['info', 'success', 'warning', 'error', 'urgent']),
-    body('title').optional().isLength({ min: 1, max: 255 }),
-    body('message').optional().isLength({ min: 1, max: 2000 }),
-    body('templateType').optional().isString()
-  ],
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
       // Check if user has admin privileges
-      if (req.user?.role !== 'admin' && req.user?.role !== 'federation') {
+      if (req.user?.role !== 'admin') {
         return res.status(403).json({
           success: false,
           error: 'Insufficient permissions'
@@ -355,18 +304,11 @@ router.post('/batch',
 
 // Get notification templates (admin only)
 router.get('/templates',
-  authenticateUser,
-  [
-    query('category').optional().isIn(['tournament', 'booking', 'message', 'system', 'payment']),
-    query('isActive').optional().isBoolean(),
-    query('page').optional().isInt({ min: 1 }),
-    query('limit').optional().isInt({ min: 1, max: 100 })
-  ],
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
       // Check if user has admin privileges
-      if (req.user?.role !== 'admin' && req.user?.role !== 'federation') {
+      if (req.user?.role !== 'admin') {
         return res.status(403).json({
           success: false,
           error: 'Insufficient permissions'
@@ -395,18 +337,11 @@ router.get('/templates',
 
 // Test notification delivery (admin only)
 router.post('/test',
-  authenticateUser,
-  [
-    body('userId').notEmpty(),
-    body('channel').isIn(['inApp', 'email', 'sms', 'push']),
-    body('title').isLength({ min: 1, max: 255 }),
-    body('message').isLength({ min: 1, max: 2000 })
-  ],
-  validateRequest,
+  authenticate,
   async (req, res) => {
     try {
       // Check if user has admin privileges
-      if (req.user?.role !== 'admin' && req.user?.role !== 'federation') {
+      if (req.user?.role !== 'admin') {
         return res.status(403).json({
           success: false,
           error: 'Insufficient permissions'

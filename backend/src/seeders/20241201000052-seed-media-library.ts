@@ -132,7 +132,7 @@ module.exports = {
     {
       microsite_id: 1, // Club Pickleball CDMX microsite (system asset)
       user_id: 1, // admin001 - System assets
-      filename: 'federation-logo-official.svg',
+      filename: 'admin-logo-official.svg',
       original_name: 'Logo_Federacion_Mexicana_Pickleball_Oficial.svg',
       mime_type: 'image/svg+xml',
       size: 45678,
@@ -141,12 +141,12 @@ module.exports = {
         height: 512
       }),
       storage_provider: 'local',
-      storage_key: 'system/branding/federation-logo-official.svg',
-      url: '/media/system/branding/federation-logo-official.svg',
+      storage_key: 'system/branding/admin-logo-official.svg',
+      url: '/media/system/branding/admin-logo-official.svg',
       thumbnail_url: null, // SVG files don't need thumbnails
       alt: 'Logo oficial de la Federación Mexicana de Pickleball',
       caption: 'Logo vectorial oficial de la federación para uso en documentos y sitios web',
-      tags: JSON.stringify(['logo', 'official', 'federation', 'branding', 'vector']),
+      tags: JSON.stringify(['logo', 'official', 'admin', 'branding', 'vector']),
       folder: 'branding',
       category: 'image',
       usage_count: 234,

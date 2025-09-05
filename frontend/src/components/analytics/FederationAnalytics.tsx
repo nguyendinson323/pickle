@@ -5,8 +5,8 @@ import Badge from '../ui/Badge';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 export const FederationAnalytics: React.FC = () => {
-  // Mock federation analytics data since analytics slice doesn't exist yet
-  const federation = {
+  // Mock admin analytics data since analytics slice doesn't exist yet
+  const admin = {
     totalRevenue: 0,
     totalCourts: 0,
     activeUsers: 0,
@@ -23,7 +23,7 @@ export const FederationAnalytics: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<'30days' | '3months' | '1year'>('30days');
 
   useEffect(() => {
-    // TODO: Implement federation analytics data fetching when analytics slice is created
+    // TODO: Implement admin analytics data fetching when analytics slice is created
     console.log('Federation analytics data would be fetched for:', selectedPeriod);
   }, [selectedPeriod]);
 
@@ -48,7 +48,7 @@ export const FederationAnalytics: React.FC = () => {
     }
   };
 
-  if (loading && !federation) {
+  if (loading && !admin) {
     return (
       <div className="flex justify-center items-center h-64">
         <LoadingSpinner />
@@ -73,7 +73,7 @@ export const FederationAnalytics: React.FC = () => {
     );
   }
 
-  if (!federation) {
+  if (!admin) {
     return (
       <div className="text-center py-12">
         <div className="text-gray-400 mb-4">
@@ -82,7 +82,7 @@ export const FederationAnalytics: React.FC = () => {
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">No data available</h3>
-        <p className="text-gray-600">No federation data found to display</p>
+        <p className="text-gray-600">No admin data found to display</p>
       </div>
     );
   }
@@ -135,7 +135,7 @@ export const FederationAnalytics: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
               <p className="text-2xl font-bold text-green-600">
-                {formatPrice(federation.totalRevenue)}
+                {formatPrice(admin.totalRevenue)}
               </p>
               <p className="text-xs text-gray-500 mt-1">{getPeriodLabel()}</p>
             </div>
@@ -153,7 +153,7 @@ export const FederationAnalytics: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Registered Courts</p>
               <p className="text-2xl font-bold text-blue-600">
-                {formatNumber(federation.totalCourts)}
+                {formatNumber(admin.totalCourts)}
               </p>
               <p className="text-xs text-gray-500 mt-1">Across the network</p>
             </div>
@@ -171,7 +171,7 @@ export const FederationAnalytics: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Active Users</p>
               <p className="text-2xl font-bold text-purple-600">
-                {formatNumber(federation.activeUsers)}
+                {formatNumber(admin.activeUsers)}
               </p>
               <p className="text-xs text-gray-500 mt-1">{getPeriodLabel()}</p>
             </div>
@@ -189,7 +189,7 @@ export const FederationAnalytics: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Reservations</p>
               <p className="text-2xl font-bold text-orange-600">
-                {formatNumber(federation.totalReservations)}
+                {formatNumber(admin.totalReservations)}
               </p>
               <p className="text-xs text-gray-500 mt-1">{getPeriodLabel()}</p>
             </div>
@@ -208,7 +208,7 @@ export const FederationAnalytics: React.FC = () => {
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing States</h3>
           <div className="space-y-3">
-            {federation.topStates.map((state: any, index: number) => (
+            {admin.topStates.map((state: any, index: number) => (
               <div key={state.state} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Badge variant={index === 0 ? 'success' : index === 1 ? 'warning' : 'info'}>
@@ -228,7 +228,7 @@ export const FederationAnalytics: React.FC = () => {
             ))}
           </div>
 
-          {federation.topStates.length === 0 && (
+          {admin.topStates.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               <p>Not enough data to show states</p>
             </div>
@@ -243,7 +243,7 @@ export const FederationAnalytics: React.FC = () => {
             <div className="flex justify-between items-center">
               <span className="text-gray-600">New registered courts</span>
               <div className="flex items-center gap-2">
-                <Badge variant="success">+{federation.newCourts}</Badge>
+                <Badge variant="success">+{admin.newCourts}</Badge>
                 <span className="text-sm text-gray-500">{getPeriodLabel()}</span>
               </div>
             </div>
@@ -251,7 +251,7 @@ export const FederationAnalytics: React.FC = () => {
             <div className="flex justify-between items-center">
               <span className="text-gray-600">New users</span>
               <div className="flex items-center gap-2">
-                <Badge variant="success">+{formatNumber(federation.newUsers)}</Badge>
+                <Badge variant="success">+{formatNumber(admin.newUsers)}</Badge>
                 <span className="text-sm text-gray-500">{getPeriodLabel()}</span>
               </div>
             </div>
@@ -259,10 +259,10 @@ export const FederationAnalytics: React.FC = () => {
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Average occupancy rate</span>
               <Badge variant={
-                federation.averageOccupancy >= 0.8 ? 'success' :
-                federation.averageOccupancy >= 0.6 ? 'warning' : 'error'
+                admin.averageOccupancy >= 0.8 ? 'success' :
+                admin.averageOccupancy >= 0.6 ? 'warning' : 'error'
               }>
-                {(federation.averageOccupancy * 100).toFixed(1)}%
+                {(admin.averageOccupancy * 100).toFixed(1)}%
               </Badge>
             </div>
 
@@ -270,7 +270,7 @@ export const FederationAnalytics: React.FC = () => {
               <span className="text-gray-600">Average rating</span>
               <div className="flex items-center gap-1">
                 <span className="font-semibold text-gray-900">
-                  {federation.averageRating.toFixed(1)}
+                  {admin.averageRating.toFixed(1)}
                 </span>
                 <span className="text-yellow-500">⭐</span>
               </div>
@@ -280,8 +280,8 @@ export const FederationAnalytics: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Average revenue per court</span>
                 <span className="font-semibold text-green-600">
-                  {federation.totalCourts > 0 
-                    ? formatPrice(federation.totalRevenue / federation.totalCourts)
+                  {admin.totalCourts > 0 
+                    ? formatPrice(admin.totalRevenue / admin.totalCourts)
                     : formatPrice(0)
                   }
                 </span>
@@ -298,7 +298,7 @@ export const FederationAnalytics: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">
-              {federation.totalCourts}
+              {admin.totalCourts}
             </div>
             <p className="text-gray-600">Total Courts</p>
             <p className="text-xs text-gray-500 mt-1">Across the network</p>
@@ -306,7 +306,7 @@ export const FederationAnalytics: React.FC = () => {
 
           <div className="text-center">
             <div className="text-3xl font-bold text-purple-600 mb-2">
-              {formatNumber(federation.activeUsers)}
+              {formatNumber(admin.activeUsers)}
             </div>
             <p className="text-gray-600">Active Users</p>
             <p className="text-xs text-gray-500 mt-1">Player base</p>
@@ -314,7 +314,7 @@ export const FederationAnalytics: React.FC = () => {
 
           <div className="text-center">
             <div className="text-3xl font-bold text-green-600 mb-2">
-              {formatPrice(federation.totalRevenue / (federation.totalReservations || 1))}
+              {formatPrice(admin.totalRevenue / (admin.totalReservations || 1))}
             </div>
             <p className="text-gray-600">Average Ticket</p>
             <p className="text-xs text-gray-500 mt-1">Per reservation</p>

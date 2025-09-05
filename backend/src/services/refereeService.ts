@@ -118,32 +118,35 @@ class RefereeService {
     await this.updateRefereeHistory(refereeId, matchId);
 
     // Notify referee
-    await notificationService.createNotification(
-      refereeId,
-      'Referee Assignment',
-      `You have been assigned as referee for ${(match as any).tournament.name} on ${match.scheduledDate} at ${match.scheduledTime}`,
-      { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-    );
+    await new notificationService().sendNotification({
+      userId: refereeId.toString(),
+      type: 'tournament',
+      category: 'info',
+      title: 'Referee Assignment',
+      message: `You have been assigned as referee for ${(match as any).tournament.name} on ${match.scheduledDate} at ${match.scheduledTime}`
+    });
 
     // Notify players
     if (match.player1Id) {
       const referee = await User.findByPk(refereeId);
-      await notificationService.createNotification(
-        match.player1Id,
-        'Referee Assigned',
-        `${referee?.username} has been assigned as referee for your match`,
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new notificationService().sendNotification({
+        userId: match.player1Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Referee Assigned',
+        message: `${referee?.username} has been assigned as referee for your match`
+      });
     }
 
     if (match.player2Id) {
       const referee = await User.findByPk(refereeId);
-      await notificationService.createNotification(
-        match.player2Id,
-        'Referee Assigned',
-        `${referee?.username} has been assigned as referee for your match`,
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new notificationService().sendNotification({
+        userId: match.player2Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Referee Assigned',
+        message: `${referee?.username} has been assigned as referee for your match`
+      });
     }
 
     return match;
@@ -244,12 +247,13 @@ class RefereeService {
     await match.update({ refereeId: null });
 
     // Notify referee
-    await notificationService.createNotification(
-      refereeId,
-      'Referee Assignment Removed',
-      `You have been removed as referee from a match`,
-      { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-    );
+    await new notificationService().sendNotification({
+      userId: refereeId.toString(),
+      type: 'tournament',
+      category: 'info',
+      title: 'Referee Assignment Removed',
+      message: `You have been removed as referee from a match`
+    });
 
     return match;
   }
@@ -344,15 +348,13 @@ class RefereeService {
 
     // Send notifications to available referees
     for (const referee of targetReferees) {
-      await notificationService.createNotification(
-        referee.userId,
-        'Referee Request',
-        `You are requested to referee a match in ${(match as any).tournament.name} on ${match.scheduledDate}`,
-        { 
-          type: 'info', 
-          actionUrl: `/referee/requests/${matchId}`
-        }
-      );
+      await new notificationService().sendNotification({
+        userId: referee.userId.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Referee Request',
+        message: `You are requested to referee a match in ${(match as any).tournament.name} on ${match.scheduledDate}`
+      });
     }
 
     return {

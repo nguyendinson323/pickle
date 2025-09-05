@@ -1,6 +1,13 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { debounce } from 'lodash';
-import styles from './MessageInput.module.css';
+
+// Simple debounce implementation
+function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+}
 
 interface MessageInputProps {
   onSendMessage: (
@@ -185,23 +192,23 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className={styles.messageInputContainer}>
+    <div className="border-t border-gray-200 bg-white p-4">
       {uploadingFiles.length > 0 && (
-        <div className={styles.uploadingFiles}>
+        <div className="mb-2 p-2 bg-gray-50 rounded">
           {uploadingFiles.map((file, index) => (
-            <div key={index} className={styles.uploadingFile}>
-              <span>{file.name}</span>
-              <div className={styles.uploadProgress}>Uploading...</div>
+            <div key={index} className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">{file.name}</span>
+              <div className="text-blue-500">Uploading...</div>
             </div>
           ))}
         </div>
       )}
 
-      <div className={styles.inputWrapper}>
-        <div className={styles.attachContainer}>
+      <div className="flex items-end space-x-2">
+        <div className="relative">
           <button
             type="button"
-            className={styles.attachButton}
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
             onClick={() => setShowAttachMenu(!showAttachMenu)}
             disabled={disabled}
             title="Attach files"
@@ -210,33 +217,37 @@ const MessageInput: React.FC<MessageInputProps> = ({
           </button>
 
           {showAttachMenu && (
-            <div className={styles.attachMenu}>
+            <div className="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-40">
               <button
-                className={styles.attachOption}
+                className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2"
                 onClick={() => fileInputRef.current?.click()}
               >
-                📄 File
+                <span>📄</span>
+                <span>File</span>
               </button>
               <button
-                className={styles.attachOption}
+                className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2"
                 onClick={() => {
                   fileInputRef.current?.click();
                   fileInputRef.current?.setAttribute('accept', 'image/*');
                 }}
               >
-                🖼️ Image
+                <span>🖼️</span>
+                <span>Image</span>
               </button>
               <button
-                className={styles.attachOption}
+                className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2"
                 onClick={handleLocationShare}
               >
-                📍 Location
+                <span>📍</span>
+                <span>Location</span>
               </button>
               <button
-                className={styles.attachOption}
+                className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2"
                 onClick={handleMatchInvite}
               >
-                🎾 Match Invite
+                <span>🎾</span>
+                <span>Match Invite</span>
               </button>
             </div>
           )}
@@ -249,19 +260,23 @@ const MessageInput: React.FC<MessageInputProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={disabled ? "Connecting..." : placeholder}
           disabled={disabled}
-          className={styles.messageInput}
+          className="flex-1 resize-none border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-400"
           rows={1}
         />
 
         <button
           type="button"
-          className={`${styles.sendButton} ${message.trim() ? styles.active : ''}`}
+          className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
+            message.trim() && !disabled && !sending
+              ? 'bg-blue-500 text-white hover:bg-blue-600'
+              : 'bg-gray-200 text-gray-400'
+          }`}
           onClick={handleSendMessage}
           disabled={!message.trim() || disabled || sending}
           title="Send message"
         >
           {sending ? (
-            <div className={styles.sendingSpinner}>⏳</div>
+            <div className="animate-spin">⏳</div>
           ) : (
             '➤'
           )}
@@ -272,7 +287,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         ref={fileInputRef}
         type="file"
         multiple
-        className={styles.hiddenFileInput}
+        className="hidden"
         onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
         accept="*/*"
       />

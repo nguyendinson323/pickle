@@ -59,6 +59,7 @@ class Microsite extends Model<MicrositeAttributes, MicrositeCreationAttributes> 
   public analytics?: any;
   public settings!: any;
   public publishedAt?: Date;
+  public slug: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }

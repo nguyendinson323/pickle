@@ -1,7 +1,7 @@
 # Step 8: Ranking System and Digital Credentials
 
 ## Overview
-This step implements a comprehensive ranking system for players and coaches, automatic digital credential generation with QR codes, ranking history tracking, and point-based tournament ranking calculations. The system generates official federation ID cards that can be scanned for verification during tournaments and events.
+This step implements a comprehensive ranking system for players and coaches, automatic digital credential generation with QR codes, ranking history tracking, and point-based tournament ranking calculations. The system generates official admin ID cards that can be scanned for verification during tournaments and events.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
 Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
@@ -402,12 +402,12 @@ const generateCredentialPDF = async (credential: Credential): Promise<Buffer> =>
   const buffers: Buffer[] = [];
   doc.on('data', buffers.push.bind(buffers));
   
-  // Header with federation name and logo
+  // Header with admin name and logo
   doc.fontSize(12)
      .font('Helvetica-Bold')
      .text('FEDERACIÓN MEXICANA DE PICKLEBALL', 15, 15);
   
-  // Add federation logo
+  // Add admin logo
   if (credential.federationLogo) {
     doc.image(credential.federationLogo, 15, 35, { width: 40 });
   }

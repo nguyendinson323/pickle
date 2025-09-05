@@ -301,7 +301,7 @@ cd frontend && npm run dev &
 - Public credential shows only appropriate information
 - No sensitive data (contact info, documents) exposed
 - QR code links work correctly
-- **UI Elements Present**: Public credential view with federation branding
+- **UI Elements Present**: Public credential view with admin branding
 
 ---
 

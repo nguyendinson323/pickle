@@ -102,7 +102,7 @@ const TournamentDetailsPage: React.FC = () => {
   const canEditTournament = () => {
     if (!user || !selectedTournament) return false;
     
-    return user.role === 'federation' || 
+    return user.role === 'admin' || 
            (selectedTournament.organizerType === user.role && selectedTournament.organizerId === user.id);
   };
 

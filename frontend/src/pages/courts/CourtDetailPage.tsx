@@ -42,7 +42,7 @@ export const CourtDetailPage: React.FC = () => {
     if (!user || !currentCourt) return false;
     
     // Federation can view all analytics
-    if (user.role === 'federation') return true;
+    if (user.role === 'admin') return true;
     
     // Court owners can view their own analytics
     if (currentCourt.ownerId === user.id) return true;
@@ -54,7 +54,7 @@ export const CourtDetailPage: React.FC = () => {
     if (!user || !currentCourt) return false;
     
     // Federation can edit all courts
-    if (user.role === 'federation') return true;
+    if (user.role === 'admin') return true;
     
     // Court owners can edit their own courts
     if (currentCourt.ownerId === user.id) return true;

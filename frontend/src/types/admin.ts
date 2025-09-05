@@ -9,7 +9,7 @@ export interface AdminDashboardOverview {
       club: number;
       partner: number;
       state_committee: number;
-      federation: number;
+      admin: number;
     };
   };
   tournaments: {
@@ -232,7 +232,7 @@ export interface PlatformStatistic {
     club: number;
     partner: number;
     state_committee: number;
-    federation: number;
+    admin: number;
   };
   totalTournaments: number;
   newTournaments: number;

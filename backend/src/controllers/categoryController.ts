@@ -11,7 +11,7 @@ const createCategory = async (req: Request, res: Response) => {
     const tournament = await Tournament.findByPk(tournamentId);
     if (!tournament) return res.status(404).json({ error: 'Tournament not found' });
 
-    if (tournament.organizerId !== userId && req.user?.role !== 'federation') {
+    if (tournament.organizerId !== userId && req.user?.role !== 'admin') {
       return res.status(403).json({ error: 'Not authorized to add categories to this tournament' });
     }
 
@@ -44,7 +44,7 @@ const updateCategory = async (req: Request, res: Response) => {
     if (!category) return res.status(404).json({ error: 'Category not found' });
 
     const tournament = category.get('Tournament') as any;
-    if (tournament?.organizerId !== userId && req.user?.role !== 'federation') {
+    if (tournament?.organizerId !== userId && req.user?.role !== 'admin') {
       return res.status(403).json({ error: 'Not authorized to update this category' });
     }
 
@@ -78,7 +78,7 @@ const deleteCategory = async (req: Request, res: Response) => {
     const tournament = category.get('Tournament') as any;
     const registrations = category.get('registrations') as any[];
     
-    if (tournament?.organizerId !== userId && req.user?.role !== 'federation') {
+    if (tournament?.organizerId !== userId && req.user?.role !== 'admin') {
       return res.status(403).json({ error: 'Not authorized to delete this category' });
     }
 
@@ -169,7 +169,7 @@ const toggleCategoryStatus = async (req: Request, res: Response) => {
     if (!category) return res.status(404).json({ error: 'Category not found' });
     
     const tournament = category.get('Tournament') as any;
-    if (tournament?.organizerId !== userId && req.user?.role !== 'federation') {
+    if (tournament?.organizerId !== userId && req.user?.role !== 'admin') {
       return res.status(403).json({ error: 'Not authorized to modify this category' });
     }
 

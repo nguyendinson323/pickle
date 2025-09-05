@@ -64,7 +64,7 @@ User.init({
     field: 'password_hash'
   },
   role: {
-    type: DataTypes.ENUM('player', 'coach', 'club', 'partner', 'state', 'federation'),
+    type: DataTypes.ENUM('player', 'coach', 'club', 'partner', 'state', 'admin'),
     allowNull: false
   },
   isActive: {

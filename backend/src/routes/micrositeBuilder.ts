@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
-import { authenticateToken } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import * as micrositeBuilderController from '../controllers/micrositeBuilderController';
 
 const router = Router();
@@ -41,7 +41,7 @@ router.get('/public/:subdomain', micrositeBuilderController.getPublicMicrosite);
 router.get('/public/:subdomain/sitemap.xml', micrositeBuilderController.generateSitemap);
 
 // Protected routes (authentication required)
-router.use(authenticateToken);
+router.use(authenticate);
 
 // Microsite CRUD
 router.get('/', micrositeBuilderController.getMicrosites);

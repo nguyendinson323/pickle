@@ -9,7 +9,7 @@ const createCredential = async (req: AuthRequest, res: Response): Promise<void> 
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation' && user.role !== 'state') {
+    if (user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions to create credentials' 
@@ -64,7 +64,7 @@ const getUserCredentials = async (req: AuthRequest, res: Response): Promise<void
     const { userId } = req.params;
 
     // Check if user can access these credentials
-    if (user.userId !== parseInt(userId) && user.role !== 'federation' && user.role !== 'state') {
+    if (user.userId !== parseInt(userId) && user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -95,7 +95,7 @@ const getCredentialsByState = async (req: AuthRequest, res: Response): Promise<v
     const { userType, status, limit = 50, offset = 0 } = req.query;
 
     // Check if user can access state credentials
-    if (user.role !== 'federation' && (user.role !== 'state' || (user as any).stateId !== parseInt(stateId))) {
+    if (user.role !== 'admin' && (user.role !== 'state' || (user as any).stateId !== parseInt(stateId))) {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -136,7 +136,7 @@ const updateCredentialStatus = async (req: AuthRequest, res: Response): Promise<
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation' && user.role !== 'state') {
+    if (user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -173,7 +173,7 @@ const renewCredential = async (req: AuthRequest, res: Response): Promise<void> =
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation' && user.role !== 'state') {
+    if (user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -251,7 +251,7 @@ const getExpiringCredentials = async (req: AuthRequest, res: Response): Promise<
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation' && user.role !== 'state') {
+    if (user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -282,7 +282,7 @@ const getCredentialStatistics = async (req: AuthRequest, res: Response): Promise
     const { stateId } = req.query;
 
     // Check permissions for state-specific stats
-    if (stateId && user.role !== 'federation' && (user.role !== 'state' || (user as any).stateId !== parseInt(stateId as string))) {
+    if (stateId && user.role !== 'admin' && (user.role !== 'state' || (user as any).stateId !== parseInt(stateId as string))) {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 

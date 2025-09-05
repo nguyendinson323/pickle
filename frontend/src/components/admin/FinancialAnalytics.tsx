@@ -11,10 +11,10 @@ import {
   FiFilter,
   FiCreditCard,
   FiUsers,
-  FiBuilding,
+  FiHome,
   FiArrowUp,
   FiArrowDown,
-  FiBarChart3,
+  FiBarChart2,
   FiPieChart
 } from 'react-icons/fi';
 
@@ -296,7 +296,7 @@ const FinancialAnalytics: React.FC = () => {
             <MetricCard
               title="Transacciones"
               value={data.summary.transactionCount.toLocaleString()}
-              icon={FiBarChart3}
+              icon={FiBarChart2}
               color="orange"
             />
           </div>
@@ -323,7 +323,7 @@ const FinancialAnalytics: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Tendencia Mensual</h3>
-                <FiBarChart3 className="h-5 w-5 text-gray-400" />
+                <FiBarChart2 className="h-5 w-5 text-gray-400" />
               </div>
               <MonthlyTrendChart data={data.monthlyTrends} />
             </motion.div>
@@ -339,7 +339,7 @@ const FinancialAnalytics: React.FC = () => {
             <div className="px-6 py-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">Top Clubes por Ingresos</h3>
-                <FiBuilding className="h-5 w-5 text-gray-400" />
+                <FiHome className="h-5 w-5 text-gray-400" />
               </div>
             </div>
             <div className="overflow-x-auto">

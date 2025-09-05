@@ -87,7 +87,7 @@ export const CourtDetail: React.FC = () => {
   const canManageCourt = user && currentCourt && (
     (user.role === 'club' && currentCourt.ownerType === 'club' && user.id === currentCourt.ownerId) ||
     (user.role === 'partner' && currentCourt.ownerType === 'partner' && user.id === currentCourt.ownerId) ||
-    user.role === 'federation'
+    user.role === 'admin'
   );
 
   if (loading) {

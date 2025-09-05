@@ -1,7 +1,7 @@
 # 02. User Profile Management System - Complete Implementation Guide
 
 ## Overview
-The current project lacks comprehensive user profile management workflows. Users need complete profile creation, editing, credential generation, and role-specific profile features based on the federation requirements.
+The current project lacks comprehensive user profile management workflows. Users need complete profile creation, editing, credential generation, and role-specific profile features based on the admin requirements.
 
 ## Missing Components Analysis
 
@@ -410,7 +410,7 @@ const DigitalCredential: React.FC<{ data: CredentialData }> = ({ data }) => {
         {/* Header with Federation Logo */}
         <div className="flex items-center justify-between mb-4">
           <img 
-            src="/federation-logo.png" 
+            src="/admin-logo.png" 
             alt="Mexican Pickleball Federation"
             className="h-12 w-auto"
           />
@@ -882,7 +882,7 @@ const calculateProfileCompletion = (user: any): number => {
 3. **Basic Profile Completion Workflow**: Essential for onboarding
 
 ### Phase 2 (High Priority - Week 2)
-1. **Digital Credential Generation**: Core federation requirement
+1. **Digital Credential Generation**: Core admin requirement
 2. **Privacy Settings for Players**: Required for player search feature
 3. **Role-specific Profile Views**: Different dashboards per role
 
@@ -919,4 +919,4 @@ After implementation:
 - `src/routes/upload.ts` (new)
 - Database migrations for new columns
 
-This comprehensive profile management system will provide users with all the required functionality for profile creation, editing, and management according to the federation's specifications.
+This comprehensive profile management system will provide users with all the required functionality for profile creation, editing, and management according to the admin's specifications.

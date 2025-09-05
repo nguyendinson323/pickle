@@ -117,7 +117,7 @@ cd backend && npm run seed:notifications  # If separate seeder exists
 - **Email Service**: NotificationService processes email through SendGrid
 - **Template Selection**: Appropriate email template selected based on notification type
 - **API Request**: Email sent via SendGrid API with personalized content
-- **Email Template**: Professional template with federation branding and user data
+- **Email Template**: Professional template with admin branding and user data
 - **Delivery Tracking**: Email delivery status tracked and recorded
 - **Database Logging**: Email sent status and delivery confirmation logged
 - **Response Handling**: Email service response processed and stored
@@ -125,7 +125,7 @@ cd backend && npm run seed:notifications  # If separate seeder exists
 **Success Criteria**:
 - Emails deliver successfully to correct recipients
 - Email content includes accurate, personalized information from seeded data
-- Professional formatting with federation branding
+- Professional formatting with admin branding
 - **Email Quality**: Mobile-friendly, professional email templates
 - **Personalization**: Emails include relevant user and event information
 - **Delivery Tracking**: Email delivery status properly tracked

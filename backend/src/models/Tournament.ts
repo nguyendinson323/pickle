@@ -9,7 +9,7 @@ interface TournamentAttributes {
   id: number;
   name: string;
   description: string;
-  organizerType: 'federation' | 'state' | 'club' | 'partner';
+  organizerType: 'admin' | 'state' | 'club' | 'partner';
   organizerId: number;
   tournamentType: TournamentType;
   level: TournamentLevel;
@@ -52,7 +52,7 @@ class Tournament extends Model<TournamentAttributes, TournamentCreationAttribute
   public id!: number;
   public name!: string;
   public description!: string;
-  public organizerType!: 'federation' | 'state' | 'club' | 'partner';
+  public organizerType!: 'admin' | 'state' | 'club' | 'partner';
   public organizerId!: number;
   public tournamentType!: TournamentType;
   public level!: TournamentLevel;
@@ -106,7 +106,7 @@ Tournament.init({
     allowNull: false
   },
   organizerType: {
-    type: DataTypes.ENUM('federation', 'state', 'club', 'partner'),
+    type: DataTypes.ENUM('admin', 'state', 'club', 'partner'),
     allowNull: false
   },
   organizerId: {

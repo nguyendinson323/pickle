@@ -124,7 +124,7 @@ const confirmPayment = async (req: AuthRequest, res: Response): Promise<void> =>
     }
 
     await payment.update({
-      status: 'completed',
+      status: 'succeeded',
       stripeChargeId: paymentIntent.latest_charge as string
     });
 
@@ -249,8 +249,8 @@ const refundPayment = async (req: AuthRequest, res: Response): Promise<void> => 
       return;
     }
 
-    if (payment.status !== 'completed') {
-      res.status(400).json({ error: 'Can only refund completed payments' });
+    if (payment.status !== 'succeeded') {
+      res.status(400).json({ error: 'Can only refund succeeded payments' });
       return;
     }
 

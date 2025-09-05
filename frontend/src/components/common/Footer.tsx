@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
       { name: 'Privacy Notice', href: '/privacy-notice' },
       { name: 'Contact', href: '/contact' },
     ],
-    federation: [
+    admin: [
       { name: 'About the Federation', href: '/about' },
       { name: 'Official Rules', href: '/rules' },
       { name: 'Certifications', href: '/certifications' },
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-white font-semibold mb-4">Federation</h3>
             <ul className="space-y-3">
-              {footerLinks.federation.map((link) => (
+              {footerLinks.admin.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}

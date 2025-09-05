@@ -60,7 +60,7 @@ class CloudinaryService {
 
     return new Promise((resolve, reject) => {
       const uploadOptions = {
-        folder: `${process.env.CLOUDINARY_FOLDER || 'pickleball-federation'}/${folder}`,
+        folder: `${process.env.CLOUDINARY_FOLDER || 'pickleball-admin'}/${folder}`,
         public_id: `${Date.now()}_${originalName.split('.')[0]}`,
         resource_type: 'auto' as const,
         ...options,

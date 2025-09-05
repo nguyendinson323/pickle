@@ -4,7 +4,7 @@ import Court from '../models/Court';
 import User from '../models/User';
 import CourtSchedule from '../models/CourtSchedule';
 import Payment from '../models/Payment';
-import { createNotification } from './notificationService';
+import NotificationService from './notificationService';
 
 interface ReservationData {
   courtId: number;
@@ -75,17 +75,12 @@ export class ReservationService {
       });
 
       // Send notification
-      await createNotification({
-        userId: reservationData.userId,
-        type: 'success',
+      await new NotificationService().sendNotification({
+        userId: reservationData.userId.toString(),
+        type: 'booking',
+        category: 'success',
         title: 'Reserva Creada',
-        message: `Tu reserva para ${court.name} ha sido creada exitosamente.`,
-        metadata: {
-          reservationId: reservation.id,
-          courtName: court.name,
-          date: reservationData.reservationDate,
-          startTime: reservationData.startTime
-        }
+        message: `Tu reserva para ${court.name} ha sido creada exitosamente.`
       });
 
       return reservation;
@@ -145,10 +140,10 @@ export class ReservationService {
       const today = new Date();
       const daysDifference = Math.ceil((bookingDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
       
-      if (daysDifference > court.maxAdvanceBookingDays) {
+      if (daysDifference > court.advanceBookingDays) {
         conflicts.push({
           type: 'advance_booking',
-          message: `Cannot book more than ${court.maxAdvanceBookingDays} days in advance`
+          message: `Cannot book more than ${court.advanceBookingDays} days in advance`
         });
       }
 
@@ -157,17 +152,17 @@ export class ReservationService {
       const endMinutes = this.timeToMinutes(endTime);
       const duration = endMinutes - startMinutes;
 
-      if (duration < court.minBookingDuration) {
+      if (duration < court.minimumBookingDuration) {
         conflicts.push({
           type: 'duration',
-          message: `Minimum booking duration is ${court.minBookingDuration} minutes`
+          message: `Minimum booking duration is ${court.minimumBookingDuration} minutes`
         });
       }
 
-      if (duration > court.maxBookingDuration) {
+      if (duration > court.maximumBookingDuration) {
         conflicts.push({
           type: 'duration',
-          message: `Maximum booking duration is ${court.maxBookingDuration} minutes`
+          message: `Maximum booking duration is ${court.maximumBookingDuration} minutes`
         });
       }
 
@@ -255,16 +250,12 @@ export class ReservationService {
       }
 
       // Send notification
-      await createNotification({
-        userId: reservation.userId,
-        type: 'info',
+      await new NotificationService().sendNotification({
+        userId: reservation.userId.toString(),
+        type: 'booking',
+        category: 'info',
         title: 'Reserva Cancelada',
-        message: `Tu reserva para ${(reservation as any).court.name} ha sido cancelada.`,
-        metadata: {
-          reservationId: reservation.id,
-          refundAmount,
-          reason
-        }
+        message: `Tu reserva para ${(reservation as any).court.name} ha sido cancelada.`
       });
     } catch (error: any) {
       throw new Error(`Error cancelling reservation: ${error.message}`);
@@ -284,15 +275,12 @@ export class ReservationService {
       });
 
       // Send confirmation notification
-      await createNotification({
-        userId: reservation.userId,
-        type: 'success',
+      await new NotificationService().sendNotification({
+        userId: reservation.userId.toString(),
+        type: 'payment',
+        category: 'success',
         title: 'Reserva Confirmada',
-        message: 'Tu pago ha sido procesado y tu reserva está confirmada.',
-        metadata: {
-          reservationId: reservation.id,
-          paymentId
-        }
+        message: 'Tu pago ha sido procesado y tu reserva está confirmada.'
       });
 
       return reservation;
@@ -385,7 +373,7 @@ export class ReservationService {
     // Check for weekend rates
     const dayOfWeek = new Date(date).getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const weekendRateMultiplier = isWeekend && court.weekendRate ? (court.weekendRate / court.hourlyRate) : 1;
+    const weekendRateMultiplier = isWeekend ? (court.peakHourRate / court.hourlyRate) : 1;
     
     const subtotal = durationHours * baseRate * peakRateMultiplier * weekendRateMultiplier;
     const taxAmount = subtotal * 0.16; // 16% IVA in Mexico

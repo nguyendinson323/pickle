@@ -11,7 +11,7 @@ cd backend && npm run dev
 cd frontend && npm run dev
 
 # Verify PostgreSQL database is running and properly seeded
-PGPASSWORD=a psql -h localhost -U postgres -d pickleball_federation -c "SELECT COUNT(*) FROM users WHERE role = 'federation';"
+PGPASSWORD=a psql -h localhost -U postgres -d pickleball_federation -c "SELECT COUNT(*) FROM users WHERE role = 'admin';"
 ```
 
 ### Test Credentials
@@ -33,11 +33,11 @@ All testing must use only seeded database data from the existing user, tournamen
 
 #### T10.1.1: Federation Admin Dashboard Access
 **Test Flow:**
-1. **Frontend Action**: Navigate to `/admin/dashboard` as federation admin
+1. **Frontend Action**: Navigate to `/admin/dashboard` as admin admin
 2. **API Request**: `GET /api/admin/dashboard/overview`
    - **Headers**: `Authorization: Bearer <federation_token>`
    - **Expected Request**: `{ }`
-3. **Backend Route**: `adminRoutes.get('/dashboard/overview', authenticateToken, requireRole('federation'), adminDashboardController.getDashboardOverview)`
+3. **Backend Route**: `adminRoutes.get('/dashboard/overview', authenticateToken, requireRole('admin'), adminDashboardController.getDashboardOverview)`
 4. **Controller**: `adminDashboardController.getDashboardOverview()` 
 5. **Service**: `adminDashboardService.getDashboardOverview(adminId)`
 6. **Database Query**: Aggregate statistics from users, tournaments, payments tables
@@ -98,7 +98,7 @@ All testing must use only seeded database data from the existing user, tournamen
 1. **Frontend Action**: Navigate to `/admin/users` and apply role filter "player"
 2. **API Request**: `GET /api/admin/users?role=player&page=1&limit=50`
    - **Headers**: `Authorization: Bearer <federation_token>`
-3. **Backend Route**: `adminRoutes.get('/users', authenticateToken, requireRole('federation'), adminDashboardController.getUserManagement)`
+3. **Backend Route**: `adminRoutes.get('/users', authenticateToken, requireRole('admin'), adminDashboardController.getUserManagement)`
 4. **Controller**: `adminDashboardController.getUserManagement(req, res)`
 5. **Service**: `adminDashboardService.getUserManagement(filters)`
 6. **Database Query**: 
@@ -133,7 +133,7 @@ All testing must use only seeded database data from the existing user, tournamen
 2. **API Request**: `PUT /api/admin/users/:userId/status`
    - **Headers**: `Authorization: Bearer <federation_token>`
    - **Body**: `{ isActive: false, reason: "Policy violation" }`
-3. **Backend Route**: `adminRoutes.put('/users/:userId/status', authenticateToken, requireRole('federation'), adminDashboardController.updateUserStatus)`
+3. **Backend Route**: `adminRoutes.put('/users/:userId/status', authenticateToken, requireRole('admin'), adminDashboardController.updateUserStatus)`
 4. **Controller**: `adminDashboardController.updateUserStatus(req, res)`
 5. **Service**: Update user record and create admin log entry
 6. **Database Updates**:
@@ -295,7 +295,7 @@ All testing must use only seeded database data from the existing user, tournamen
 ## Error Handling Tests
 
 ### E10.1: Permission Validation
-- Non-federation users cannot access admin endpoints
+- Non-admin users cannot access admin endpoints
 - Invalid tokens rejected with 401 status
 - Missing required parameters return 400 errors
 

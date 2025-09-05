@@ -123,7 +123,7 @@ export class DashboardService {
   async getAdminDashboard(userId: number): Promise<any> {
     const user = await User.findByPk(userId);
 
-    if (!user || user.role !== 'federation') {
+    if (!user || user.role !== 'admin') {
       throw new Error('Unauthorized access');
     }
 

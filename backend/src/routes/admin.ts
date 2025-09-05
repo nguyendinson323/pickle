@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { auth, requireRole } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import {
   getDashboardOverview,
   getUserManagement,
@@ -18,7 +18,7 @@ import {
 const router = Router();
 
 // Middleware para requerir autenticación y rol de federación
-const requireFederationRole = [auth, requireRole('federation')];
+const requireFederationRole = [authenticate, authorize('admin')];
 
 // Dashboard Overview
 router.get('/dashboard/overview', requireFederationRole, getDashboardOverview);

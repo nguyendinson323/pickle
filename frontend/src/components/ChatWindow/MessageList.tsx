@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import MessageItem from './MessageItem';
 import { Message } from '../../types/messaging';
-import styles from './MessageList.module.css';
 
 interface MessageListProps {
   messages: Message[];
@@ -93,10 +92,10 @@ const MessageList: React.FC<MessageListProps> = ({
 
   if (messages.length === 0) {
     return (
-      <div className={styles.emptyState}>
-        <div className={styles.emptyIcon}>💬</div>
-        <h3>No messages yet</h3>
-        <p>Start the conversation by sending a message!</p>
+      <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+        <div className="text-4xl mb-4">💬</div>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
+        <p className="text-sm text-gray-500">Start the conversation by sending a message!</p>
       </div>
     );
   }
@@ -104,29 +103,33 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageGroups = groupMessagesByDate(messages);
 
   return (
-    <div className={styles.messageList}>
+    <div className="flex flex-col space-y-4 p-4">
       {Object.entries(messageGroups).map(([date, dateMessages]) => (
-        <div key={date} className={styles.dateGroup}>
-          <div className={styles.dateDivider}>
-            <span className={styles.dateLabel}>{formatDate(date)}</span>
+        <div key={date} className="space-y-2">
+          <div className="flex justify-center">
+            <span className="px-3 py-1 bg-gray-100 text-xs font-medium text-gray-600 rounded-full">
+              {formatDate(date)}
+            </span>
           </div>
           
-          {dateMessages.map((message, index) => (
-            <MessageItem
-              key={message.id}
-              message={message}
-              currentUserId={currentUserId}
-              isEditing={editingMessageId === message.id}
-              showAvatar={shouldShowAvatar(message, dateMessages[index - 1])}
-              showTimestamp={shouldShowTimestamp(message, dateMessages[index + 1])}
-              onStartEdit={handleStartEdit}
-              onCancelEdit={handleCancelEdit}
-              onSaveEdit={handleSaveEdit}
-              onDelete={onDeleteMessage}
-              onAddReaction={onAddReaction}
-              onRemoveReaction={onRemoveReaction}
-            />
-          ))}
+          <div className="space-y-1">
+            {dateMessages.map((message, index) => (
+              <MessageItem
+                key={message.id}
+                message={message}
+                currentUserId={currentUserId}
+                isEditing={editingMessageId === message.id}
+                showAvatar={shouldShowAvatar(message, dateMessages[index - 1])}
+                showTimestamp={shouldShowTimestamp(message, dateMessages[index + 1])}
+                onStartEdit={handleStartEdit}
+                onCancelEdit={handleCancelEdit}
+                onSaveEdit={handleSaveEdit}
+                onDelete={onDeleteMessage}
+                onAddReaction={onAddReaction}
+                onRemoveReaction={onRemoveReaction}
+              />
+            ))}
+          </div>
         </div>
       ))}
     </div>

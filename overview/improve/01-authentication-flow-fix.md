@@ -88,7 +88,7 @@ const ProtectedRoute: React.FC<Props> = ({ children, roles }) => {
   
   {/* Role-specific routes */}
   <Route path="/admin/*" element={
-    <ProtectedRoute roles={['federation']}>
+    <ProtectedRoute roles={['admin']}>
       <AdminRoutes />
     </ProtectedRoute>
   } />
@@ -243,7 +243,7 @@ const DashboardPage: React.FC = () => {
         return <PartnerDashboard />;
       case 'state_committee':
         return <StateDashboard />;
-      case 'federation':
+      case 'admin':
         return <AdminDashboard />;
       default:
         return <div>Invalid user role</div>;
@@ -284,7 +284,7 @@ const users = [
   {
     email: 'admin@federacionpickleball.mx',
     password_hash: await bcrypt.hash('a', 10),
-    role: 'federation',
+    role: 'admin',
     // ... other fields
   },
   {

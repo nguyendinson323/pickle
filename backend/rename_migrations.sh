@@ -26,7 +26,7 @@ mv 20240301000006-create-coaches.ts 20241201000008-create-coaches.ts 2>/dev/null
 mv 20240301000008-create-partners.ts 20241201000009-create-partners.ts 2>/dev/null
 mv 20240301000007-create-clubs.ts 20241201000010-create-clubs.ts 2>/dev/null
 mv 20240301000009-create-state-committees.ts 20241201000011-create-state-committees.ts 2>/dev/null
-mv 20240301000016-create-federation-credentials.ts 20241201000012-create-credentials.ts 2>/dev/null
+mv 20240301000016-create-admin-credentials.ts 20241201000012-create-credentials.ts 2>/dev/null
 mv 20240901000028-create-admin-logs.ts 20241201000013-create-admin-logs.ts 2>/dev/null
 mv 20240901000007-create-payment-methods.ts 20241201000014-create-payment-methods.ts 2>/dev/null
 mv 20240901000005-create-notification-preferences.ts 20241201000015-create-notification-preferences.ts 2>/dev/null

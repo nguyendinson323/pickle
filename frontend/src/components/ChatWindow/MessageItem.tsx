@@ -1,8 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Message } from '../../types/messaging';
-import MessageReactions from './MessageReactions';
-import MessageAttachments from './MessageAttachments';
-import styles from './MessageItem.module.css';
 
 interface MessageItemProps {
   message: Message;
@@ -48,8 +45,8 @@ const MessageItem: React.FC<MessageItemProps> = ({
     }
   }, [isEditing, editContent]);
 
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-US', {
+  const formatTime = (date: string | Date) => {
+    return new Date(date).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
@@ -111,25 +108,25 @@ const MessageItem: React.FC<MessageItemProps> = ({
 
   const renderMessageContent = () => {
     if (message.isDeleted) {
-      return <span className={styles.deletedMessage}>{message.content}</span>;
+      return <span className="text-gray-400 italic">{message.content}</span>;
     }
 
     if (isEditing) {
       return (
-        <form onSubmit={handleEditSubmit} className={styles.editForm}>
+        <form onSubmit={handleEditSubmit} className="space-y-2">
           <textarea
             ref={editInputRef}
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             onKeyDown={handleEditKeyDown}
-            className={styles.editInput}
+            className="w-full p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={Math.min(editContent.split('\n').length + 1, 6)}
           />
-          <div className={styles.editActions}>
-            <button type="button" onClick={onCancelEdit} className={styles.cancelButton}>
+          <div className="flex justify-end space-x-2">
+            <button type="button" onClick={onCancelEdit} className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800">
               Cancel
             </button>
-            <button type="submit" className={styles.saveButton}>
+            <button type="submit" className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
               Save
             </button>
           </div>
@@ -138,10 +135,10 @@ const MessageItem: React.FC<MessageItemProps> = ({
     }
 
     return (
-      <div className={styles.messageContent}>
+      <div className="break-words">
         {message.content}
         {message.isEdited && (
-          <span className={styles.editedIndicator} title={`Edited ${formatTime(message.editedAt!)}`}>
+          <span className="text-xs text-gray-400 ml-2" title={`Edited ${message.editedAt ? formatTime(message.editedAt) : ''}`}>
             (edited)
           </span>
         )}
@@ -153,11 +150,11 @@ const MessageItem: React.FC<MessageItemProps> = ({
     switch (message.messageType) {
       case 'location':
         return (
-          <div className={styles.locationMessage}>
-            <div className={styles.locationIcon}>📍</div>
+          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg mt-2">
+            <div className="text-2xl">📍</div>
             <div>
-              <div className={styles.locationLabel}>Location shared</div>
-              <div className={styles.locationAddress}>
+              <div className="font-medium text-gray-900">Location shared</div>
+              <div className="text-sm text-gray-600">
                 {message.location?.address || 'Location coordinates'}
               </div>
             </div>
@@ -166,16 +163,18 @@ const MessageItem: React.FC<MessageItemProps> = ({
 
       case 'match_invite':
         return (
-          <div className={styles.matchInviteMessage}>
-            <div className={styles.matchInviteIcon}>🎾</div>
-            <div>
-              <div className={styles.matchInviteLabel}>Match Invitation</div>
-              <div className={styles.matchInviteDetails}>
-                Court booking for {new Date(message.matchInvite?.proposedTime).toLocaleString()}
-              </div>
-              <div className={styles.matchInviteActions}>
-                <button className={styles.acceptButton}>Accept</button>
-                <button className={styles.declineButton}>Decline</button>
+          <div className="p-3 bg-green-50 rounded-lg mt-2 border border-green-200">
+            <div className="flex items-center space-x-3">
+              <div className="text-2xl">🎾</div>
+              <div className="flex-1">
+                <div className="font-medium text-green-900">Match Invitation</div>
+                <div className="text-sm text-gray-600">
+                  Court booking for {message.matchInvite?.proposedTime ? new Date(message.matchInvite.proposedTime).toLocaleString() : 'TBD'}
+                </div>
+                <div className="flex space-x-2 mt-2">
+                  <button className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600">Accept</button>
+                  <button className="px-3 py-1 text-sm bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Decline</button>
+                </div>
               </div>
             </div>
           </div>
@@ -188,19 +187,57 @@ const MessageItem: React.FC<MessageItemProps> = ({
 
   if (isSystemMessage) {
     return (
-      <div className={styles.systemMessage}>
-        <span className={styles.systemMessageText}>{message.content}</span>
-        <span className={styles.systemMessageTime}>
-          {formatTime(message.createdAt)}
-        </span>
+      <div className="flex justify-center py-2">
+        <div className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600 space-x-2">
+          <span>{message.content}</span>
+          <span className="text-xs text-gray-400">
+            {formatTime(message.createdAt)}
+          </span>
+        </div>
       </div>
     );
-  }
+  };
+
+  // Simple MessageAttachments component
+  const MessageAttachments = ({ attachments }: { attachments: any[] }) => (
+    <div className="mt-2 space-y-2">
+      {attachments.map((attachment, index) => (
+        <div key={index} className="p-2 bg-gray-100 rounded border">
+          <div className="text-sm text-gray-600">{attachment.filename || 'Attachment'}</div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // Simple MessageReactions component
+  const MessageReactions = ({ reactions, onReaction, currentUserId }: { 
+    reactions: any[], 
+    onReaction: (emoji: string) => void, 
+    currentUserId: string 
+  }) => (
+    <div className="flex flex-wrap gap-1 mt-2">
+      {reactions.map((reaction, index) => (
+        <button
+          key={index}
+          onClick={() => onReaction(reaction.emoji)}
+          className={`px-2 py-1 rounded-full text-xs flex items-center space-x-1 ${
+            reaction.userId === currentUserId 
+              ? 'bg-blue-100 text-blue-800' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          <span>{reaction.emoji}</span>
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div 
       ref={messageRef}
-      className={`${styles.messageItem} ${isOwnMessage ? styles.ownMessage : styles.otherMessage}`}
+      className={`flex space-x-2 py-2 group hover:bg-gray-50 ${
+        isOwnMessage ? 'flex-row-reverse space-x-reverse' : 'flex-row'
+      }`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => {
         setShowActions(false);
@@ -208,16 +245,16 @@ const MessageItem: React.FC<MessageItemProps> = ({
       }}
     >
       {showAvatar && (
-        <div className={styles.avatar}>
-          <div className={styles.avatarCircle}>
+        <div className={`flex-shrink-0 ${isOwnMessage ? 'order-2' : 'order-1'}`}>
+          <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-medium text-gray-600">
             {message.sender?.firstName?.[0] || message.sender?.username?.[0] || 'U'}
           </div>
         </div>
       )}
 
-      <div className={styles.messageBody}>
+      <div className={`flex-1 max-w-xs ${isOwnMessage ? 'order-1' : 'order-2'}`}>
         {showAvatar && !isOwnMessage && (
-          <div className={styles.senderName}>
+          <div className="text-sm font-medium text-gray-900 mb-1">
             {message.sender?.firstName && message.sender?.lastName 
               ? `${message.sender.firstName} ${message.sender.lastName}`
               : message.sender?.username || 'Unknown User'
@@ -225,7 +262,11 @@ const MessageItem: React.FC<MessageItemProps> = ({
           </div>
         )}
 
-        <div className={styles.messageBubble}>
+        <div className={`relative p-3 rounded-lg ${
+          isOwnMessage 
+            ? 'bg-blue-500 text-white ml-auto' 
+            : 'bg-gray-200 text-gray-900'
+        }`}>
           {renderMessageContent()}
           {renderSpecialContent()}
           
@@ -240,63 +281,65 @@ const MessageItem: React.FC<MessageItemProps> = ({
               currentUserId={currentUserId}
             />
           )}
+
+          {(showActions || showEmojiPicker) && !message.isDeleted && (
+            <div className={`absolute top-0 -mt-8 flex space-x-1 ${
+              isOwnMessage ? 'right-0' : 'left-0'
+            }`}>
+              <button
+                className="p-1 bg-white border border-gray-200 rounded-full shadow hover:bg-gray-50"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                title="Add reaction"
+              >
+                😊
+              </button>
+
+              {isOwnMessage && message.messageType === 'text' && (
+                <button
+                  className="p-1 bg-white border border-gray-200 rounded-full shadow hover:bg-gray-50"
+                  onClick={() => onStartEdit(message.id)}
+                  title="Edit message"
+                >
+                  ✏️
+                </button>
+              )}
+
+              {isOwnMessage && (
+                <button
+                  className={`p-1 bg-white border border-gray-200 rounded-full shadow hover:bg-gray-50 ${
+                    deleteConfirm ? 'bg-red-100 border-red-300' : ''
+                  }`}
+                  onClick={handleDelete}
+                  title={deleteConfirm ? "Click again to confirm" : "Delete message"}
+                >
+                  🗑️
+                </button>
+              )}
+
+              {showEmojiPicker && (
+                <div className="absolute top-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex space-x-1 z-10">
+                  {['👍', '👎', '❤️', '😂', '😮', '😢', '😡', '🎉'].map(emoji => (
+                    <button
+                      key={emoji}
+                      className="p-1 hover:bg-gray-100 rounded text-lg"
+                      onClick={() => handleReaction(emoji)}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {showTimestamp && (
-          <div className={styles.messageFooter}>
-            <span className={styles.timestamp}>
-              {formatTime(message.createdAt)}
-            </span>
+          <div className={`flex items-center space-x-2 mt-1 text-xs text-gray-400 ${
+            isOwnMessage ? 'justify-end' : 'justify-start'
+          }`}>
+            <span>{formatTime(message.createdAt)}</span>
             {isOwnMessage && getReadReceiptsText() && (
-              <span className={styles.readReceipts}>
-                • {getReadReceiptsText()}
-              </span>
-            )}
-          </div>
-        )}
-
-        {(showActions || showEmojiPicker) && !message.isDeleted && (
-          <div className={`${styles.messageActions} ${isOwnMessage ? styles.ownActions : styles.otherActions}`}>
-            <button
-              className={styles.actionButton}
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              title="Add reaction"
-            >
-              😊
-            </button>
-
-            {isOwnMessage && message.messageType === 'text' && (
-              <button
-                className={styles.actionButton}
-                onClick={() => onStartEdit(message.id)}
-                title="Edit message"
-              >
-                ✏️
-              </button>
-            )}
-
-            {isOwnMessage && (
-              <button
-                className={`${styles.actionButton} ${deleteConfirm ? styles.confirmDelete : ''}`}
-                onClick={handleDelete}
-                title={deleteConfirm ? "Click again to confirm" : "Delete message"}
-              >
-                🗑️
-              </button>
-            )}
-
-            {showEmojiPicker && (
-              <div className={styles.emojiPicker}>
-                {['👍', '👎', '❤️', '😂', '😮', '😢', '😡', '🎉'].map(emoji => (
-                  <button
-                    key={emoji}
-                    className={styles.emojiButton}
-                    onClick={() => handleReaction(emoji)}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
+              <span>• {getReadReceiptsText()}</span>
             )}
           </div>
         )}

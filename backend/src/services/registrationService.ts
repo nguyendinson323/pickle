@@ -133,7 +133,7 @@ class RegistrationService {
         idDocumentUrl = docResult.secureUrl;
       }
 
-      // Generate federation ID
+      // Generate admin ID
       const federationIdNumber = await this.generateFederationId('PLY');
 
       // Create player profile
@@ -244,7 +244,7 @@ class RegistrationService {
         idDocumentUrl = docResult.secureUrl;
       }
 
-      // Generate federation ID
+      // Generate admin ID
       const federationIdNumber = await this.generateFederationId('COA');
 
       // Create coach profile

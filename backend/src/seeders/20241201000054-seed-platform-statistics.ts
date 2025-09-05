@@ -23,7 +23,7 @@ module.exports = {
           club: Math.floor(baseUsers * 0.08),
           partner: Math.floor(baseUsers * 0.05),
           state_committee: Math.floor(baseUsers * 0.03),
-          federation: Math.floor(baseUsers * 0.01)
+          admin: Math.floor(baseUsers * 0.01)
         }),
         total_sessions: Math.floor(Math.random() * 800) + 400,
         avg_session_duration: parseFloat(((Math.random() * 1800) + 900).toFixed(2)), // 15-45 minutes

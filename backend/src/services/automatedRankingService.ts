@@ -7,7 +7,9 @@ import {
   Player
 } from '../models';
 import rankingService from './rankingService';
-import notificationService from './notificationService';
+import NotificationService from './notificationService';
+
+const notificationService = new NotificationService();
 import sequelize from '../config/database';
 import { Op } from 'sequelize';
 
@@ -366,12 +368,13 @@ class AutomatedRankingService {
 
       for (const ranking of inactivePlayers) {
         try {
-          await notificationService.createNotification(
-            (ranking as any).player.userId,
-            'Ranking Activity Reminder',
-            `Your ranking position may decline due to inactivity. Participate in tournaments to maintain your ranking!`,
-            { type: 'warning' }
-          );
+          await notificationService.sendNotification({
+            userId: (ranking as any).player.userId.toString(),
+            type: 'system',
+            category: 'warning',
+            title: 'Ranking Activity Reminder',
+            message: `Your ranking position may decline due to inactivity. Participate in tournaments to maintain your ranking!`
+          });
         } catch (error) {
           console.error(`Error sending reminder to player ${ranking.playerId}:`, error);
           // Continue with other players
@@ -394,12 +397,13 @@ class AutomatedRankingService {
         try {
           const message = `Your rankings have been updated after ${tournament.name}. Check your new position!`;
           
-          await notificationService.createNotification(
-            result.playerId,
-            'Rankings Updated',
-            message,
-            { type: 'success' }
-          );
+          await notificationService.sendNotification({
+            userId: result.playerId.toString(),
+            type: 'system',
+            category: 'info',
+            title: 'Rankings Updated',
+            message: message
+          });
         } catch (error) {
           console.error(`Error sending notification to player ${result.playerId}:`, error);
           // Continue with other players

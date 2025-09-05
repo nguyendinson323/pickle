@@ -15,7 +15,7 @@ export interface RoleConfig {
 }
 
 export type UserRole = 
-  | 'federation'
+  | 'admin'
   | 'state_committee' 
   | 'club'
   | 'partner'

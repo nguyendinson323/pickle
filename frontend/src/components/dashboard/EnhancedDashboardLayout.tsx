@@ -40,7 +40,7 @@ const EnhancedDashboardLayout: React.FC<EnhancedDashboardLayoutProps> = ({
 
   const getRoleConfig = (role: UserRole): RoleConfig => {
     const configs: Record<UserRole, RoleConfig> = {
-      federation: {
+      admin: {
         title: 'Federation Administration',
         color: 'red',
         navigation: [

@@ -62,16 +62,13 @@ export const getUserManagement = async (req: Request, res: Response): Promise<vo
     }
 
     const { page = 1, limit = 20, role, status, search } = req.query;
-    const userManagement = await adminDashboardService.getUserManagement(
-      adminId,
-      {
-        page: Number(page),
-        limit: Number(limit),
-        role: role as string,
-        status: status as string,
-        search: search as string
-      }
-    );
+    const userManagement = await adminDashboardService.getUserManagement({
+      page: Number(page),
+      limit: Number(limit),
+      role: role as string,
+      status: status as string,
+      searchTerm: search as string
+    });
 
     res.json(userManagement);
   } catch (error: any) {
@@ -196,16 +193,13 @@ export const getSystemAlerts = async (req: Request, res: Response): Promise<void
     }
 
     const { page = 1, limit = 20, severity, status, type } = req.query;
-    const alerts = await adminDashboardService.getSystemAlerts(
-      adminId,
-      {
-        page: Number(page),
-        limit: Number(limit),
-        severity: severity as string,
-        status: status as string,
-        type: type as string
-      }
-    );
+    const alerts = await adminDashboardService.getSystemAlerts({
+      page: Number(page),
+      limit: Number(limit),
+      severity: severity as string,
+      status: status as string,
+      type: type as string
+    });
 
     res.json(alerts);
   } catch (error: any) {
@@ -265,11 +259,10 @@ export const getFinancialOverview = async (req: Request, res: Response): Promise
     }
 
     const { startDate, endDate } = req.query;
-    const financial = await adminDashboardService.getFinancialOverview(
-      adminId,
-      startDate as string,
-      endDate as string
-    );
+    const financial = await adminDashboardService.getFinancialOverview({
+      startDate: startDate ? new Date(startDate as string) : new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+      endDate: endDate ? new Date(endDate as string) : new Date()
+    });
 
     res.json(financial);
   } catch (error: any) {
@@ -290,7 +283,7 @@ export const broadcastAnnouncement = async (req: Request, res: Response): Promis
 
     const { title, message, targetAudience, priority, scheduledFor } = req.body;
 
-    await adminDashboardService.broadcastAnnouncement(
+    const result = await adminDashboardService.broadcastAnnouncement(
       {
         title,
         message,
@@ -341,18 +334,15 @@ export const getAdminLogs = async (req: Request, res: Response): Promise<void> =
       adminUserId 
     } = req.query;
 
-    const logs = await adminDashboardService.getAdminLogs(
-      adminId,
-      {
-        page: Number(page),
-        limit: Number(limit),
-        category: category as string,
-        severity: severity as string,
-        startDate: startDate as string,
-        endDate: endDate as string,
-        adminUserId: adminUserId ? Number(adminUserId) : undefined
-      }
-    );
+    const logs = await adminDashboardService.getAdminLogs({
+      page: Number(page),
+      limit: Number(limit),
+      category: category as string,
+      severity: severity as string,
+      startDate: startDate as string,
+      endDate: endDate as string,
+      adminUserId: adminUserId ? Number(adminUserId) : undefined
+    });
 
     res.json(logs);
   } catch (error: any) {
@@ -374,9 +364,8 @@ export const generateReport = async (req: Request, res: Response): Promise<void>
     const { reportType, startDate, endDate, format = 'json', filters } = req.body;
 
     const report = await adminDashboardService.generateReport(
-      adminId,
+      reportType,
       {
-        reportType,
         startDate,
         endDate,
         format,
@@ -423,14 +412,11 @@ export const getPlatformStatistics = async (req: Request, res: Response): Promis
 
     const { startDate, endDate, granularity = 'daily' } = req.query;
 
-    const stats = await adminDashboardService.getPlatformStatistics(
-      adminId,
-      {
-        startDate: startDate as string,
-        endDate: endDate as string,
-        granularity: granularity as 'daily' | 'weekly' | 'monthly'
-      }
-    );
+    const stats = await adminDashboardService.getPlatformStatistics({
+      startDate: startDate as string,
+      endDate: endDate as string,
+      granularity: granularity as 'daily' | 'weekly' | 'monthly'
+    });
 
     res.json(stats);
   } catch (error: any) {

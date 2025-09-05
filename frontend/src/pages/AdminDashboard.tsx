@@ -14,7 +14,7 @@ import {
   FiDollarSign, 
   FiMessageSquare,
   FiFileText,
-  FiBarChart3,
+  FiBarChart,
   FiSettings,
   FiArrowUp,
   FiArrowDown,
@@ -36,7 +36,7 @@ interface AdminDashboardOverview {
       club: number;
       partner: number;
       state_committee: number;
-      federation: number;
+      admin: number;
     };
   };
   tournaments: {
@@ -81,7 +81,7 @@ const AdminDashboard: React.FC = () => {
   const fetchOverview = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/admin/dashboard/overview');
+      const response = await api.get<{ success: boolean; data: AdminDashboardOverview }>('/admin/dashboard/overview');
       setOverview(response.data);
       setError(null);
     } catch (err: any) {
@@ -92,12 +92,12 @@ const AdminDashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    if (user?.role === 'federation') {
+    if (user?.role === 'admin') {
       fetchOverview();
     }
   }, [user]);
 
-  if (!user || user.role !== 'federation') {
+  if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
@@ -136,7 +136,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   const navigation = [
-    { name: 'Panel General', href: '/admin', icon: FiBarChart3, current: location.pathname === '/admin' },
+    { name: 'Panel General', href: '/admin', icon: FiBarChart, current: location.pathname === '/admin' },
     { name: 'Usuarios', href: '/admin/users', icon: FiUsers, current: location.pathname.startsWith('/admin/users') },
     { name: 'Moderación', href: '/admin/moderation', icon: FiShield, current: location.pathname.startsWith('/admin/moderation') },
     { name: 'Alertas', href: '/admin/alerts', icon: FiAlertTriangle, current: location.pathname.startsWith('/admin/alerts') },
@@ -388,7 +388,7 @@ const AdminDashboard: React.FC = () => {
                         <StatCard
                           title="Transacciones"
                           value={overview.financial.transaction_count.toLocaleString()}
-                          icon={FiBarChart3}
+                          icon={FiBarChart}
                           color="yellow"
                         />
                       </div>

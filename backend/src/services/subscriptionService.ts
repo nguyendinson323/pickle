@@ -1,5 +1,7 @@
 import stripeService from './stripeService';
-import notificationService from './notificationService';
+import NotificationService from './notificationService';
+
+const notificationService = new NotificationService();
 import User from '../models/User';
 import Subscription from '../models/Subscription';
 import SubscriptionPlan from '../models/SubscriptionPlan';
@@ -44,21 +46,23 @@ class SubscriptionService {
       );
 
       // Create local subscription record
+      // Cast to proper Stripe subscription type
+      const stripeSub = stripeSubscription as any;
+      
       const subscription = await Subscription.create({
-        id: uuidv4(),
         userId,
-        planId,
-        stripeSubscriptionId: stripeSubscription.id,
+        planId: parseInt(planId),
+        stripeSubscriptionId: stripeSub.id,
         stripeCustomerId,
-        status: stripeSubscription.status as any,
-        currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
-        cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+        status: stripeSub.status,
+        currentPeriodStart: new Date(stripeSub.current_period_start * 1000),
+        currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+        cancelAtPeriodEnd: stripeSub.cancel_at_period_end,
         amount: plan.amount,
         currency: plan.currency,
         interval: plan.interval,
         intervalCount: plan.intervalCount,
-        nextBillingDate: new Date(stripeSubscription.current_period_end * 1000)
+        nextBillingDate: new Date(stripeSub.current_period_end * 1000)
       });
 
       logger.info(`Subscription created: ${subscription.id} for user: ${userId}`);
@@ -66,7 +70,7 @@ class SubscriptionService {
       return {
         subscription,
         stripeSubscription,
-        clientSecret: (stripeSubscription.latest_invoice as Stripe.Invoice)?.payment_intent?.client_secret
+        clientSecret: (stripeSub.latest_invoice as any)?.payment_intent?.client_secret
       };
     } catch (error) {
       logger.error('Error creating subscription:', error);
@@ -96,17 +100,17 @@ class SubscriptionService {
 
       // Update local subscription
       await subscription.update({
-        status: stripeSubscription.status as any,
-        cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-        canceledAt: stripeSubscription.canceled_at ? 
-          new Date(stripeSubscription.canceled_at * 1000) : new Date()
+        status: (stripeSubscription as any).status,
+        cancelAtPeriodEnd: (stripeSubscription as any).cancel_at_period_end,
+        canceledAt: (stripeSubscription as any).canceled_at ? 
+          new Date((stripeSubscription as any).canceled_at * 1000) : new Date()
       });
 
       logger.info(`Subscription cancelled: ${subscription.id} (immediate: ${immediately})`);
 
       // Send cancellation notification
       await notificationService.sendNotification({
-        userId,
+        userId: userId.toString(),
         type: 'system',
         category: 'info',
         title: 'Subscription Cancelled',
@@ -159,20 +163,20 @@ class SubscriptionService {
 
       // Update local subscription
       await subscription.update({
-        planId: newPlanId,
+        planId: parseInt(newPlanId),
         amount: newPlan.amount,
         currency: newPlan.currency,
         interval: newPlan.interval,
         intervalCount: newPlan.intervalCount,
-        currentPeriodEnd: new Date(updatedStripeSubscription.current_period_end * 1000),
-        nextBillingDate: new Date(updatedStripeSubscription.current_period_end * 1000)
+        currentPeriodEnd: new Date((updatedStripeSubscription as any).current_period_end * 1000),
+        nextBillingDate: new Date((updatedStripeSubscription as any).current_period_end * 1000)
       });
 
       logger.info(`Subscription plan changed: ${subscription.id} to plan: ${newPlanId}`);
 
       // Send plan change notification
       await notificationService.sendNotification({
-        userId,
+        userId: userId.toString(),
         type: 'system',
         category: 'success',
         title: 'Subscription Plan Changed',
@@ -287,14 +291,13 @@ class SubscriptionService {
 
       // Create payment record
       const payment = await Payment.create({
-        id: uuidv4(),
         userId,
         stripePaymentIntentId: paymentIntent.id,
         amount: Math.round(amount * 100),
         currency: currency.toUpperCase() as any,
         type: 'tournament_entry',
         relatedEntityType: 'tournament',
-        relatedEntityId: tournamentId,
+        relatedEntityId: parseInt(tournamentId),
         status: 'pending',
         paymentMethod: { type: 'card' }, // Will be updated when payment is confirmed
         webhookProcessed: false
@@ -342,14 +345,13 @@ class SubscriptionService {
 
       // Create payment record
       const payment = await Payment.create({
-        id: uuidv4(),
         userId,
         stripePaymentIntentId: paymentIntent.id,
         amount: Math.round(amount * 100),
         currency: currency.toUpperCase() as any,
         type: 'court_booking',
         relatedEntityType: 'court_booking',
-        relatedEntityId: bookingId,
+        relatedEntityId: parseInt(bookingId),
         status: 'pending',
         paymentMethod: { type: 'card' },
         webhookProcessed: false
@@ -367,19 +369,18 @@ class SubscriptionService {
 
   // Private webhook handlers
   private async handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
-    if (!invoice.subscription) return;
+    if (!(invoice as any).subscription) return;
 
     const subscription = await Subscription.findOne({
-      where: { stripeSubscriptionId: invoice.subscription as string }
+      where: { stripeSubscriptionId: (invoice as any).subscription as string }
     });
 
     if (subscription) {
       // Create payment record
       await Payment.create({
-        id: uuidv4(),
         userId: subscription.userId,
         subscriptionId: subscription.id,
-        stripePaymentIntentId: invoice.payment_intent as string,
+        stripePaymentIntentId: (invoice as any).payment_intent as string,
         amount: invoice.amount_paid,
         currency: invoice.currency.toUpperCase() as any,
         type: 'subscription',
@@ -399,7 +400,7 @@ class SubscriptionService {
 
       // Send confirmation notification
       await notificationService.sendNotification({
-        userId: subscription.userId,
+        userId: subscription.userId.toString(),
         type: 'system',
         category: 'success',
         title: 'Payment Successful',
@@ -410,10 +411,10 @@ class SubscriptionService {
   }
 
   private async handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-    if (!invoice.subscription) return;
+    if (!(invoice as any).subscription) return;
 
     const subscription = await Subscription.findOne({
-      where: { stripeSubscriptionId: invoice.subscription as string }
+      where: { stripeSubscriptionId: (invoice as any).subscription as string }
     });
 
     if (subscription) {
@@ -421,7 +422,7 @@ class SubscriptionService {
 
       // Send payment failed notification
       await notificationService.sendNotification({
-        userId: subscription.userId,
+        userId: subscription.userId.toString(),
         type: 'system',
         category: 'error',
         title: 'Payment Failed',
@@ -439,11 +440,11 @@ class SubscriptionService {
     if (subscription) {
       await subscription.update({
         status: stripeSubscription.status as any,
-        currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
-        cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-        canceledAt: stripeSubscription.canceled_at ? 
-          new Date(stripeSubscription.canceled_at * 1000) : null
+        currentPeriodStart: new Date((stripeSubscription as any).current_period_start * 1000),
+        currentPeriodEnd: new Date((stripeSubscription as any).current_period_end * 1000),
+        cancelAtPeriodEnd: (stripeSubscription as any).cancel_at_period_end,
+        canceledAt: (stripeSubscription as any).canceled_at ? 
+          new Date((stripeSubscription as any).canceled_at * 1000) : null
       });
     }
   }
@@ -461,7 +462,7 @@ class SubscriptionService {
 
       // Send cancellation confirmation
       await notificationService.sendNotification({
-        userId: subscription.userId,
+        userId: subscription.userId.toString(),
         type: 'system',
         category: 'info',
         title: 'Subscription Cancelled',
@@ -479,15 +480,15 @@ class SubscriptionService {
     if (payment && payment.status !== 'succeeded') {
       await payment.update({
         status: 'succeeded',
-        stripeChargeId: paymentIntent.charges?.data[0]?.id,
+        stripeChargeId: (paymentIntent as any).charges?.data[0]?.id,
         webhookProcessed: true,
         paymentMethod: {
           type: 'card',
-          card: paymentIntent.charges?.data[0]?.payment_method_details?.card ? {
-            brand: paymentIntent.charges.data[0].payment_method_details.card.brand,
-            last4: paymentIntent.charges.data[0].payment_method_details.card.last4,
-            expMonth: paymentIntent.charges.data[0].payment_method_details.card.exp_month,
-            expYear: paymentIntent.charges.data[0].payment_method_details.card.exp_year
+          card: (paymentIntent as any).charges?.data[0]?.payment_method_details?.card ? {
+            brand: (paymentIntent as any).charges.data[0].payment_method_details.card.brand,
+            last4: (paymentIntent as any).charges.data[0].payment_method_details.card.last4,
+            expMonth: (paymentIntent as any).charges.data[0].payment_method_details.card.exp_month,
+            expYear: (paymentIntent as any).charges.data[0].payment_method_details.card.exp_year
           } : undefined
         }
       });
@@ -505,7 +506,7 @@ class SubscriptionService {
       }
 
       await notificationService.sendNotification({
-        userId: payment.userId,
+        userId: payment.userId.toString(),
         type: 'system',
         category: 'success',
         title,

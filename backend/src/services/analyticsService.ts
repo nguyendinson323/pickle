@@ -303,7 +303,7 @@ export class AnalyticsService {
           });
 
           const averageRating = reviews.length > 0
-            ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+            ? reviews.reduce((sum, review) => sum + review.ratings.overallExperience, 0) / reviews.length
             : 0;
 
           // Calculate utilization rate
@@ -469,7 +469,7 @@ export class AnalyticsService {
   }> {
     try {
       const courts = await Court.findAll({
-        where: { ownerType, ownerId, isActive: true }
+        where: { ownerType, ownerId, isActive: true } as any
       });
 
       let totalRevenue = 0;
@@ -497,7 +497,7 @@ export class AnalyticsService {
           });
 
           const courtRating = reviews.length > 0
-            ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+            ? reviews.reduce((sum, r) => sum + r.ratings.overallExperience, 0) / reviews.length
             : 0;
 
           totalRevenue += courtRevenue;

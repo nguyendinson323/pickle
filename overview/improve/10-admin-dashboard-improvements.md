@@ -1,7 +1,7 @@
 # 10. Admin Dashboard Improvements - Complete Implementation Guide
 
 ## Problem Analysis
-The current project lacks a comprehensive administrative dashboard system for federation administrators to manage the entire Mexican Pickleball Federation platform effectively. This includes user management, content moderation, analytics, system monitoring, and federation-wide governance tools.
+The current project lacks a comprehensive administrative dashboard system for admin administrators to manage the entire Mexican Pickleball Federation platform effectively. This includes user management, content moderation, analytics, system monitoring, and admin-wide governance tools.
 
 ## Core Requirements
 1. **User Management**: Comprehensive user administration and role management
@@ -71,7 +71,7 @@ interface PlatformStatistics extends Model {
     club: number;
     partner: number;
     state_committee: number;
-    federation: number;
+    admin: number;
   };
   
   // Engagement metrics
@@ -226,7 +226,7 @@ class AdminDashboardService {
   async getDashboardOverview(adminId: string): Promise<AdminDashboardOverview> {
     // Verify admin permissions
     const admin = await User.findByPk(adminId);
-    if (admin.role !== 'federation') {
+    if (admin.role !== 'admin') {
       throw new Error('Insufficient permissions for admin dashboard');
     }
 
@@ -1286,7 +1286,7 @@ const UserManagement: React.FC = () => {
       club: 'bg-purple-100 text-purple-800',
       partner: 'bg-yellow-100 text-yellow-800',
       state_committee: 'bg-indigo-100 text-indigo-800',
-      federation: 'bg-red-100 text-red-800'
+      admin: 'bg-red-100 text-red-800'
     };
     return colors[role] || 'bg-gray-100 text-gray-800';
   };
@@ -1326,7 +1326,7 @@ const UserManagement: React.FC = () => {
               <option value="club">Clubs</option>
               <option value="partner">Partners</option>
               <option value="state_committee">State Committees</option>
-              <option value="federation">Federation</option>
+              <option value="admin">Federation</option>
             </select>
           </div>
 
@@ -1515,7 +1515,7 @@ const UserManagement: React.FC = () => {
 // backend/tests/admin.test.ts
 describe('Admin Dashboard System', () => {
   describe('Dashboard Overview', () => {
-    it('should return dashboard overview for federation admin', async () => {
+    it('should return dashboard overview for admin admin', async () => {
       const response = await request(app)
         .get('/api/admin/dashboard/overview')
         .set('Authorization', `Bearer ${federationToken}`)
@@ -1525,7 +1525,7 @@ describe('Admin Dashboard System', () => {
       expect(response.body.data.growthMetrics).toBeDefined();
     });
 
-    it('should deny access for non-federation users', async () => {
+    it('should deny access for non-admin users', async () => {
       await request(app)
         .get('/api/admin/dashboard/overview')
         .set('Authorization', `Bearer ${playerToken}`)
@@ -1593,7 +1593,7 @@ describe('Admin Dashboard System', () => {
 
 ## Expected Results
 After implementation:
-- Comprehensive administrative dashboard for federation management
+- Comprehensive administrative dashboard for admin management
 - User management with role-based permissions
 - Content moderation workflow with automated flagging
 - System monitoring and alerting capabilities

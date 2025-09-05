@@ -1,5 +1,5 @@
 {
-  "name": "pickleball-federation-backend",
+  "name": "pickleball-admin-backend",
   "version": "1.0.0",
   "description": "Mexican Pickleball Federation Backend API",
   "main": "dist/server.js",

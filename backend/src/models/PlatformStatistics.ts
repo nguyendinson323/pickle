@@ -111,7 +111,7 @@ PlatformStatistics.init({
       club: 0,
       partner: 0,
       state_committee: 0,
-      federation: 0
+      admin: 0
     },
     field: 'users_by_role'
   },

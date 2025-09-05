@@ -23,7 +23,7 @@ export const CredentialsPage: React.FC = () => {
     expiringSoon: 0
   });
 
-  const isAdmin = user?.role === 'federation' || user?.role === 'state';
+  const isAdmin = user?.role === 'admin' || user?.role === 'state';
 
   useEffect(() => {
     fetchCredentialStats();

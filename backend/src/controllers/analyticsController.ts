@@ -294,7 +294,7 @@ const getFederationAnalytics = async (req: Request, res: Response): Promise<void
       }
     });
   } catch (error: any) {
-    console.error('Error fetching federation analytics:', error);
+    console.error('Error fetching admin analytics:', error);
     res.status(500).json({ success: false, message: error.message || 'Error interno del servidor' });
   }
 };

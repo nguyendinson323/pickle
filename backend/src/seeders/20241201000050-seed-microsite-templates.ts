@@ -368,8 +368,8 @@ module.exports = {
           'multilingual_support'
         ]
       }),
-      thumbnail_url: '/templates/federation-thumb.jpg',
-      preview_url: '/templates/federation-preview.jpg',
+      thumbnail_url: '/templates/admin-thumb.jpg',
+      preview_url: '/templates/admin-preview.jpg',
       features: JSON.stringify([
         'official_news',
         'tournament_management',

@@ -125,8 +125,8 @@ module.exports = {
       {
         name: 'Copa Nacional de Pickleball México 2024',
         description: 'Torneo nacional oficial con participación de los mejores jugadores del país. Evento clasificatorio internacional.',
-        organizer_type: 'federation',
-        organizer_id: 1, // admin (federation)
+        organizer_type: 'admin',
+        organizer_id: 1, // admin (admin)
         tournament_type: 'championship',
         level: 'national',
         state_id: 1, // Ciudad de México (sede nacional)

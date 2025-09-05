@@ -93,7 +93,7 @@ const calculateTournamentPoints = async (req: AuthRequest, res: Response): Promi
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation' && user.role !== 'state') {
+    if (user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -140,7 +140,7 @@ const updateTournamentRankings = async (req: AuthRequest, res: Response): Promis
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation' && user.role !== 'state') {
+    if (user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -171,7 +171,7 @@ const recalculatePositions = async (req: AuthRequest, res: Response): Promise<vo
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation' && user.role !== 'state') {
+    if (user.role !== 'admin' && user.role !== 'state') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 
@@ -208,7 +208,7 @@ const applyRankingDecay = async (req: AuthRequest, res: Response): Promise<void>
     const user = req.user;
     
     // Check if user has admin privileges
-    if (user.role !== 'federation') {
+    if (user.role !== 'admin') {
       res.status(403).json({ 
         success: false, 
         error: 'Insufficient permissions' 

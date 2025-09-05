@@ -325,7 +325,7 @@ class MicrositeService {
     
     // Verify owner permissions
     const owner = await User.findByPk(ownerId);
-    if (!['club', 'state_committee', 'federation'].includes(owner.role)) {
+    if (!['club', 'state_committee', 'admin'].includes(owner.role)) {
       throw new Error('Insufficient permissions to create microsite');
     }
 
@@ -1686,7 +1686,7 @@ After implementation:
 - Mobile-responsive design generation
 - SEO optimization and analytics tracking
 - Media library and content management
-- Integration with federation events and tournaments
+- Integration with admin events and tournaments
 - SSL certificates and custom domain support
 
 ## Files to Create/Modify

@@ -1,8 +1,6 @@
 import React from 'react';
 import NotificationItem from './NotificationItem';
-import NotificationFilters from './NotificationFilters';
 import { Notification } from '../../types/notifications';
-import styles from './NotificationList.module.css';
 
 interface NotificationListProps {
   notifications: Notification[];
@@ -67,32 +65,11 @@ const NotificationList: React.FC<NotificationListProps> = ({
     }
   };
 
-  const getNotificationIcon = (type: string, category: string) => {
-    const iconMap: { [key: string]: string } = {
-      'tournament': '🏆',
-      'booking': '📅',
-      'message': '💬',
-      'match': '🎾',
-      'payment': '💳',
-      'maintenance': '🔧',
-      'system': '⚙️'
-    };
-
-    const categoryIconMap: { [key: string]: string } = {
-      'success': '✅',
-      'warning': '⚠️',
-      'error': '❌',
-      'urgent': '🚨',
-      'info': 'ℹ️'
-    };
-
-    return categoryIconMap[category] || iconMap[type] || '📢';
-  };
 
   if (loading && notifications.length === 0) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}>Loading notifications...</div>
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-500">Loading notifications...</div>
       </div>
     );
   }
@@ -100,12 +77,12 @@ const NotificationList: React.FC<NotificationListProps> = ({
   const notificationGroups = groupNotificationsByDate(notifications);
 
   return (
-    <div className={styles.notificationList}>
-      <div className={styles.header}>
-        <div className={styles.headerActions}>
+    <div className="flex flex-col h-full">
+      <div className="flex justify-between items-center p-4 border-b border-gray-200">
+        <div className="flex items-center gap-2">
           {unreadCount > 0 && (
             <button
-              className={styles.markAllReadButton}
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
               onClick={onMarkAllAsRead}
             >
               Mark all as read ({unreadCount})
@@ -113,31 +90,55 @@ const NotificationList: React.FC<NotificationListProps> = ({
           )}
         </div>
         
-        <NotificationFilters
-          filters={filters}
-          onChange={onFilterChange}
-        />
+        <div className="flex gap-2">
+          <select
+            value={filters.type}
+            onChange={(e) => onFilterChange({ ...filters, type: e.target.value })}
+            className="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All Types</option>
+            <option value="tournament">Tournament</option>
+            <option value="message">Message</option>
+            <option value="system">System</option>
+            <option value="payment">Payment</option>
+          </select>
+          <select
+            value={filters.isRead}
+            onChange={(e) => onFilterChange({ ...filters, isRead: e.target.value })}
+            className="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All</option>
+            <option value="false">Unread</option>
+            <option value="true">Read</option>
+          </select>
+        </div>
       </div>
 
       {notifications.length === 0 ? (
-        <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>🔔</div>
-          <h3>No notifications</h3>
-          <p>You're all caught up! New notifications will appear here.</p>
+        <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+          <div className="text-4xl mb-4">🔔</div>
+          <h3 className="text-lg font-medium text-gray-900">No notifications</h3>
+          <p className="text-sm mt-1 text-gray-500">You're all caught up! New notifications will appear here.</p>
         </div>
       ) : (
-        <div className={styles.notificationsContainer}>
+        <div className="flex-1 overflow-y-auto">
           {Object.entries(notificationGroups).map(([date, dateNotifications]) => (
-            <div key={date} className={styles.dateGroup}>
-              <div className={styles.dateDivider}>
-                <span className={styles.dateLabel}>{formatDate(date)}</span>
+            <div key={date} className="mb-4">
+              <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                <span className="text-xs font-medium text-gray-600 uppercase tracking-wider">{formatDate(date)}</span>
               </div>
               
               {dateNotifications.map(notification => (
                 <NotificationItem
                   key={notification.id}
-                  notification={notification}
-                  icon={getNotificationIcon(notification.type, notification.category)}
+                  id={notification.id}
+                  type={notification.type as 'tournament' | 'message' | 'system' | 'payment' | 'general'}
+                  title={notification.title}
+                  message={notification.message}
+                  timestamp={new Date(notification.createdAt)}
+                  read={notification.isRead}
+                  priority={'medium'}
+                  actionUrl={notification.actionUrl}
                   onMarkAsRead={onMarkAsRead}
                   onDelete={onDelete}
                 />
@@ -146,9 +147,9 @@ const NotificationList: React.FC<NotificationListProps> = ({
           ))}
 
           {hasMore && (
-            <div className={styles.loadMoreContainer}>
+            <div className="flex justify-center py-4 border-t border-gray-200">
               <button
-                className={styles.loadMoreButton}
+                className="px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={onLoadMore}
                 disabled={loading}
               >

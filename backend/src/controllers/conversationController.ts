@@ -6,11 +6,14 @@ import enhancedNotificationService from '../services/enhancedNotificationService
 // Create a new conversation
 const createConversation = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const conversation = await conversationService.createConversation(req.user.userId, {
+    const conversation = await conversationService.createConversation({
       type: req.body.type,
-      participantIds: req.body.participantIds,
+      participants: [
+        { userId: req.user.userId, role: 'member' },
+        ...req.body.participantIds.map((id: string) => ({ userId: id, role: 'member' }))
+      ],
       name: req.body.name,
-      metadata: req.body.metadata || {}
+      description: req.body.description
     });
 
     res.status(201).json({
@@ -30,12 +33,13 @@ const createConversation = async (req: AuthRequest, res: Response): Promise<void
 const getConversations = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const filters = {
-      type: req.query.type as string[],
+      type: req.query.type as string,
       isArchived: req.query.isArchived === 'true',
-      search: req.query.search as string,
-      limit: req.query.limit ? parseInt(req.query.limit as string) : 20,
-      offset: req.query.offset ? parseInt(req.query.offset as string) : 0
+      search: req.query.search as string
     };
+    
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
 
     const result = await conversationService.getConversations(req.user.userId, filters);
 
@@ -44,9 +48,9 @@ const getConversations = async (req: AuthRequest, res: Response): Promise<void> 
       data: result.conversations,
       pagination: {
         total: result.total,
-        limit: filters.limit,
-        offset: filters.offset,
-        hasMore: result.total > (filters.offset + filters.limit)
+        limit,
+        offset,
+        hasMore: result.total > (offset + limit)
       }
     });
   } catch (error) {
@@ -108,11 +112,12 @@ const sendMessage = async (req: AuthRequest, res: Response): Promise<void> => {
     );
 
     // Send notifications to other participants (async)
-    conversationService.getConversations(req.user.userId, { limit: 1 })
+    conversationService.getConversations(req.user.userId, {})
       .then(async (result) => {
         const conversation = result.conversations.find(c => c.id === parseInt(req.params.conversationId));
         if (conversation) {
-          for (const participantId of conversation.participantIds) {
+          for (const participant of conversation.participants) {
+            const participantId = parseInt(participant.userId);
             if (participantId !== req.user.userId) {
               await enhancedNotificationService.notifyNewMessage(
                 participantId,

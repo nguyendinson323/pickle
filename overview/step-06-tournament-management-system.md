@@ -1,7 +1,7 @@
 # Step 6: Tournament Management System
 
 ## Overview
-This step implements a comprehensive tournament management system that allows federation admins, state committees, clubs, and partners to create and manage tournaments at various levels (National, State, Municipal, Local). The system handles tournament creation, player registration, bracket generation, match scheduling, score tracking, referee assignments, and result management.
+This step implements a comprehensive tournament management system that allows admin admins, state committees, clubs, and partners to create and manage tournaments at various levels (National, State, Municipal, Local). The system handles tournament creation, player registration, bracket generation, match scheduling, score tracking, referee assignments, and result management.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
 Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
@@ -233,7 +233,7 @@ export interface Tournament {
   id: number;
   name: string;
   description: string;
-  organizerType: 'federation' | 'state' | 'club' | 'partner';
+  organizerType: 'admin' | 'state' | 'club' | 'partner';
   organizerId: number;
   tournamentType: TournamentType;
   level: TournamentLevel;

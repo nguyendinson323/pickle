@@ -22,7 +22,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       allowNull: false
     },
     role: {
-      type: DataTypes.ENUM('player', 'coach', 'club', 'partner', 'state', 'federation'),
+      type: DataTypes.ENUM('player', 'coach', 'club', 'partner', 'state', 'admin'),
       allowNull: false
     },
     is_active: {

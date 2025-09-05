@@ -49,12 +49,12 @@ const createLocation = async (req: AuthRequest, res: Response): Promise<void> =>
     if (req.body.isCurrentLocation) {
       await PlayerLocation.update(
         { isCurrentLocation: false },
-        { where: { userId: req.user.userId } }
+        { where: { playerId: player.id } }
       );
     }
 
     const location = await PlayerLocation.create({
-      userId: req.user.userId,
+      playerId: player.id,
       latitude: req.body.latitude,
       longitude: req.body.longitude,
       address: req.body.address,
@@ -99,7 +99,7 @@ const getLocations = async (req: AuthRequest, res: Response): Promise<void> => {
     }
 
     const locations = await PlayerLocation.findAll({
-      where: { userId: req.user.userId },
+      where: { playerId: player.id },
       order: [['isCurrentLocation', 'DESC'], ['createdAt', 'DESC']]
     });
 
@@ -131,7 +131,7 @@ const updateLocation = async (req: AuthRequest, res: Response): Promise<void> =>
     const location = await PlayerLocation.findOne({
       where: {
         id: parseInt(req.params.locationId),
-        userId: req.user.userId
+        playerId: player.id
       }
     });
 
@@ -155,7 +155,7 @@ const updateLocation = async (req: AuthRequest, res: Response): Promise<void> =>
         { isCurrentLocation: false },
         { 
           where: { 
-            userId: req.user.userId,
+            playerId: player.id,
             id: { [require('sequelize').Op.ne]: location.id }
           } 
         }
@@ -196,7 +196,7 @@ const deleteLocation = async (req: AuthRequest, res: Response): Promise<void> =>
     const deleted = await PlayerLocation.destroy({
       where: {
         id: parseInt(req.params.locationId),
-        userId: req.user.userId
+        playerId: player.id
       }
     });
 

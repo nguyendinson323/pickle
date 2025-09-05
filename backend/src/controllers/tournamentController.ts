@@ -51,7 +51,7 @@ export class TournamentController {
       }
 
       // Check ownership
-      if (tournament.organizerId !== userId && req.user?.role !== 'federation') {
+      if (tournament.organizerId !== userId && req.user?.role !== 'admin') {
         return res.status(403).json({ error: 'Not authorized to update this tournament' });
       }
 
@@ -79,7 +79,7 @@ export class TournamentController {
       }
 
       // Check ownership
-      if (tournament.organizerId !== userId && req.user?.role !== 'federation') {
+      if (tournament.organizerId !== userId && req.user?.role !== 'admin') {
         return res.status(403).json({ error: 'Not authorized to delete this tournament' });
       }
 
@@ -271,7 +271,7 @@ export class TournamentController {
       }
 
       // Check ownership
-      if (tournament.organizerId !== userId && req.user?.role !== 'federation') {
+      if (tournament.organizerId !== userId && req.user?.role !== 'admin') {
         return res.status(403).json({ error: 'Not authorized to update this tournament' });
       }
 

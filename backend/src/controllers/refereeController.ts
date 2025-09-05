@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import refereeService from '../services/refereeService';
 import { TournamentMatch, Tournament, Coach } from '../models';
-import notificationService from '../services/notificationService';
+import NotificationService from '../services/notificationService';
+
+const notificationService = new NotificationService();
 import { UserRole } from '../types/auth';
 
 interface AuthRequest extends Request {
@@ -49,7 +51,7 @@ const assignReferee = async (req: AuthRequest, res: Response): Promise<void> => 
     }
 
     const tournament = (match as any).Tournament;
-    if (tournament?.organizerId !== userId && req.user?.role !== 'federation') {
+    if (tournament?.organizerId !== userId && req.user?.role !== 'admin') {
       res.status(403).json({ error: 'Not authorized to assign referee' });
       return;
     }
@@ -59,11 +61,13 @@ const assignReferee = async (req: AuthRequest, res: Response): Promise<void> => 
     // Notify referee
     const referee = await Coach.findByPk(refereeId);
     if (referee) {
-      await notificationService.createNotification(
-        referee.userId,
-        'referee_assignment',
-        `You have been assigned as referee for a match`
-      );
+      await notificationService.sendNotification({
+        userId: referee.userId.toString(),
+        type: 'system',
+        category: 'info',
+        title: 'Referee Assignment',
+        message: 'You have been assigned as referee for a match'
+      });
     }
 
     res.json({ message: 'Referee assigned successfully', assignment });
@@ -88,7 +92,7 @@ const removeReferee = async (req: AuthRequest, res: Response): Promise<void> => 
     }
 
     const tournament = (match as any).Tournament;
-    if (tournament?.organizerId !== userId && req.user?.role !== 'federation') {
+    if (tournament?.organizerId !== userId && req.user?.role !== 'admin') {
       res.status(403).json({ error: 'Not authorized to remove referee' });
       return;
     }
@@ -117,7 +121,7 @@ const updateRefereeStatus = async (req: AuthRequest, res: Response): Promise<voi
     }
 
     const tournament = (match as any).Tournament;
-    if (tournament?.organizerId !== userId && req.user?.role !== 'federation') {
+    if (tournament?.organizerId !== userId && req.user?.role !== 'admin') {
       res.status(403).json({ error: 'Not authorized to update referee status' });
       return;
     }

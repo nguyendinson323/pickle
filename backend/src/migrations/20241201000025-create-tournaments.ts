@@ -16,7 +16,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       allowNull: false
     },
     organizer_type: {
-      type: DataTypes.ENUM('federation', 'state', 'club', 'partner'),
+      type: DataTypes.ENUM('admin', 'state', 'club', 'partner'),
       allowNull: false
     },
     organizer_id: {

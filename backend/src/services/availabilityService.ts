@@ -55,7 +55,7 @@ export class AvailabilityService {
         };
       }
 
-      await court.update({ operatingHours });
+      await court.update({ operatingHours: operatingHours as any });
     } catch (error: any) {
       throw new Error(`Error setting court schedule: ${error.message}`);
     }
@@ -217,7 +217,7 @@ export class AvailabilityService {
         throw new Error('Court not found');
       }
 
-      await court.update({ operatingHours: hours });
+      await court.update({ operatingHours: hours as any });
     } catch (error: any) {
       throw new Error(`Error updating operating hours: ${error.message}`);
     }
@@ -322,8 +322,8 @@ export class AvailabilityService {
     const dayOfWeek = new Date(date).getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     
-    if (isWeekend && court.weekendRate) {
-      baseRate = court.weekendRate;
+    if (isWeekend && court.peakHourRate) {
+      baseRate = court.peakHourRate;
     }
     
     // Convert to 30-minute slot rate

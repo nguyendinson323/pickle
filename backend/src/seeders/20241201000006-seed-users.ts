@@ -11,7 +11,7 @@ module.exports = {
         username: 'admin',
         email: 'admin@federacionpickleball.mx',
         password_hash: passwordHash,
-        role: 'federation',
+        role: 'admin',
         is_active: true,
         email_verified: true,
         created_at: now,

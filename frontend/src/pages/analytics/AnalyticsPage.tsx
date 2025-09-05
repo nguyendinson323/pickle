@@ -10,7 +10,7 @@ export const AnalyticsPage: React.FC = () => {
   const { user } = useAppSelector(state => state.auth);
   const { courts: myCourts } = useAppSelector(state => state.courts);
 
-  const [selectedView, setSelectedView] = useState<'federation' | 'courts'>('courts');
+  const [selectedView, setSelectedView] = useState<'admin' | 'courts'>('courts');
 
   // Check if user has access to analytics
   React.useEffect(() => {
@@ -19,13 +19,13 @@ export const AnalyticsPage: React.FC = () => {
       return;
     }
 
-    if (!['club', 'partner', 'federation'].includes(user.role)) {
+    if (!['club', 'partner', 'admin'].includes(user.role)) {
       navigate('/courts', { replace: true });
       return;
     }
   }, [user, navigate]);
 
-  if (!user || !['club', 'partner', 'federation'].includes(user.role)) {
+  if (!user || !['club', 'partner', 'admin'].includes(user.role)) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
         <div className="text-center">
@@ -73,11 +73,11 @@ export const AnalyticsPage: React.FC = () => {
                   My Courts
                 </button>
                 
-                {user.role === 'federation' && (
+                {user.role === 'admin' && (
                   <button
-                    onClick={() => setSelectedView('federation')}
+                    onClick={() => setSelectedView('admin')}
                     className={`px-4 py-2 text-sm font-medium transition-colors ${
-                      selectedView === 'federation'
+                      selectedView === 'admin'
                         ? 'bg-blue-500 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
@@ -176,7 +176,7 @@ export const AnalyticsPage: React.FC = () => {
         )}
 
         {/* Federation Analytics View */}
-        {selectedView === 'federation' && user.role === 'federation' && (
+        {selectedView === 'admin' && user.role === 'admin' && (
           <div className="bg-white rounded-lg border p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Federation Analytics</h3>
             <p className="text-gray-600">Federation analytics dashboard implementation pending</p>

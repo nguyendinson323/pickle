@@ -22,7 +22,7 @@ export const USER_ROLES = {
   CLUB: 'club',
   PARTNER: 'partner',
   STATE: 'state',
-  FEDERATION: 'federation',
+  FEDERATION: 'admin',
 } as const;
 
 export const STORAGE_KEYS = {

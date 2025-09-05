@@ -406,7 +406,7 @@ cd backend && npm run seed:tournaments  # If separate seeder exists
 - **Backend Route**: `router.post('/:id/certificates', authenticate, authorizeTournamentManager, tournamentController.generateCertificates)`
 - **Controller**: `tournamentController.generateCertificates` creates PDF certificates
 - **Certificate Service**: PDF generation with tournament and player information
-- **Template System**: Professional certificate templates with federation branding
+- **Template System**: Professional certificate templates with admin branding
 - **Response**: `{ success: true, certificates: CertificateData[], downloadUrls: string[] }`
 - **Frontend Receive**: Certificate generation confirmation
 - **File Generation**: PDF certificates created with proper formatting
@@ -415,7 +415,7 @@ cd backend && npm run seed:tournaments  # If separate seeder exists
 
 **Success Criteria**:
 - Certificates generate correctly for all winners and participants
-- Professional formatting with federation branding
+- Professional formatting with admin branding
 - Certificates include accurate tournament and player information
 - **UI Elements Present**: Certificate preview, download buttons, sharing options
 - **Quality**: High-quality PDF certificates suitable for printing
@@ -493,7 +493,7 @@ cd backend && npm run seed:tournaments  # If separate seeder exists
 **Frontend Page**: Federation tournament management
 
 **Steps**:
-1. Login as federation admin
+1. Login as admin admin
 2. Create national-level tournament
 3. Set nationwide registration and categories
 4. Configure qualification requirements
@@ -514,7 +514,7 @@ cd backend && npm run seed:tournaments  # If separate seeder exists
 - Qualification systems configurable
 - All skill levels and categories available
 - **UI Elements Present**: National tournament form, qualification settings
-- **Permission System**: Only federation can create national tournaments
+- **Permission System**: Only admin can create national tournaments
 - **Feature Access**: Full tournament feature set available
 
 ### Test 8.2: State/Local Tournament Restrictions
@@ -693,7 +693,7 @@ For each tournament management system test:
 - [ ] Correct HTTP status codes returned for all API calls
 - [ ] Response data matches TypeScript interfaces exactly
 - [ ] All data comes from seeded database (verify specific tournaments, registrations, matches)
-- [ ] Role-based authorization works correctly (federation, state, club, player permissions)
+- [ ] Role-based authorization works correctly (admin, state, club, player permissions)
 - [ ] Payment processing integrates correctly with Stripe
 - [ ] Tournament brackets generate and display properly
 - [ ] Match scoring and progression works correctly

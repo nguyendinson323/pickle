@@ -1,7 +1,7 @@
 # 03. Dashboard Functionality Implementation - Role-Based Complete System
 
 ## Overview
-The current project has incomplete dashboard implementations. Each user role requires specific functionality and workflows according to the federation requirements. The dashboards need to be fully functional with proper data integration, navigation, and role-specific features.
+The current project has incomplete dashboard implementations. Each user role requires specific functionality and workflows according to the admin requirements. The dashboards need to be fully functional with proper data integration, navigation, and role-specific features.
 
 ## Current State Analysis
 
@@ -40,7 +40,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       color: string;
       navigation: NavigationItem[];
     }> = {
-      federation: {
+      admin: {
         title: 'Federation Administration',
         color: 'red',
         navigation: [
@@ -236,7 +236,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex items-center flex-shrink-0 px-4">
             <img
               className="h-8 w-auto"
-              src="/federation-logo-white.png"
+              src="/admin-logo-white.png"
               alt="Mexican Pickleball Federation"
             />
             <h1 className="ml-3 text-sm font-semibold">
@@ -444,7 +444,7 @@ const PlayerDashboard: React.FC = () => {
               Official Player Credential
             </h3>
             <p className="text-sm text-gray-600 mb-4">
-              View and download your official federation credential with QR code
+              View and download your official admin credential with QR code
             </p>
             <Link
               to="/credentials"
@@ -986,7 +986,7 @@ export const useDashboardData = (role: UserRole) => {
   const [error, setError] = useState(null);
 
   const endpoints = {
-    federation: '/dashboard/admin',
+    admin: '/dashboard/admin',
     state_committee: '/dashboard/state',
     club: '/dashboard/club',
     partner: '/dashboard/partner',
@@ -1225,4 +1225,4 @@ After full implementation:
 - ✅ Mobile-responsive design
 - ✅ Performance optimized with caching
 
-This dashboard system will provide complete functionality for all user roles according to the federation requirements.
+This dashboard system will provide complete functionality for all user roles according to the admin requirements.

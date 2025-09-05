@@ -267,7 +267,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/create"
           element={
-            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
               <CreateTournamentForm />
             </ProtectedRoute>
           }
@@ -276,7 +276,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/manage"
           element={
-            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
               <TournamentManagePage />
             </ProtectedRoute>
           }
@@ -290,7 +290,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/:id/bracket"
           element={
-            <ProtectedRoute requiredRoles={['player', 'coach', 'federation', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['player', 'coach', 'admin', 'state', 'club', 'partner']}>
               <TournamentBracket />
             </ProtectedRoute>
           }
@@ -299,7 +299,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/:id/scoring"
           element={
-            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
               <LiveScoring />
             </ProtectedRoute>
           }
@@ -308,7 +308,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/tournaments/analytics"
           element={
-            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
               <TournamentAnalyticsPage />
             </ProtectedRoute>
           }
@@ -364,7 +364,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/export"
           element={
-            <ProtectedRoute requiredRoles={['federation', 'state', 'club', 'partner']}>
+            <ProtectedRoute requiredRoles={['admin', 'state', 'club', 'partner']}>
               <ExportPage />
             </ProtectedRoute>
           }
@@ -373,7 +373,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requiredRoles={['federation']}>
+            <ProtectedRoute requiredRoles={['admin']}>
               <AdminPage />
             </ProtectedRoute>
           }
@@ -382,7 +382,7 @@ const AppContent: React.FC = () => {
         <Route
           path="/admin/*"
           element={
-            <ProtectedRoute requiredRoles={['federation']}>
+            <ProtectedRoute requiredRoles={['admin']}>
               <AdminDashboard />
             </ProtectedRoute>
           }

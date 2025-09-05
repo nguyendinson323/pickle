@@ -9,7 +9,7 @@ import tournamentsController from '../controllers/tournamentsController';
 const router = Router();
 
 // Tournament Management Routes
-router.post('/', authenticate, authorize('federation', 'state', 'club', 'partner'), tournamentController.createTournament);
+router.post('/', authenticate, authorize('admin', 'state', 'club', 'partner'), tournamentController.createTournament);
 router.get('/search', tournamentController.searchTournaments);
 router.get('/upcoming', tournamentController.getUpcomingTournaments);
 router.get('/active', tournamentController.getActiveTournaments);

@@ -83,7 +83,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
             id: '4',
             type: 'warning',
             title: 'Membership Renewal Reminder',
-            message: 'Your federation membership expires in 30 days. Renew now to avoid service interruption.',
+            message: 'Your admin membership expires in 30 days. Renew now to avoid service interruption.',
             timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
             read: false,
             actionRequired: true,

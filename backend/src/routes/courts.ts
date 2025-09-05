@@ -31,7 +31,7 @@ router.get('/facilities/search', searchFacilities);
 router.get('/facilities/:id', getFacilityById);
 router.get('/facilities/:facilityId/analytics', 
   authenticate,
-  authorizeRoles(['club', 'partner', 'federation', 'admin']),
+  authorizeRoles(['club', 'partner', 'admin', 'admin']),
   getFacilityAnalytics
 );
 

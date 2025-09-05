@@ -5,7 +5,7 @@ import {
   EyeIcon, 
   PencilIcon, 
   TrashIcon, 
-  GlobeIcon,
+  GlobeAltIcon,
   DocumentDuplicateIcon,
   ChartBarIcon
 } from '@heroicons/react/24/outline';
@@ -190,7 +190,7 @@ const MicrositeBuilderPage: React.FC = () => {
         {/* Microsites Grid */}
         {microsites.length === 0 ? (
           <div className="text-center py-12">
-            <GlobeIcon className="mx-auto h-12 w-12 text-gray-400" />
+            <GlobeAltIcon className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No hay micrositios</h3>
             <p className="mt-1 text-sm text-gray-500">
               Comienza creando tu primer micrositio personalizado.

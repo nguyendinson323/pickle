@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, col } from 'sequelize';
 import User from '../models/User';
 import AdminLog from '../models/AdminLog';
 import PlatformStatistics from '../models/PlatformStatistics';
@@ -11,6 +11,8 @@ import PlayerFinderMatch from '../models/PlayerFinderMatch';
 import PlayerFinderRequest from '../models/PlayerFinderRequest';
 import sequelize from '../config/database';
 import NotificationService from './notificationService';
+
+const notificationService = new NotificationService();
 
 interface AdminDashboardOverview {
   overview: {
@@ -158,7 +160,7 @@ class AdminDashboardService {
   async getDashboardOverview(adminId: number): Promise<AdminDashboardOverview> {
     // Verify admin permissions
     const admin = await User.findByPk(adminId);
-    if (!admin || admin.role !== 'federation') {
+    if (!admin || admin.role !== 'admin') {
       throw new Error('Insufficient permissions for admin dashboard');
     }
 
@@ -176,8 +178,8 @@ class AdminDashboardService {
       ContentModeration.count({ where: { status: 'pending' } }),
       SystemAlert.count({ where: { status: 'open' } }),
       AdminLog.findAll({
-        where: { createdAt: { [Op.gte]: lastWeek } },
-        order: [['createdAt', 'DESC']],
+        where: { created_at: { [Op.gte]: lastWeek } } as any,
+        order: [['created_at', 'DESC']],
         limit: 10,
         include: [{ model: User, as: 'admin', attributes: ['username'] }]
       })
@@ -338,7 +340,8 @@ class AdminDashboardService {
 
     // Send notification to content owner if applicable
     if (action.notifyUser && action.targetUserId) {
-      await NotificationService.createNotification(action.targetUserId, {
+      await notificationService.sendNotification({
+        userId: action.targetUserId.toString(),
         type: 'system',
         category: action.actionTaken === 'warning' ? 'warning' : 'error',
         title: 'Content Moderation Action',
@@ -397,7 +400,8 @@ class AdminDashboardService {
 
     // Create notifications for all target users
     const notificationPromises = targetUsers.map(userId =>
-      NotificationService.createNotification(userId, {
+      notificationService.sendNotification({
+        userId: userId.toString(),
         type: 'system',
         category: 'info',
         title,
@@ -428,8 +432,8 @@ class AdminDashboardService {
       where: {
         type: 'subscription',
         status: 'succeeded',
-        createdAt: { [Op.between]: [startDate, endDate] }
-      },
+        created_at: { [Op.between]: [startDate, endDate] }
+      } as any,
       attributes: [
         [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount'],
         [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
@@ -443,8 +447,8 @@ class AdminDashboardService {
       where: {
         type: 'tournament_entry',
         status: 'succeeded',
-        createdAt: { [Op.between]: [startDate, endDate] }
-      },
+        created_at: { [Op.between]: [startDate, endDate] }
+      } as any,
       attributes: [
         [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount'],
         [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
@@ -458,8 +462,8 @@ class AdminDashboardService {
       where: {
         type: 'court_booking',
         status: 'succeeded',
-        createdAt: { [Op.between]: [startDate, endDate] }
-      },
+        created_at: { [Op.between]: [startDate, endDate] }
+      } as any,
       attributes: [
         [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount'],
         [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
@@ -473,18 +477,18 @@ class AdminDashboardService {
       ...subscriptionPayments,
       ...tournamentPayments,
       ...bookingPayments
-    ].reduce((sum, payment) => sum + (payment.getDataValue('totalAmount') || 0), 0);
+    ].reduce((sum, payment) => sum + ((payment as any).getDataValue('totalAmount') || 0), 0);
 
     return {
       totalRevenue,
-      subscriptionRevenue: subscriptionPayments.reduce((sum, p) => sum + (p.getDataValue('totalAmount') || 0), 0),
-      tournamentRevenue: tournamentPayments.reduce((sum, p) => sum + (p.getDataValue('totalAmount') || 0), 0),
-      courtBookingRevenue: bookingPayments.reduce((sum, p) => sum + (p.getDataValue('totalAmount') || 0), 0),
+      subscriptionRevenue: subscriptionPayments.reduce((sum, p) => sum + ((p as any).getDataValue('totalAmount') || 0), 0),
+      tournamentRevenue: tournamentPayments.reduce((sum, p) => sum + ((p as any).getDataValue('totalAmount') || 0), 0),
+      courtBookingRevenue: bookingPayments.reduce((sum, p) => sum + ((p as any).getDataValue('totalAmount') || 0), 0),
       totalTransactions: [
         ...subscriptionPayments,
         ...tournamentPayments,
         ...bookingPayments
-      ].reduce((sum, payment) => sum + (payment.getDataValue('count') || 0), 0),
+      ].reduce((sum, payment) => sum + ((payment as any).getDataValue('count') || 0), 0),
       revenueByDate: await this.getRevenueByDate(startDate, endDate),
       topPayingUsers: await this.getTopPayingUsers(startDate, endDate),
       subscriptionMetrics: await this.getSubscriptionMetrics(startDate, endDate)
@@ -519,8 +523,8 @@ class AdminDashboardService {
     }
     
     await alert.update({ 
-      status, 
-      notes,
+      status: status as 'open' | 'acknowledged' | 'investigating' | 'resolved' | 'false_positive', 
+      resolutionNotes: notes,
       acknowledgedBy: adminId,
       acknowledgedAt: new Date()
     });
@@ -578,10 +582,10 @@ class AdminDashboardService {
     const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
 
     const [thisWeekUsers, lastWeekUsers, thisWeekTournaments, lastWeekTournaments] = await Promise.all([
-      User.count({ where: { createdAt: { [Op.gte]: lastWeek } } }),
-      User.count({ where: { createdAt: { [Op.between]: [twoWeeksAgo, lastWeek] } } }),
-      Tournament.count({ where: { createdAt: { [Op.gte]: lastWeek } } }),
-      Tournament.count({ where: { createdAt: { [Op.between]: [twoWeeksAgo, lastWeek] } } })
+      User.count({ where: { created_at: { [Op.gte]: lastWeek } } as any }),
+      User.count({ where: { created_at: { [Op.between]: [twoWeeksAgo, lastWeek] } } as any }),
+      Tournament.count({ where: { created_at: { [Op.gte]: lastWeek } } as any }),
+      Tournament.count({ where: { created_at: { [Op.between]: [twoWeeksAgo, lastWeek] } } as any })
     ]);
 
     const userGrowth = lastWeekUsers > 0 ? ((thisWeekUsers - lastWeekUsers) / lastWeekUsers) * 100 : 0;
@@ -591,15 +595,15 @@ class AdminDashboardService {
     const thisWeekRevenue = await Payment.sum('amount', {
       where: {
         status: 'succeeded',
-        createdAt: { [Op.gte]: lastWeek }
-      }
+        created_at: { [Op.gte]: lastWeek }
+      } as any
     }) || 0;
 
     const lastWeekRevenue = await Payment.sum('amount', {
       where: {
         status: 'succeeded',
-        createdAt: { [Op.between]: [twoWeeksAgo, lastWeek] }
-      }
+        created_at: { [Op.between]: [twoWeeksAgo, lastWeek] }
+      } as any
     }) || 0;
 
     const revenueGrowth = lastWeekRevenue > 0 ? ((thisWeekRevenue - lastWeekRevenue) / lastWeekRevenue) * 100 : 0;
@@ -653,7 +657,7 @@ class AdminDashboardService {
       name: tournament.name,
       type: 'Tournament',
       metric: 'Registrations',
-      value: tournament.getDataValue('registrationCount')?.toString() || '0'
+      value: (tournament as any).getDataValue('registrationCount')?.toString() || '0'
     }));
   }
 
@@ -746,19 +750,19 @@ class AdminDashboardService {
     const revenueByDate = await Payment.findAll({
       where: {
         status: 'succeeded',
-        createdAt: { [Op.between]: [startDate, endDate] }
-      },
+        created_at: { [Op.between]: [startDate, endDate] }
+      } as any,
       attributes: [
-        [sequelize.fn('DATE', sequelize.col('createdAt')), 'date'],
+        [sequelize.fn('DATE', sequelize.col('created_at')), 'date'],
         [sequelize.fn('SUM', sequelize.col('amount')), 'revenue']
       ],
-      group: [sequelize.fn('DATE', sequelize.col('createdAt'))],
-      order: [[sequelize.fn('DATE', sequelize.col('createdAt')), 'ASC']]
+      group: [sequelize.fn('DATE', sequelize.col('created_at'))],
+      order: [[sequelize.fn('DATE', sequelize.col('created_at')), 'ASC']]
     });
 
     return revenueByDate.map(item => ({
-      date: item.getDataValue('date'),
-      revenue: item.getDataValue('revenue') || 0
+      date: (item as any).getDataValue('date'),
+      revenue: (item as any).getDataValue('revenue') || 0
     }));
   }
 
@@ -766,8 +770,8 @@ class AdminDashboardService {
     const topUsers = await Payment.findAll({
       where: {
         status: 'succeeded',
-        createdAt: { [Op.between]: [startDate, endDate] }
-      },
+        created_at: { [Op.between]: [startDate, endDate] }
+      } as any,
       attributes: [
         'userId',
         [sequelize.fn('SUM', sequelize.col('amount')), 'totalPaid']
@@ -786,7 +790,7 @@ class AdminDashboardService {
     return topUsers.map(item => ({
       userId: item.userId,
       username: item.user?.username || 'Unknown',
-      totalPaid: item.getDataValue('totalPaid') || 0
+      totalPaid: (item as any).getDataValue('totalPaid') || 0
     }));
   }
 
@@ -796,14 +800,14 @@ class AdminDashboardService {
       Subscription.count({
         where: {
           status: 'active',
-          createdAt: { [Op.between]: [startDate, endDate] }
-        }
+          created_at: { [Op.between]: [startDate, endDate] }
+        } as any
       }),
       Subscription.count({
         where: {
           status: 'cancelled',
-          updatedAt: { [Op.between]: [startDate, endDate] }
-        }
+          updated_at: { [Op.between]: [startDate, endDate] }
+        } as any
       })
     ]);
 

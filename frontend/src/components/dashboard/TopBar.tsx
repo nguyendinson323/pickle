@@ -31,7 +31,7 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
       club: 'Club',
       partner: 'Partner',
       state: 'State Committee',
-      federation: 'Administrator'
+      admin: 'Administrator'
     };
     return roleLabels[role as keyof typeof roleLabels] || role;
   };

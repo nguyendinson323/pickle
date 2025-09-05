@@ -24,7 +24,7 @@ export const MyCourtsPage: React.FC = () => {
       return;
     }
 
-    if (!['club', 'partner', 'federation'].includes(user.role)) {
+    if (!['club', 'partner', 'admin'].includes(user.role)) {
       navigate('/courts', { replace: true });
       return;
     }
@@ -105,7 +105,7 @@ export const MyCourtsPage: React.FC = () => {
     </Card>
   );
 
-  if (!user || !['club', 'partner', 'federation'].includes(user.role)) {
+  if (!user || !['club', 'partner', 'admin'].includes(user.role)) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
         <div className="text-center">

@@ -384,7 +384,7 @@ PUT /api/profile/me
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
-CLOUDINARY_FOLDER=pickleball-federation
+CLOUDINARY_FOLDER=pickleball-admin
 MAX_FILE_SIZE=10485760
 PRIVACY_POLICY_VERSION=1.0
 ```

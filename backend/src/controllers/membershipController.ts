@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { Op, fn, col } from 'sequelize';
 import { Membership, MembershipPlan, User, Payment } from '../models';
-import { createNotification } from '../services/notificationService';
+import NotificationService from '../services/notificationService';
+
+const notificationService = new NotificationService();
 
 const getMembership = async (req: Request, res: Response) => {
   try {
@@ -98,12 +100,12 @@ const cancelMembership = async (req: Request, res: Response) => {
 
     await membership.update({ status: 'cancelled', cancelledAt: new Date(), cancelReason: reason || 'User requested cancellation' });
 
-    await createNotification({
-      userId,
-      type: 'membership_cancelled',
+    await notificationService.sendNotification({
+      userId: userId.toString(),
+      type: 'system',
+      category: 'info', 
       title: 'Membresía Cancelada',
-      message: `Tu membresía ${(membership.get('plan') as any).name} ha sido cancelada.`,
-      metadata: { membershipId: membership.id, planName: (membership.get('plan') as any).name, cancelReason: reason }
+      message: `Tu membresía ${(membership.get('plan') as any).name} ha sido cancelada.`
     });
 
     res.json({ success: true, message: 'Membership cancelled successfully', membership });
@@ -169,7 +171,7 @@ const renewMembership = async (req: Request, res: Response) => {
 const getMembershipStats = async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
-    if (user.role !== 'federation') return res.status(403).json({ error: 'Access denied. Federation admin only.' });
+    if (user.role !== 'admin') return res.status(403).json({ error: 'Access denied. Federation admin only.' });
 
     const totalMemberships = await Membership.count();
     const activeMemberships = await Membership.count({ where: { status: 'active' } });

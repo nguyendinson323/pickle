@@ -39,7 +39,7 @@ class PlayerFinderService {
   async createFinderRequest(requestData: CreateFinderRequestData) {
     const { userId, location, preferences } = requestData;
 
-    // Check if user has premium access or is federation admin
+    // Check if user has premium access or is admin admin
     const user = await User.findByPk(userId, {
       include: [{ model: Player, as: 'playerProfile' }]
     });
@@ -49,7 +49,7 @@ class PlayerFinderService {
     }
 
     // Check player finder access (premium feature)
-    const hasAccess = user.role === 'federation' || 
+    const hasAccess = user.role === 'admin' || 
                      ((user as any).playerProfile?.isPremium) || 
                      false; // Add membership check here
 
@@ -85,7 +85,7 @@ class PlayerFinderService {
 
     // Create or update player location
     const [playerLocation] = await PlayerLocation.upsert({
-      userId,
+      playerId: userId,
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
       city: location.city,
@@ -258,15 +258,13 @@ class PlayerFinderService {
 
     try {
       // Create in-app notification
-      await notificationService.createNotification(
-        matchedPlayer.userId,
-        'New player match found!',
-        `${requesterName} wants to play pickleball in ${locationText} (${match.distance}km away)`,
-        {
-          type: 'info',
-          actionUrl: `/player/matches/${match.id}`
-        }
-      );
+      await new notificationService().sendNotification({
+        userId: matchedPlayer.userId.toString(),
+        type: 'match',
+        category: 'info',
+        title: 'New player match found!',
+        message: `${requesterName} wants to play pickleball in ${locationText} (${match.distance}km away)`
+      });
     } catch (error) {
       console.error('Failed to send match notification:', error);
       // Don't throw - notification failure shouldn't break matching
@@ -327,26 +325,22 @@ class PlayerFinderService {
       await match.update({ contactShared: true });
 
       // Send acceptance notification
-      await notificationService.createNotification(
-        (match as any).request.requesterId,
-        '🎉 Your pickleball match request was accepted!',
-        `${matchedPlayerName} accepted your request to play in ${locationText}${message ? ': ' + message : ''}`,
-        {
-          type: 'success',
-          actionUrl: `/player/matches/${match.id}`
-        }
-      );
+      await new notificationService().sendNotification({
+        userId: (match as any).request.requesterId.toString(),
+        type: 'match',
+        category: 'success',
+        title: '🎉 Your pickleball match request was accepted!',
+        message: `${matchedPlayerName} accepted your request to play in ${locationText}${message ? ': ' + message : ''}`
+      });
     } else {
       // Send decline notification (in-app only to avoid spam)
-      await notificationService.createNotification(
-        (match as any).request.requesterId,
-        'Match request declined',
-        `${matchedPlayerName} declined your request${message ? ': ' + message : ''}`,
-        {
-          type: 'info',
-          actionUrl: `/player/finder`
-        }
-      );
+      await new notificationService().sendNotification({
+        userId: (match as any).request.requesterId.toString(),
+        type: 'match',
+        category: 'info',
+        title: 'Match request declined',
+        message: `${matchedPlayerName} declined your request${message ? ': ' + message : ''}`
+      });
     }
 
     return match;
@@ -419,7 +413,7 @@ class PlayerFinderService {
   async getUserLocation(userId: number) {
     return await PlayerLocation.findOne({
       where: {
-        userId,
+        playerId: userId,
         isActive: true,
         isCurrentLocation: true
       }
@@ -447,7 +441,7 @@ class PlayerFinderService {
       });
     } else {
       return await PlayerLocation.create({
-        userId,
+        playerId: userId,
         latitude: locationData.latitude!,
         longitude: locationData.longitude!,
         city: locationData.city!,

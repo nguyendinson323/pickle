@@ -164,7 +164,7 @@ const EnhancedPlayerDashboard: React.FC = () => {
                 Official Player Credential
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                View and download your official federation credential with QR code
+                View and download your official admin credential with QR code
               </p>
               <Link
                 to="/profile"

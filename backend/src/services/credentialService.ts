@@ -40,7 +40,7 @@ class CredentialService {
   private readonly BASE_VERIFICATION_URL = process.env.CREDENTIAL_VERIFICATION_URL || 'https://fmp.mx/verify';
   private readonly CREDENTIAL_VALID_MONTHS = 12; // Credentials valid for 12 months
 
-  // Generate unique federation ID number
+  // Generate unique admin ID number
   private generateFederationId(userType: CredentialType, stateId: number): string {
     const typePrefix = {
       [CredentialType.PLAYER]: 'JUG',
@@ -91,7 +91,7 @@ class CredentialService {
         throw new Error('State not found');
       }
 
-      // Generate federation ID number
+      // Generate admin ID number
       const federationIdNumber = this.generateFederationId(credentialData.userType, credentialData.stateId);
 
       // Set expiration date

@@ -4,7 +4,6 @@ import { useAuth } from '../../hooks/useAuth';
 import NotificationList from './NotificationList';
 import NotificationPreferences from './NotificationPreferences';
 import { Notification, NotificationPreferences as NotificationPrefsType } from '../../types/notifications';
-import styles from './NotificationCenter.module.css';
 
 interface NotificationCenterProps {
   isOpen: boolean;
@@ -242,32 +241,45 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.notificationCenter}>
-        <div className={styles.header}>
-          <div className={styles.tabs}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50">
+      <div className="bg-white rounded-lg shadow-lg border border-gray-200 max-w-md w-full max-h-full m-4">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex border-b border-gray-200">
             <button
-              className={`${styles.tab} ${activeTab === 'notifications' ? styles.active : ''}`}
+              className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'notifications' 
+                  ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
               onClick={() => setActiveTab('notifications')}
             >
               Notifications
               {unreadCount > 0 && (
-                <span className={styles.unreadBadge}>{unreadCount}</span>
+                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                  {unreadCount}
+                </span>
               )}
             </button>
             <button
-              className={`${styles.tab} ${activeTab === 'preferences' ? styles.active : ''}`}
+              className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'preferences' 
+                  ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
               onClick={() => setActiveTab('preferences')}
             >
               Settings
             </button>
           </div>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button 
+            className="text-gray-400 hover:text-gray-600 transition-colors text-xl font-bold" 
+            onClick={onClose}
+          >
             ×
           </button>
         </div>
 
-        <div className={styles.content}>
+        <div className="flex-1 overflow-hidden">
           {activeTab === 'notifications' && (
             <NotificationList
               notifications={notifications}
@@ -283,10 +295,9 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
             />
           )}
 
-          {activeTab === 'preferences' && preferences && (
+          {activeTab === 'preferences' && (
             <NotificationPreferences
-              preferences={preferences}
-              onUpdate={updatePreferences}
+              onClose={() => setActiveTab('notifications')}
             />
           )}
         </div>

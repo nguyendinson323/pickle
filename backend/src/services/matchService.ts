@@ -5,7 +5,7 @@ import {
   Court,
   TournamentCategory
 } from '../models';
-import notificationService from './notificationService';
+import NotificationService from './notificationService';
 import { Op } from 'sequelize';
 
 class MatchService {
@@ -38,21 +38,23 @@ class MatchService {
 
     // Notify players
     if (match.player1Id) {
-      await notificationService.createNotification(
-        match.player1Id,
-        'Match Scheduled',
-        `Your match has been scheduled for ${scheduledDate} at ${scheduledTime}`,
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: match.player1Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Match Scheduled',
+        message: `Your match has been scheduled for ${scheduledDate} at ${scheduledTime}`
+      });
     }
 
     if (match.player2Id) {
-      await notificationService.createNotification(
-        match.player2Id,
-        'Match Scheduled',
-        `Your match has been scheduled for ${scheduledDate} at ${scheduledTime}`,
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: match.player2Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Match Scheduled',
+        message: `Your match has been scheduled for ${scheduledDate} at ${scheduledTime}`
+      });
     }
 
     return match;
@@ -93,21 +95,25 @@ class MatchService {
 
     // Notify players
     if (match.player1Id) {
-      await notificationService.createNotification(
-        match.player1Id,
-        'Match Started',
-        'Your match has started!',
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      const notificationServiceInstance = new NotificationService();
+      await notificationServiceInstance.sendNotification({
+        userId: match.player1Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Match Started',
+        message: 'Your match has started!'
+    });
     }
 
     if (match.player2Id) {
-      await notificationService.createNotification(
-        match.player2Id,
-        'Match Started',
-        'Your match has started!',
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      const notificationServiceInstance2 = new NotificationService();
+      await notificationServiceInstance2.sendNotification({
+        userId: match.player2Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Match Started',
+        message: 'Your match has started!'
+    });
     }
 
     return match;
@@ -175,21 +181,23 @@ class MatchService {
 
     // Notify players
     if (winnerId) {
-      await notificationService.createNotification(
-        winnerId,
-        'Match Won!',
-        'Congratulations on winning your match!',
-        { type: 'success', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: winnerId.toString(),
+        type: 'tournament',
+        category: 'success',
+        title: 'Match Won!',
+        message: 'Congratulations on winning your match!'
+      });
     }
 
     if (loserId) {
-      await notificationService.createNotification(
-        loserId,
-        'Match Completed',
-        'Your match has been completed. Better luck next time!',
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: loserId.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Match Completed',
+        message: 'Your match has been completed. Better luck next time!'
+      });
     }
 
     return match;
@@ -305,21 +313,23 @@ class MatchService {
 
     // Notify players
     if (match.player1Id) {
-      await notificationService.createNotification(
-        match.player1Id,
-        'Match Cancelled',
-        `Your match has been cancelled. Reason: ${reason}`,
-        { type: 'warning', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: match.player1Id.toString(),
+        type: 'tournament',
+        category: 'warning',
+        title: 'Match Cancelled',
+        message: `Your match has been cancelled. Reason: ${reason}`
+      });
     }
 
     if (match.player2Id) {
-      await notificationService.createNotification(
-        match.player2Id,
-        'Match Cancelled',
-        `Your match has been cancelled. Reason: ${reason}`,
-        { type: 'warning', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: match.player2Id.toString(),
+        type: 'tournament',
+        category: 'warning',
+        title: 'Match Cancelled',
+        message: `Your match has been cancelled. Reason: ${reason}`
+      });
     }
 
     return match;
@@ -346,21 +356,23 @@ class MatchService {
 
     // Notify players
     if (match.player1Id) {
-      await notificationService.createNotification(
-        match.player1Id,
-        'Match Postponed',
-        `Your match has been postponed to ${newDate} at ${newTime}. Reason: ${reason}`,
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: match.player1Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Match Postponed',
+        message: `Your match has been postponed to ${newDate} at ${newTime}. Reason: ${reason}`
+      });
     }
 
     if (match.player2Id) {
-      await notificationService.createNotification(
-        match.player2Id,
-        'Match Postponed',
-        `Your match has been postponed to ${newDate} at ${newTime}. Reason: ${reason}`,
-        { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-      );
+      await new NotificationService().sendNotification({
+        userId: match.player2Id.toString(),
+        type: 'tournament',
+        category: 'info',
+        title: 'Match Postponed',
+        message: `Your match has been postponed to ${newDate} at ${newTime}. Reason: ${reason}`
+      });
     }
 
     return match;
@@ -446,12 +458,13 @@ class MatchService {
     await match.update({ refereeId });
 
     // Notify referee
-    await notificationService.createNotification(
-      refereeId,
-      'Referee Assignment',
-      `You have been assigned as referee for a match on ${match.scheduledDate} at ${match.scheduledTime}`,
-      { type: 'info', actionUrl: `/tournaments/matches/${matchId}` }
-    );
+    await new NotificationService().sendNotification({
+      userId: refereeId.toString(),
+      type: 'tournament',
+      category: 'info',
+      title: 'Referee Assignment',
+      message: `You have been assigned as referee for a match on ${match.scheduledDate} at ${match.scheduledTime}`
+    });
 
     return match;
   }

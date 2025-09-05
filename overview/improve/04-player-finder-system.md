@@ -1014,7 +1014,7 @@ const PlayerFinderPage: React.FC = () => {
 
   // Check if user has premium access
   const hasPlayerFinderAccess = user?.membership?.planType === 'premium' || 
-                                user?.role === 'federation';
+                                user?.role === 'admin';
 
   if (!hasPlayerFinderAccess) {
     return <PlayerFinderUpgrade />;

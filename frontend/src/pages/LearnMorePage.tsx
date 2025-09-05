@@ -225,7 +225,7 @@ const LearnMorePage: React.FC = () => {
           </h2>
           <p className="text-xl text-primary-100 max-w-2xl mx-auto mb-8">
             Join the largest pickleball community in Mexico and start enjoying all the benefits 
-            of being part of the official federation.
+            of being part of the official admin.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

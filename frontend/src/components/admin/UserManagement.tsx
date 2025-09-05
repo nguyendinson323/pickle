@@ -81,7 +81,7 @@ const UserManagement: React.FC = () => {
 
   const getRoleColor = (role: string) => {
     const colors: Record<string, string> = {
-      federation: 'bg-purple-100 text-purple-800',
+      admin: 'bg-purple-100 text-purple-800',
       state_committee: 'bg-blue-100 text-blue-800',
       club: 'bg-green-100 text-green-800',
       partner: 'bg-orange-100 text-orange-800',
@@ -286,7 +286,7 @@ const UserManagement: React.FC = () => {
                 <option value="club">Club</option>
                 <option value="partner">Partner</option>
                 <option value="state_committee">Comité Estatal</option>
-                <option value="federation">Federación</option>
+                <option value="admin">Federación</option>
               </select>
             </div>
             <div>

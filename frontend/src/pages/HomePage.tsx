@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/store';
 import { selectIsAuthenticated, selectUser } from '@/store/authSlice';
 import { 
@@ -14,13 +14,14 @@ import { ROUTES, USER_ROLES } from '@/utils/constants';
 import Layout from '@/components/common/Layout';
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
 
   const features = [
     {
       name: 'Official Tournaments',
-      description: 'Participate in national, state and local tournaments organized by the federation.',
+      description: 'Participate in national, state and local tournaments organized by the admin.',
       icon: TrophyIcon,
       href: ROUTES.TOURNAMENTS,
     },
@@ -75,26 +76,26 @@ const HomePage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {isAuthenticated ? (
-                <Link
-                  to={getDashboardLink()}
+                <button
+                  onClick={() => navigate(getDashboardLink())}
                   className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg"
                 >
                   Go to Dashboard
-                </Link>
+                </button>
               ) : (
                 <>
-                  <Link
-                    to="/register"
+                  <button
+                    onClick={() => navigate('/register')}
                     className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg"
                   >
                     Register Now
-                  </Link>
-                  <Link
-                    to={ROUTES.LOGIN}
+                  </button>
+                  <button
+                    onClick={() => navigate(ROUTES.LOGIN)}
                     className="btn-ghost border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg"
                   >
                     Sign In
-                  </Link>
+                  </button>
                 </>
               )}
             </div>
@@ -155,12 +156,12 @@ const HomePage: React.FC = () => {
                 <p className="text-gray-600 mb-6">
                   {feature.description}
                 </p>
-                <Link
-                  to={feature.href}
+                <button
+                  onClick={() => navigate(feature.href)}
                   className="btn-primary w-full group-hover:bg-primary-700 transition-colors duration-200"
                 >
                   Explore
-                </Link>
+                </button>
               </div>
             ))}
           </div>
@@ -171,7 +172,7 @@ const HomePage: React.FC = () => {
       <div className="bg-primary-600 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to join the federation?
+            Ready to join the admin?
           </h2>
           <p className="text-xl text-primary-100 max-w-2xl mx-auto mb-8">
             Register today and start enjoying all the benefits of being 
@@ -179,19 +180,19 @@ const HomePage: React.FC = () => {
           </p>
           {!isAuthenticated && (
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/register"
-                className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg"
+              <button
+                onClick={() => navigate('/register')}
+                className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg flex items-center justify-center"
               >
                 <PlayIcon className="w-5 h-5 mr-2" />
                 Start Now
-              </Link>
-              <Link
-                to="/learn-more"
+              </button>
+              <button
+                onClick={() => navigate('/learn-more')}
                 className="btn-ghost border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg"
               >
                 Learn More
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -213,12 +214,12 @@ const HomePage: React.FC = () => {
                      user.role === USER_ROLES.STATE ? 'state committee' : 'user'}, 
                 you have access to all platform functionalities.
               </p>
-              <Link
-                to={ROUTES.DASHBOARD}
+              <button
+                onClick={() => navigate(ROUTES.DASHBOARD)}
                 className="btn-success"
               >
                 Go to my Dashboard
-              </Link>
+              </button>
             </div>
           </div>
         </div>

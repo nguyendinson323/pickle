@@ -13,7 +13,7 @@ export interface Tournament {
   id: number;
   name: string;
   description: string;
-  organizerType: 'federation' | 'state' | 'club' | 'partner';
+  organizerType: 'admin' | 'state' | 'club' | 'partner';
   organizerId: number;
   tournamentType: TournamentType;
   level: TournamentLevel;

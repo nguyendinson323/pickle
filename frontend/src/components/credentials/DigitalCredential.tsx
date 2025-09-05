@@ -71,7 +71,7 @@ const DigitalCredential: React.FC<DigitalCredentialProps> = ({ data, onDownload 
       'club': 'Club',
       'partner': 'Partner',
       'state': 'State Committee',
-      'federation': 'Federation Admin'
+      'admin': 'Federation Admin'
     };
     return roleMap[role] || role;
   };

@@ -1,4 +1,4 @@
-export type UserRole = 'player' | 'coach' | 'club' | 'partner' | 'state' | 'federation';
+export type UserRole = 'player' | 'coach' | 'club' | 'partner' | 'state' | 'admin';
 
 export interface LoginCredentials {
   email: string;

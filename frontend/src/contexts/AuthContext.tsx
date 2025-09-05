@@ -25,7 +25,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     id: 1,
     username: 'admin',
     email: 'admin@federacionpickleball.mx',
-    role: 'federation'
+    role: 'admin'
   });
 
   const login = (userData: User) => {

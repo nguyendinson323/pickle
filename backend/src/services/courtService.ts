@@ -6,6 +6,7 @@ import CourtBooking from '../models/CourtBooking';
 import MaintenanceRecord from '../models/MaintenanceRecord';
 import CourtReview from '../models/CourtReview';
 import User from '../models/User';
+import notificationService from './notificationService';
 
 interface SearchFilters {
   location?: {
@@ -150,7 +151,7 @@ export class CourtService {
 
     // Apply court-specific filters
     const filteredFacilities = facilities.rows.filter(facility => {
-      const courts = facility.courts || [];
+      const courts = (facility as any).courts || [];
       
       return courts.some(court => {
         // Surface filter
@@ -204,7 +205,7 @@ export class CourtService {
     }
 
     // Check operating hours
-    const dayOfWeek = new Date(date).toLocaleDateString('en', { weekday: 'lowercase' });
+    const dayOfWeek = new Date(date).toLocaleDateString('en', { weekday: 'long' }).toLowerCase();
     const operatingHours = court.operatingHours[dayOfWeek];
     
     if (!operatingHours || operatingHours.closed) {
@@ -277,7 +278,7 @@ export class CourtService {
       throw new Error('Court not found');
     }
 
-    const dayOfWeek = new Date(date).toLocaleDateString('en', { weekday: 'lowercase' });
+    const dayOfWeek = new Date(date).toLocaleDateString('en', { weekday: 'long' }).toLowerCase();
     const operatingHours = court.operatingHours[dayOfWeek];
     
     if (!operatingHours || operatingHours.closed) {
@@ -342,12 +343,12 @@ export class CourtService {
     // Apply peak hour pricing (6-10 PM)
     const startHour = parseInt(startTime.split(':')[0]);
     if (startHour >= 18 && startHour < 22) {
-      multiplier *= court.facility?.pricing.peakHourMultiplier || 1.2;
+      multiplier *= (court as any).facility?.pricing.peakHourMultiplier || 1.2;
     }
 
     // Apply weekend pricing
     if (isWeekend) {
-      multiplier *= court.facility?.pricing.weekendMultiplier || 1.3;
+      multiplier *= (court as any).facility?.pricing.weekendMultiplier || 1.3;
     }
 
     const subtotal = baseRate * duration * multiplier;
@@ -360,8 +361,8 @@ export class CourtService {
       baseRate,
       duration,
       subtotal,
-      peakHourMultiplier: startHour >= 18 && startHour < 22 ? court.facility?.pricing.peakHourMultiplier || 1.2 : 1,
-      weekendMultiplier: isWeekend ? court.facility?.pricing.weekendMultiplier || 1.3 : 1,
+      peakHourMultiplier: startHour >= 18 && startHour < 22 ? (court as any).facility?.pricing.peakHourMultiplier || 1.2 : 1,
+      weekendMultiplier: isWeekend ? (court as any).facility?.pricing.weekendMultiplier || 1.3 : 1,
       taxAmount,
       serviceFee,
       totalAmount,
@@ -393,9 +394,9 @@ export class CourtService {
 
       // Create booking
       const booking = await CourtBooking.create({
-        courtId: bookingData.courtId,
+        courtId: Number(bookingData.courtId),
         userId: bookingData.userId,
-        bookingDate: bookingData.bookingDate,
+        bookingDate: new Date(bookingData.bookingDate),
         startTime: bookingData.startTime,
         endTime: bookingData.endTime,
         duration,
@@ -441,6 +442,29 @@ export class CourtService {
         qrCode: qrCodeData
       }, { transaction: txn });
 
+      // Send booking confirmation notification
+      const court = await Court.findByPk(bookingData.courtId, {
+        include: [{ model: CourtFacility, as: 'facility' }]
+      });
+
+      const notificationServiceInstance = new notificationService();
+      await notificationServiceInstance.sendNotification({
+        userId: bookingData.userId.toString(),
+        type: 'booking',
+        category: 'info',
+        title: 'Booking Confirmation',
+        message: `Your court booking has been confirmed for ${bookingData.bookingDate}`,
+        data: {
+          courtName: court?.name || 'Court',
+          facilityName: (court as any)?.facility?.name || 'Facility',
+          bookingDate: bookingData.bookingDate,
+          startTime: bookingData.startTime,
+          endTime: bookingData.endTime,
+          totalAmount: availability.pricing.totalAmount,
+          accessCode
+        }
+      });
+
       return booking;
     });
   }
@@ -465,10 +489,10 @@ export class CourtService {
       // Check cancellation deadline
       const bookingDateTime = new Date(`${booking.bookingDate}T${booking.startTime}`);
       const now = new Date();
-      const court = await Court.findByPk(booking.courtId);
+      const courtInfo = await Court.findByPk(booking.courtId);
       const hoursUntilBooking = (bookingDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
 
-      if (hoursUntilBooking < (court?.cancellationDeadlineHours || 24)) {
+      if (hoursUntilBooking < (courtInfo?.cancellationDeadlineHours || 24)) {
         throw new Error('Cancellation deadline has passed');
       }
 
@@ -488,6 +512,29 @@ export class CourtService {
           refundProcessed: false
         }
       }, { transaction: t });
+
+      // Send cancellation confirmation notification
+      const courtWithFacility = await Court.findByPk(booking.courtId, {
+        include: [{ model: CourtFacility, as: 'facility' }]
+      });
+
+      const notificationServiceInstance2 = new notificationService();
+      await notificationServiceInstance2.sendNotification({
+        userId: booking.userId.toString(),
+        type: 'booking',
+        category: 'warning',
+        title: 'Booking Cancelled',
+        message: `Your court booking for ${booking.bookingDate} has been cancelled`,
+        data: {
+          courtName: courtWithFacility?.name || 'Court',
+          facilityName: (courtWithFacility as any)?.facility?.name || 'Facility',
+          bookingDate: booking.bookingDate,
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+          refundAmount,
+          reason
+        }
+      });
 
       return booking;
     });
@@ -557,7 +604,7 @@ export class CourtService {
 
     // Revenue by court
     const revenueByCourt = bookings.reduce((acc, booking) => {
-      const courtKey = booking.court.courtNumber;
+      const courtKey = (booking as any).court?.courtNumber || 'Unknown';
       acc[courtKey] = (acc[courtKey] || 0) + parseFloat(booking.totalAmount.toString());
       return acc;
     }, {} as Record<string, number>);
@@ -586,7 +633,7 @@ export class CourtService {
 
     for (const court of courts) {
       for (const date of dateRange) {
-        const dayOfWeek = new Date(date).toLocaleDateString('en', { weekday: 'lowercase' });
+        const dayOfWeek = new Date(date).toLocaleDateString('en', { weekday: 'long' }).toLowerCase();
         const operatingHours = court.operatingHours[dayOfWeek];
         
         if (!operatingHours?.closed) {
@@ -675,5 +722,127 @@ export class CourtService {
       page,
       totalPages: Math.ceil(bookings.count / limit)
     };
+  }
+
+  // Send booking reminders (to be called by a scheduled job)
+  static async sendBookingReminders() {
+    try {
+      const now = new Date();
+      const oneDayFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+      const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+
+      // Get bookings that need day-before reminders
+      const dayBeforeBookings = await CourtBooking.findAll({
+        where: {
+          bookingStatus: 'confirmed',
+          'remindersSent.dayBefore': false,
+          [Op.and]: [
+            Sequelize.where(
+              Sequelize.fn('DATE', Sequelize.col('bookingDate')),
+              '=',
+              oneDayFromNow.toISOString().split('T')[0]
+            )
+          ]
+        },
+        include: [
+          {
+            model: Court,
+            as: 'court',
+            include: [{ model: CourtFacility, as: 'facility' }]
+          }
+        ]
+      });
+
+      // Send day-before reminders
+      for (const booking of dayBeforeBookings) {
+        const notificationServiceInstance3 = new notificationService();
+        await notificationServiceInstance3.sendNotification({
+          userId: booking.userId.toString(),
+          type: 'booking',
+          category: 'info',
+          title: 'Booking Reminder',
+          message: `Reminder: You have a court booking tomorrow at ${booking.startTime}`,
+          data: {
+            courtName: (booking as any).court?.name || 'Court',
+            facilityName: (booking as any).court?.facility?.name || 'Facility',
+            bookingDate: booking.bookingDate,
+            startTime: booking.startTime,
+            endTime: booking.endTime,
+            accessCode: booking.accessCode
+          }
+        });
+
+        await booking.update({
+          remindersSent: { ...booking.remindersSent, dayBefore: true }
+        });
+      }
+
+      // Get bookings that need hour-before reminders
+      const hourBeforeBookings = await CourtBooking.findAll({
+        where: {
+          bookingStatus: 'confirmed',
+          'remindersSent.hourBefore': false,
+          [Op.and]: [
+            Sequelize.where(
+              Sequelize.fn('DATETIME', 
+                Sequelize.fn('CONCAT', 
+                  Sequelize.col('bookingDate'), 
+                  ' ', 
+                  Sequelize.col('startTime')
+                )
+              ),
+              '<=',
+              oneHourFromNow.toISOString().replace('T', ' ').slice(0, 19)
+            ),
+            Sequelize.where(
+              Sequelize.fn('DATETIME', 
+                Sequelize.fn('CONCAT', 
+                  Sequelize.col('bookingDate'), 
+                  ' ', 
+                  Sequelize.col('startTime')
+                )
+              ),
+              '>',
+              now.toISOString().replace('T', ' ').slice(0, 19)
+            )
+          ]
+        },
+        include: [
+          {
+            model: Court,
+            as: 'court',
+            include: [{ model: CourtFacility, as: 'facility' }]
+          }
+        ]
+      });
+
+      // Send hour-before reminders
+      for (const booking of hourBeforeBookings) {
+        const notificationServiceInstance4 = new notificationService();
+        await notificationServiceInstance4.sendNotification({
+          userId: booking.userId.toString(),
+          type: 'booking',
+          category: 'info',
+          title: 'Booking Reminder',
+          message: `Reminder: Your court booking starts in 1 hour at ${booking.startTime}`,
+          data: {
+            courtName: (booking as any).court?.name || 'Court',
+            facilityName: (booking as any).court?.facility?.name || 'Facility',
+            bookingDate: booking.bookingDate,
+            startTime: booking.startTime,
+            endTime: booking.endTime,
+            accessCode: booking.accessCode
+          }
+        });
+
+        await booking.update({
+          remindersSent: { ...booking.remindersSent, hourBefore: true }
+        });
+      }
+
+      console.log(`Sent ${dayBeforeBookings.length} day-before and ${hourBeforeBookings.length} hour-before booking reminders`);
+    } catch (error: any) {
+      console.error('Failed to send booking reminders:', error.message);
+    }
   }
 }

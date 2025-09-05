@@ -53,7 +53,7 @@ const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
         <div className="flex items-center flex-shrink-0 px-4">
           <img
             className="h-8 w-auto"
-            src="/federation-logo-white.png"
+            src="/admin-logo-white.png"
             alt="Mexican Pickleball Federation"
             onError={(e) => {
               // Fallback to a colored rectangle if image fails to load

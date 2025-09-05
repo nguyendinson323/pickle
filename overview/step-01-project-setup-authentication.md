@@ -182,7 +182,7 @@ pick-new/
 
 ### 5. Layout Components
 - Header with navigation and user menu
-- Footer with federation information
+- Footer with admin information
 - Layout wrapper component
 - Responsive design with mobile support
 
@@ -222,7 +222,7 @@ export interface UserProfile {
   profile: PlayerProfile | CoachProfile | ClubProfile | PartnerProfile | StateCommitteeProfile;
 }
 
-export type UserRole = 'player' | 'coach' | 'club' | 'partner' | 'state' | 'federation';
+export type UserRole = 'player' | 'coach' | 'club' | 'partner' | 'state' | 'admin';
 ```
 
 ### Frontend Types

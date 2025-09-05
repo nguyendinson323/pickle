@@ -21,14 +21,13 @@ const createReview = async (req: Request, res: Response): Promise<void> => {
     const review = await CourtReview.create({
       userId,
       courtId: parseInt(courtId),
-      reservationId: parseInt(reservationId),
-      rating,
-      title,
-      comment,
-      amenityRatings,
-      isRecommended: isRecommended || false,
-      isVerifiedBooking: true,
-      isHidden: false
+      bookingId: parseInt(reservationId),
+      ratings: rating,
+      reviewTitle: title,
+      reviewText: comment,
+      recommendToFriends: isRecommended || false,
+      isVerified: true,
+      status: 'active'
     });
 
     res.status(201).json({ success: true, message: 'Reseña creada exitosamente', data: review });
@@ -45,7 +44,7 @@ const getCourtReviews = async (req: Request, res: Response): Promise<void> => {
     const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
 
     const { rows: reviews, count: total } = await CourtReview.findAndCountAll({
-      where: { courtId, isHidden: false },
+      where: { courtId, status: 'active' },
       include: [
         { model: User, as: 'user', attributes: ['id', 'username'] },
         { model: Reservation, as: 'reservation', attributes: ['id', 'reservationDate'] }
@@ -183,9 +182,16 @@ const respondToReview = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Add response to responses array
+    const updatedResponses = [...(review.responses || []), {
+      responderId: userId,
+      responderType: 'facility_owner' as const,
+      responseText: response,
+      responseDate: new Date()
+    }];
+    
     await review.update({
-      ownerResponse: response,
-      ownerResponseAt: new Date()
+      responses: updatedResponses
     });
 
     res.json({ success: true, message: 'Respuesta agregada exitosamente', data: review });
@@ -197,7 +203,7 @@ const respondToReview = async (req: Request, res: Response): Promise<void> => {
 
 const calculateAverageRatings = async (courtId: number) => {
   const reviews = await CourtReview.findAll({ 
-    where: { courtId, isHidden: false } 
+    where: { courtId, status: 'active' } 
   });
 
   if (reviews.length === 0) {
@@ -209,14 +215,20 @@ const calculateAverageRatings = async (courtId: number) => {
     };
   }
 
-  const ratingSum = reviews.reduce((sum, review) => sum + review.rating, 0);
+  const ratingSum = reviews.reduce((sum, review) => {
+    const overallRating = review.ratings.overallExperience || 0;
+    return sum + overallRating;
+  }, 0);
   const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
   
   reviews.forEach(review => {
-    distribution[review.rating as keyof typeof distribution]++;
+    const overallRating = review.ratings.overallExperience || 0;
+    if (overallRating >= 1 && overallRating <= 5) {
+      distribution[Math.floor(overallRating) as keyof typeof distribution]++;
+    }
   });
 
-  const recommendCount = reviews.filter(review => review.isRecommended).length;
+  const recommendCount = reviews.filter(review => review.recommendToFriends).length;
 
   return {
     overall: parseFloat((ratingSum / reviews.length).toFixed(1)),
@@ -240,7 +252,7 @@ const flagReview = async (req: Request, res: Response): Promise<void> => {
     // Here you would typically create a report record in a separate table
     // For now, we'll just hide the review and log the reason
     console.log(`Review flagged with reason: ${reason}`);
-    await review.update({ isHidden: true });
+    await review.update({ status: 'hidden' });
 
     res.json({ success: true, message: 'Reseña reportada exitosamente' });
   } catch (error: any) {

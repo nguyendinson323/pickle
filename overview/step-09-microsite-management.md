@@ -1,7 +1,7 @@
 # Step 9: Microsite Management System
 
 ## Overview
-This step implements a comprehensive microsite management system that allows clubs, partners, and state committees to create and manage their own public websites within the federation platform. Each organization gets a customizable microsite with their own subdomain, content management capabilities, and integration with booking/tournament systems.
+This step implements a comprehensive microsite management system that allows clubs, partners, and state committees to create and manage their own public websites within the admin platform. Each organization gets a customizable microsite with their own subdomain, content management capabilities, and integration with booking/tournament systems.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
 Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
@@ -18,7 +18,7 @@ Don't use any mockup, simulation or random data for frontend.
 - Build tournament registration integration
 - Create SEO optimization tools
 - Implement theme customization and branding
-- Add content moderation for federation oversight
+- Add content moderation for admin oversight
 
 ## Microsite Features by Organization Type
 
@@ -617,7 +617,7 @@ export class ContentModerationService {
       result.flags.push('inappropriate_content');
     }
     
-    // Check for compliance with federation rules
+    // Check for compliance with admin rules
     const complianceCheck = await this.checkFederationCompliance(content);
     if (!complianceCheck.passed) {
       result.flags.push('federation_compliance');

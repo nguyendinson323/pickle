@@ -245,7 +245,7 @@ cd backend && npm run seed:messages  # If separate seeder exists
 - **Trigger Event**: Action generates email notification (tournament registration, booking confirmation)
 - **Email Service**: NotificationService sends email via SendGrid
 - **API Request**: Email delivery through configured email service
-- **Email Template**: Professional email template with federation branding
+- **Email Template**: Professional email template with admin branding
 - **Delivery Tracking**: Email sent status recorded in database
 - **Response Logging**: Email delivery confirmation or failure logged
 - **User Preferences**: Email delivery respects user notification preferences

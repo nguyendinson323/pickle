@@ -21,7 +21,7 @@ Don't use any mockup, simulation or random data for frontend.
 
 ### Player Dashboard
 **Navigation Tabs:**
-- **Credential** - Digital federation ID with QR code
+- **Credential** - Digital admin ID with QR code
 - **Account** - Edit personal information and settings
 - **Inbox** - Messages, announcements, notifications
 - **Connection** - Player finder (premium feature)
@@ -33,7 +33,7 @@ Don't use any mockup, simulation or random data for frontend.
 **Navigation Tabs:**
 - **Credential** - Digital coaching credential with QR code
 - **Account** - Edit personal and professional information
-- **Inbox** - Messages and federation communications
+- **Inbox** - Messages and admin communications
 - **Connection** - Find players and other coaches (premium)
 - **Certifications** - View courses, diplomas, manage licenses
 - **Training** - Schedule training sessions, manage students

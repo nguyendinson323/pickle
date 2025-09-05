@@ -106,7 +106,7 @@ export const CourtsPage: React.FC = () => {
               </Button>
 
               {/* Register Court Button */}
-              {user && (user.role === 'club' || user.role === 'partner' || user.role === 'federation') && (
+              {user && (user.role === 'club' || user.role === 'partner' || user.role === 'admin') && (
                 <Button
                   variant="primary"
                   onClick={() => window.location.href = '/courts/register'}

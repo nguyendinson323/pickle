@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import subscriptionService from '../services/subscriptionService';
 import stripeService from '../services/stripeService';
 import SubscriptionPlan from '../models/SubscriptionPlan';
+import Subscription from '../models/Subscription';
 import Payment from '../models/Payment';
 import logger from '../utils/logger';
 
@@ -36,7 +37,7 @@ class SubscriptionController {
    */
   async getUserSubscription(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       if (!userId) {
         return res.status(401).json({
           success: false,
@@ -65,7 +66,7 @@ class SubscriptionController {
    */
   async createSubscription(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const { planId, paymentMethodId } = req.body;
 
       if (!userId) {
@@ -111,7 +112,7 @@ class SubscriptionController {
    */
   async cancelSubscription(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const { immediately } = req.body;
 
       if (!userId) {
@@ -148,7 +149,7 @@ class SubscriptionController {
    */
   async changeSubscriptionPlan(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const { newPlanId } = req.body;
 
       if (!userId) {
@@ -190,7 +191,7 @@ class SubscriptionController {
    */
   async createTournamentPayment(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const { tournamentId, amount, currency = 'USD' } = req.body;
 
       if (!userId) {
@@ -237,7 +238,7 @@ class SubscriptionController {
    */
   async createBookingPayment(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const { bookingId, amount, currency = 'USD' } = req.body;
 
       if (!userId) {
@@ -284,7 +285,7 @@ class SubscriptionController {
    */
   async getPaymentHistory(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       const { limit = 10, offset = 0, type } = req.query;
 
       if (!userId) {
@@ -333,7 +334,7 @@ class SubscriptionController {
    */
   async getUpcomingInvoice(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       
       if (!userId) {
         return res.status(401).json({
@@ -415,7 +416,7 @@ class SubscriptionController {
    */
   async reactivateSubscription(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.userId;
       
       if (!userId) {
         return res.status(401).json({
@@ -445,11 +446,17 @@ class SubscriptionController {
         { cancel_at_period_end: false }
       );
 
-      // Update local subscription
-      await subscription.update({
-        cancelAtPeriodEnd: false,
-        canceledAt: null
+      // Update local subscription - fetch the actual model instance
+      const subscriptionModel = await Subscription.findOne({
+        where: { userId, id: subscription.id }
       });
+      
+      if (subscriptionModel) {
+        await subscriptionModel.update({
+          cancelAtPeriodEnd: false,
+          canceledAt: null
+        });
+      }
 
       res.json({
         success: true,

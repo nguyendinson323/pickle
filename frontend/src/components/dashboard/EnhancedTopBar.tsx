@@ -59,7 +59,7 @@ const EnhancedTopBar: React.FC<EnhancedTopBarProps> = ({
       club: 'Club Manager',
       partner: 'Business Partner',
       state: 'State Administrator',
-      federation: 'Federation Administrator'
+      admin: 'Federation Administrator'
     };
     return roleLabels[role as keyof typeof roleLabels] || role;
   };
@@ -71,7 +71,7 @@ const EnhancedTopBar: React.FC<EnhancedTopBarProps> = ({
       club: 'bg-purple-100 text-purple-800',
       partner: 'bg-orange-100 text-orange-800',
       state: 'bg-indigo-100 text-indigo-800',
-      federation: 'bg-red-100 text-red-800'
+      admin: 'bg-red-100 text-red-800'
     };
     return roleColors[role as keyof typeof roleColors] || 'bg-gray-100 text-gray-800';
   };
@@ -264,7 +264,7 @@ const EnhancedTopBar: React.FC<EnhancedTopBarProps> = ({
                     )}
 
                     {/* Admin access */}
-                    {(user?.role === 'state' || user?.role === 'federation') && (
+                    {(user?.role === 'state' || user?.role === 'admin') && (
                       <button
                         onClick={() => {
                           navigate('/admin');

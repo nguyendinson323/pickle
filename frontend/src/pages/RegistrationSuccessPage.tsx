@@ -14,7 +14,7 @@ const RegistrationSuccessPage: React.FC = () => {
       case 'club': return 'Club';
       case 'partner': return 'Commercial Partner';
       case 'state': return 'State Committee';
-      case 'federation': return 'Federation';
+      case 'admin': return 'Federation';
       default: return 'User';
     }
   };
@@ -51,12 +51,12 @@ const RegistrationSuccessPage: React.FC = () => {
         ];
       case 'state':
         return [
-          'Coordinate with the national federation',
+          'Coordinate with the national admin',
           'Register clubs in your state',
           'Plan state events',
           'Establish contact with other committees'
         ];
-      case 'federation':
+      case 'admin':
         return [
           'Manage the national platform',
           'Supervise state committees',
@@ -159,7 +159,7 @@ const RegistrationSuccessPage: React.FC = () => {
                 <li>• Your account has been created and is active immediately</li>
                 <li>• You will receive a confirmation email shortly</li>
                 <li>• You can update your profile at any time</li>
-                <li>• For questions or support, contact the federation team</li>
+                <li>• For questions or support, contact the admin team</li>
               </ul>
             </div>
           </div>

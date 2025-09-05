@@ -1,7 +1,7 @@
 # Step 10: Admin Dashboard and System Administration
 
 ## Overview
-This final step implements a comprehensive administrative system for the federation, providing complete oversight and management capabilities for all platform activities. The admin dashboard includes user management, financial oversight, content moderation, system analytics, and advanced reporting tools for effective federation governance.
+This final step implements a comprehensive administrative system for the admin, providing complete oversight and management capabilities for all platform activities. The admin dashboard includes user management, financial oversight, content moderation, system analytics, and advanced reporting tools for effective admin governance.
 Don't use any mockup data for frontend.
 Do use only database data from backend.
 Before rendering a page, all required data for the page should be prepared from backend through API endpoint to store on Redux.
@@ -48,7 +48,7 @@ Don't use any mockup, simulation or random data for frontend.
 - **User-Generated Content**: Monitor posts, reviews, comments
 - **Flagged Content**: Review reported content and take action
 - **Content Approval**: Approve or reject pending content
-- **Compliance Monitoring**: Ensure federation guideline compliance
+- **Compliance Monitoring**: Ensure admin guideline compliance
 
 ### 5. Tournament & Court Management
 - **Tournament Oversight**: Monitor all tournaments across levels
@@ -896,7 +896,7 @@ After completing all 10 steps, the Mexican Pickleball Federation platform will h
 5. **Court Management** - Complete booking and reservation system
 6. **Tournament System** - Multi-level tournament organization and management
 7. **Player Finder** - Location-based player matching with privacy controls
-8. **Digital Credentials** - QR code-enabled federation ID cards
+8. **Digital Credentials** - QR code-enabled admin ID cards
 9. **Microsite System** - Custom websites for organizations
 10. **Admin Dashboard** - Comprehensive administrative oversight tools
 

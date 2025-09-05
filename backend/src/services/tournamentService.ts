@@ -69,15 +69,26 @@ class TournamentService {
         }
       }
 
-      // Notify all registered players
+      // Notify all registered players about tournament start
       const registrations = (tournament as any).registrations || [];
       for (const registration of registrations) {
-        await notificationService.createNotification(
-          registration.playerId,
-          'Tournament Started',
-          `The tournament "${tournament.name}" has started. Check your matches!`,
-          { type: 'info', actionUrl: `/tournaments/${tournamentId}` }
-        );
+        await new notificationService().sendNotification({
+          userId: registration.playerId.toString(),
+          type: 'tournament',
+          category: 'info',
+          templateType: 'tournament_started',
+          data: {
+            tournamentName: tournament.name,
+            tournamentLevel: tournament.level,
+            startDate: tournament.startDate,
+            venue: tournament.venueName,
+            registrationFee: (tournament as any).registrationFee || 0
+          },
+          actionUrl: `/tournaments/${tournamentId}`,
+          relatedEntityType: 'tournament',
+          relatedEntityId: tournamentId.toString(),
+          channels: { email: true, push: true, sms: true, inApp: true } // Multi-channel notification for important event
+        });
       }
 
       await transaction.commit();
@@ -95,7 +106,8 @@ class TournamentService {
       const tournament = await Tournament.findByPk(tournamentId, {
         include: [
           { model: TournamentBracket, as: 'brackets' },
-          { model: TournamentMatch, as: 'matches' }
+          { model: TournamentMatch, as: 'matches' },
+          { model: TournamentRegistration, as: 'registrations' }
         ],
         transaction
       });
@@ -122,15 +134,49 @@ class TournamentService {
       // Update player rankings
       await this.updatePlayerRankings(tournamentId, transaction);
 
-      // Notify winners
+      // Notify winners with multi-channel approach
       for (const bracket of (tournament as any).brackets || []) {
         if (bracket.winnerPlayerId) {
-          await notificationService.createNotification(
-            bracket.winnerPlayerId,
-            'Congratulations!',
-            `You won the ${bracket.name} category in ${tournament.name}!`,
-            { type: 'success', actionUrl: `/tournaments/${tournamentId}/results` }
-          );
+          await new notificationService().sendNotification({
+            userId: bracket.winnerPlayerId,
+            type: 'tournament',
+            category: 'success',
+            templateType: 'tournament_winner',
+            data: {
+              tournamentName: tournament.name,
+              categoryName: bracket.name,
+              tournamentLevel: tournament.level,
+              prizeAmount: bracket.prizeAmount,
+              venue: tournament.venueName
+            },
+            actionUrl: `/tournaments/${tournamentId}/results`,
+            relatedEntityType: 'tournament',
+            relatedEntityId: tournamentId.toString(),
+            channels: { email: true, push: true, sms: true, inApp: true },
+          });
+        }
+      }
+
+      // Notify all participants about tournament completion
+      const allParticipants = (tournament as any).registrations || [];
+      for (const registration of allParticipants) {
+        if (registration.status === 'paid') {
+          await new notificationService().sendNotification({
+            userId: registration.playerId.toString(),
+            type: 'tournament',
+            category: 'info',
+            templateType: 'tournament_completed',
+            data: {
+              tournamentName: tournament.name,
+              tournamentLevel: tournament.level,
+              completedAt: new Date().toISOString(),
+              resultsAvailable: true
+            },
+            actionUrl: `/tournaments/${tournamentId}/results`,
+            relatedEntityType: 'tournament',
+            relatedEntityId: tournamentId.toString(),
+            channels: { email: true, push: true, inApp: true }
+          });
         }
       }
 
@@ -325,11 +371,11 @@ class TournamentService {
         await Payment.create({
           userId: bracket.winnerPlayerId,
           amount: firstPrize,
-          paymentType: 'tournament',
-          paymentMethod: 'transfer',
+          type: 'tournament_entry',
+          paymentMethod: { type: 'wallet' },
           status: 'pending',
-          referenceType: 'tournament',
-          referenceId: tournamentId,
+          relatedEntityType: 'tournament',
+          relatedEntityId: tournamentId,
           description: `First place prize - ${tournament.name}`
         }, { transaction });
       }
@@ -339,11 +385,11 @@ class TournamentService {
         await Payment.create({
           userId: bracket.runnerUpPlayerId,
           amount: secondPrize,
-          paymentType: 'tournament',
-          paymentMethod: 'transfer',
+          type: 'tournament_entry',
+          paymentMethod: { type: 'wallet' },
           status: 'pending',
-          referenceType: 'tournament',
-          referenceId: tournamentId,
+          relatedEntityType: 'tournament',
+          relatedEntityId: tournamentId,
           description: `Second place prize - ${tournament.name}`
         }, { transaction });
       }
@@ -490,6 +536,228 @@ class TournamentService {
     }
     
     return age;
+  }
+
+  // Send registration confirmation notification
+  async sendRegistrationConfirmation(registrationId: number): Promise<void> {
+    const registration = await TournamentRegistration.findByPk(registrationId, {
+      include: [
+        { model: Tournament, as: 'tournament' },
+        { model: TournamentCategory, as: 'category' },
+        { model: User, as: 'player' }
+      ]
+    });
+
+    if (!registration) {
+      throw new Error('Registration not found');
+    }
+
+    const tournament = (registration as any).tournament;
+    const category = (registration as any).category;
+    const player = (registration as any).player;
+
+    await new notificationService().sendNotification({
+      userId: registration.playerId.toString(),
+      type: 'tournament',
+      category: 'success',
+      templateType: 'tournament_registration_confirmed',
+      data: {
+        tournamentName: tournament.name,
+        categoryName: category.name,
+        tournamentLevel: tournament.level,
+        startDate: tournament.startDate,
+        venue: tournament.venueName,
+        registrationFee: (tournament as any).registrationFee || 0,
+        playerName: player.username
+      },
+      actionUrl: `/tournaments/${tournament.id}/registration`,
+      relatedEntityType: 'tournament',
+      relatedEntityId: tournament.id.toString(),
+      channels: { email: true, push: true, inApp: true },
+    });
+  }
+
+  // Send match schedule notification
+  async sendMatchScheduleNotification(matchId: number): Promise<void> {
+    const match = await TournamentMatch.findByPk(matchId, {
+      include: [
+        { model: Tournament, as: 'tournament' },
+        { model: User, as: 'player1' },
+        { model: User, as: 'player2' }
+      ]
+    });
+
+    if (!match) {
+      throw new Error('Match not found');
+    }
+
+    const tournament = (match as any).tournament;
+    const player1 = (match as any).player1;
+    const player2 = (match as any).player2;
+
+    // Notify both players
+    for (const player of [player1, player2]) {
+      if (player) {
+        await new notificationService().sendNotification({
+          userId: player.id.toString(),
+          type: 'tournament',
+          category: 'info',
+          templateType: 'match_scheduled',
+          data: {
+            tournamentName: tournament.name,
+            opponent: player.id === player1.id ? 
+              player2.username : 
+              player1.username,
+            scheduledDate: match.scheduledDate,
+            scheduledTime: match.scheduledTime,
+            venue: (match as any).tournament?.venueName || tournament.venueName,
+            round: match.round,
+            courtAssignment: match.courtAssignment
+          },
+          actionUrl: `/tournaments/${tournament.id}/match/${match.id}`,
+          relatedEntityType: 'match',
+          relatedEntityId: match.id.toString(),
+          channels: { email: true, push: true, sms: true, inApp: true },
+          });
+      }
+    }
+  }
+
+  // Send match result notification
+  async sendMatchResultNotification(matchId: number): Promise<void> {
+    const match = await TournamentMatch.findByPk(matchId, {
+      include: [
+        { model: Tournament, as: 'tournament' },
+        { model: User, as: 'player1' },
+        { model: User, as: 'player2' },
+        { model: User, as: 'winner' }
+      ]
+    });
+
+    if (!match) {
+      throw new Error('Match not found');
+    }
+
+    const tournament = (match as any).tournament;
+    const player1 = (match as any).player1;
+    const player2 = (match as any).player2;
+    const winner = (match as any).winner;
+
+    // Notify both players about the result
+    for (const player of [player1, player2]) {
+      if (player) {
+        const isWinner = winner && player.id === winner.id;
+        const opponent = player.id === player1.id ? player2 : player1;
+
+        await new notificationService().sendNotification({
+          userId: player.id.toString(),
+          type: 'tournament',
+          category: isWinner ? 'success' : 'info',
+          templateType: isWinner ? 'match_won' : 'match_lost',
+          data: {
+            tournamentName: tournament.name,
+            opponent: opponent.username,
+            score: match.score,
+            round: match.round,
+            venue: (match as any).tournament?.venueName || tournament.venueName,
+            nextMatch: isWinner ? 'You advance to the next round!' : undefined
+          },
+          actionUrl: `/tournaments/${tournament.id}/match/${match.id}`,
+          relatedEntityType: 'match',
+          relatedEntityId: match.id.toString(),
+          channels: { email: true, push: true, inApp: true },
+            });
+      }
+    }
+  }
+
+  // Send tournament registration reminder
+  async sendRegistrationReminder(tournamentId: number): Promise<void> {
+    const tournament = await Tournament.findByPk(tournamentId);
+    
+    if (!tournament || tournament.status !== 'open') {
+      return;
+    }
+
+    // Find eligible players who haven't registered yet
+    const eligiblePlayers = await User.findAll({
+      where: {
+        role: 'player',
+        isActive: true,
+        // subscriptionStatus: 'active' // Property not available in User model
+      },
+      include: [
+        {
+          model: TournamentRegistration,
+          as: 'tournamentRegistrations',
+          where: { tournamentId },
+          required: false
+        }
+      ]
+    });
+
+    const unregisteredPlayers = eligiblePlayers.filter(player => 
+      !(player as any).tournamentRegistrations || 
+      (player as any).tournamentRegistrations.length === 0
+    );
+
+    // Send reminder to unregistered players
+    for (const player of unregisteredPlayers) {
+      await new notificationService().sendNotification({
+        userId: player.id.toString(),
+        type: 'tournament',
+        category: 'info',
+        templateType: 'tournament_registration_reminder',
+        data: {
+          tournamentName: tournament.name,
+          tournamentLevel: tournament.level,
+          registrationDeadline: tournament.registrationEnd,
+          startDate: tournament.startDate,
+          venue: tournament.venueName,
+          playerName: player.username
+        },
+        actionUrl: `/tournaments/${tournamentId}/register`,
+        relatedEntityType: 'tournament',
+        relatedEntityId: tournamentId.toString(),
+        channels: { email: true, push: true, inApp: true },
+        });
+    }
+  }
+
+  // Send tournament schedule change notification
+  async sendScheduleChangeNotification(tournamentId: number, changeType: 'date' | 'venue' | 'time', changeDetails: any): Promise<void> {
+    const tournament = await Tournament.findByPk(tournamentId, {
+      include: [
+        { model: TournamentRegistration, as: 'registrations', where: { status: 'paid' } }
+      ]
+    });
+
+    if (!tournament) {
+      throw new Error('Tournament not found');
+    }
+
+    const registrations = (tournament as any).registrations || [];
+
+    for (const registration of registrations) {
+      await new notificationService().sendNotification({
+        userId: registration.playerId.toString(),
+        type: 'tournament',
+        category: 'warning',
+        templateType: 'tournament_schedule_changed',
+        data: {
+          tournamentName: tournament.name,
+          changeType,
+          oldValue: changeDetails.oldValue,
+          newValue: changeDetails.newValue,
+          reason: changeDetails.reason,
+          effectiveDate: changeDetails.effectiveDate
+        },
+        actionUrl: `/tournaments/${tournamentId}`,
+        relatedEntityType: 'tournament',
+        relatedEntityId: tournamentId.toString(),
+        channels: { email: true, push: true, sms: true, inApp: true },
+      });
+    }
   }
 }
 

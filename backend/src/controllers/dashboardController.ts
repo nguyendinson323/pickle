@@ -14,7 +14,7 @@ const getDashboardData = asyncHandler(async (req: AuthRequest, res: Response) =>
   else if (role === 'club') dashboardData = await dashboardService.getClubDashboard(userId);
   else if (role === 'partner') dashboardData = await dashboardService.getPartnerDashboard(userId);
   else if (role === 'state') dashboardData = await dashboardService.getStateDashboard(userId);
-  else if (role === 'federation') dashboardData = await dashboardService.getAdminDashboard(userId);
+  else if (role === 'admin') dashboardData = await dashboardService.getAdminDashboard(userId);
   else return res.status(400).json({ success: false, error: 'Invalid user role' });
 
   res.json({ success: true, data: dashboardData });
@@ -22,7 +22,7 @@ const getDashboardData = asyncHandler(async (req: AuthRequest, res: Response) =>
 
 const getPlayerDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = parseInt(req.params.id) || req.user.userId;
-  if (!['player','federation'].includes(req.user.role) && req.user.userId !== userId) 
+  if (!['player','admin'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
   const data = await dashboardService.getPlayerDashboard(userId);
@@ -31,7 +31,7 @@ const getPlayerDashboard = asyncHandler(async (req: AuthRequest, res: Response) 
 
 const getCoachDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = parseInt(req.params.id) || req.user.userId;
-  if (!['coach','federation'].includes(req.user.role) && req.user.userId !== userId) 
+  if (!['coach','admin'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
   const data = await dashboardService.getCoachDashboard(userId);
@@ -40,7 +40,7 @@ const getCoachDashboard = asyncHandler(async (req: AuthRequest, res: Response) =
 
 const getClubDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = parseInt(req.params.id) || req.user.userId;
-  if (!['club','federation'].includes(req.user.role) && req.user.userId !== userId) 
+  if (!['club','admin'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
   const data = await dashboardService.getClubDashboard(userId);
@@ -49,7 +49,7 @@ const getClubDashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
 
 const getPartnerDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = parseInt(req.params.id) || req.user.userId;
-  if (!['partner','federation'].includes(req.user.role) && req.user.userId !== userId) 
+  if (!['partner','admin'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
   const data = await dashboardService.getPartnerDashboard(userId);
@@ -58,7 +58,7 @@ const getPartnerDashboard = asyncHandler(async (req: AuthRequest, res: Response)
 
 const getStateDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = parseInt(req.params.id) || req.user.userId;
-  if (!['state','federation'].includes(req.user.role) && req.user.userId !== userId) 
+  if (!['state','admin'].includes(req.user.role) && req.user.userId !== userId) 
     return res.status(403).json({ success: false, error: 'Access denied' });
 
   const data = await dashboardService.getStateDashboard(userId);
@@ -66,7 +66,7 @@ const getStateDashboard = asyncHandler(async (req: AuthRequest, res: Response) =
 });
 
 const getAdminDashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
-  if (req.user.role !== 'federation') 
+  if (req.user.role !== 'admin') 
     return res.status(403).json({ success: false, error: 'Access denied - Federation admin required' });
 
   const data = await dashboardService.getAdminDashboard(req.user.userId);

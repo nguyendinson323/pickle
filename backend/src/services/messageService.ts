@@ -1,7 +1,7 @@
 import Message from '../models/Message';
 import Conversation from '../models/Conversation';
 import NotificationService from './notificationService';
-import { Op } from 'sequelize';
+import { Op, literal } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 
 interface CreateMessageData {
@@ -73,17 +73,20 @@ class MessageService {
 
       // Create message
       const message = await Message.create({
-        id: uuidv4(),
-        conversationId: data.conversationId,
-        senderId: data.senderId,
+        conversationId: parseInt(data.conversationId),
+        senderId: parseInt(data.senderId),
         content: data.content,
         messageType: data.messageType || 'text',
         attachments: data.attachments || [],
         location: data.location,
-        matchInvite: data.matchInvite,
+        matchInvite: data.matchInvite ? {
+          ...data.matchInvite,
+          courtId: parseInt(data.matchInvite.courtId),
+          facilityId: parseInt(data.matchInvite.facilityId)
+        } : undefined,
         isEdited: false,
         isDeleted: false,
-        readBy: [{ userId: data.senderId.toString(), readAt: new Date() }],
+        readBy: [{ userId: parseInt(data.senderId), readAt: new Date() }],
         reactions: []
       });
 
@@ -200,7 +203,7 @@ class MessageService {
       }
 
       // Check if user owns the message
-      if (message.senderId !== userId) {
+      if (message.senderId !== parseInt(userId)) {
         throw new Error('Unauthorized to edit this message');
       }
 
@@ -230,7 +233,7 @@ class MessageService {
       }
 
       // Check if user owns the message
-      if (message.senderId !== userId) {
+      if (message.senderId !== parseInt(userId)) {
         throw new Error('Unauthorized to delete this message');
       }
 
@@ -257,7 +260,7 @@ class MessageService {
       if (!alreadyRead) {
         const updatedReadBy = [
           ...message.readBy,
-          { userId, readAt: new Date() }
+          { userId: parseInt(userId), readAt: new Date() }
         ];
 
         await message.update({ readBy: updatedReadBy });
@@ -282,7 +285,7 @@ class MessageService {
       // Add new reaction
       const updatedReactions = [
         ...filteredReactions,
-        { userId, emoji, createdAt: new Date() }
+        { userId: parseInt(userId), emoji, createdAt: new Date() }
       ];
 
       await message.update({ reactions: updatedReactions });
@@ -447,18 +450,228 @@ class MessageService {
             senderName: 'User', // Will be populated by notification service
             conversationName: conversation.name || 'Direct Message',
             messagePreview: this.generateMessagePreview(message),
-            conversationId: conversation.id,
+            conversationId: conversation.id.toString(),
             messageId: message.id
           },
           actionUrl: `/messages/${conversation.id}`,
           relatedEntityType: 'message',
-          relatedEntityId: message.id
+          relatedEntityId: message.id.toString()
         });
       }
     } catch (error: any) {
       console.error('Failed to send message notifications:', error);
     }
   }
+
+  private async findOrCreateDirectConversation(senderId: string, receiverId: string): Promise<Conversation> {
+    // Try to find existing conversation
+    let conversation = await Conversation.findOne({
+      where: {
+        type: 'direct',
+        [Op.and]: [
+          literal(`participants @> '[{"userId": "${senderId}"}]'`),
+          literal(`participants @> '[{"userId": "${receiverId}"}]'`)
+        ]
+      }
+    });
+
+    if (!conversation) {
+      conversation = await Conversation.create({
+        id: uuidv4(),
+        type: 'direct',
+        name: null,
+        participants: [
+          { userId: senderId, role: 'member', isActive: true, joinedAt: new Date() },
+          { userId: receiverId, role: 'member', isActive: true, joinedAt: new Date() }
+        ],
+        isGroup: false,
+        // createdBy field removed as it doesn't exist in model
+      });
+    }
+
+    return conversation;
+  }
+
+  // Additional methods for controller compatibility
+  async sendMessage(
+    senderId: string, 
+    receiverId: string, 
+    subject: string, 
+    content: string, 
+    options: { isUrgent?: boolean; attachments?: any[] } = {}
+  ): Promise<any> {
+    try {
+      // Find or create conversation between sender and receiver
+      let conversation = await this.findOrCreateDirectConversation(senderId, receiverId);
+      
+      const messageData: CreateMessageData = {
+        conversationId: conversation.id.toString(),
+        senderId,
+        content,
+        messageType: 'text',
+        attachments: options.attachments || []
+      };
+
+      const message = await this.createMessage(messageData);
+      
+      // Note: subject and urgency could be stored separately if needed
+
+      return message;
+    } catch (error: any) {
+      throw new Error(`Failed to send message: ${error.message}`);
+    }
+  }
+
+  async getInbox(userId: string, page: number = 1, limit: number = 20): Promise<{
+    conversations: any[];
+    total: number;
+    page: number;
+    totalPages: number;
+  }> {
+    try {
+      const offset = (page - 1) * limit;
+
+      // Get conversations where user is participant
+      const { count, rows } = await Conversation.findAndCountAll({
+        where: literal(`participants @> '[{"userId": "${userId}"}]'`),
+        limit,
+        offset,
+        order: [['lastMessageAt', 'DESC']],
+        include: [
+          {
+            association: 'lastMessage',
+            include: [{
+              association: 'sender',
+              attributes: ['id', 'username', 'firstName', 'lastName', 'profilePicture']
+            }]
+          }
+        ]
+      });
+
+      return {
+        conversations: rows,
+        total: count,
+        page,
+        totalPages: Math.ceil(count / limit)
+      };
+    } catch (error: any) {
+      throw new Error(`Failed to get inbox: ${error.message}`);
+    }
+  }
+
+  async markAsRead(messageId: string, userId: string): Promise<boolean> {
+    try {
+      await this.markMessageAsRead(messageId, userId);
+      return true;
+    } catch (error: any) {
+      return false;
+    }
+  }
+
+  async sendAnnouncementToAll(
+    senderId: string, 
+    subject: string, 
+    content: string, 
+    targetRoles?: string[]
+  ): Promise<number> {
+    try {
+      // This would typically involve creating a broadcast or system message
+      // For now, we'll create individual conversations or use the notification system
+      
+      // Use notification service to send announcements
+      const User = require('../models/User');
+      const whereClause: any = {};
+      
+      if (targetRoles && targetRoles.length > 0) {
+        whereClause.role = { [Op.in]: targetRoles };
+      }
+
+      const targetUsers = await User.findAll({
+        where: whereClause,
+        attributes: ['id']
+      });
+
+      let sentCount = 0;
+      for (const user of targetUsers) {
+        if (user.id !== senderId) {
+          try {
+            await this.notificationService.sendNotification({
+              userId: user.id,
+              type: 'message',
+              category: 'info',
+              templateType: 'system_announcement',
+              data: {
+                subject,
+                content,
+                senderName: 'System Administrator'
+              },
+              actionUrl: '/announcements',
+              relatedEntityType: 'announcement',
+              relatedEntityId: `announcement_${Date.now()}`
+            });
+            sentCount++;
+          } catch (error) {
+            console.error(`Failed to send announcement to user ${user.id}:`, error);
+          }
+        }
+      }
+
+      return sentCount;
+    } catch (error: any) {
+      throw new Error(`Failed to send announcement: ${error.message}`);
+    }
+  }
+
+  async getConversation(
+    userId: string, 
+    otherUserId: string, 
+    page: number = 1, 
+    limit: number = 20
+  ): Promise<{
+    messages: Message[];
+    total: number;
+    page: number;
+    totalPages: number;
+  }> {
+    try {
+      // Find conversation between the two users
+      const conversation = await this.findDirectConversation(userId, otherUserId);
+      
+      if (!conversation) {
+        return {
+          messages: [],
+          total: 0,
+          page,
+          totalPages: 0
+        };
+      }
+
+      return await this.getMessages(
+        { conversationId: conversation.id.toString() },
+        { page, limit, orderDirection: 'ASC' }
+      );
+    } catch (error: any) {
+      throw new Error(`Failed to get conversation: ${error.message}`);
+    }
+  }
+
+  private async findDirectConversation(userId: string, otherUserId: string): Promise<Conversation | null> {
+    try {
+      return await Conversation.findOne({
+        where: {
+          type: 'direct',
+          [Op.and]: [
+            literal(`participants @> '[{"userId": "${userId}"}]'`),
+            literal(`participants @> '[{"userId": "${otherUserId}"}]'`)
+          ]
+        }
+      });
+    } catch (error) {
+      console.error('Error finding direct conversation:', error);
+      return null;
+    }
+  }
+
 }
 
 export default new MessageService();

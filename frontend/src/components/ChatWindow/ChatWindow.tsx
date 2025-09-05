@@ -4,10 +4,16 @@ import { useAuth } from '../../hooks/useAuth';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import ConversationHeader from './ConversationHeader';
-import TypingIndicator from './TypingIndicator';
 import { Message, Conversation } from '../../types/messaging';
-import { debounce } from 'lodash';
-import styles from './ChatWindow.module.css';
+
+// Simple debounce implementation
+function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+}
 
 interface ChatWindowProps {
   conversation: Conversation;
@@ -107,7 +113,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       scrollToBottom();
       
       // Mark message as read if not from current user
-      if (data.message.senderId !== user?.id) {
+      if (data.message.senderId !== String(user?.id)) {
         markMessageAsRead(data.message.id);
       }
     };
@@ -179,7 +185,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     };
 
     const handleTypingStarted = (data: { userId: string; conversationId: string }) => {
-      if (data.conversationId === conversation.id && data.userId !== user?.id) {
+      if (data.conversationId === conversation.id && data.userId !== String(user?.id)) {
         setTypingUsers(prev => {
           const existing = prev.find(u => u.userId === data.userId);
           if (!existing) {
@@ -408,45 +414,78 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   if (loading && messages.length === 0) {
     return (
-      <div className={styles.chatWindow}>
+      <div className="flex flex-col h-full bg-white">
         <ConversationHeader 
-          conversation={conversation}
-          onClose={onClose}
+          conversationId={conversation.id}
+          title={conversation.name || 'Conversation'}
+          participants={conversation.participants.map(p => ({
+            id: p.userId,
+            name: `User ${p.userId}`, // Would normally fetch user details
+            avatar: undefined
+          }))}
         />
-        <div className={styles.loadingContainer}>
-          <div className={styles.spinner}>Loading messages...</div>
+        <div className="flex items-center justify-center flex-1">
+          <div className="text-gray-500">Loading messages...</div>
         </div>
       </div>
     );
   }
 
+  // Simple TypingIndicator component
+  const TypingIndicator = ({ users }: { users: TypingUser[] }) => {
+    if (users.length === 0) return null;
+    
+    const usernames = users.map(u => u.username).join(', ');
+    return (
+      <div className="px-4 py-2 text-sm text-gray-500 italic">
+        {usernames} {users.length === 1 ? 'is' : 'are'} typing...
+      </div>
+    );
+  };
+
   return (
-    <div className={styles.chatWindow}>
-      <ConversationHeader 
-        conversation={conversation}
-        onClose={onClose}
-        isConnected={isConnected}
-      />
+    <div className="flex flex-col h-full bg-white">
+      <div className="relative">
+        <ConversationHeader 
+          conversationId={conversation.id}
+          title={conversation.name || 'Conversation'}
+          participants={conversation.participants.map(p => ({
+            id: p.userId,
+            name: `User ${p.userId}`, // Would normally fetch user details
+            avatar: undefined
+          }))}
+          isOnline={isConnected}
+        />
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            title="Close chat"
+          >
+            ✕
+          </button>
+        )}
+      </div>
 
       {error && (
-        <div className={styles.errorBanner}>
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 flex justify-between items-center">
           {error}
-          <button onClick={() => setError(null)}>×</button>
+          <button onClick={() => setError(null)} className="text-red-700 hover:text-red-900">×</button>
         </div>
       )}
 
       <div 
-        className={styles.messagesContainer}
+        className="flex-1 overflow-y-auto p-4"
         ref={messagesContainerRef}
         onScroll={handleScroll}
       >
         {loading && messages.length > 0 && (
-          <div className={styles.loadingMore}>Loading more messages...</div>
+          <div className="text-center py-2 text-gray-500">Loading more messages...</div>
         )}
 
         <MessageList
           messages={messages}
-          currentUserId={user?.id || ''}
+          currentUserId={String(user?.id || '')}
           onEditMessage={editMessage}
           onDeleteMessage={deleteMessage}
           onAddReaction={addReaction}
@@ -467,7 +506,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       />
 
       {!isConnected && (
-        <div className={styles.connectionStatus}>
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 text-center">
           Reconnecting...
         </div>
       )}

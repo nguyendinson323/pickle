@@ -3,6 +3,7 @@ import path from 'path';
 import PDFDocument from 'pdfkit';
 // import nodemailer from 'nodemailer'; // Removed - not available
 import { Invoice, User, MembershipPlan, Payment } from '../models';
+import { Op } from 'sequelize';
 
 interface InvoiceData {
   userId: number;
@@ -37,11 +38,10 @@ export const generateInvoiceNumber = async (): Promise<string> => {
   const count = await Invoice.count({
     where: {
       createdAt: {
-        [require('sequelize').Op.gte]: new Date(`${year}-01-01`),
-        [require('sequelize').Op.lt]: new Date(`${year + 1}-01-01`)
+        [Op.between]: [new Date(`${year}-01-01`), new Date(`${year}-12-31`)]
       }
     }
-  });
+  } as any) as unknown as number;
 
   const invoiceNumber = `INV-${year}-${String(count + 1).padStart(6, '0')}`;
   return invoiceNumber;
@@ -303,7 +303,7 @@ export const markInvoiceOverdue = async (): Promise<void> => {
     where: {
       status: 'sent',
       dueDate: {
-        [require('sequelize').Op.lt]: new Date()
+        [Op.lt]: new Date()
       }
     }
   });
@@ -327,7 +327,7 @@ export const generateMonthlyReport = async (year: number, month: number) => {
   const invoices = await Invoice.findAll({
     where: {
       issueDate: {
-        [require('sequelize').Op.between]: [startDate, endDate]
+        [Op.between]: [startDate, endDate]
       }
     },
     include: [

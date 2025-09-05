@@ -272,7 +272,7 @@ class StripeService {
    */
   async getUpcomingInvoice(customerId: string, subscriptionId?: string) {
     try {
-      const upcomingInvoice = await stripe.invoices.retrieveUpcoming({
+      const upcomingInvoice = await (stripe.invoices as any).retrieveUpcoming({
         customer: customerId,
         subscription: subscriptionId
       });

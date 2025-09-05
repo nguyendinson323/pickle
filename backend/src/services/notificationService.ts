@@ -78,7 +78,7 @@ class NotificationService {
       // Create notification
       const notification = await Notification.create({
         id: uuidv4(),
-        userId: data.userId,
+        userId: parseInt(data.userId),
         type: data.type,
         category: data.category,
         title: notificationContent.title,
@@ -86,7 +86,7 @@ class NotificationService {
         actionText: notificationContent.actionText,
         actionUrl: data.actionUrl,
         relatedEntityType: data.relatedEntityType,
-        relatedEntityId: data.relatedEntityId,
+        relatedEntityId: data.relatedEntityId ? parseInt(data.relatedEntityId) : undefined,
         isRead: false,
         channels,
         deliveryStatus: {
@@ -292,14 +292,14 @@ class NotificationService {
   ): Promise<NotificationPreferences> {
     try {
       const [userPrefs, created] = await NotificationPreferences.findOrCreate({
-        where: { userId },
+        where: { userId: parseInt(userId) },
         defaults: {
-          userId,
+          userId: parseInt(userId),
           globalEnabled: true,
           quietHoursEnabled: false,
           quietHoursStart: '22:00',
           quietHoursEnd: '08:00',
-          preferences: {} // Will use default from model
+          preferences: this.getDefaultPreferences()
         }
       });
 
@@ -313,14 +313,14 @@ class NotificationService {
   async getUserPreferences(userId: string): Promise<NotificationPreferences> {
     try {
       const [preferences] = await NotificationPreferences.findOrCreate({
-        where: { userId },
+        where: { userId: parseInt(userId) },
         defaults: {
-          userId,
+          userId: parseInt(userId),
           globalEnabled: true,
           quietHoursEnabled: false,
           quietHoursStart: '22:00',
           quietHoursEnd: '08:00',
-          preferences: {} // Will use default from model
+          preferences: this.getDefaultPreferences()
         }
       });
 
@@ -593,6 +593,42 @@ class NotificationService {
       };
       await notification.update({ deliveryStatus: updatedDeliveryStatus });
     }
+  }
+  private getDefaultPreferences() {
+    const defaultChannelPrefs = { inApp: true, email: true, sms: false, push: true };
+    
+    return {
+      tournaments: {
+        registration_open: defaultChannelPrefs,
+        registration_confirmed: defaultChannelPrefs,
+        bracket_released: defaultChannelPrefs,
+        match_scheduled: defaultChannelPrefs,
+        match_reminder: defaultChannelPrefs,
+        results_posted: defaultChannelPrefs
+      },
+      bookings: {
+        booking_confirmed: defaultChannelPrefs,
+        booking_reminder: defaultChannelPrefs,
+        booking_cancelled: defaultChannelPrefs,
+        court_unavailable: defaultChannelPrefs
+      },
+      matches: {
+        match_request: defaultChannelPrefs,
+        match_accepted: defaultChannelPrefs,
+        match_declined: defaultChannelPrefs,
+        court_suggestion: defaultChannelPrefs
+      },
+      messages: {
+        direct_message: defaultChannelPrefs,
+        group_message: { inApp: true, email: false, sms: false, push: true },
+        mention: defaultChannelPrefs
+      },
+      system: {
+        account_security: { inApp: true, email: true, sms: true, push: true },
+        payment_updates: defaultChannelPrefs,
+        maintenance_alerts: defaultChannelPrefs
+      }
+    };
   }
 }
 

@@ -17,7 +17,7 @@ export const CourtRegistrationPage: React.FC = () => {
       return;
     }
 
-    if (!['club', 'partner', 'federation'].includes(user.role)) {
+    if (!['club', 'partner', 'admin'].includes(user.role)) {
       navigate('/courts', { replace: true });
       return;
     }
@@ -45,7 +45,7 @@ export const CourtRegistrationPage: React.FC = () => {
     navigate('/courts');
   };
 
-  if (!user || !['club', 'partner', 'federation'].includes(user.role)) {
+  if (!user || !['club', 'partner', 'admin'].includes(user.role)) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
         <div className="text-center">
@@ -56,7 +56,7 @@ export const CourtRegistrationPage: React.FC = () => {
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">Restricted Access</h3>
           <p className="text-gray-600 mb-4">
-            Only clubs, partners and the federation can register courts.
+            Only clubs, partners and the admin can register courts.
           </p>
           <Button onClick={() => navigate('/courts')}>
             Back to Courts
@@ -265,7 +265,7 @@ export const CourtRegistrationPage: React.FC = () => {
             <div>
               <h4 className="font-medium text-gray-900 mb-2">Required Documentation</h4>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Registration with the Mexican federation</li>
+                <li>• Registration with the Mexican admin</li>
                 <li>• Proof of address for the court</li>
                 <li>• Official identification of the person in charge</li>
                 <li>• Current insurance policy</li>

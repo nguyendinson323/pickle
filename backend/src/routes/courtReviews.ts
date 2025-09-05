@@ -38,7 +38,7 @@ router.get('/courts/:courtId/reviews', asyncHandler(courtReviewController.getCou
 // Owner responses to reviews
 router.post('/reviews/:id/respond', 
   authenticate, 
-  authorizeRoles(['club', 'partner', 'federation']), 
+  authorizeRoles(['club', 'partner', 'admin']), 
   asyncHandler(courtReviewController.respondToReview)
 );
 

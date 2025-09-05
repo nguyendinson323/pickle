@@ -176,7 +176,7 @@ export const CredentialVerifier: React.FC = () => {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Credential Verifier</h1>
         <p className="mt-2 text-gray-600">
-          Verify the authenticity and validity of federation credentials
+          Verify the authenticity and validity of admin credentials
         </p>
       </div>
 

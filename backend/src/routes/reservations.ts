@@ -58,7 +58,7 @@ router.get('/conflicts/detect', asyncHandler(ReservationController.detectConflic
 // Court reservations (for owners/admins)
 router.get('/courts/:courtId/reservations', 
   authenticate, 
-  authorizeRoles(['club', 'partner', 'federation']), 
+  authorizeRoles(['club', 'partner', 'admin']), 
   asyncHandler(ReservationController.getCourtReservations)
 );
 

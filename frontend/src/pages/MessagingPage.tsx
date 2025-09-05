@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMessaging } from '../contexts/MessagingContext';
-import { ChatWindow } from '../components/ChatWindow/ChatWindow';
-import { NotificationCenter } from '../components/NotificationCenter/NotificationCenter';
+import ChatWindow from '../components/ChatWindow/ChatWindow';
+import NotificationCenter from '../components/NotificationCenter/NotificationCenter';
 import { useAppSelector } from '../store';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
@@ -254,7 +254,10 @@ const MessagingLayout: React.FC = () => {
               </svg>
             </button>
           </div>
-          <NotificationCenter />
+          <NotificationCenter 
+            isOpen={showNotifications}
+            onClose={() => setShowNotifications(false)}
+          />
         </div>
       )}
 
@@ -290,7 +293,7 @@ interface CreateConversationDialogProps {
 const CreateConversationDialog: React.FC<CreateConversationDialogProps> = ({ onClose, onCreate }) => {
   const [conversationType, setConversationType] = useState('direct');
   const [conversationName, setConversationName] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [selectedUsers] = useState<string[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

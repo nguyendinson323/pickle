@@ -10,7 +10,9 @@ import {
 import { Op } from 'sequelize';
 import tournamentService from '../services/tournamentService';
 import stripeService from '../services/stripeService';
-import notificationService from '../services/notificationService';
+import NotificationService from '../services/notificationService';
+
+const notificationService = new NotificationService();
 import sequelize from '../config/database';
 
 export class TournamentRegistrationController {
@@ -193,13 +195,15 @@ export class TournamentRegistrationController {
       const payment = await Payment.create({
         userId: registration.playerId,
         amount: totalFee,
-        paymentType: 'membership' as any,
-        paymentMethod: 'stripe',
-        status: 'completed',
+        currency: 'USD',
+        type: 'tournament_entry',
+        paymentMethod: { type: 'card' as const },
+        status: 'succeeded',
         stripePaymentIntentId: paymentIntentId,
-        referenceType: 'tournament_registration',
-        referenceId: registration.id,
-        description: `Tournament registration - ${tournament?.name || 'Tournament'}`
+        relatedEntityType: 'tournament',
+        relatedEntityId: registration.id,
+        description: `Tournament registration - ${tournament?.name || 'Tournament'}`,
+        webhookProcessed: false
       }, { transaction });
 
       // Update registration
@@ -223,19 +227,38 @@ export class TournamentRegistrationController {
       const tournamentForNotification = await Tournament.findByPk(registration.tournamentId, { transaction });
       
       // Send confirmation notification
-      await notificationService.createNotification(
-        registration.playerId,
-        'tournament',
-        `Your registration for ${tournamentForNotification?.name || 'the tournament'} has been confirmed!`
-      );
+      await notificationService.sendNotification({
+        userId: registration.playerId.toString(),
+        type: 'tournament',
+        category: 'success',
+        templateType: 'tournament_registration_confirmed',
+        data: {
+          tournamentName: tournamentForNotification?.name || 'Tournament',
+          registrationDate: registration.registrationDate,
+          categoryName: 'Category', // TODO: Fetch category name via association
+          registrationFee: registration.amountPaid
+        },
+        actionUrl: `/tournaments/${registration.tournamentId}`,
+        relatedEntityType: 'tournament',
+        relatedEntityId: registration.tournamentId.toString()
+      });
 
       // If partner, notify them too
       if (registration.partnerId) {
-        await notificationService.createNotification(
-          registration.partnerId,
-          'tournament',
-          `You have been registered as a partner for ${tournamentForNotification?.name || 'the tournament'}`
-        );
+        await notificationService.sendNotification({
+          userId: registration.partnerId.toString(),
+          type: 'tournament',
+          category: 'info',
+          templateType: 'tournament_partner_registered',
+          data: {
+            tournamentName: tournamentForNotification?.name || 'Tournament',
+            partnerName: 'Partner', // TODO: Fetch player name via association
+            categoryName: 'Category' // TODO: Fetch category name via association
+          },
+          actionUrl: `/tournaments/${registration.tournamentId}`,
+          relatedEntityType: 'tournament',
+          relatedEntityId: registration.tournamentId.toString()
+        });
       }
 
       await transaction.commit();
@@ -275,7 +298,7 @@ export class TournamentRegistrationController {
       }
 
       // Check ownership
-      if (registration.playerId !== userId && req.user?.role !== 'federation') {
+      if (registration.playerId !== userId && req.user?.role !== 'admin') {
         await transaction.rollback();
         return res.status(403).json({ error: 'Not authorized to cancel this registration' });
       }
@@ -336,11 +359,22 @@ export class TournamentRegistrationController {
       const tournament = await Tournament.findByPk(registration.tournamentId, { transaction });
       
       // Notify player
-      await notificationService.createNotification(
-        registration.playerId,
-        'tournament',
-        `Your registration for ${tournament?.name || 'the tournament'} has been cancelled. ${refundAmount > 0 ? `Refund of $${refundAmount} MXN will be processed.` : ''}`
-      );
+      await notificationService.sendNotification({
+        userId: registration.playerId.toString(),
+        type: 'tournament',
+        category: 'warning',
+        templateType: 'tournament_registration_cancelled',
+        data: {
+          tournamentName: tournament?.name || 'Tournament',
+          reason,
+          refundAmount,
+          hasRefund: refundAmount > 0,
+          withdrawalDate: new Date().toISOString()
+        },
+        actionUrl: `/tournaments`,
+        relatedEntityType: 'tournament',
+        relatedEntityId: registration.tournamentId.toString()
+      });
 
       await transaction.commit();
 
@@ -468,7 +502,7 @@ export class TournamentRegistrationController {
 
       // Check if user is tournament organizer
       const tournamentForAuth = await Tournament.findByPk(registration.tournamentId);
-      if (tournamentForAuth?.organizerId !== userId && req.user?.role !== 'federation') {
+      if (tournamentForAuth?.organizerId !== userId && req.user?.role !== 'admin') {
         return res.status(403).json({ error: 'Not authorized to check in players' });
       }
 
@@ -483,11 +517,20 @@ export class TournamentRegistrationController {
       });
 
       // Notify player
-      await notificationService.createNotification(
-        registration.playerId,
-        'tournament',
-        `You have been checked in for ${tournamentForAuth?.name || 'the tournament'}`
-      );
+      await notificationService.sendNotification({
+        userId: registration.playerId.toString(),
+        type: 'tournament',
+        category: 'success',
+        templateType: 'tournament_check_in_confirmed',
+        data: {
+          tournamentName: tournamentForAuth?.name || 'Tournament',
+          checkInTime: new Date().toISOString(),
+          venue: tournamentForAuth?.venueName || 'Tournament Venue'
+        },
+        actionUrl: `/tournaments/${registration.tournamentId}`,
+        relatedEntityType: 'tournament',
+        relatedEntityId: registration.tournamentId.toString()
+      });
 
       res.json({ 
         message: 'Player checked in successfully',
@@ -516,7 +559,7 @@ export class TournamentRegistrationController {
 
       // Check if user is tournament organizer
       const tournamentForSeed = await Tournament.findByPk(registration.tournamentId);
-      if (tournamentForSeed?.organizerId !== userId && req.user?.role !== 'federation') {
+      if (tournamentForSeed?.organizerId !== userId && req.user?.role !== 'admin') {
         return res.status(403).json({ error: 'Not authorized to update seeds' });
       }
 

@@ -121,13 +121,13 @@ const MessageItem: React.FC<MessageItemProps> = ({
                 <Badge
                   variant={
                     message.senderRole === 'system' ? 'info' :
-                    message.senderRole === 'federation' ? 'primary' :
+                    message.senderRole === 'admin' ? 'primary' :
                     'secondary'
                   }
                   size="sm"
                 >
                   {message.senderRole === 'system' ? 'System' :
-                   message.senderRole === 'federation' ? 'Federation' :
+                   message.senderRole === 'admin' ? 'Federation' :
                    message.senderRole}
                 </Badge>
               )}
