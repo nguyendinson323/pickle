@@ -207,7 +207,7 @@ const CoachRegistrationForm: React.FC<CoachRegistrationFormProps> = ({
               required
               value={formData.stateId}
               onChange={(value) => updateField('stateId', parseInt(value))}
-              options={states.map(state => ({ value: state.id, label: state.name }))}
+              options={states?.map(state => ({ value: state.id, label: state.name })) || []}
               error={errors.stateId}
             />
             

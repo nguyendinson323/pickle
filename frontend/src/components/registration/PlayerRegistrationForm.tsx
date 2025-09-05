@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { fetchStates, fetchNrtpLevels, fetchGenderOptions, selectStates, selectNrtpLevels, selectGenderOptions, selectDataLoading } from '@/store/dataSlice';
+import { selectStates, selectNrtpLevels, selectGenderOptions, selectDataLoading } from '@/store/dataSlice';
 import { registerPlayer, selectIsSubmitting, selectRegistrationError } from '@/store/registrationSlice';
 import { PlayerRegistrationData } from '@/types/registration';
 import FormField from '@/components/forms/FormField';
@@ -50,12 +50,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [_showPrivacyModal, setShowPrivacyModal] = useState(false);
 
-  // Load data on component mount
-  useEffect(() => {
-    dispatch(fetchStates());
-    dispatch(fetchNrtpLevels());
-    dispatch(fetchGenderOptions());
-  }, [dispatch]);
+  // Data is now loaded globally in App.tsx, no need to fetch here
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -212,7 +207,7 @@ const PlayerRegistrationForm: React.FC<PlayerRegistrationFormProps> = ({
               required
               value={formData.stateId}
               onChange={(value) => updateField('stateId', parseInt(value))}
-              options={states.map(state => ({ value: state.id, label: state.name }))}
+              options={states?.map(state => ({ value: state.id, label: state.name })) || []}
               error={errors.stateId}
             />
             

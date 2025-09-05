@@ -199,7 +199,7 @@ const StateCommitteeRegistrationForm: React.FC<StateCommitteeRegistrationFormPro
               required
               value={formData.stateId}
               onChange={(value) => updateField('stateId', parseInt(value))}
-              options={states.map(state => ({ value: state.id, label: state.name }))}
+              options={states?.map(state => ({ value: state.id, label: state.name })) || []}
               error={errors.stateId}
             />
             

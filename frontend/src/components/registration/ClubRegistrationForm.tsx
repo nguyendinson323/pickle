@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { fetchStates, selectStates, selectDataLoading } from '@/store/dataSlice';
+import { selectStates, selectDataLoading } from '@/store/dataSlice';
 import { registerClub, selectIsSubmitting, selectRegistrationError } from '@/store/registrationSlice';
 import { ClubRegistrationData } from '@/types/registration';
 import FormField from '@/components/forms/FormField';
@@ -57,10 +57,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
     { value: 'mixed', label: 'Mixed' }
   ];
 
-  // Load data on component mount
-  useEffect(() => {
-    dispatch(fetchStates());
-  }, [dispatch]);
+  // Data is now loaded globally in App.tsx, no need to fetch here
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -218,7 +215,7 @@ const ClubRegistrationForm: React.FC<ClubRegistrationFormProps> = ({
               required
               value={formData.stateId}
               onChange={(value) => updateField('stateId', parseInt(value))}
-              options={states.map(state => ({ value: state.id, label: state.name }))}
+              options={states?.map(state => ({ value: state.id, label: state.name })) || []}
               error={errors.stateId}
             />
             
