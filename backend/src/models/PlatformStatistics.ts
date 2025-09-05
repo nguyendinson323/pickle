@@ -110,7 +110,7 @@ PlatformStatistics.init({
       coach: 0,
       club: 0,
       partner: 0,
-      state_committee: 0,
+      state: 0,
       admin: 0
     },
     field: 'users_by_role'

@@ -24,7 +24,7 @@ The current project lacks a microsite builder system that would allow clubs and 
 interface Microsite extends Model {
   id: string;
   ownerId: string; // Club or state committee user ID
-  ownerType: 'club' | 'state_committee';
+  ownerType: 'club' | 'state';
   
   // Basic Info
   name: string;
@@ -154,7 +154,7 @@ interface MicrositeTemplate extends Model {
   id: string;
   name: string;
   description: string;
-  category: 'club' | 'state_committee' | 'general';
+  category: 'club' | 'state' | 'general';
   
   // Preview
   thumbnailUrl: string;
@@ -325,7 +325,7 @@ class MicrositeService {
     
     // Verify owner permissions
     const owner = await User.findByPk(ownerId);
-    if (!['club', 'state_committee', 'admin'].includes(owner.role)) {
+    if (!['club', 'state', 'admin'].includes(owner.role)) {
       throw new Error('Insufficient permissions to create microsite');
     }
 
@@ -358,7 +358,7 @@ class MicrositeService {
     // Create microsite with template defaults
     const microsite = await Microsite.create({
       ownerId,
-      ownerType: owner.role === 'club' ? 'club' : 'state_committee',
+      ownerType: owner.role === 'club' ? 'club' : 'state',
       name,
       slug,
       subdomain,

@@ -9,7 +9,7 @@ interface MicrositeTemplate {
   id: number;
   name: string;
   description: string;
-  category: 'club' | 'state_committee' | 'general';
+  category: 'club' | 'state' | 'general';
   thumbnailUrl: string;
   previewUrl?: string;
   isPremium: boolean;

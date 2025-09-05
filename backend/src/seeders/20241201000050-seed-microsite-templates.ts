@@ -307,7 +307,7 @@ module.exports = {
     },
     {
       name: 'Federación Deportiva',
-      category: 'state_committee',
+      category: 'state',
       description: 'Template institucional para federaciones deportivas con funcionalidades oficiales',
       structure: JSON.stringify({
         layout: {

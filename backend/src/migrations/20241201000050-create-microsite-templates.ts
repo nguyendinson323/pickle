@@ -16,7 +16,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       allowNull: false
     },
     category: {
-      type: DataTypes.ENUM('club', 'state_committee', 'general'),
+      type: DataTypes.ENUM('club', 'state', 'general'),
       allowNull: false,
       defaultValue: 'general'
     },

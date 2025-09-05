@@ -55,7 +55,7 @@ const EnhancedDashboardLayout: React.FC<EnhancedDashboardLayoutProps> = ({
           { name: 'Rankings', href: '/admin/rankings', icon: ChartBarIcon },
         ]
       },
-      state_committee: {
+      state: {
         title: 'State Committee',
         color: 'blue',
         navigation: [

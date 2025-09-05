@@ -56,7 +56,7 @@ class MicrositeBuilderService {
       throw new Error('User not found');
     }
 
-    if (!['club', 'state_committee', 'admin'].includes(owner.role)) {
+    if (!['club', 'state', 'admin'].includes(owner.role)) {
       throw new Error('Insufficient permissions to create microsite');
     }
 

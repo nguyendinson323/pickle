@@ -3,7 +3,7 @@ import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/authSlice';
 import apiService from '@/services/api';
 
-export type UserRole = 'player' | 'coach' | 'club' | 'partner' | 'state_committee' | 'admin';
+export type UserRole = 'player' | 'coach' | 'club' | 'partner' | 'state' | 'admin';
 
 export const useDashboardData = (role?: UserRole) => {
   const user = useAppSelector(selectCurrentUser);
@@ -15,7 +15,7 @@ export const useDashboardData = (role?: UserRole) => {
 
   const endpoints: Record<UserRole, string> = {
     admin: '/dashboard/admin',
-    state_committee: '/dashboard/state',
+    state: '/dashboard/state',
     club: '/dashboard/club',
     partner: '/dashboard/partner',
     coach: '/dashboard/coach',

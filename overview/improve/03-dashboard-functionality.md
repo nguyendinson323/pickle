@@ -55,7 +55,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           { name: 'Rankings', href: '/admin/rankings', icon: ChartBarIcon },
         ]
       },
-      state_committee: {
+      state: {
         title: 'State Committee',
         color: 'blue',
         navigation: [
@@ -987,7 +987,7 @@ export const useDashboardData = (role: UserRole) => {
 
   const endpoints = {
     admin: '/dashboard/admin',
-    state_committee: '/dashboard/state',
+    state: '/dashboard/state',
     club: '/dashboard/club',
     partner: '/dashboard/partner',
     coach: '/dashboard/coach',

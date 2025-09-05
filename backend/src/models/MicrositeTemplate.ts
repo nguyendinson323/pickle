@@ -5,7 +5,7 @@ interface MicrositeTemplateAttributes {
   id: number;
   name: string;
   description: string;
-  category: 'club' | 'state_committee' | 'general';
+  category: 'club' | 'state' | 'general';
   
   // Preview
   thumbnailUrl: string;
@@ -27,7 +27,7 @@ class MicrositeTemplate extends Model<MicrositeTemplateAttributes, MicrositeTemp
   public id!: number;
   public name!: string;
   public description!: string;
-  public category!: 'club' | 'state_committee' | 'general';
+  public category!: 'club' | 'state' | 'general';
   public thumbnailUrl!: string;
   public previewUrl!: string;
   public structure!: any;
@@ -55,7 +55,7 @@ MicrositeTemplate.init({
     allowNull: false
   },
   category: {
-    type: DataTypes.ENUM('club', 'state_committee', 'general'),
+    type: DataTypes.ENUM('club', 'state', 'general'),
     allowNull: false,
     defaultValue: 'general'
   },

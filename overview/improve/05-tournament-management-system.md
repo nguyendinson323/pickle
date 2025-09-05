@@ -44,7 +44,7 @@ interface Tournament extends Model {
   contactEmail: string;
   contactPhone: string;
   organizedBy: string; // User ID of organizer
-  organizationType: 'admin' | 'state_committee' | 'club';
+  organizationType: 'admin' | 'state' | 'club';
   isPublic: boolean;
   featuredImage: string;
   gallery: string[];
@@ -171,7 +171,7 @@ class TournamentService {
   async createTournament(organizerId: string, tournamentData: CreateTournamentRequest) {
     // Validate organizer permissions
     const organizer = await User.findByPk(organizerId);
-    if (!['admin', 'state_committee', 'club'].includes(organizer.role)) {
+    if (!['admin', 'state', 'club'].includes(organizer.role)) {
       throw new Error('Insufficient permissions to create tournaments');
     }
 

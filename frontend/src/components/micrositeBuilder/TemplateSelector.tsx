@@ -8,7 +8,7 @@ interface MicrositeTemplate {
   id: number;
   name: string;
   description: string;
-  category: 'club' | 'state_committee' | 'general';
+  category: 'club' | 'state' | 'general';
   thumbnailUrl: string;
   previewUrl?: string;
   isPremium: boolean;
@@ -91,7 +91,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   const getCategoryLabel = (cat: string) => {
     const labels = {
       club: 'Club',
-      state_committee: 'Comité Estatal',
+      state: 'Comité Estatal',
       general: 'General'
     };
     return labels[cat as keyof typeof labels] || cat;
@@ -121,7 +121,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           >
             <option value="all">Todas las categorías</option>
             <option value="club">Club</option>
-            <option value="state_committee">Comité Estatal</option>
+            <option value="state">Comité Estatal</option>
             <option value="general">General</option>
           </select>
         </div>

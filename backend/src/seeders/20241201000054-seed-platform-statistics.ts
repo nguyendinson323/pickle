@@ -22,7 +22,7 @@ module.exports = {
           coach: Math.floor(baseUsers * 0.18),
           club: Math.floor(baseUsers * 0.08),
           partner: Math.floor(baseUsers * 0.05),
-          state_committee: Math.floor(baseUsers * 0.03),
+          state: Math.floor(baseUsers * 0.03),
           admin: Math.floor(baseUsers * 0.01)
         }),
         total_sessions: Math.floor(Math.random() * 800) + 400,

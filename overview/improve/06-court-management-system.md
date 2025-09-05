@@ -306,7 +306,7 @@ class CourtService {
   async createFacility(ownerId: string, facilityData: CreateFacilityRequest) {
     // Verify owner permissions
     const owner = await User.findByPk(ownerId);
-    if (!['club', 'admin', 'state_committee'].includes(owner.role)) {
+    if (!['club', 'admin', 'state'].includes(owner.role)) {
       throw new Error('Insufficient permissions to create court facilities');
     }
 

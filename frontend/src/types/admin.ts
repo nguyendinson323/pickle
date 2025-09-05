@@ -8,7 +8,7 @@ export interface AdminDashboardOverview {
       coach: number;
       club: number;
       partner: number;
-      state_committee: number;
+      state: number;
       admin: number;
     };
   };
@@ -231,7 +231,7 @@ export interface PlatformStatistic {
     coach: number;
     club: number;
     partner: number;
-    state_committee: number;
+    state: number;
     admin: number;
   };
   totalTournaments: number;

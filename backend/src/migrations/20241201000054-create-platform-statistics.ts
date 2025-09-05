@@ -35,7 +35,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
         coach: 0,
         club: 0,
         partner: 0,
-        state_committee: 0,
+        state: 0,
         admin: 0
       }
     },

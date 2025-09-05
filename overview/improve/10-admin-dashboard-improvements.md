@@ -70,7 +70,7 @@ interface PlatformStatistics extends Model {
     coach: number;
     club: number;
     partner: number;
-    state_committee: number;
+    state: number;
     admin: number;
   };
   
@@ -1285,7 +1285,7 @@ const UserManagement: React.FC = () => {
       coach: 'bg-green-100 text-green-800',
       club: 'bg-purple-100 text-purple-800',
       partner: 'bg-yellow-100 text-yellow-800',
-      state_committee: 'bg-indigo-100 text-indigo-800',
+      state: 'bg-indigo-100 text-indigo-800',
       admin: 'bg-red-100 text-red-800'
     };
     return colors[role] || 'bg-gray-100 text-gray-800';
@@ -1325,7 +1325,7 @@ const UserManagement: React.FC = () => {
               <option value="coach">Coaches</option>
               <option value="club">Clubs</option>
               <option value="partner">Partners</option>
-              <option value="state_committee">State Committees</option>
+              <option value="state">State Committees</option>
               <option value="admin">Federation</option>
             </select>
           </div>

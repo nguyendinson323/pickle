@@ -2,11 +2,17 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
     
-    // Get sample users for each role to create preferences
+    // Get sample users for each role to create preferences (excluding those who already have preferences)
     const users = await queryInterface.sequelize.query(
-      'SELECT id, role FROM users WHERE role IN (\'admin\', \'state_committee\', \'club\', \'partner\', \'coach\', \'player\') LIMIT 50',
+      'SELECT u.id, u.role FROM users u LEFT JOIN notification_preferences np ON u.id = np.user_id WHERE u.role IN (\'admin\', \'state\', \'club\', \'partner\', \'coach\', \'player\') AND np.user_id IS NULL LIMIT 50',
       { type: Sequelize.QueryTypes.SELECT }
     );
+
+    // Only proceed if there are users without notification preferences
+    if (users.length === 0) {
+      console.log('All users already have notification preferences. Skipping seeder.');
+      return;
+    }
 
     const preferences = users.map(user => ({
       user_id: user.id,
@@ -14,7 +20,7 @@ module.exports = {
       quiet_hours_enabled: true,
       quiet_hours_start: '22:00',
       quiet_hours_end: '08:00',
-      preferences: getPreferencesForRole(user.role),
+      preferences: JSON.stringify(getPreferencesForRole(user.role)),
       created_at: now,
       updated_at: now
     }));
@@ -76,7 +82,7 @@ function getPreferencesForRole(role) {
       }
     },
 
-    state_committee: {
+    state: {
       ...basePreferences,
       
       // State-level management

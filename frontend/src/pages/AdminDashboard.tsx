@@ -35,7 +35,7 @@ interface AdminDashboardOverview {
       coach: number;
       club: number;
       partner: number;
-      state_committee: number;
+      state: number;
       admin: number;
     };
   };

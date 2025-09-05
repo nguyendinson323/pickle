@@ -241,7 +241,7 @@ const DashboardPage: React.FC = () => {
         return <ClubDashboard />;
       case 'partner':
         return <PartnerDashboard />;
-      case 'state_committee':
+      case 'state':
         return <StateDashboard />;
       case 'admin':
         return <AdminDashboard />;

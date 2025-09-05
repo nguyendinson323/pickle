@@ -181,19 +181,6 @@ const LoginForm: React.FC = () => {
             </a>
           </div>
         </form>
-
-        {/* Demo credentials for testing */}
-        {(import.meta as any).env?.MODE === 'development' && (
-          <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-            <h3 className="text-sm font-medium text-yellow-800">
-              Test credentials:
-            </h3>
-            <p className="text-xs text-yellow-600 mt-1">
-              Email: admin@federacionpickleball.mx<br />
-              Password: a
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
