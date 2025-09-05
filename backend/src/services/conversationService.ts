@@ -6,12 +6,7 @@ import privacyService from './privacyService';
 import { Op } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 
-// Set up associations for proper includes
-ConversationMessage.belongsTo(User, { foreignKey: 'senderId', as: 'sender' });
-ConversationMessage.belongsTo(ConversationMessage, { foreignKey: 'replyToId', as: 'replyTo' });
-ConversationMessage.hasMany(MessageReaction, { foreignKey: 'messageId', as: 'reactions' });
-MessageReaction.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-ConversationMessage.belongsTo(Conversation, { foreignKey: 'conversationId', as: 'conversation' });
+// Associations are defined in models/index.ts - no need to duplicate here
 
 interface CreateConversationData {
   type: 'direct' | 'group' | 'tournament' | 'court_booking';
